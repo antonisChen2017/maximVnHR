@@ -1,0 +1,117 @@
+</div> 
+</div>
+  <!-- END PAGE CONTENT --> 
+</div>
+<!-- END PAGE CONTAINER -->  <!-- BEGIN FOOTER --> 
+<div id="footer" class="footer"> 
+<div class="footer-inner"> </div> 
+<div class="footer-tools"></div> 
+<!-- END FOOTER -->  
+</div> 
+<!-- END WRAPPER -->  
+
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/ie8.css"/>
+<![endif]-->
+<!-- END THEME STYLES -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="javascript/assets//plugins/respond.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/excanvas.min.js"></script> 
+<![endif]--> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-1.11.1.min.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-migrate-1.1.0.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/bootstrap/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-cookie-master/src/jquery.cookie.js"></script> 
+<!-- END CORE PLUGINS --> 
+<!-- BEGIN PAGE LEVEL PLUGINS --> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="javascript/assets/plugins/select2/select2.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/spinner/jquery.mousewheel.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/DT_bootstrap.js"></script> 
+<!-- END PAGE LEVEL PLUGINS --> 
+<!-- BEGIN PAGE LEVEL SCRIPTS --> 
+<script type="text/javascript" src="javascript/assets//scripts/app.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/form-components.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-sliders.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script> 
+<script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script> 
+<script type="text/javascript" src="javascript/assets/layer/layer.js"></script> 
+<!-- END PAGE LEVEL SCRIPTS --> 
+<script>
+jQuery(document).ready(function() {    
+  //var fnSetData=null;
+   App.init(); // init layout and core plugins
+   TableAdvanced.init();
+   FormComponents.init();
+   
+   $('#searchEmployeeNo').change(function(){  
+	     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+		 $('#searchEmployee').val(p1);       
+	   }) 
+	
+    $('#searchEmployee').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+				 	$('#searchEmployeeNo').val(p1);       
+				   })  
+   
+   $('#searchDepartmen').change(function(){  
+	//	layer.msg('玩命提示中');
+	   var p1= $('#searchDepartmen').val();  //这就是selected的值  
+	   jQuery.ajax({
+			url:'/PortalManager?pk=AT&mtb=1&pg=Attendan&pl=at&tb=0&pn=at009&doajax=SwEmpNo',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeNoDiv').html(data);    
+				 $('#searchEmployeeNo').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 $('#searchEmployee').val(p1);       
+				   }) 
+			}
+		});
+	   jQuery.ajax({
+			url:'/PortalManager?pk=AT&mtb=1&pg=Attendan&pl=at&tb=0&pn=at009&doajax=SwEmp',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeDiv').html(data);    
+				 $('#searchEmployee').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+				 	$('#searchEmployeeNo').val(p1);       
+				   })  
+			}
+		});
+   })
+	
+	
+	
+	
+});
+
+function    upReturn(rowID){  
+//	layer.msg('玩命提示中'+rowID);
+	layer.prompt({title: '退回理由:', formType: 2}, function(text, index){
+	//	layer.msg('退回理由'+text);
+		ActionForm.act.value='R';
+		ActionForm.returnMsg.value=text;
+		ActionForm.rowID.value=rowID;
+		ActionForm.submit();
+	 });
+}  
+function    checkNO(){  
+
+	ActionForm.act.value='R';  
+	ActionForm.submit();   
+}  
+</script> 
+<!-- END JAVASCRIPTS -->
+</div>

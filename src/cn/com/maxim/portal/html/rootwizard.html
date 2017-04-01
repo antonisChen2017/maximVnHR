@@ -1,0 +1,371 @@
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets//fonts/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//plugins/bootstrap/css/bootstrap.min.css" />
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN THEME STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-bootstrap-custom.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-responsive.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/theme-default.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/plugins.css" />
+<link rel="stylesheet" type="text/css" href="javascript/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="javascript/easyui/demo.css">
+
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
+<![endif]-->
+<!-- END THEME STYLES -->
+<!-- BEGIN PAGE CONTAINER -->
+<div id="content" class="page-container">
+	<!-- BEGIN PAGE CONTENT -->
+	<div class="page-content-wrapper">
+		<!-- END TICKER-->
+		<div class="page-content fullwidth">
+			<!-- BEGIN PAGE HEADER-->
+			<div class="row">
+				<!-- BEGIN PAGE TITLE-->
+				<h3 class="page-title">
+					員工待工明細表<small>填寫</small>
+				</h3>
+				<!-- END PAGE TITLE-->
+			</div>
+			<div class='container'>
+
+				<section id="wizard">
+					<div id="rootwizard">
+						<div class="navbar">
+							<div class="navbar-inner">
+								<div class="container">
+									<ul>
+										<li><a href="#tab1" style='' data-toggle="tab">模式</a></li>
+										<li><a href="#tab2" contenteditable="false" data-toggle="tab">產地</a></li>
+										<li><a href="#tab3" contenteditable="false" data-toggle="tab">顏色</a></li>
+										<li><a href="#tab4" style='' data-toggle="tab">Fourth</a></li>
+										<li><a href="#tab5" contenteditable="false" data-toggle="tab">Fifth</a></li>
+										<li><a href="#tab6" contenteditable="false" data-toggle="tab">Sixth</a></li>
+										<li><a href="#tab7" contenteditable="false" data-toggle="tab">Seventh</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="tab-content">
+							<div class="tab-pane" id="tab1">
+								<div class="easyui-panel" title="模式" style="width: 900px; padding: 10px">
+
+
+									<TABLE>
+										<TR>
+											<TH nowrap align="left">模式组别</TH>
+											<TD><SELECT class="easyui-combobox" onchange="if(this.value!='????'){QueryForm.act2.value='C';QueryForm.submit();}" name="model">
+													<OPTION selected value="1">--- 选择一个模式组别 ---</OPTION>
+													<OPTION selected value="2">aa</OPTION>
+													<OPTION selected value="3">bb</OPTION>
+											</SELECT></TD>
+										</TR>
+										<TR>
+											<TH>模式组别筛选</TH>
+											<TD><INPUT class="easyui-validatebox" name="ModelFilter" type="text" onkeyup="if(event.keyCode==13){QueryForm.act2.value='F';QueryForm._PD.value='';QueryForm.submit();}" value=""></TD>
+										</TR>
+										<TR>
+											<TH nowrap align="left">数据模式</TH>
+											<TD><SELECT class="easyui-combobox" onchange="if(this.value!='')QueryForm.submit();" name="_PD">
+													<OPTION selected value="">--- 选择一个数据模式---</OPTION>
+											</SELECT></TD>
+										</TR>
+										<TR>
+											<TH nowrap colspan="2" align="left">注册日期</TH>
+										</TR>
+										<TR>
+											<TH nowrap align="right">从</TH>
+											<TD><SPAN> <span nowrap> <INPUT name="StartDate" style="width: 110px; background: url(/javascript/images/cal.png) no-repeat right;" type="text" value="2017-03-20"
+														id="StartDate"> <script type='text/javascript'>
+															$('#StartDate').datepicker(
+																{
+																	dateFormat : "yy-mm-dd"
+																});
+														</script>
+												</span>
+											</SPAN></TD>
+										</TR>
+										<TR>
+											<TH nowrap align="right">到</TH>
+											<TD><SPAN> <span nowrap> <INPUT name="EndDate" style="width: 110px; background: url(/javascript/images/cal.png) no-repeat right;" type="text" value="2017-03-23"
+														id="EndDate"> <script type='text/javascript'>
+															$('#EndDate').datepicker(
+																{
+																	dateFormat : "yy-mm-dd"
+																});
+														</script>
+												</span>
+											</SPAN></TD>
+										</TR>
+										<TR>
+											<TH colspan="2" align="left">模糊查询</TH>
+										</TR>
+										<TR>
+											<TH align="right">订单参考号</TH>
+											<TD><INPUT class="easyui-validatebox" name="mnno" type="text" value=""></TD>
+										</TR>
+										<TR>
+											<TH align="right">款式参考号</TH>
+											<TD><INPUT class="easyui-validatebox" name="sono" type="text" value=""></TD>
+										</TR>
+										<TR>
+											<TH nowrap colspan="2" align="center"><INPUT name="Query" type="submit" class="btn btn-success " value=" 查询"> <INPUT onclick="checkStrip()" name="Strip" type="button"
+												class="btn btn-success " value=" 排 模 "> <INPUT name="act2" type="hidden" value=""></TH>
+										</TR>
+									</TABLE>
+								</div>
+							</div>
+							<div class="tab-pane" id="tab2">
+								<TABLE>
+									<TBODY>
+										<TR>
+											<TH nowrap align="left">款式</TH>
+											<TD nowrap colspan="5"><SELECT onchange="ArtworkChange(ListForm)" name="POArtwork">
+													<OPTION value="">--尚未注测任何款式--</OPTION>
+											</SELECT> <SCRIPT language="JavaScript">
+												var aw = new Array();
+												aw[0] = new Array('', '1', '1', '30.0', '30.0', '100.0', '100.0', '100.0', '100.0', '100.0', '50.0', '250.0', '100.0', '0', false, false, 'LR', '0.0', '1', false, false, '1.0', false, false, 1, false);
+												function ArtworkChange(StripForm) {
+													for (i = 0; i < aw.length; i++) {
+														if (StripForm.POArtwork.value == aw[i][0]) {
+															StripForm.cols.value = aw[i][1];
+															StripForm.rows.value = aw[i][2];
+															StripForm.gapx.value = aw[i][3];
+															StripForm.gapy.value = aw[i][4];
+															StripForm.mtop.value = aw[i][5];
+															StripForm.mbottom.value = aw[i][6];
+															StripForm.mleft.value = aw[i][7];
+															StripForm.mright.value = aw[i][8];
+															StripForm.PrintMode.value = aw[i][13];
+															StripForm.dir.value = aw[i][16];
+															StripForm.blooding.value = aw[i][17];
+															StripForm.init.value = aw[i][18];
+															StripForm.border.checked = aw[i][14];
+															StripForm.InfoShow.checked = aw[i][19];
+															break;
+														}
+													}
+												}
+											</SCRIPT></TD>
+											<TH nowrap align="left">文件批注</TH>
+											<TD nowrap colspan="5"><INPUT name="film" size="35" type="text" value=""> <INPUT onclick="updatePrintPara(ListForm)" name="parabtn" type="button" class="ButtonStyle"
+												value="设为默认"></TD>
+										</TR>
+										<TR>
+											<TH nowrap align="left">行数</TH>
+											<TD nowrap><INPUT name="cols" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">水平间距</TH>
+											<TD nowrap><INPUT name="gapx" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">左间距</TH>
+											<TD nowrap><INPUT name="mleft" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">上间距</TH>
+											<TD nowrap><INPUT name="mtop" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">输出模式</TH>
+											<TH nowrap align="left"><SELECT name="PrintMode">
+													<OPTION value="9">出货数</OPTION>
+													<OPTION value="10">订单数</OPTION>
+													<OPTION value="11">Q1</OPTION>
+													<OPTION value="12">Q2</OPTION>
+													<OPTION value="13">Q3</OPTION>
+													<OPTION value="14">Q4</OPTION>
+													<OPTION value="15">Q5</OPTION>
+											</SELECT> 起始 <INPUT name="init" size="4" type="text" value=""> 出血 <INPUT name="blooding" size="4" type="text" value=""></TH>
+										</TR>
+										<TR>
+											<TH nowrap align="left">列数</TH>
+											<TD nowrap><INPUT name="rows" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">垂直间距</TH>
+											<TD nowrap><INPUT name="gapy" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">右间距</TH>
+											<TD nowrap><INPUT name="mright" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">下间距</TH>
+											<TD nowrap><INPUT name="mbottom" size="6" type="text" value=""></TD>
+											<TH nowrap align="left">打印方向</TH>
+											<TH nowrap align="left"><SELECT class="easyui-combobox" name="dir">
+													<OPTION selected value="LR">由左而右(横排)</OPTION>
+													<OPTION value="RL">由右而左(横排)</OPTION>
+													<OPTION value="LR-U">由左而右(直排)</OPTION>
+													<OPTION value="RL-U">由右而左(直排)</OPTION>
+											</SELECT> <INPUT name="border" type="checkbox" value="Y">边框 <INPUT name="InfoShow" type="checkbox" value="Y">表头信息 <INPUT name="getImage" type="checkbox" value="Y">低像素</TH>
+										</TR>
+									</TBODY>
+								</TABLE>
+
+							</div>
+							<div class="tab-pane" id="tab3">
+								<input name="pi_code" type="hidden" value=""> <input name="model" type="hidden" value="">
+								<!-- Start DB HTML Table -->
+								<table border="0" cellspacing="1" cellpadding="2">
+									<tr class="HeaderRow">
+										<th nowrap>序号</th>
+										<th nowrap><INPUT name="combine" type="checkbox" value="Y">同款合并</th>
+										<th nowrap>订单参考号</th>
+										<th nowrap>款式参考号</th>
+										<th nowrap>注册者</th>
+										<th nowrap>注测日期</th>
+										<th nowrap>编辑注册数据</th>
+										<th nowrap>画稿打印</th>
+									</tr>
+								</table>
+								<!-- End DB HTML Table -->
+
+							</div>
+							<div class="tab-pane" id="tab4">
+								<h2>Load Form Data</h2>
+								<div class="demo-info">
+									<div class="demo-tip icon-tip"></div>
+									<div>Click the buttons below to load form data.</div>
+								</div>
+								<div style="margin: 10px 0;">
+									<a href="javascript:void(0)" class="easyui-linkbutton" onclick="loadLocal()">LoadLocal</a> <a href="javascript:void(0)" class="easyui-linkbutton" onclick="loadRemote()">LoadRemote</a> <a
+										href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
+								</div>
+								<div class="easyui-panel" title="New Topic" style="width: 400px">
+									<div style="padding: 10px 0 10px 60px">
+										<form id="ff" method="post">
+											<table>
+												<tr>
+													<td>Name:</td>
+													<td><input class="easyui-validatebox" type="text" name="name" data-options="required:true"></input></td>
+												</tr>
+												<tr>
+													<td>Email:</td>
+													<td><input class="easyui-validatebox" type="text" name="email" data-options="required:true,validType:'email'"></input></td>
+												</tr>
+												<tr>
+													<td>Subject:</td>
+													<td><input class="easyui-validatebox" type="text" name="subject" data-options="required:true"></input></td>
+												</tr>
+												<tr>
+													<td>Message:</td>
+													<td><textarea name="message" style="height: 60px;"></textarea></td>
+												</tr>
+												<tr>
+													<td>Language:</td>
+													<td><select class="easyui-combobox" name="language"><option value="ar">Arabic</option>
+															<option value="bg">Bulgarian</option>
+															<option value="ca">Catalan</option>
+															<option value="zh-cht">Chinese Traditional</option>
+															<option value="cs">Czech</option>
+															<option value="da">Danish</option>
+															<option value="nl">Dutch</option>
+															<option value="en" selected="selected">English</option>
+															<option value="et">Estonian</option>
+															<option value="fi">Finnish</option>
+															<option value="fr">French</option>
+															<option value="de">German</option>
+															<option value="el">Greek</option>
+															<option value="ht">Haitian Creole</option>
+															<option value="he">Hebrew</option>
+															<option value="hi">Hindi</option>
+															<option value="mww">Hmong Daw</option>
+															<option value="hu">Hungarian</option>
+															<option value="id">Indonesian</option>
+															<option value="it">Italian</option>
+															<option value="ja">Japanese</option>
+															<option value="ko">Korean</option>
+															<option value="lv">Latvian</option>
+															<option value="lt">Lithuanian</option>
+															<option value="no">Norwegian</option>
+															<option value="fa">Persian</option>
+															<option value="pl">Polish</option>
+															<option value="pt">Portuguese</option>
+															<option value="ro">Romanian</option>
+															<option value="ru">Russian</option>
+															<option value="sk">Slovak</option>
+															<option value="sl">Slovenian</option>
+															<option value="es">Spanish</option>
+															<option value="sv">Swedish</option>
+															<option value="th">Thai</option>
+															<option value="tr">Turkish</option>
+															<option value="uk">Ukrainian</option>
+															<option value="vi">Vietnamese</option></select></td>
+												</tr>
+											</table>
+										</form>
+									</div>
+								</div>
+
+							</div>
+							<div class="tab-pane" id="tab5">5</div>
+							<div class="tab-pane" id="tab6">6</div>
+							<div class="tab-pane" id="tab7">
+					
+ 							</div>
+							
+							<ul class="pager wizard">
+								<li class="previous first" style="display: none;"><a href="#">First</a></li>
+								<li class="previous"><a href="#">Previous</a></li>
+								<li class="next last" style="display: none;"><a href="#">Last</a></li>
+								<li class="next"><a href="#">Next</a></li>
+							</ul>
+							
+						</div>
+					</div>
+
+				</section>
+			</div>
+			<!-- END PAGE CONTENT -->
+			<!-- END PAGE CONTAINER -->
+			<!-- BEGIN FOOTER -->
+
+			<!-- END WRAPPER -->
+
+			<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/ie8.css"/>
+<![endif]-->
+			<!-- END THEME STYLES -->
+			<!--[if lt IE 9]>
+<script type="text/javascript" src="javascript/assets//plugins/respond.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/excanvas.min.js"></script> 
+
+<script type="text/javascript" src="javascript/assets//plugins/jquery-1.11.1.min.js"></script> 
+<![endif]-->
+			<script type="text/javascript" src="javascript/assets//plugins/jquery-migrate-1.1.0.js"></script>
+			<script type="text/javascript" src="javascript/assets//plugins/bootstrap/js/bootstrap.min.js"></script>
+			<script type="text/javascript" src="javascript/assets//plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+			<script type="text/javascript" src="javascript/assets//plugins/jquery-cookie-master/src/jquery.cookie.js"></script>
+			<!-- END CORE PLUGINS -->
+			<!-- BEGIN PAGE LEVEL PLUGINS -->
+			<script type="text/javascript" src="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/select2/select2.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js"></script>
+			<script type="text/javascript" src="javascript/assets/plugins/spinner/jquery.mousewheel.js"></script>
+			<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/jquery.dataTables.min.js"></script>
+			<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/DT_bootstrap.js"></script>
+			<!-- END PAGE LEVEL PLUGINS -->
+			<!-- BEGIN PAGE LEVEL SCRIPTS -->
+			<script type="text/javascript" src="javascript/assets//scripts/app.js"></script>
+			<script type="text/javascript" src="javascript/assets/scripts/form-components.js"></script>
+			<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-sliders.js"></script>
+			<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script>
+			<script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script>
+			<script type="text/javascript" src="javascript/assets/layer/layer.js"></script>
+			<script type="text/javascript" src="javascript/assets/scripts/jquery.bootstrap.wizard.js"></script>
+			<script type="text/javascript" src="javascript/easyui/jquery.easyui.min.js"></script>
+			
+
+			<!-- END PAGE LEVEL SCRIPTS -->
+			<script>
+		
+				$(document).ready(function() {
+					$('#rootwizard').bootstrapWizard(
+						{
+							onTabClick : function(tab, navigation, index) {
+								//alert('on tab click disabled');
+								return false;
+							}
+						});
+					$(".test").simpleCanleder();  
+				});
+			</script>
+			<!-- END JAVASCRIPTS -->
+		</div>

@@ -1,0 +1,3 @@
+update VN_EMPLOYEE_UNIT
+set UNIT_ID='<UNITID>'
+where EMPLOYEENO='<EMPID>'

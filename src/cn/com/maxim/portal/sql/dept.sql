@@ -1,0 +1,9 @@
+select d.DEPARTMENT as 部門 ,v.DEPARTMENT_ID AS 部門編號 ,vu.UNIT AS 單位 ,v.EMPLOYEE as 名稱 ,
+v.EMPLOYEENO as 員工編號 ,v.ENTRYDATE as 到職日 ,v.DUTIES as 職稱  from VN_EMPLOYEE as v,
+VN_DEPARTMENT as d ,
+VN_EMPLOYEE_UNIT as eu ,
+VN_UNIT as vu
+WHERE v.DEPARTMENT_ID=d.ID
+and eu.EMPLOYEENO=v.EMPLOYEENO
+and vu.ID=eu.UNIT_ID
+and v.DEPARTMENT_ID='<DEPTID/>'

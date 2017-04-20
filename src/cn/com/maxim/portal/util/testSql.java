@@ -11,24 +11,24 @@ import cn.com.maxim.service.ExcelClientService;
 
 public class testSql {
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		 try
 		    {
-		String sql = " SELECT  *  ,[DEPARTMENT]   ,[SYS_DEPARTMENT]  FROM [hr].[dbo].[VN_DEPARTMENT]";
+		String sql = " SELECT  *  FROM PT_MODEL";
 		    
 	
 		  Class.forName("net.sourceforge.jtds.jdbc.Driver");
 	      Connection con = DriverManager.getConnection(
-	        "jdbc:jtds:sqlserver://192.168.4.199:1434/hr;charset=gb2312", "sa", "!Q@W3e4r");
+	        "jdbc:jtds:sqlserver://192.168.4.199/jj;charset=gb2312", "sa", "!Q@W3e4r");
 	      Statement stmt = con.createStatement();
 	   //   String sql = "SELECT bh, xm FROM employee";
 	      
 	      ResultSet rs = stmt.executeQuery(sql);
 	      if (rs.next()) 
 	      {
-	        String id = rs.getString("DEPARTMENT");
-	        System.out.println("[DEPARTMENT]:"+id);
+	        String id = rs.getString("MODEL");
+	        System.out.println("[MODEL]:"+id);
 	       
 	      }
 	      rs.close();
@@ -42,8 +42,8 @@ public class testSql {
 	      err.printStackTrace();
 	    }
 	}
-	*/
-	public static void main(String[] args) {
+	
+	/*public static void main(String[] args) {
 		
 		 String s = "<table><tbody><tr><td>斕疑</td><td>bb</td></tr><tr><td>cc</td><td>dd</td></tr></tbody></table>";
 		    ExcelClientService ecs = new ExcelClientService();
@@ -57,6 +57,6 @@ public class testSql {
 		    }
 	
 	}
-	
+	*/
 
 }

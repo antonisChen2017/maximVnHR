@@ -13,42 +13,48 @@ public class leaveCardVO implements Serializable
 
 	
 	/** 請假事由 **/
-	public String searchHoliday;
+	private String searchHoliday;
 	/** 代理人 **/
-	public String  searchAgent;
+	private String  searchAgent;
 	/**部門 */
-	public String searchDepartmen;
+	private String searchDepartmen;
 	/**單位 */
-	public String searchUnit;
+	private String searchUnit;
 	/**姓名 */
-	public String searchEmployee;
+	private String searchEmployee;
 	/**工號 */
-	public String searchEmployeeNo;
+	private String searchEmployeeNo;
 	/**申請日期 */
-	public String  applicationDate ;
+	private String  applicationDate ;
 	/**是否顯示查詢結果*/
-	public boolean  showDataTable;
+	private boolean  showDataTable;
 	/**資料庫訊息*/
-	public String  msg;
+	private String  msg;
 	/**請假開始-時 */
-	public String startLeaveTime;
-	/**請假結束-時 */
-	public String endLeaveTime;
-	/**請假開始-年月日 */
-	public String startLeaveDate;
-	/**請假結束-年月日 */
-	public String endLeaveDate;
-	/**備註 */
-	public String note;
-	/**請假卡狀態*/
-	public String  status;
-	/**請假天數*/
-	public String  dayCount;
-	/** 退回原因*/
-	public String returnMsg;
-	/**行ID**/
-	public String  rowID;
+	private String startLeaveTime;
 	
+	/**請假結束-時 */
+	private String endLeaveTime;
+	/**請假開始-年月日 */
+	private String startLeaveDate;
+	/**請假結束-年月日 */
+	private String endLeaveDate;
+	/**備註 */
+	private String note;
+	/**請假卡狀態*/
+	private String  status;
+	/**請假天數*/
+	private String  dayCount;
+	/** 退回原因*/
+	private String returnMsg;
+	/**行ID**/
+	private String  rowID;
+	/**ActionURI**/
+	private String  ActionURI;
+	/**請假開始-分 */
+	private String startLeaveMinute;
+	/**請假結束-分 */
+	private String endLeaveMinute;
 	
 	public String getSearchHoliday()
 	{
@@ -122,10 +128,6 @@ public class leaveCardVO implements Serializable
 	{
 		this.msg = msg;
 	}
-	
-	
-	
-	
 	
 	public String getStartLeaveDate()
 	{
@@ -211,16 +213,42 @@ public class leaveCardVO implements Serializable
 	{
 		this.rowID = rowID;
 	}
+	
+	
+	public String getActionURI()
+	{
+		return ActionURI;
+	}
+	public void setActionURI(String actionURI)
+	{
+		ActionURI = actionURI;
+	}
+	
+	
+	
+	public String getStartLeaveMinute()
+	{
+		return startLeaveMinute;
+	}
+	public void setStartLeaveMinute(String startLeaveMinute)
+	{
+		this.startLeaveMinute = startLeaveMinute;
+	}
+	public String getEndLeaveMinute()
+	{
+		return endLeaveMinute;
+	}
+	public void setEndLeaveMinute(String endLeaveMinute)
+	{
+		this.endLeaveMinute = endLeaveMinute;
+	}
 	@Override
 	public String toString()
 	{
-		return "leaveCardVO [searchHoliday=" + searchHoliday + ", searchAgent=" + searchAgent + ", searchDepartmen="
-				+ searchDepartmen + ", searchUnit=" + searchUnit + ", searchEmployee=" + searchEmployee
-				+ ", searchEmployeeNo=" + searchEmployeeNo + ", applicationDate=" + applicationDate + ", showDataTable="
-				+ showDataTable + ", msg=" + msg + ", startLeaveTime=" + startLeaveTime + ", endLeaveTime="
-				+ endLeaveTime + ", startLeaveDate=" + startLeaveDate + ", endLeaveDate=" + endLeaveDate + ", note="
-				+ note + ", status=" + status + ", dayCount=" + dayCount + ", returnMsg=" + returnMsg + "]";
+		return "leaveCardVO [searchHoliday=" + searchHoliday + ", searchAgent=" + searchAgent + ", searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", applicationDate=" + applicationDate + ", showDataTable=" + showDataTable + ", msg=" + msg + ", startLeaveTime=" + startLeaveTime + ", endLeaveTime=" + endLeaveTime + ", startLeaveDate=" + startLeaveDate + ", endLeaveDate=" + endLeaveDate + ", note=" + note + ", status=" + status + ", dayCount=" + dayCount + ", returnMsg=" + returnMsg + ", rowID=" + rowID + ", ActionURI=" + ActionURI + ", startLeaveMinute=" + startLeaveMinute + ", endLeaveMinute=" + endLeaveMinute + "]";
 	}
+	
+	
 	
 
 

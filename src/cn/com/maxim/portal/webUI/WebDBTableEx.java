@@ -1387,9 +1387,14 @@ public class WebDBTableEx  {
 		        		if(returnMSG==null){
 		        			returnMSG="";
 		        		}
+		        		
 		        		if(rowaction.equals("S")){
 		        			
 		        			if(delbut.equals("0")){
+		        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+		        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+		        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
 		        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
 		        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 		        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
@@ -1400,6 +1405,8 @@ public class WebDBTableEx  {
 			        	
 		        			if(delbut.equals("0")){
 		        			
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+		        			}else  if(delbut.equals("E")){
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
 		        			}else{
 		        			
@@ -1414,6 +1421,11 @@ public class WebDBTableEx  {
 				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">單位主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部門主管退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
 		        			}else{
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管退回</td> \r");
 		        			
@@ -1424,12 +1436,22 @@ public class WebDBTableEx  {
 				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部門主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部門主管退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
 		        			}else{
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部門主管退回</td> \r");
 		        			
 		        			}
 		        		}else if(rowaction.equals("MR")){//管理退回
 		        			if(delbut.equals("0")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
 				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
@@ -1458,11 +1480,22 @@ public class WebDBTableEx  {
 		        			}else if(delbut.equals("2")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
 				        						+ "\n <button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
-				        						+ " \n <button onclick=\"ActionForm.act.value='D';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+				        						+ " \n <button onclick=\"ActionForm.act.value='D';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">審核通過</button></td> \r");
 		        				
-		        			}else{
+		        			}else if(delbut.equals("DT")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+		        						+ "\n <button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+		        						+ " \n <button onclick=\"ActionForm.act.value='D';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">審核通過</button></td> \r");
+        				
+		        			}
+		        			else  if(delbut.equals("U")){
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管審核通過</td> \r");
+		        			}else  if(delbut.equals("1")){
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管審核通過</td> \r");
+		        			}else  if(delbut.equals("E")){
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管審核通過</td> \r");
 		        			}
+		        			
 		        		}else if(rowaction.equals("D")){//部門主管審核ok
 		        			
 		        			if(delbut.equals("0")){//
@@ -1475,6 +1508,9 @@ public class WebDBTableEx  {
 				        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='M';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
 		        		
+		        			}else if(delbut.equals("DT")){
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部門主管審核通過</td> \r");
+        				
 		        			}
 		        			else if(delbut.equals("2")){
 		        				
@@ -1486,13 +1522,15 @@ public class WebDBTableEx  {
 		        			}else{
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部門主管審核通過</td> \r");
 		        			}
+		        			
 		        		}else if(rowaction.equals("L")){//副總審核ok
 		        			
-		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已審核通過</td> \r");
+		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副總已審核通過</td> \r");
 		        			
-		        		}else if(rowaction.equals("M")){//管理部審核ok
+		        		}
+		        		else if(rowaction.equals("M")){//管理部審核ok
 		        			
-		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部審核通過</td> \r");
+		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部已審核通過</td> \r");
 		        			
 		        		}
 		        	

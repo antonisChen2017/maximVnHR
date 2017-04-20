@@ -286,6 +286,76 @@ public class DateUtil   {
             if(this.getweekdayloc(dd1,ca)==0){//星期天
                 return 0;
             }else{
+             
+                return this.getOneShijian(d1,d2,ca);
+            }
+        }else{
+            double bb=0.000;
+            while(dd2.getTime()>=dd1.getTime()){
+                if(this.getweekdayloc(dd1,ca)==1){
+            
+                    if(dd1.getTime()==dd11.getTime()){
+                    	if(this.getshijian(d1,ca)<0.5){
+                    	
+                    	      bb+=0.5;
+                    	
+                    	}else{
+                    	      bb+=this.getshijian(d1,ca);
+                    	
+                    	}
+                  
+                    }else if(dd1.getTime()==dd2.getTime()){
+                    	if((1-this.getshijian(d2,ca))<0.5){
+                    		   bb+=0.5;
+                    
+                    	}else{
+                    	    bb+=(1-this.getshijian(d2,ca));
+                    	
+                  	  }
+                    
+                    }else{
+                        bb+=1;
+                   
+                    }
+                  }
+                
+                ca.setTime(d1);
+                ca.add(Calendar.DATE, 1);
+                d1=ca.getTime();
+                ca.clear();
+                ca.setTime(dd1);
+                ca.add(Calendar.DATE, 1);
+                dd1=ca.getTime();
+             
+            }
+       	
+            return bb;
+        }
+         
+    }
+     
+    /**
+     *月份每日考勤表
+     * @param s1
+     * @param s2
+     * @return
+     * @throws ParseException
+     */
+  /*  public  double monthSunDay(String s1 ,String s2) throws ParseException{
+        SimpleDateFormat s = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date d1 = s.parse(s1);
+        Date d2 = s.parse(s2);
+        SimpleDateFormat ss = new SimpleDateFormat("yyyy/MM/dd");
+        Date dd1 = ss.parse(s1);
+        Date dd11 = ss.parse(s1);
+        Date dd2 = ss.parse(s2);
+    
+        Calendar ca = Calendar.getInstance();
+        if(dd1.getTime()==dd2.getTime()){//同一天
+            if(this.getweekdayloc(dd1,ca)==0){//星期天
+                return 0;
+            }else{
+            //  	System.out.println("jisuan sw1 day: "+String.valueOf(this.getshijian(d2,ca)-(1-this.getshijian(d1,ca))));
                 return this.getshijian(d2,ca)-(1-this.getshijian(d1,ca));
             }
         }else{
@@ -295,20 +365,27 @@ public class DateUtil   {
             
                     if(dd1.getTime()==dd11.getTime()){
                     	if(this.getshijian(d1,ca)<0.5){
+                    	
                     	      bb+=0.5;
+                    	  	// System.out.println("jisuan sw2 day: "+bb);
                     	}else{
                     	      bb+=this.getshijian(d1,ca);
+                    	 	// System.out.println("jisuan sw3 day: "+bb);
                     	}
                   
                     }else if(dd1.getTime()==dd2.getTime()){
                     	if((1-this.getshijian(d2,ca))<0.5){
                     		   bb+=0.5;
+                    		//	 System.out.println("jisuan sw4 bb :"+bb);
+                    		//	 System.out.println("jisuan sw4 day:  "+this.getshijian(d2,ca));
                     	}else{
                     	    bb+=(1-this.getshijian(d2,ca));
+                    	//	 System.out.println("jisuan sw5 day: "+bb);
                   	  }
                     
                     }else{
                         bb+=1;
+                   //	 System.out.println("jisuan sw6 day: "+bb);
                     }
                   }
                 
@@ -324,9 +401,8 @@ public class DateUtil   {
              
             return bb;
         }
-         
-    }
-     
+    */
+    
      
     //传进一个日期判断是否是周六、日    。六日返回0，其他返回1
     private  int getweekdayloc(Date date,Calendar ca){
@@ -340,6 +416,31 @@ public class DateUtil   {
          
     }
     
+  /**
+   * 传进一个日期判断星期幾
+   * @param date
+   * @param ca
+   * @return
+   */
+    public static  int getweekday(Date date,Calendar ca){
+        ca.setTime(date);
+        return ca.get(Calendar.DAY_OF_WEEK);
+         
+    }
+    
+    /**
+     * 計算當月幾天
+     * @param date
+     * @return
+     */
+    public static int getDaysOfTheMonth(Date date){//获取当月天数
+		Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(date); // 要计算你想要的月份，改变这里即可
+		int days = rightNow.getActualMaximum(Calendar.DAY_OF_MONTH);
+	 
+		return days;
+	}
+    
   //传进一个日期判断是否是公司放假日    。是返回0，其他返回1
     private int getHolidayloc(Date date,int re){
         SimpleDateFormat ss = new SimpleDateFormat("yyyy-MM-dd");
@@ -347,8 +448,7 @@ public class DateUtil   {
         ArrayList al=new ArrayList();
         al.add("2017-03-27");//假設放假日
         for(int i=0;i<al.size();i++){
-        	System.out.println("al  : "+al.get(i));
-        	System.out.println(" dd1  : "+dd1);
+      
         	if(dd1.equals(al.get(i))){
         		re=0;
         		break;
@@ -362,18 +462,45 @@ public class DateUtil   {
         ca.setTime(date);
         int shi = ca.get(Calendar.HOUR_OF_DAY);
         int fen = ca.get(Calendar.MINUTE);
-        double d = shi+fen/60.000;
+        double d= shi+fen/60.000;
         if(shi<9.000){
             return 1.000;
         }else if(d<=12.500 && d>=9.000){
+        
             return (12.500-d+(18.000-13.500))/8;
         }else if(d>12.500 && d<13.000){
+        
             return (18.000-13.500)/8;
         }else if(d>=13.500&& d<=18.000){
+         
             return (18.000-d)/8;
         }else{
             return 0.000;
         }
+    }
+    //判断 同一天
+    private double getOneShijian(Date date1,Date date2,Calendar ca){
+        ca.setTime(date1);
+        int shi1= ca.get(Calendar.HOUR_OF_DAY);
+        int fen1 = ca.get(Calendar.MINUTE);
+        double d1 = shi1+fen1/60.000;
+        
+        ca.setTime(date2);
+        int shi2 = ca.get(Calendar.HOUR_OF_DAY);
+        int fen2 = ca.get(Calendar.MINUTE);
+        double d2 = shi2+fen2/60.000;
+        double d = 0.0;
+        d=d2-d1;
+        double r= 0.0;
+   
+        if(d>=4){
+            r =1;
+        }else if(d<=4){       
+            r =0.5;
+        }else if(d<=0){
+            r =0;
+        }
+        return r;
     }
     /**
      * 傳出系統年/月

@@ -7,83 +7,83 @@ package cn.com.maxim.portal.attendan.ro;
 public class yearMonthLateRO
 {
 	/** 員工編號 **/
-	public String  ID;
+	private String  ID;
 	/** 員工編號 **/
-	public String  EMPLOYEENO;
+	private String  EMPLOYEENO;
 	/** 員工名稱 **/
-	public String  EMPLOYEE;
+	private String  EMPLOYEE;
 	/**部門 */
-	public String DEPARTMENT;
+	private String DEPARTMENT;
 	/**單位*/
-	public String UNIT;
+	private String UNIT;
 	/**1日 */
-	public String DAY1;
+	private String DAY1;
 	/**2日 */
-	public String DAY2;
+	private String DAY2;
 	/**3日 */
-	public String DAY3;
+	private String DAY3;
 	/**4日 */
-	public String DAY4;
+	private String DAY4;
 	/**5日 */
-	public String DAY5;
+	private String DAY5;
 	/**6日 */
-	public String DAY6;
+	private String DAY6;
 	/**7日 */
-	public String DAY7;
+	private String DAY7;
 	/**8日 */
-	public String DAY8;
+	private String DAY8;
 	/**9日 */
-	public String DAY9;
+	private String DAY9;
 	/**10日 */
-	public String DAY10;
+	private String DAY10;
 	/**11日 */
-	public String DAY11;
+	private String DAY11;
 	/**12日 */
-	public String DAY12;
+	private String DAY12;
 	/**13日 */
-	public String DAY13;
+	private String DAY13;
 	/**14日 */
-	public String DAY14;
+	private String DAY14;
 	/**15日 */
-	public String DAY15;
+	private String DAY15;
 	/**16日 */
-	public String DAY16;
+	private String DAY16;
 	/**17日 */
-	public String DAY17;
+	private String DAY17;
 	/**18日 */
-	public String DAY18;
+	private String DAY18;
 	/**19日 */
-	public String DAY19;
+	private String DAY19;
 	/**20日 */
-	public String DAY20;
+	private String DAY20;
 	/**21日 */
-	public String DAY21;
+	private String DAY21;
 	/**22日 */
-	public String DAY22;
+	private String DAY22;
 	/**23日 */
-	public String DAY23;
+	private String DAY23;
 	/**24日 */
-	public String DAY24;
+	private String DAY24;
 	/**25日 */
-	public String DAY25;
+	private String DAY25;
 	/**26日 */
-	public String DAY26;
+	private String DAY26;
 	/**27日 */
-	public String DAY27;
+	private String DAY27;
 	/**28日 */
-	public String DAY28;
+	private String DAY28;
 	/**29日 */
-	public String DAY29;
+	private String DAY29;
 	/**30日 */
-	public String DAY30;
+	private String DAY30;
 	/**31日 */
-	public String DAY31;
+	private String DAY31;
 	/**分**/
-	public String  MINUTE;
+	private String  MINUTE;
 	/**點**/
-	public String  HOUR;
+	private String  HOUR;
 	/**遲到次數**/
-	public String  LATETIMES;
+	private String  LATETIMES;
 	
 	
 	

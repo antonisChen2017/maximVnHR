@@ -9,20 +9,29 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import cn.com.maxim.portal.attendan.ro.empLateEarlyRO;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
+import cn.com.maxim.portal.attendan.ro.repAttendanceDayRO;
+import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
+import cn.com.maxim.portal.attendan.ro.repDailyRO;
 import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
-import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.MapListHandler;
+import cn.com.maxim.portal.hr.dem_LeaveCard;
+import cn.com.maxim.portal.hr.mgr_LeaveCard;
+
 
 public class DBUtil
 {
+	
 	public static String queryDBID(Connection con, String sql)
-	{
-
+	{	
+		
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(DBUtil.class);
 		String result = "";
 		PreparedStatement STMT = null;
 		try
@@ -36,6 +45,7 @@ public class DBUtil
 		}
 		catch (SQLException error)
 		{
+			logger.error(error.getMessage());
 		}
 		return result;
 	}
@@ -48,7 +58,8 @@ public class DBUtil
 	 */
 	public static String queryDBField(Connection con, String sql,String Field)
 	{
-
+		
+		
 		String result = "";
 		PreparedStatement STMT = null;
 		try
@@ -62,6 +73,9 @@ public class DBUtil
 		}
 		catch (SQLException error)
 		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
 		}
 		return result;
 	}
@@ -77,6 +91,9 @@ public class DBUtil
 	 */
 	public static  String addOverM(String SearchDepartmen, String queryDate, Connection con) 
 	{
+		
+		
+		
 		String MID="";
 		if ((SearchDepartmen == null) || (queryDate == null))
 		{
@@ -90,9 +107,11 @@ public class DBUtil
 			ps.execute();
 			MID= DBUtil.queryDBID(con, SqlUtil.getOvertimeID(SearchDepartmen, queryDate));
 		}
-		catch (Exception Exception)
+		catch (SQLException error)
 		{
-			System.out.println(Exception.getMessage());
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
 		}
 
 		return MID;
@@ -115,7 +134,9 @@ public class DBUtil
 		}
 		catch (Exception Exception)
 		{
-			System.out.println(Exception.getMessage());
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			flag=false;
 		}
 
@@ -167,11 +188,13 @@ public class DBUtil
 			{
 				result = rs.getString("ID");
 			}
-			System.out.println("SID result : "+result);
+			//System.out.println("SID result : "+result);
 		}
 		catch (Exception Exception)
 		{
-			System.out.println("Exception : "+Exception);
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			return "x";
 		}
 
@@ -194,6 +217,9 @@ public class DBUtil
 		}
 		catch (SQLException error)
 		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
 		}
 		return result;
 	}
@@ -213,9 +239,13 @@ public class DBUtil
 		}
 		catch (SQLException error)
 		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
 		}
 		return result;
 	}
+	
 	public static   String selectDBDepartmentID(Connection con, String UserEmployeeNo)
 	{
 
@@ -232,6 +262,9 @@ public class DBUtil
 		}
 		catch (SQLException error)
 		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
 		}
 		return result;
 	}
@@ -252,7 +285,9 @@ public class DBUtil
 		}
 		catch (Exception Exception)
 		{
-			System.out.println(Exception.getMessage());
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			flag=false;
 		}
 
@@ -280,7 +315,9 @@ public class DBUtil
 		}
 		catch (Exception Exception)
 		{
-			System.out.println(Exception.getMessage());
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			flag=false;
 		}
 
@@ -304,7 +341,9 @@ public class DBUtil
 		}
 		catch (Exception Exception)
 		{
-			System.out.println(Exception.getMessage());
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			flag=false;
 		}
 
@@ -326,7 +365,9 @@ public class DBUtil
 		}
 		catch (SQLException error)
 		{
-			System.out.println("error:"+error);
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
 		}
 		//System.out.println("result:"+result);
 		return result;
@@ -367,12 +408,25 @@ public class DBUtil
 					 */
 					String yyyy=otVo.getQueryDate().split("/")[0];
 					String mm=otVo.getQueryDate().split("/")[1];
+					//System.out.println("time over sql : "+SqlUtil.getAPPhoursflag(otVo.getSearchEmployeeNo(), yyyy, mm));
 					String flag=DBUtil.queryExceedMonthOverTime(SqlUtil.getAPPhoursflag(otVo.getSearchEmployeeNo(), yyyy, mm), con);
-					boolean updateFlag=updateSql(SqlUtil.updateMonthOverTims(flag,SID), con);
+					if(flag.equals("1")){
+						if(otVo.isOverTimeSave()){
+							updateSql(SqlUtil.updateMonthOverTims(flag,SID), con);
+							msg="已新增加班申請單";
+						}else{
+						
+							DBUtil.delOvertimeS(resultID,con);
+							msg="超過每月規定加班時數,請聯絡人事";
+						}
+					}else{
+						updateSql(SqlUtil.updateMonthOverTims(flag,SID), con);
+						msg="已新增加班申請單";
+					}
+				
+					
 				}
-				if(!SID.equals("x")){
-					msg="已新增加班申請單";
-				}
+				
 			}
 			else
 			{
@@ -387,15 +441,28 @@ public class DBUtil
 					 */
 					String yyyy=otVo.getQueryDate().split("/")[0];
 					String mm=otVo.getQueryDate().split("/")[1];
-					System.out.println("查此人是否本月超過規定時間 sql:  "+SqlUtil.getAPPhoursflag(otVo.getSearchEmployeeNo(), yyyy, mm));
+					//System.out.println("查此人是否本月超過規定時間 sql:  "+SqlUtil.getAPPhoursflag(otVo.getSearchEmployeeNo(), yyyy, mm));
 					String flag=DBUtil.queryExceedMonthOverTime(SqlUtil.getAPPhoursflag(otVo.getSearchEmployeeNo(), yyyy, mm), con);
 				
 					/**
 					 * stop3.2 查出來是否超時 寫入此條紀錄
 					 */
-					boolean updateFlag=updateSql(SqlUtil.updateMonthOverTims(flag,SID), con);
 				
-					msg="已新增加班申請單";
+					if(flag.equals("1")){
+						if(otVo.isOverTimeSave()){
+							updateSql(SqlUtil.updateMonthOverTims(flag,SID), con);
+							msg="已新增加班申請單";
+						}else{
+							DBUtil.delOvertimeS(resultID,con);
+							msg="超過每月規定加班時數,請聯絡人事";
+						}
+					}else{
+						updateSql(SqlUtil.updateMonthOverTims(flag,SID), con);
+						msg="已新增加班申請單";
+					}
+					
+				
+					
 			}
 
 			return msg;
@@ -418,7 +485,9 @@ public class DBUtil
 			}
 			catch (SQLException error)
 			{
-				System.out.println("error:"+error);
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
 			}
 			//System.out.println("result:"+result);
 			return result;
@@ -426,7 +495,12 @@ public class DBUtil
 			
 		}
 		
-		
+		/**
+		 * UPDATE 共用
+		 * @param Sql
+		 * @param con
+		 * @return
+		 */
 		public static  boolean updateSql(String Sql, Connection con) 
 		{
 			boolean flag=false;
@@ -444,7 +518,9 @@ public class DBUtil
 			}
 			catch (Exception Exception)
 			{
-				System.out.println(Exception.getMessage());
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 				flag=false;
 			}
 
@@ -469,7 +545,9 @@ public class DBUtil
 			}
 			catch (Exception Exception)
 			{
-				System.out.println(Exception.getMessage());
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 				flag=false;
 			}
 
@@ -482,6 +560,7 @@ public class DBUtil
 		 * @param con
 		 * @return
 		 */
+		
 		public static  boolean updateDbTable(String sql, Connection con) 
 		{
 			boolean flag=false;
@@ -499,7 +578,9 @@ public class DBUtil
 			}
 			catch (Exception Exception)
 			{
-				System.out.println(Exception.getMessage());
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 				flag=false;
 			}
 
@@ -517,20 +598,85 @@ public class DBUtil
 			{
 			
 	
-			String result="x";
+			String result="x",WorkFDate="";
 			if ( (lcVo.getSearchEmployeeNo() == null))
 			{
 				return "x";
 			}else{
 				
-				String startTime=lcVo.getStartLeaveDate() + " " + lcVo.getStartLeaveTime() + ":00:00";
-				String endTime=lcVo.getEndLeaveDate() + " " + lcVo.getEndLeaveTime() + ":00:00";
+				String startTime=lcVo.getStartLeaveDate() + " " + lcVo.getStartLeaveTime() +":"+ lcVo.getStartLeaveMinute()+":00";
+				String endTime=lcVo.getEndLeaveDate() + " " + lcVo.getEndLeaveTime() +":"+ lcVo.getEndLeaveMinute()+":00";
 				DateUtil dateUtil=new DateUtil();
 				
 				lcVo.setDayCount(String.valueOf(dateUtil.jisuan(startTime, endTime)));
-				if(lcVo.getDayCount().equals("0.0")){
+				if(lcVo.getDayCount().equals("0.0") ){
 					return "v";
 				}
+				if(lcVo.getDayCount().equals("0") ){
+					return "v";
+				}
+				/**不能已有打卡時間**/
+				/** stop1  同一天 **/
+				if(lcVo.getStartLeaveDate().equals(lcVo.getEndLeaveDate())){
+					//同一天
+					//System.out.println("不能已有打卡時間 Sql: "+SqlUtil.getOnlyWorkTime(lcVo));
+					WorkFDate=queryDBField(con,SqlUtil.getOnlyWorkTime(lcVo),"WorkFDate");
+					//System.out.println("不能已有打卡時間 : WorkFDate"+WorkFDate);
+					if(!WorkFDate.equals("")){
+						return "o";
+					}
+					
+					
+					/**已請假不能再請**/
+					//System.out.println("不能已請假 e ql: "+SqlUtil.getOnlyLeaveTime(lcVo));
+					WorkFDate=queryDBField(con,SqlUtil.getOnlyLeaveTime(lcVo),"STARTLEAVEDATE");
+					if(!WorkFDate.equals("")){
+						return "w";
+					}
+				}else{
+					//不同天
+					leaveCardVO WorkFlcVo=new leaveCardVO();
+					WorkFlcVo.setStartLeaveDate(lcVo.getStartLeaveDate());
+					WorkFlcVo.setStartLeaveTime(lcVo.getStartLeaveTime());
+					WorkFlcVo.setStartLeaveMinute(lcVo.getEndLeaveMinute());
+					WorkFlcVo.setEndLeaveDate(lcVo.getStartLeaveDate());
+					WorkFlcVo.setEndLeaveTime("23");
+					WorkFlcVo.setEndLeaveMinute("59");
+					WorkFlcVo.setSearchEmployeeNo(lcVo.getSearchEmployeeNo());
+					//System.out.println("不能已有開始打卡時間 Sql: "+SqlUtil.getOnlyWorkTime(WorkFlcVo));
+					WorkFDate=queryDBField(con,SqlUtil.getOnlyWorkTime(WorkFlcVo),"WorkFDate");
+					//System.out.println("不能已有開始打卡時間 : WorkFDate"+WorkFDate);
+					if(!WorkFDate.equals("")){
+						return "o";
+					}
+					
+					
+					leaveCardVO WorkElcVo=new leaveCardVO();
+					WorkElcVo.setStartLeaveDate(lcVo.getEndLeaveDate());
+					WorkElcVo.setStartLeaveTime("05");
+					WorkElcVo.setStartLeaveMinute("30");
+					WorkElcVo.setEndLeaveDate(lcVo.getEndLeaveDate());
+					WorkElcVo.setEndLeaveTime(lcVo.getEndLeaveTime());
+					WorkElcVo.setEndLeaveMinute(lcVo.getEndLeaveTime());
+					WorkElcVo.setSearchEmployeeNo(lcVo.getSearchEmployeeNo());
+					//System.out.println("不能已有結束打卡時間 Sql: "+SqlUtil.getOnlyWorkTime(WorkElcVo));
+					WorkFDate=queryDBField(con,SqlUtil.getOnlyWorkTime(WorkElcVo),"WorkFDate");
+					//System.out.println("不能已有結束打卡時間 : WorkFDate"+WorkFDate);
+					if(!WorkFDate.equals("")){
+						return "o";
+					}
+					/**已請假不能再請**/
+					WorkFDate=queryDBField(con,SqlUtil.getOnlyLeaveTime(lcVo),"STARTLEAVEDATE");
+					if(!WorkFDate.equals("")){
+						return "w";
+					}
+				}
+				
+			
+				
+				
+				
+				/**單天星期天不能請**/
 			}
 			try
 			{
@@ -539,8 +685,8 @@ public class DBUtil
 				ps.setString(1, lcVo.getSearchEmployeeNo());
 				ps.setString(2, lcVo.getSearchHoliday());
 				ps.setString(3, lcVo.getApplicationDate());
-				ps.setString(4, lcVo.getStartLeaveDate() + " " + lcVo.getStartLeaveTime() + ":00" );
-				ps.setString(5, lcVo.getEndLeaveDate() + " " + lcVo.getEndLeaveTime() + ":00" );
+				ps.setString(4, lcVo.getStartLeaveDate() + " " + lcVo.getStartLeaveTime() + ":" + lcVo.getStartLeaveMinute());
+				ps.setString(5, lcVo.getEndLeaveDate() + " " + lcVo.getEndLeaveTime() + ":" + lcVo.getEndLeaveMinute() );
 				ps.setString(6, lcVo.getSearchAgent());
 				ps.setString(7, lcVo.getNote());
 				ps.setString(8, lcVo.getStatus());
@@ -551,11 +697,13 @@ public class DBUtil
 				{
 					result = rs.getString("ID");
 				}
-				System.out.println("LCID result : "+result);
+				//System.out.println("LCID result : "+result);
 			}
 			catch (Exception Exception)
 			{
-				System.out.println("Exception : "+Exception);
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 				return "x";
 			}
 
@@ -563,7 +711,7 @@ public class DBUtil
 				
 			}
 		/**
-		 * 測式
+		 * 由站台設定帳號人名搜尋單位資料
 		 * @param con
 		 * @param sql
 		 * @param er
@@ -571,7 +719,8 @@ public class DBUtil
 		 */
 		public static List<employeeUserRO> queryUserList(Connection con, String sql,employeeUserRO er )
 		{
-
+			//System.out.println("sql  : "+sql);
+			
 			String result = "";
 			PreparedStatement STMT = null;
 			ReflectHelper rh=new ReflectHelper();
@@ -581,11 +730,13 @@ public class DBUtil
 				STMT = con.prepareStatement(sql);
 				ResultSet rs = STMT.executeQuery();
 				 lro=(List<employeeUserRO>)rh.getBean(rs,er);
-				 rs.close();
-				 STMT.close();
+			
 			}
 			catch (Exception error)
 			{
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
 			}
 			return lro;
 		}
@@ -627,7 +778,9 @@ public class DBUtil
 			}
 			catch (Exception Exception)
 			{
-				System.out.println("Exception : "+Exception);
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 				result= "紀錄失敗！";
 			}
 
@@ -654,16 +807,77 @@ public class DBUtil
 				STMT = con.prepareStatement(sql);
 				ResultSet rs = STMT.executeQuery();
 				 leo=(List<yearMonthLateRO>)rh.getBean(rs,er);
-				 rs.close();
-				 STMT.close();
+				
 			}
 			catch (Exception error)
 			{
-				System.out.println("error :"+error.getMessage());
+				Log4jUtil lu=new Log4jUtil();
+				Logger logger  =lu.initLog4j(DBUtil.class);
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
+			}
+			return leo;
+		}
+		
+		/**
+		 * 查詢日考勤報表資料
+		 * @param con
+		 * @param sql
+		 * @param er
+		 * @return
+		 */
+		public static List<repDailyRO> queryDailyList(Connection con, String sql,repDailyRO rd )
+		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			String result = "";
+			PreparedStatement STMT = null;
+			ReflectHelper rh=new ReflectHelper();
+			List<repDailyRO> leo=null;
+			try
+			{
+				STMT = con.prepareStatement(sql);
+				ResultSet rs = STMT.executeQuery();
+				 leo=(List<repDailyRO>)rh.getBean(rs,rd);
+				
+			}
+			catch (Exception error)
+			{
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
 			}
 			
 			return leo;
 		}
+		
+		/**
+		 * 查詢月考勤報表資料
+		 * @param con
+		 * @param sql
+		 * @param er
+		 * @return
+		 */
+		public static List<repAttendanceRO> queryMonthAttendanceExcel(Connection con, String sql,repAttendanceRO rd )
+		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			String result = "";
+			PreparedStatement STMT = null;
+			ReflectHelper rh=new ReflectHelper();
+			List<repAttendanceRO> leo=null;
+			try
+			{
+				STMT = con.prepareStatement(sql);
+				ResultSet rs = STMT.executeQuery();
+				 leo=(List<repAttendanceRO>)rh.getBean(rs,rd);
+				
+			}
+			catch (Exception error)
+			{
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
+			}
+			
+			return leo;
+		}
+		
 		/**
 		 * 查詢遲到早退名單表
 		 * @param con
@@ -673,7 +887,8 @@ public class DBUtil
 		 */
 		public static List<yearMonthLateRO> queryYmLateList(Connection con, String sql,yearMonthLateRO er )
 		{
-
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
 			String result = "";
 			PreparedStatement STMT = null;
 			ReflectHelper rh=new ReflectHelper();
@@ -683,25 +898,26 @@ public class DBUtil
 				STMT = con.prepareStatement(sql);
 				ResultSet rs = STMT.executeQuery();
 				 leo=(List<yearMonthLateRO>)rh.getBean(rs,er);
-				 rs.close();
-				 STMT.close();
+			
 			}
 			catch (Exception error)
 			{
-				System.out.println("error :"+error.getMessage());
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
 			}
 			return leo;
 		}
 		
 		
 		/**
-		 * 執行每月遲到表單計算工作
+		 * 直接執行SQL 無參數 無返回
 		 * @param con
 		 * @param sql
 		 * @return
 		 */
 		public static  String workLateOperationSql(Connection con, String sql )
 		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
 			String MID="";
 			
 			try
@@ -712,11 +928,68 @@ public class DBUtil
 			}
 			catch (Exception Exception)
 			{
-				System.out.println(Exception.getMessage());
+				logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			}
 
 			return MID;
 		}
 		
+		/**
+		 * 查詢員工遲到早退打卡資料
+		 * @param con
+		 * @param sql
+		 * @param er
+		 * @return
+		 */
+		public static List<empLateEarlyRO> queryEmpLateEarlyList(Connection con, String sql,empLateEarlyRO lr )
+		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+			String result = "";
+			PreparedStatement STMT = null;
+			ReflectHelper rh=new ReflectHelper();
+			List<empLateEarlyRO> leo=null;
+			try
+			{
+				STMT = con.prepareStatement(sql);
+				ResultSet rs = STMT.executeQuery();
+				 leo=(List<empLateEarlyRO>)rh.getBean(rs,lr);
+			
+			}
+			catch (Exception error)
+			{
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
+			}
+			return leo;
+		}
 		
+		/**
+		 * 查詢全廠出勤sql
+		 * @param con
+		 * @param sql
+		 * @param er
+		 * @return
+		 */
+		public static List<repAttendanceDayRO> queryForeignCadres(Connection con, String sql,repAttendanceDayRO ra )
+		{
+			Log4jUtil lu=new Log4jUtil();
+			Logger logger  =lu.initLog4j(DBUtil.class);
+		//	logger.info("queryForeignCadres sql :"+sql);
+			String result = "";
+			PreparedStatement STMT = null;
+			ReflectHelper rh=new ReflectHelper();
+			List<repAttendanceDayRO> leo=null;
+			try
+			{
+				STMT = con.prepareStatement(sql);
+				ResultSet rs = STMT.executeQuery();
+				 leo=(List<repAttendanceDayRO>)rh.getBean(rs,ra);
+			
+			}
+			catch (Exception error)
+			{
+				logger.error(vnStringUtil.getExceptionAllinformation(error));
+			}
+			return leo;
+		}
 }

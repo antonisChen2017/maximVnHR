@@ -7,19 +7,19 @@ package cn.com.maxim.portal.attendan.ro;
 public class vnTurnRO
 {
 	/**  ID **/
-	public String  ID;
+	private String  ID;
 	/** Code 代號  **/
-	public String  Code;
+	private String  Code;
 	/** 越文 名稱  **/
-	public String  VName;
+	private String  VName;
 	/**中文名稱  **/
-	public String  CBName;
+	private String  CBName;
 	/**開始時間**/
-	public String  FHM;
+	private String  FHM;
 	/**結束時間**/
-	public String  EHM;
+	private String  EHM;
 	/**總時間(分)**/
-	public String  AllMin;
+	private String  AllMin;
 	
 	public String getID()
 	{

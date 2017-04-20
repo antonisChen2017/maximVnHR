@@ -1,10 +1,17 @@
 package cn.com.maxim.portal.util;
 
 import java.sql.Connection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import org.apache.log4j.Logger;
+
+import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.attendan.vo.repAttendanceVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
 
 public class SqlUtil
@@ -13,29 +20,63 @@ public class SqlUtil
 	public static final String getOvertime(overTimeVO otVo)
 	{
 
-		StringBuilder Sb = new StringBuilder("select  S.ID  ").append(" ,EP.EMPLOYEENO   as '工號'   ").append(" ,EP.EMPLOYEE  as '姓名'   ").append(" ,DT.DEPARTMENT as '部門'  ").append(" ,UT.UNIT as '單位'  ").append(" ,  CONVERT(varchar(100),  S.SUBMITDATE, 111)  as '提交日期' ").append(" ,CONVERT(varchar(100), S.OVERTIME_START, 120) as '加班開始時間' ").append(" ,CONVERT(varchar(100), S.OVERTIME_END, 120)    as '加班結束時間' ").append(" ,S.APPLICATION_HOURS as '總共小時' ").append("  ,(  ").append(" case  when ((  SELECT  REASONS FROM VN_OVERTIME_S WHERE ID=S.ID ) ='5' ").append(" )  then (SELECT  USERREASONS FROM VN_OVERTIME_S WHERE ID=S.ID)  ").append(" else (SELECT RS.REASONS FROM VN_OVERTIME_S as VS INNER JOIN VN_REASONS AS RS ON VS.REASONS = RS.ID WHERE VS.ID=S.ID ) end   ").append("  )  ")
-				.append("  as '加班事由'   ").append(" , S.NOTE  as '備註' ").append(" , S.MONTHOVERTIME  as 'MOTime' ").append(" , S.RETURNMSG  as 'returnMSG' ").append(" ,  S.STATUS   as 'action'  ").append("	from VN_OVERTIME_M AS M  ").append("	INNER JOIN ").append("	VN_OVERTIME_S AS S ").append("	ON M.ID = S.M_ID ").append("	INNER JOIN ").append("	VN_REASONS AS RS ").append("	 ON S.REASONS = RS.ID ").append("	INNER JOIN ").append("	VN_DEPARTMENT AS DT ").append("	 ON M.DEPARTMENT = DT.ID ").append("	 INNER JOIN ").append("	 VN_UNIT AS UT ").append("	ON S.UNIT = UT.ID ").append("  INNER JOIN ").append("  VN_EMPLOYEE AS EP ").append("	ON S. EP_ID = EP.ID ").append("	 where 1=1 ");
+		StringBuilder Sb = new StringBuilder("select  S.ID  \n")
+				.append(" ,EP.EMPLOYEENO   as '工號'  \n")
+				.append(" ,EP.EMPLOYEE  as '姓名'   \n")
+				.append(" ,DT.DEPARTMENT as '部門'  \n")
+				.append(" ,UT.UNIT as '單位'  \n")
+				.append(" ,  CONVERT(varchar(100),  S.SUBMITDATE, 111)  as '提交日期' \n")
+				.append(" ,CONVERT(varchar(100), S.OVERTIME_START, 120) as '加班開始時間' \n")
+				.append(" ,CONVERT(varchar(100), S.OVERTIME_END, 120)    as '加班結束時間' \n")
+				.append(" ,S.APPLICATION_HOURS as '總共小時' \n")
+				.append("  ,(  \n")
+				.append(" case  when ((  SELECT  REASONS FROM VN_OVERTIME_S WHERE ID=S.ID ) ='0' \n")
+				.append(" )  then (SELECT  USERREASONS FROM VN_OVERTIME_S WHERE ID=S.ID)  \n")
+				.append(" else (SELECT RS.REASONS FROM VN_OVERTIME_S as VS INNER JOIN VN_REASONS AS RS ON VS.REASONS = RS.ID WHERE VS.ID=S.ID ) end   \n")
+				.append("  )  \n")
+				.append("  as '加班事由'   \n")
+				.append(" , S.NOTE  as '備註' \n")
+				.append(" , S.MONTHOVERTIME  as 'MOTime' \n")
+				.append(" , S.RETURNMSG  as 'returnMSG' \n")
+				.append(" ,  S.STATUS   as 'action'  \n")
+				.append("	from VN_OVERTIME_M AS M  \n")
+				.append("	INNER JOIN \n")
+				.append("	VN_OVERTIME_S AS S \n")
+				.append("	ON M.ID = S.M_ID \n")
+				.append("	INNER JOIN \n")
+				.append("	(SELECT     *  FROM   VN_REASONS  Union All  select '0','','','') AS RS \n")
+				.append("	 ON S.REASONS = RS.ID \n")
+				.append("	INNER JOIN \n")
+				.append("	VN_DEPARTMENT AS DT \n")
+				.append("	 ON M.DEPARTMENT = DT.ID \n")
+				.append("	 INNER JOIN \n")
+				.append("	 VN_UNIT AS UT \n")
+				.append("	ON S.UNIT = UT.ID \n")
+				.append("  INNER JOIN \n")
+				.append("  VN_EMPLOYEE AS EP \n")
+				.append("	ON S. EP_ID = EP.ID \n")
+				.append("	 where 1=1 \n");
 		if (!otVo.getSearchEmployeeNo().equals("0"))
 		{
-			Sb.append(" AND S.EP_ID = '" + otVo.getSearchEmployeeNo() + "' ");
+			Sb.append(" AND S.EP_ID = '" + otVo.getSearchEmployeeNo() + "' \n");
 		}
 		if (!otVo.getSearchDepartmen().equals("0"))
 		{
-			Sb.append(" AND M.DEPARTMENT = '" + otVo.getSearchDepartmen() + "' ");
+			Sb.append(" AND M.DEPARTMENT = '" + otVo.getSearchDepartmen() + "' \n");
 		}
 		if (!otVo.getSearchUnit().equals("0"))
 		{
-			Sb.append(" AND S.UNIT ='" + otVo.getSearchUnit() + "' ");
+			Sb.append(" AND S.UNIT ='" + otVo.getSearchUnit() + "' \n");
 		}
-		if (!otVo.getSearchReasons().equals("5"))
+		if (!otVo.getSearchReasons().equals("0"))
 		{
-			Sb.append(" AND S.REASONS = '" + otVo.getSearchReasons() + "' ");
+			Sb.append(" AND S.REASONS = '" + otVo.getSearchReasons() + "' \n");
 		}
-		if (!otVo.getQueryDate().equals(""))
+		if (!otVo.getSubmitDate().equals(""))
 		{
-			Sb.append(" AND S.SUBMITDATE = '" + otVo.getQueryDate() + "' ");
+			Sb.append(" AND S.SUBMITDATE = '" + otVo.getSubmitDate() + "' \n");
 		}
-		Sb.append(" ORDER BY S.ID DESC ");
+		Sb.append(" ORDER BY S.ID DESC \n");
 		return Sb.toString();
 
 	}
@@ -96,10 +137,46 @@ public class SqlUtil
 	public static final String getOvertimeNoSave(overTimeVO otVo)
 	{
 
-		StringBuilder Sb = new StringBuilder("select  S.ID  \n").append(" ,EP.EMPLOYEENO   as '工號'     \n").append(" ,EP.EMPLOYEE  as '姓名'     \n").append(" ,DT.DEPARTMENT as '部門'    \n").append(" ,UT.UNIT as '單位'    \n").append(" ,  CONVERT(varchar(100),  S.SUBMITDATE, 111)  as '提交日期'   \n").append(" ,CONVERT(varchar(100), S.OVERTIME_START, 120) as '加班開始時間'   \n").append(" ,CONVERT(varchar(100), S.OVERTIME_END, 120)    as '加班結束時間'   \n").append(" ,S.APPLICATION_HOURS as '總共小時'   \n").append("  ,(    \n").append(" case  when ((  SELECT  REASONS FROM VN_OVERTIME_S WHERE ID=S.ID ) ='5'   \n").append(" )  then (SELECT  USERREASONS FROM VN_OVERTIME_S WHERE ID=S.ID)    \n")
-				.append(" else (SELECT RS.REASONS FROM VN_OVERTIME_S as VS INNER JOIN VN_REASONS AS RS ON VS.REASONS = RS.ID WHERE VS.ID=S.ID ) end     \n").append("  )    \n").append("  as '加班事由'     \n").append(" , S.NOTE  as '備註'   \n").append(" , S.MONTHOVERTIME  as 'MOTime'   \n").append(" ,  S.STATUS   as 'action'    \n").append("	from VN_OVERTIME_M AS M    \n").append("	INNER JOIN   \n").append("	VN_OVERTIME_S AS S \n").append("	ON M.ID = S.M_ID \n").append("	INNER JOIN \n").append("	VN_REASONS AS RS \n").append("	 ON S.REASONS = RS.ID \n").append("	INNER JOIN \n").append("	VN_DEPARTMENT AS DT \n").append("	 ON M.DEPARTMENT = DT.ID \n").append("	 INNER JOIN \n").append("	 VN_UNIT AS UT \n").append("	ON S.UNIT = UT.ID \n").append("  INNER JOIN \n")
-				.append("  VN_EMPLOYEE AS EP \n").append("	ON S. EP_ID = EP.ID \n").append("	 where 1=1 \n");
-
+		StringBuilder Sb = new StringBuilder("select  S.ID  \n")
+				.append(" ,EP.EMPLOYEENO   as '工號'     \n")
+				.append(" ,EP.EMPLOYEE  as '姓名'     \n")
+				.append(" ,DT.DEPARTMENT as '部門'    \n")
+				.append(" ,UT.UNIT as '單位'    \n")
+				.append(" ,  CONVERT(varchar(100),  S.SUBMITDATE, 111)  as '提交日期'   \n")
+				.append(" ,CONVERT(varchar(100), S.OVERTIME_START, 120) as '加班開始時間'   \n")
+				.append(" ,CONVERT(varchar(100), S.OVERTIME_END, 120)    as '加班結束時間'   \n")
+				.append(" ,S.APPLICATION_HOURS as '總共小時'   \n")
+				.append("  ,(    \n")
+				.append(" case  when ((  SELECT  REASONS FROM VN_OVERTIME_S WHERE ID=S.ID ) ='0'   \n")
+				.append(" )  then (SELECT  USERREASONS FROM VN_OVERTIME_S WHERE ID=S.ID)    \n")
+				.append(" else (SELECT RS.REASONS FROM VN_OVERTIME_S as VS INNER JOIN VN_REASONS AS RS ON VS.REASONS = RS.ID WHERE VS.ID=S.ID ) end     \n")
+				.append("  )    \n")
+				.append("  as '加班事由'     \n")
+				.append(" , S.NOTE  as '備註'   \n")
+				.append(" , S.MONTHOVERTIME  as 'MOTime'   \n")
+				.append(" ,  S.STATUS   as 'action'    \n")
+				.append("	from VN_OVERTIME_M AS M    \n")
+				.append("	INNER JOIN   \n")
+				.append("	VN_OVERTIME_S AS S \n")
+				.append("	ON M.ID = S.M_ID \n")
+				.append("	INNER JOIN \n")
+				.append("	(SELECT     *  FROM   VN_REASONS  Union All  select '0','','','') AS RS \n")
+				.append("	 ON S.REASONS = RS.ID \n")
+				.append("	INNER JOIN \n")
+				.append("	VN_DEPARTMENT AS DT \n")
+				.append("	 ON M.DEPARTMENT = DT.ID \n")
+				.append("	 INNER JOIN \n")
+				.append("	 VN_UNIT AS UT \n")
+				.append("	ON S.UNIT = UT.ID \n")
+				.append("  INNER JOIN \n")
+				.append("  VN_EMPLOYEE AS EP \n")
+				.append("	ON S. EP_ID = EP.ID \n")
+				.append("	 where 1=1 \n");
+				
+	    //是否超時加班
+		Sb.append("	AND S.MONTHOVERTIME='"+otVo.getMonthOverTime()+"'  \n");
+		
+			
 		if (!otVo.getSearchDepartmen().equals("0"))
 		{
 			Sb.append(" AND M.DEPARTMENT = '" + otVo.getSearchDepartmen() + "' \n");
@@ -508,10 +585,18 @@ public class SqlUtil
 	public static final String getEmployeeNameDate(String name)
 	{
 
-		StringBuilder Sb = new StringBuilder(" SELECT ").append(" E.ID ,U.ID as UID,ENTRYDATE,DUTIES,U.UNIT,D.DEPARTMENT,E.EMPLOYEENO,E.DEPARTMENT_ID as DID ").append(" FROM VN_EMPLOYEE as E ").append("	INNER JOIN ").append("		VN_DEPARTMENT AS D  ").append("		ON D.ID = E.DEPARTMENT_ID ").append("		INNER JOIN ").append("		VN_UNIT AS U  ").append("		ON U.ID = E.UNIT_ID ");
+		StringBuilder Sb = new StringBuilder(" SELECT ")
+				.append(" E.ID ,U.ID as UID,ENTRYDATE,DUTIES,U.UNIT,D.DEPARTMENT,E.EMPLOYEENO,E.DEPARTMENT_ID as DID ")
+				.append(" FROM VN_EMPLOYEE as E ")
+				.append("	INNER JOIN ")
+				.append("		VN_DEPARTMENT AS D  ")
+				.append("		ON D.ID = E.DEPARTMENT_ID ")
+				.append("		INNER JOIN ")
+				.append("		VN_UNIT AS U  ")
+				.append("		ON U.ID = E.UNIT_ID ");
 		if (!name.equals(""))
 		{
-			Sb.append("   where EMPLOYEE =N'" + name + "' ");
+			Sb.append("   where EMPLOYEE LIKE N'%" + name + "%' ");
 		}
 		return Sb.toString();
 	}
@@ -540,10 +625,11 @@ public class SqlUtil
 			Sb.append(" and EP.UNIT_ID ='" + lcVo.getSearchUnit() + "' ");
 		}
 		Sb.append(" AND C.STATUS <>'S' ");
+	
 		Sb.append(" AND C.STATUS <>'UR' ");
-		Sb.append(" AND C.STATUS <>'DR' ");
-		Sb.append(" AND C.STATUS <>'LR' ");
-		Sb.append(" AND C.STATUS <>'MR' ");
+		//Sb.append(" AND C.STATUS <>'DR' ");
+		//Sb.append(" AND C.STATUS <>'LR' ");
+	//	Sb.append(" AND C.STATUS <>'MR' ");
 		Sb.append(" ORDER BY C.ID DESC ");
 
 		return Sb.toString();
@@ -559,9 +645,11 @@ public class SqlUtil
 	public static final String getDepartmenLeaveCard(leaveCardVO lcVo)
 	{
 
-		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  ").append("  EP.EMPLOYEE  as '姓名',   ").append("  EP.EMPLOYEENO  as '工號',   ").append("  C.APPLICATIONDATE  as '申請日期',  ").append("  HD.HOLIDAYNAME  as '假別',  ").append("  DAYCOUNT as  天數,  ").append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始時間', ").append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束時間', ").append("  EP2.EMPLOYEE  as '代理人', ").append("  C.NOTE as '備註', ").append("  C.STATUS   as 'action' , ").append("  C.RETURNMSG  as 'returnMSG' ").append("  FROM VN_LEAVECARD  AS C  ").append("  INNER JOIN      ").append("  VN_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  ").append("  INNER JOIN   ").append("  VN_HOLIDAY AS HD      ON C.HD_ID =HD.ID ").append("   INNER JOIN     ")
+		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  ")
+				.append("  EP.EMPLOYEE  as '姓名',   ")
+				.append("  EP.EMPLOYEENO  as '工號',   ").append("  C.APPLICATIONDATE  as '申請日期',  ").append("  HD.HOLIDAYNAME  as '假別',  ").append("  DAYCOUNT as  天數,  ").append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始時間', ").append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束時間', ").append("  EP2.EMPLOYEE  as '代理人', ").append("  C.NOTE as '備註', ").append("  C.STATUS   as 'action' , ").append("  C.RETURNMSG  as 'returnMSG' ").append("  FROM VN_LEAVECARD  AS C  ").append("  INNER JOIN      ").append("  VN_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  ").append("  INNER JOIN   ").append("  VN_HOLIDAY AS HD      ON C.HD_ID =HD.ID ").append("   INNER JOIN     ")
 				.append("   VN_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID ").append("   where 1=1 ");
-		if (!lcVo.getSearchEmployeeNo().equals("0"))
+		if (!lcVo.getSearchEmployeeNo().equals("0") )
 		{
 			Sb.append(" and C.EP_ID ='" + lcVo.getSearchEmployeeNo() + "' ");
 		}
@@ -577,9 +665,9 @@ public class SqlUtil
 		Sb.append(" AND C.STATUS <>'T' ");
 		Sb.append(" AND C.STATUS <>'S' ");
 		Sb.append(" AND C.STATUS <>'UR' ");
-		Sb.append(" AND C.STATUS <>'DR' ");
-		Sb.append(" AND C.STATUS <>'LR' ");
-		Sb.append(" AND C.STATUS <>'MR' ");
+		//Sb.append(" AND C.STATUS <>'DR' ");
+		//Sb.append(" AND C.STATUS <>'LR' ");
+		//Sb.append(" AND C.STATUS <>'MR' ");
 		Sb.append(" ORDER BY C.ID DESC ");
 
 		return Sb.toString();
@@ -645,7 +733,7 @@ public class SqlUtil
 		{
 			Sb.append(" and EP.DEPARTMENT_ID ='" + lcVo.getSearchDepartmen() + "' ");
 		}
-		Sb.append(" AND DAYCOUNT >= '3' ");
+		Sb.append(" and cast(C.DAYCOUNT as float) >= 3 ");
 		Sb.append(" AND C.STATUS <>'T' ");
 		Sb.append(" AND C.STATUS <>'S' ");
 		Sb.append(" AND C.STATUS <>'M' ");
@@ -669,10 +757,20 @@ public class SqlUtil
 	public static final String updateLcStatus(leaveCardVO lcVo)
 	{
 		StringBuilder Sb = new StringBuilder(" update VN_LEAVECARD	 ").append(" set  Status='" + lcVo.getStatus() + "'  ");
+		
+		if (lcVo.getStatus().equals("L"))
+		{
+			Sb.append(" , SAVETIME=getdate()  ");
+		}
+		if (lcVo.getStatus().equals("M"))
+		{
+			Sb.append(" , SAVETIME=getdate()  ");
+		}
 		if (!lcVo.getReturnMsg().equals(""))
 		{
 			Sb.append(" , RETURNMSG=N'" + lcVo.getReturnMsg() + "' ");
 		}
+	
 		Sb.append("  where ID='" + lcVo.getRowID() + "' ");
 
 		return Sb.toString();
@@ -707,36 +805,141 @@ public class SqlUtil
 	 */
 	public static final String getdailyReport(leaveCardVO lcVo)
 	{
-
-		StringBuilder Sb = new StringBuilder("  SELECT  \n");
-		Sb.append(" CONVERT(varchar(100),  DAY, 111) AS 日期,  \n");
-		Sb.append(" SOON  AS 工號, \n");
-		Sb.append(" DemonstrateTeam  AS 部門 ,  \n");
-		Sb.append("  TanComplete 姓名,   \n");
-		Sb.append("  WaitForTheCardToDo  AS  上班打卡時間,  \n");
-		Sb.append("  HoldTheCardDown  AS  下班打卡時間,  \n");
-		Sb.append("  HowToMakeMajority AS 出勤時數, \n");
-		Sb.append("  TheTimeToIncreaseTheShift AS 晚班時數,  \n");
-		Sb.append(" CONVERT(varchar(100),  DAY, 23)+' '+HoursOfCaShift as overtime  \n");
-		Sb.append(" FROM VN_DETAIL AS D  \n");
-		Sb.append(" INNER JOIN     \n");
-		Sb.append(" VN_DEPARTMENT AS VD   \n");
-		Sb.append(" ON VD.DEPARTMENT = D.DemonstrateTeam  \n");
-		Sb.append(" where 1=1  \n");
-		if (!lcVo.getSearchDepartmen().equals("0"))
-		{
-			Sb.append(" and VD.ID ='" + lcVo.getSearchDepartmen() + "'  \n");
-		}
-		// Sb.append(" AND VD.ID='15' ");
-		if (!lcVo.getSearchEmployeeNo().equals("0"))
-		{
-			Sb.append(" AND D.SOON='" + lcVo.getSearchEmployeeNo() + "'  \n");
-		}
-		// Sb.append(" AND D.SOON='13062304' ");
-
-		return Sb.toString();
+		HtmlUtil hu=new HtmlUtil();
+		String sql="";
+		//遲到名單
+		sql=hu.gethtml(UrlUtil.sql_rep_daily);
+		sql=sql.replace("<FDate/>", lcVo.getApplicationDate());
+		sql=sql.replace("<DEPARTMENT/>", lcVo.getSearchDepartmen());
+		sql=sql.replace("<UNIT/>", lcVo.getSearchUnit());
+		return sql;
 	}
 
+	/**
+	 * 月份考勤表-建立資料
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getMonthReport(Connection con,repAttendanceVO raVo)
+	{
+		HtmlUtil hu=new HtmlUtil();
+		String sql="";
+		//遲到名單
+		sql=hu.gethtml(UrlUtil.sql_month_Attendance);
+		sql=sql.replace("<year/>", raVo.getQueryYearMonth().split("/")[0]);
+		sql=sql.replace("<Month/>",raVo.getQueryYearMonth().split("/")[1]);
+		sql=sql.replace("<DEPARTMENT_ID/>",raVo.getSearchDepartmen());
+		sql=sql.replace("<UNIT_ID/>",raVo.getSearchUnit());
+		HrFileUtil.writeStr(sql, "D:/out_sql_month_Attendance.txt");
+		DBUtil.workLateOperationSql(con,sql);
+		return  getvnMonthAttendance(raVo);
+	}
+	
+	/**
+	 * 月份考勤表-查出資料
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getvnMonthAttendance(repAttendanceVO raVo)
+	{
+	
+		
+		StringBuilder tableSql = new StringBuilder("  SELECT  \n");
+		tableSql.append(" EMPLOYEENO as 工號 ,  \n");
+		tableSql.append(" EMPLOYEE as 姓名,  \n");
+		tableSql.append(" DAY1 as '1'  ,  \n");
+		tableSql.append(" DAY2 as '2'  ,  \n");
+		tableSql.append(" DAY3 as '3'  ,  \n");
+		tableSql.append(" DAY4 as '4'  ,  \n");
+		tableSql.append(" DAY5 as '5'  ,  \n");
+		tableSql.append(" DAY6 as '6'  ,  \n");
+		tableSql.append(" DAY7 as '7'  ,  \n");
+		tableSql.append(" DAY8 as '8'  ,  \n");
+		tableSql.append(" DAY9 as '9'  , \n");
+		tableSql.append(" DAY10 as '10'  ,  \n");
+		tableSql.append(" DAY11 as '11'  ,  \n");
+		tableSql.append(" DAY12 as '12'  ,  \n");
+		tableSql.append(" DAY13 as '13'  ,  \n");
+		tableSql.append(" DAY14 as '14'  ,  \n");
+		tableSql.append(" DAY15 as '15'  ,  \n");
+		tableSql.append(" DAY16 as '16'  ,  \n");
+		tableSql.append(" DAY17 as '17'  ,  \n");
+		tableSql.append(" DAY18 as '18' ,  \n");
+		tableSql.append(" DAY19 as '19' ,  \n");
+		tableSql.append(" DAY20 as '20' ,  \n");
+		tableSql.append(" DAY21 as '21' ,  \n");
+		tableSql.append(" DAY22 as '22' ,  \n");
+		tableSql.append(" DAY23 as '23' ,  \n");
+		tableSql.append(" DAY24 as '24' ,  \n");
+		tableSql.append(" DAY25 as '25' ,  \n");
+		tableSql.append(" DAY26 as '26' ,  \n");
+		tableSql.append(" DAY27 as '27' ,  \n");
+		tableSql.append(" DAY28 as '28' ,  \n");
+		tableSql.append(" DAY29 as '29' ,  \n");
+		tableSql.append(" DAY30 as '30' ,  \n");
+		tableSql.append(" DAY31 as '31' ,   \n");
+		tableSql.append(" NOTE as '總共'   \n");
+		tableSql.append(" FROM  VN_YEAR_MONTH_ATTENDANCE   where YEAR='"+raVo.getQueryYearMonth().split("/")[0]+"'    \n"); 
+		tableSql.append(" and  MONTH='"+raVo.getQueryYearMonth().split("/")[1]+"'    \n"); 
+		tableSql.append(" and  DEPARTMENT='"+raVo.getSearchDepartmen()+"'    \n"); 
+		tableSql.append(" and  UNIT='"+raVo.getSearchUnit()+"'    \n"); 		
+		return  tableSql.toString();
+	}
+	
+	/**
+	 * 
+	 */
+	
+	/**
+	 * 個人查閱遲到早退and打卡時間
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getEmplateOutEarly(Connection con,lateOutEarlyVO erVo)
+	{
+
+		HtmlUtil hu=new HtmlUtil();
+		String sql="",IsLate="";
+		//遲到名單
+				if(erVo.getQueryIsLate().equals("1")){
+					IsLate="1";
+				}
+				if(erVo.getQueryIsLate().equals("2")){
+					IsLate="0";
+				}
+		    sql=hu.gethtml(UrlUtil.sql_emp_IsQueryLate);
+			sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
+			sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
+			sql=sql.replace("<isLate/>",IsLate);
+			sql=sql.replace("<EMPLOYEENO/>",erVo.getEmpID());
+			String LATE=DBUtil.queryDBField(con,sql,"LATE");
+			if(Integer.valueOf(LATE)==0){
+					if(erVo.getQueryIsLate().equals("1")){
+						sql=hu.gethtml(UrlUtil.sql_empLate);
+						
+						sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
+						sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
+						sql=sql.replace("<EmpID/>", erVo.getEmpID());
+				
+						DBUtil.workLateOperationSql(con,sql);
+					}
+					if(erVo.getQueryIsLate().equals("2")){
+						sql=hu.gethtml(UrlUtil.sql_empEarly);
+					
+						sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
+						sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
+						sql=sql.replace("<EmpID/>", erVo.getEmpID());
+				
+						DBUtil.workLateOperationSql(con,sql);
+					}
+			}
+		
+		return getEmpYMLate(erVo);
+	}
+	
 	/**
 	 * 遲到早退名單
 	 * 
@@ -844,6 +1047,69 @@ public class SqlUtil
 	}
 	
 	
+	
+	/**
+	 * 查詢員工個人遲到早退列表
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getEmpYMLate(lateOutEarlyVO erVo)
+	{
+		StringBuilder tableSql = new StringBuilder("  SELECT  \n");
+		tableSql.append(" WT1,  \n");
+		tableSql.append(" WT2   ,  \n");
+		tableSql.append(" WT3   ,  \n");
+		tableSql.append(" WT4   ,  \n");
+		tableSql.append(" WT5   ,  \n");
+		tableSql.append(" WT6  ,  \n");
+		tableSql.append(" WT7 ,  \n");
+		tableSql.append(" WT8  ,  \n");
+		tableSql.append(" WT9   , \n");
+		tableSql.append(" WT10   ,  \n");
+		tableSql.append(" WT11   ,  \n");
+		tableSql.append(" WT12   ,  \n");
+		tableSql.append(" WT13  ,  \n");
+		tableSql.append(" WT14   ,  \n");
+		tableSql.append(" WT15   ,  \n");
+		tableSql.append(" WT16   ,  \n");
+		tableSql.append(" WT17   ,  \n");
+		tableSql.append(" WT18  ,  \n");
+		tableSql.append(" WT19  ,  \n");
+		tableSql.append(" WT20  ,  \n");
+		tableSql.append(" WT21  ,  \n");
+		tableSql.append(" WT22  ,  \n");
+		tableSql.append(" WT23  ,  \n");
+		tableSql.append(" WT24 ,  \n");
+		tableSql.append(" WT25 ,  \n");
+		tableSql.append(" WT26 ,  \n");
+		tableSql.append(" WT27  ,  \n");
+		tableSql.append(" WT28  ,  \n");
+		tableSql.append(" WT29  ,  \n");
+		tableSql.append(" WT30  ,  \n");
+		tableSql.append(" WT31  ,  \n");
+		tableSql.append(" MINUTE ,  \n"); 
+		tableSql.append(" HOUR  ,  \n"); 
+		if(erVo.getQueryIsLate().equals("1")){
+			tableSql.append(" LATETIMES    \n"); 
+		}	
+		if(erVo.getQueryIsLate().equals("2")){
+			tableSql.append(" LATETIMES    \n"); 
+		}
+		tableSql.append(" FROM  VN_EMP_LATE   where YEAR='"+erVo.getQueryYearMonth().split("/")[0]+"'    \n"); 
+		tableSql.append(" and  MONTH='"+erVo.getQueryYearMonth().split("/")[1]+"'    \n"); 
+		if(erVo.getQueryIsLate().equals("1")){
+			tableSql.append(" and ISLATE='1'    \n"); 
+		}	
+		if(erVo.getQueryIsLate().equals("2")){
+			tableSql.append(" and ISLATE='0'   \n"); 
+		}
+		tableSql.append(" and EMPLOYEENO='"+erVo.getEmpID()+"'   \n"); 
+		
+		return tableSql.toString();
+	}
+	
+	
 	/**
 	 * 查詢遲到早退名單年月區分-報表
 	 * 
@@ -901,6 +1167,8 @@ public class SqlUtil
 		if(erVo.getQueryIsLate().equals("2")){
 			tableSql.append(" and ISLATE='0'   \n"); 
 		}
+	
+		
 		
 		return tableSql.toString();
 	}
@@ -915,12 +1183,320 @@ public class SqlUtil
 	{
 
 		HtmlUtil hu=new HtmlUtil();
-		String sql="",IsLate="";
+		String sql="";
 		//遲到名單
 		
 		 sql=hu.gethtml(UrlUtil.sql_dept);
 		 sql=sql.replace("<DEPTID/>", lcVo.getSearchDepartmen());
 
+		return sql;
+	}
+	/**
+	 * 部門員工名單
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getEhm(overTimeVO otVo)
+	{
+		StringBuilder tableSql = new StringBuilder("  SELECT  \n");
+		tableSql .append(" ehm  \n");
+		tableSql .append(" FROM VN_TURN  \n");
+		tableSql .append( " WHERE CODE='"+otVo.getOverTimeClass()+"' \n");
+		return tableSql.toString();
+	}
+	
+	/**
+	 * 日考勤表excel Sql
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getDailyExcelSql(leaveCardVO lcVo )
+	{
+		
+		HtmlUtil hu=new HtmlUtil();
+		String sql="";
+		//遲到名單
+		
+		 sql=hu.gethtml(UrlUtil.sql_excelDaily);
+		 sql=sql.replace("<FDate/>", lcVo.getApplicationDate());
+		 sql=sql.replace("<DEPARTMENT/>", lcVo.getSearchDepartmen());
+		 sql=sql.replace("<UNIT/>", lcVo.getSearchUnit());
+
+		return sql;
+	}
+	
+	
+	/**
+	 * 月考勤表excel Sql
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getvnMonthAttendanceExcel(repAttendanceVO raVo)
+	{
+	
+		
+		StringBuilder tableSql = new StringBuilder("  SELECT  \n");
+		tableSql.append(" ROW_NUMBER() over(order by EMPLOYEENO) as ID,  \n");
+		tableSql.append(" EMPLOYEENO  ,  \n");
+		tableSql.append(" EMPLOYEE ,  \n");
+		tableSql.append(" DAY1  ,  \n");
+		tableSql.append(" DAY2 ,  \n");
+		tableSql.append(" DAY3 ,  \n");
+		tableSql.append(" DAY4   ,  \n");
+		tableSql.append(" DAY5   ,  \n");
+		tableSql.append(" DAY6  ,  \n");
+		tableSql.append(" DAY7  ,  \n");
+		tableSql.append(" DAY8   ,  \n");
+		tableSql.append(" DAY9   , \n");
+		tableSql.append(" DAY10   ,  \n");
+		tableSql.append(" DAY11   ,  \n");
+		tableSql.append(" DAY12   ,  \n");
+		tableSql.append(" DAY13   ,  \n");
+		tableSql.append(" DAY14   ,  \n");
+		tableSql.append(" DAY15 ,  \n");
+		tableSql.append(" DAY16   ,  \n");
+		tableSql.append(" DAY17   ,  \n");
+		tableSql.append(" DAY18 ,  \n");
+		tableSql.append(" DAY19 ,  \n");
+		tableSql.append(" DAY20 ,  \n");
+		tableSql.append(" DAY21 ,  \n");
+		tableSql.append(" DAY22 ,  \n");
+		tableSql.append(" DAY23  ,  \n");
+		tableSql.append(" DAY24  ,  \n");
+		tableSql.append(" DAY25 ,  \n");
+		tableSql.append(" DAY26  ,  \n");
+		tableSql.append(" DAY27  ,  \n");
+		tableSql.append(" DAY28  ,  \n");
+		tableSql.append(" DAY29 ,  \n");
+		tableSql.append(" DAY30  ,  \n");
+		tableSql.append(" DAY31  ,   \n");
+		tableSql.append(" NOTE   \n");
+		tableSql.append(" FROM  VN_YEAR_MONTH_ATTENDANCE   where YEAR='"+raVo.getQueryYearMonth().split("/")[0]+"'    \n"); 
+		tableSql.append(" and  MONTH='"+raVo.getQueryYearMonth().split("/")[1]+"'    \n"); 
+		tableSql.append(" and  DEPARTMENT='"+raVo.getSearchDepartmen()+"'    \n"); 
+		tableSql.append(" and  UNIT='"+raVo.getSearchUnit()+"'    \n"); 		
+		return  tableSql.toString();
+	}
+
+	/**
+	 * 月份考勤表-修改統計資料
+	 * 
+	 * @param unitID
+	 * @return
+	 */
+	public static final String upRepAttendance(repAttendanceVO raVo)
+	{
+		StringBuilder Sb = new StringBuilder(" update VN_YEAR_MONTH_ATTENDANCE	 ").append(" set  NOTE='" + raVo.getNOTE()+ "'  ");
+		Sb.append("  where EMPLOYEENO='" +raVo.getEMPLOYEENO() + "' ");
+		Sb.append("  and YEAR='" +raVo.getQueryYearMonth().split("/")[0] + "' ");
+		Sb.append("  and MONTH='" +raVo.getQueryYearMonth().split("/")[1] + "' ");
+		return Sb.toString();
+	}
+	
+	/**
+	 * 查詢請假開始時間或結束時間有無在打卡區間時間內
+	 * 
+	 * @param unitID
+	 * @return
+	 */
+	public static final String getOnlyWorkTime(leaveCardVO lcVo)
+	{
+		StringBuilder Sb = new StringBuilder(" select WorkFDate,WorkEDate   from   PWERP_MS.dbo.RsKQResult R,PWERP_MS.dbo.RsEmployee E ,hr.dbo.VN_EMPLOYEE V ");
+		Sb.append("  where   V.EMPLOYEENO=E.EmpID ");
+		Sb.append("    and V.ID='"+lcVo.getSearchEmployeeNo()+"'  " );
+		Sb.append(" and WorkFDate <='"+lcVo.getStartLeaveDate().replaceAll("/", "")+" "+lcVo.getStartLeaveTime()+":"+lcVo.getStartLeaveMinute()+"' ");
+		Sb.append(" and WorkEDate >=  '"+lcVo.getEndLeaveDate().replaceAll("/", "")+" "+lcVo.getEndLeaveTime()+":"+lcVo.getEndLeaveMinute()+"' ");
+			
+		return Sb.toString();
+	}
+	
+	/**
+	 * 查詢請假開始時間有無請假
+	 * 
+	 * @param unitID
+	 * @return
+	 */
+	public static final String getOnlyLeaveTime(leaveCardVO lcVo)
+	{
+		StringBuilder Sb = new StringBuilder("  select STARTLEAVEDATE from hr.dbo.VN_LEAVECARD V ");
+		Sb.append("	where V.EP_ID='"+lcVo.getSearchEmployeeNo()+"'  " );
+		Sb.append(" and STARTLEAVEDATE <= '"+lcVo.getStartLeaveDate().replaceAll("/", "")+" "+lcVo.getStartLeaveTime()+":"+lcVo.getStartLeaveMinute()+"' ");
+		Sb.append("  Union All ");
+		Sb.append("  select STARTLEAVEDATE from hr.dbo.VN_LEAVECARD V ");
+		Sb.append("	where V.EP_ID='"+lcVo.getSearchEmployeeNo()+"'  " );
+		Sb.append(" and ENDLEAVEDATE <= '"+lcVo.getEndLeaveDate().replaceAll("/", "")+" "+lcVo.getEndLeaveTime()+":"+lcVo.getEndLeaveMinute()+"' ");
+
+		return Sb.toString();
+	}
+	
+	
+	/**
+	 * 外籍幹部人數
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getNoVnMaxPeople(leaveCardVO lcVo)
+	{
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_noVnMaxPeople);
+		sql=sql.replace("<toDay>", lcVo.getApplicationDate().replaceAll("/", ""));
+		return sql;
+	}
+	
+	/**
+	 * 越籍前一天應出勤人數
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getYestoDayVnMaxPeople(leaveCardVO lcVo) throws ParseException
+	{
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMdd" );
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_VnMaxPeople);
+		Date date = sdf.parse( lcVo.getApplicationDate().replaceAll("/", "") );
+		date=DateUtil.addDays(date, -1);
+		
+		sql=sql.replace("<toDay>", sdf.format(date));
+		return sql;
+	}
+	
+	/**
+	 * 越籍今天應出勤人數
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getVnMaxPeople(leaveCardVO lcVo) throws ParseException
+	{
+	
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_VnMaxPeople);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		return sql;
+	}
+	
+	/**
+	 * 越籍今天實際出勤人數
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getActualMaxPeople(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_VnActualPeople);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		//logger.info("getActualMaxPeople sql :"+sql);
+		return sql;
+	}
+	
+	/**
+	 * 行政班次
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getTurnA1People(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_vnTurnA1People);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		//logger.info("getActualMaxPeople sql :"+sql);
+		return sql;
+	}
+	/**
+	 * 早班次
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getTurnC1People(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_vnTurnC1People);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		//logger.info("getActualMaxPeople sql :"+sql);
+		return sql;
+	}
+	/**
+	 * 中班次
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getTurnC2People(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_vnTurnC2People);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		//logger.info("getActualMaxPeople sql :"+sql);
+		return sql;
+	}
+	/**
+	 * 夜班次
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getTurnC3People(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_vnTurnC3People);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		//logger.info("getActualMaxPeople sql :"+sql);
+		return sql;
+	}
+	
+	/**
+	 * 加班申請
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getOverTimePeople(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_vnOverTimePeople);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+
+		return sql;
+	}
+	
+	/**
+	 * 部門查詢
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getDeptID(String UserEmployeeNo)
+	{
+		String sql="select ID from VN_DEPARTMENT where DEPARTMENT =N'" + UserEmployeeNo + "'";
 		return sql;
 	}
 }

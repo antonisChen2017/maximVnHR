@@ -13,14 +13,17 @@ public class lateOutEarlyVO  implements Serializable
 	private static final long serialVersionUID = 7213593713535360585L;
 
 	/**年月 */
-	public String  queryYearMonth;
+	private String  queryYearMonth;
 	/** 遲到:1/早退:2  */
-	public String  queryIsLate;
+	private String  queryIsLate;
 	/**是否顯示查詢結果*/
-	public boolean  showDataTable;
+	private boolean  showDataTable;
 	/**資料庫訊息*/
-	public String  msg;
-	
+	private String  msg;
+	/**員工代號*/
+	private String  EmpID;
+	/**ActionURI*/
+	private String  ActionURI;
 	
 	public String getQueryYearMonth()
 	{
@@ -55,10 +58,28 @@ public class lateOutEarlyVO  implements Serializable
 	{
 		this.msg = msg;
 	}
-	public static long getSerialversionuid()
+	public String getActionURI()
 	{
-		return serialVersionUID;
+		return ActionURI;
 	}
+	public void setActionURI(String actionURI)
+	{
+		ActionURI = actionURI;
+	}
+	public String getEmpID()
+	{
+		return EmpID;
+	}
+	public void setEmpID(String empID)
+	{
+		EmpID = empID;
+	}
+	@Override
+	public String toString()
+	{
+		return "lateOutEarlyVO [queryYearMonth=" + queryYearMonth + ", queryIsLate=" + queryIsLate + ", showDataTable=" + showDataTable + ", msg=" + msg + ", EmpID=" + EmpID + ", ActionURI=" + ActionURI + "]";
+	}
+
 	
 	
 	

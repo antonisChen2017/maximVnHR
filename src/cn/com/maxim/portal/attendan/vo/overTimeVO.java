@@ -13,56 +13,62 @@ public class overTimeVO implements Serializable
 
 	private static final long serialVersionUID = -8717143017939146669L;
 	/**部門 */
-	public String searchDepartmen;
+	private String searchDepartmen;
 	/** 加班日期 */
-	public String queryDate;
+	private String queryDate;
 	/**單位 */
-	public String searchUnit;
+	private String searchUnit;
 	/**加班原因 */
-	public String searchReasons;
+	private String searchReasons;
 	/**加班開始-時 */
-	public String startTimeHh;
+	private String startTimeHh;
 	/**加班開始分 */
-	public String startTimemm;
+	private String startTimemm;
 	/**加班結束-時 */
-	public String endTimeHh;
+	private String endTimeHh;
 	/**加班結束-分 */
-	public String endTimemm;
+	private String endTimemm;
 	/**總共小時 */
-	public String addTime;
+	private String addTime;
 	/**姓名 */
-	public String searchEmployee;
+	private String searchEmployee;
 	/**工號 */
-	public String searchEmployeeNo;
+	private String searchEmployeeNo;
 	/**註解*/
-	public String note;
+	private String note;
 	/**早晚班別*/
-	public String overTimeClass;
+	private String overTimeClass;
 	/**提交日期*/
-	public String  submitDate;
+	private String  submitDate;
 	/**使用者自訂加班理由*/
-	public String  userReason;
+	private String  userReason;
 	/**判斷按鈕功能*/
-	public String  act;
+	private String  act;
 	/**加班單狀態*/
-	public String  status;
+	private String  status;
 	/**資料庫訊息*/
-	public String  msg;
+	private String  msg;
 	/**是否顯示查詢結果*/
-	public boolean  showDataTable;
+	private boolean  showDataTable;
 	/**行ID**/
-	public String  rowID;
+	private String  rowID;
 	/**start 提交日期*/
-	public String startSubmitDate;
+	private String startSubmitDate;
 	/**end 提交日期*/
-	public String EndSubmitDate;
+	private String EndSubmitDate;
 	/**start 提交日期*/
-	public String startQueryDate;
+	private String startQueryDate;
 	/**end 提交日期*/
-	public String endQueryDate;
+	private String endQueryDate;
 	/** 退回原因*/
-	public String returnMsg;
-
+	private String returnMsg;
+	/** 查詢是否超過加班時數  **/
+	private String  monthOverTime;
+	/** 超過時間是否可以寫入  **/
+	private boolean  OverTimeSave;
+	/**ActionURI**/
+	private String  ActionURI;
+	
 	public String getSearchDepartmen()
 	{
 		return searchDepartmen;
@@ -275,19 +281,48 @@ public class overTimeVO implements Serializable
 	{
 		this.returnMsg = returnMsg;
 	}
+	
+	public String getMonthOverTime()
+	{
+		return monthOverTime;
+	}
+	public void setMonthOverTime(String monthOverTime)
+	{
+		this.monthOverTime = monthOverTime;
+	}
+	
+
+
+	
+	
+	
+	
+	
+	public boolean isOverTimeSave()
+	{
+		return OverTimeSave;
+	}
+	public void setOverTimeSave(boolean overTimeSave)
+	{
+		OverTimeSave = overTimeSave;
+	}
+	public String getActionURI()
+	{
+		return ActionURI;
+	}
+	public void setActionURI(String actionURI)
+	{
+		ActionURI = actionURI;
+	}
 	@Override
 	public String toString()
 	{
-		return "overTimeVO [searchDepartmen=" + searchDepartmen + ", queryDate=" + queryDate + ", searchUnit="
-				+ searchUnit + ", searchReasons=" + searchReasons + ", startTimeHh=" + startTimeHh + ", startTimemm="
-				+ startTimemm + ", endTimeHh=" + endTimeHh + ", endTimemm=" + endTimemm + ", addTime=" + addTime
-				+ ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note
-				+ ", overTimeClass=" + overTimeClass + ", submitDate=" + submitDate + ", userReason=" + userReason
-				+ ", act=" + act + ", status=" + status + ", msg=" + msg + ", showDataTable=" + showDataTable
-				+ ", rowID=" + rowID + ", startSubmitDate=" + startSubmitDate + ", EndSubmitDate=" + EndSubmitDate
-				+ ", startQueryDate=" + startQueryDate + ", endQueryDate=" + endQueryDate + ", returnMsg=" + returnMsg
-				+ "]";
+		return "overTimeVO [searchDepartmen=" + searchDepartmen + ", queryDate=" + queryDate + ", searchUnit=" + searchUnit + ", searchReasons=" + searchReasons + ", startTimeHh=" + startTimeHh + ", startTimemm=" + startTimemm + ", endTimeHh=" + endTimeHh + ", endTimemm=" + endTimemm + ", addTime=" + addTime + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", overTimeClass=" + overTimeClass + ", submitDate=" + submitDate + ", userReason=" + userReason + ", act=" + act + ", status=" + status + ", msg=" + msg + ", showDataTable=" + showDataTable + ", rowID=" + rowID + ", startSubmitDate=" + startSubmitDate + ", EndSubmitDate=" + EndSubmitDate + ", startQueryDate=" + startQueryDate + ", endQueryDate=" + endQueryDate + ", returnMsg="
+				+ returnMsg + ", monthOverTime=" + monthOverTime + ", OverTimeSave=" + OverTimeSave + ", ActionURI=" + ActionURI + "]";
 	}
+	
+	
+	
 	
 	
 

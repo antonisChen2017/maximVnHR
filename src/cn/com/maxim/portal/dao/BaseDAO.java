@@ -39,11 +39,11 @@ public class BaseDAO {
      * @param clazz
      * @return
      */
-    public List query(String sqlString,Class clazz) {
+    public List query(String sqlString,Class clazz,Connection conn) {
         List beans = null;
-        Connection conn = null;
+      //  Connection conn = null;
         try {
-            conn = getConnection();
+        //    conn = getConnection();
             QueryRunner qRunner = new QueryRunner();
             beans =
                 (List) qRunner.query(
@@ -64,12 +64,12 @@ public class BaseDAO {
      * @param clazz
      * @return
      */
-    public Object get(String sqlString,Class clazz) {
+    public Object get(String sqlString,Class clazz,Connection conn) {
         List beans = null;
         Object obj = null;
-        Connection conn = null;
+     //   Connection conn = null;
         try {
-            conn = getConnection();
+      //      conn = getConnection();
             QueryRunner qRunner = new QueryRunner();
             beans =
                 (List) qRunner.query(
@@ -94,11 +94,11 @@ public class BaseDAO {
      * @param sqlString
      * @return
      */
-    public boolean update(String sqlString) {
-        Connection conn = null;
+    public boolean update(String sqlString,Connection conn) {
+      //  Connection conn = null;
         boolean flag = false;
         try {
-            conn = getConnection();
+        //    conn = getConnection();
             QueryRunner qRunner = new QueryRunner();
             int i =qRunner.update(conn,sqlString);
             if (i > 0) {

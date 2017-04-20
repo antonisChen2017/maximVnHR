@@ -6,33 +6,36 @@ public class stopWorkVO implements Serializable
 {
 	private static final long serialVersionUID = -7902613727843012480L;
 	/**部門 */
-	public String searchDepartmen;
+	private String searchDepartmen;
 	/**單位 */
-	public String searchUnit;
+	private String searchUnit;
 	/**原因 */
-	public String searchReasons;
+	private String searchReasons;
 	/**start 待料開始日期*/
-	public String startStopWorkDate;
+	private String startStopWorkDate;
 	/**end 待料結束日期*/
-	public String endStopWorkDate;
+	private String endStopWorkDate;
 	/**待料開始-時 */
-	public String startTimeHhmm;
+	private String startTimeHhmm;
 
 	/**待料結束-時 */
-	public String endTimeHhmm;
+	private String endTimeHhmm;
 
 	/**總天數 */
-	public String addDay;
+	private String addDay;
 	/**姓名 */
-	public String searchEmployee;
+	private String searchEmployee;
 	/**工號 */
-	public String searchEmployeeNo;
+	private String searchEmployeeNo;
 	/**註解*/
-	public String note;
+	private String note;
 	/**是否顯示查詢結果*/
-	public boolean  showDataTable;
+	private boolean  showDataTable;
 	/**資料庫訊息*/
-	public String  msg;
+	private String  msg;
+	/**ActionURI*/
+	private String  ActionURI;
+	
 	
 	public String getSearchDepartmen()
 	{
@@ -139,15 +142,23 @@ public class stopWorkVO implements Serializable
 	{
 		this.msg = msg;
 	}
+	
+	
+	
+	public String getActionURI()
+	{
+		return ActionURI;
+	}
+	public void setActionURI(String actionURI)
+	{
+		ActionURI = actionURI;
+	}
 	@Override
 	public String toString()
 	{
-		return "stopWorkVO [searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchReasons="
-				+ searchReasons + ", startStopWorkDate=" + startStopWorkDate + ", endStopWorkDate=" + endStopWorkDate
-				+ ", startTimeHhmm=" + startTimeHhmm + ", endTimeHhmm=" + endTimeHhmm + ", addDay=" + addDay
-				+ ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note
-				+ ", showDataTable=" + showDataTable + ", msg=" + msg + "]";
+		return "stopWorkVO [searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchReasons=" + searchReasons + ", startStopWorkDate=" + startStopWorkDate + ", endStopWorkDate=" + endStopWorkDate + ", startTimeHhmm=" + startTimeHhmm + ", endTimeHhmm=" + endTimeHhmm + ", addDay=" + addDay + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", showDataTable=" + showDataTable + ", msg=" + msg + ", ActionURI=" + ActionURI + "]";
 	}
+	
 	
 	
 	

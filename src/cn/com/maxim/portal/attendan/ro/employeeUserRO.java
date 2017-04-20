@@ -10,27 +10,37 @@ import java.util.Date;
 public class employeeUserRO  
 {
 	/**員工個人資料  ID **/
-	public String  ID;
-	/** 單位 ID **/
-	public String  UID;
-	/** 部門 ID **/
-	public String  DID;
-	/** 到職日 **/
-	public Date  ENTRYDATE;
-	/** 職稱 **/
-	public String  DUTIES;
-	/**部門 */
-	public String DEPARTMENT;
-	/**單位 */
-	public String UNIT;
-	/**工號 */
-	public String EMPLOYEENO;
+	private String  ID;
 	
-	public Date getENTRYDATE()
+	/** 單位 ID **/
+	private String  UID;
+	
+	/** 到職日 **/
+	private String  ENTRYDATE;
+	
+	/** 職稱 **/
+	private String  DUTIES;
+	
+	/**單位 */
+	private String UNIT;
+	
+	/**部門 */
+	private String DEPARTMENT;
+	
+	
+	
+	/**工號 */
+	private String EMPLOYEENO;
+	
+	/** 部門 ID **/
+	private String  DID;
+	
+	
+	public String getENTRYDATE()
 	{
 		return ENTRYDATE;
 	}
-	public void setENTRYDATE(Date eNTRYDATE)
+	public void setENTRYDATE(String eNTRYDATE)
 	{
 		ENTRYDATE = eNTRYDATE;
 	}

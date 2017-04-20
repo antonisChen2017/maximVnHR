@@ -16,9 +16,12 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-
+import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
+import cn.com.maxim.portal.attendan.ro.repDailyRO;
 import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
+import cn.com.maxim.portal.attendan.vo.leaveCardVO;
+import cn.com.maxim.portal.attendan.vo.repAttendanceVO;
 import cn.com.maxim.portal.util.ExcelUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 
@@ -28,15 +31,13 @@ public class ExcelOutService  extends HttpServlet{
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, IllegalAccessException, InvocationTargetException {
-		String _name = request.getParameter("_name");
-		
+		    String _name = request.getParameter("_name");
+		    response.setHeader("Connection", "close");
+	        response.setHeader("Content-Type", "application/vnd.ms-excel;charset=UTF-8");
 		if (_name.equals("lateOutEarly")) {
 			 	lateOutEarlyVO eaVo = new lateOutEarlyVO(); 
 				BeanUtils.populate(eaVo,request.getParameterMap());
-		        response.setHeader("Connection", "close");
-		        response.setHeader("Content-Type", "application/vnd.ms-excel;charset=UTF-8");
 		        String filename = System.currentTimeMillis() + "yearMonthLate.xls";
-		       // filename = encodeFileName(request, filename);
 		        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
 		    	String IsLate="",title1="",title2="";
 		        OutputStream out = null;
@@ -68,6 +69,61 @@ public class ExcelOutService  extends HttpServlet{
 		            }
 		        }
 		}
+		
+		if (_name.equals("daily")) {
+			leaveCardVO lcVo = new leaveCardVO(); 
+			BeanUtils.populate(lcVo,request.getParameterMap());
+	        String filename = System.currentTimeMillis() + "daily.xls";
+	        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+	        String title1="";
+	        OutputStream out = null;
+	        try {
+	        	 String[] headers =null;  
+		           
+			     headers = UrlUtil.dailyExcelheaders.split(",");  
+			     title1=lcVo.getApplicationDate().split("/")[0]+"年"+lcVo.getApplicationDate().split("/")[1]+"月"+lcVo.getApplicationDate().split("/")[2]+"日考勤表";
+					
+	            
+			    List<repDailyRO> eaRolist=( List<repDailyRO>)request.getSession().getAttribute("daRolist");
+	            ExcelUtil<repDailyRO> eu = new ExcelUtil<repDailyRO>();
+	            HSSFWorkbook workbook = eu.exportExcel(title1,headers,eaRolist,title1,"");
+	            
+	            out = response.getOutputStream();  
+	            workbook.write(out);  
+	        } finally {
+	            if(out!=null){
+	                out.close();
+	            }
+	        }
+		}
+		
+		if (_name.equals("repAttendance")) {
+			repAttendanceVO raVo = new repAttendanceVO(); 
+			BeanUtils.populate(raVo,request.getParameterMap());
+			String filename = System.currentTimeMillis() + "repAttendance.xls";
+			  response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+		        String title1="";
+		        OutputStream out = null;
+		        try {
+		        	 String[] headers =null;  
+				     headers = UrlUtil.repAttendanceExcelheaders.split(",");  	     
+				     title1=raVo.getQueryYearMonth().split("/")[0]+"年"+raVo.getQueryYearMonth().split("/")[1]+"月分每日考勤表";
+				     List<repAttendanceRO> eaRolist=( List<repAttendanceRO>)request.getSession().getAttribute("raRolist");
+				     System.out.println("eaRolist : "+eaRolist);
+			         ExcelUtil<repAttendanceRO> eu = new ExcelUtil<repAttendanceRO>();
+			         HSSFWorkbook workbook = eu.exportExcel(title1,headers,eaRolist,title1,"");
+			            
+			         out = response.getOutputStream();  
+			         workbook.write(out);  
+		        } finally {
+		            if(out!=null){
+		                out.close();
+		            }
+		        }
+			
+		}
+	
+		
     }
     
     public String encodeFileName(HttpServletRequest request, String fileName) throws UnsupportedEncodingException {

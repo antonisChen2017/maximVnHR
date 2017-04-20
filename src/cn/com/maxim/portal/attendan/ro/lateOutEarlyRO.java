@@ -3,28 +3,28 @@ package cn.com.maxim.portal.attendan.ro;
 import java.util.Date;
 /**
  * 寫入VN_YEAR_MONTH_LATE 表
- * 遲到早退名單 查詢打卡資料VO  資料庫物件
+ * 遲到早退名單 查詢打卡資料RO  資料庫物件
  * @author antonis.chen
  *
  */
 public class lateOutEarlyRO
 {
 	/** 日期 Day **/
-	public String  Day;
+	private String  Day;
 	/** SOON 員工編號  **/
-	public String  SOON;
+	private String  SOON;
 	/** 部門  **/
-	public String  DemonstrateTeam;
+	private String  DemonstrateTeam;
 	/** 員工名稱 **/
-	public String  TanComplete;
+	private String  TanComplete;
 	/** 上班刷卡時間 **/
-	public String  WaitForTheCardToDo;
+	private String  WaitForTheCardToDo;
 	/**下班刷卡時間 */
-	public String HoldTheCardDown;
+	private String HoldTheCardDown;
 	/**遲到時間 早退時間 */
-	public String dftime;
+	private String dftime;
 	/**遲到或早退狀態 */
-	public String action;
+	private String action;
 	
 	
 	public String getSOON()

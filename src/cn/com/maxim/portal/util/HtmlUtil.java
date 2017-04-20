@@ -10,17 +10,22 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+
+import org.apache.commons.lang3.time.DateUtils;
 
 import cn.com.maxim.htmlcontrol.WebHidden;
 import cn.com.maxim.htmlcontrol.WebLabel;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.lateOutEarlyRO;
 import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
+import cn.com.maxim.portal.attendan.vo.calendarVO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.attendan.vo.repAttendanceVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
 import cn.com.maxim.portal.webUI.WebDBTableCL;
 import cn.com.maxim.portal.webUI.WebDBTableEx;
@@ -290,19 +295,7 @@ public class HtmlUtil
 		//各班加班時間切換 start
 		int iSHh=0;
 		int iEHh=23;
-		if(otVo.getAct()!=null){
-			if(otVo.getAct().equals("SwTime")){
-				
-				if(otVo.getOverTimeClass().equals("A1")){
-					 iSHh=16;
-					 iEHh=21;
-				}
-				if(otVo.getOverTimeClass().equals("A2")){
-					 iSHh=17;
-					 iEHh=22;
-				}
-			}
-		}
+		
 		//各班加班時間切換 end
 		
 		StringBuilder Sb = new StringBuilder("").append("<div  id='changeTimeDiv' class=\"row\">\r").append("<div class=\"col-md-5\"><div class=\"col-md-4\"> \r")
@@ -727,6 +720,10 @@ public static final String getListStatusJs(){
 		return " <button id='saveBut' class=\"btn btn-primary \" onclick=\"saveData()\" type=\"button\">保存</button>"; 
 	}
 	
+	public static String drawTableMExcelButton(){
+		return "<button id='excelBut' class=\"btn btn-primary \" onclick=\"outExecl()\" type=\"button\">輸出EXECL</button>"; 
+	}
+	
 	public static String getOverTimeClass(overTimeVO otVo ){
 		
 		
@@ -750,7 +747,9 @@ public static final String getListStatusJs(){
 		//return  "<input type=\"text\"   name=\"userReasons\"   id=\"userReasons\" class=\"form-control\" placeholder=\"可輸入自訂加班事由\">
 		return  "<input type=\"text\"   name='"+ ID+"'   id='"+ ID+"'  class=\"form-control\" value='"+Value+"'placeholder='"+placeholder+"'>";
 	}
-	
+	/*
+	 * 訊息
+	 */
 	public static final String getMsgDiv(String msg){
 		StringBuilder Sb = new StringBuilder("&nbsp;");
 		if(msg!=null){
@@ -809,6 +808,7 @@ public static final String getListStatusJs(){
 		if(totalTime.equals("")){
 			htmlButton="";
 		}
+		
 		if(page.equals("save")){
 			bStatus="0";
 		}
@@ -818,17 +818,25 @@ public static final String getListStatusJs(){
 		if(page.equals(UrlUtil.pageLList)){
 			bStatus="1";
 		}
-		
+		if(page.equals(UrlUtil.pageUsList)){
+			bStatus="U";
+		}
+		if(page.equals(UrlUtil.pageEmpUnitList)){
+			bStatus="E";
+		}
+		if(page.equals(UrlUtil.pageDtmList)){
+			bStatus="DT";
+		}
 		WebDBTableEx table = new WebDBTableEx(con, sql);
 
 		return table.getHTMLTableLC(out,"無資料",css, htmlButton,msg, bStatus);
 		//System.out.println("table :"+table.toString());
 	}
 	
-	public static String drawLateOutEarlyTable( String sql,String ymSql,String htmlButton ,Connection con, PrintWriter out,String page)
+	public static String drawLateOutEarlyTable( String sql,String htmlButton ,Connection con, PrintWriter out,String page)
 			throws SQLException
 	{
-		String resultS = "", Status = "";
+		
 		String  css="table table-striped table-bordered table-hover";
 	
 		
@@ -836,9 +844,6 @@ public static final String getListStatusJs(){
 		
 		String msg="";
 
-		
-		htmlButton="<button id='saveBut' class=\"btn btn-primary \" onclick=\"outExecl()\" type=\"button\">輸出EXECL</button>";
-		
 		if(page.equals("save")){
 			bStatus="0";
 		}
@@ -849,7 +854,73 @@ public static final String getListStatusJs(){
 		//System.out.println("table :"+table.toString());
 	}
 	/**
-	 * 選擇時間
+	 * 月考績表table
+	 * @param sql
+	 * @param htmlButton
+	 * @param con
+	 * @param out
+	 * @param page
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawRepAttendanceTable( String sql,String htmlButton ,Connection con, PrintWriter out,repAttendanceVO raVo)
+			throws SQLException
+	{
+		
+		String  css="table table-striped table-bordered table-hover";
+	
+		
+		String bStatus="0";
+		
+		String msg="";
+
+		//if(page.equals("save")){
+			bStatus="0";
+		//}
+
+		WebDBTableLO table = new WebDBTableLO(con, sql);
+
+		return table.getHTMLTableRA(out,"無資料",css, msg,htmlButton,con,raVo);
+		//System.out.println("table :"+table.toString());
+	}
+	
+	
+	/**
+	 * 員工查詢遲到早退表單
+	 * @param sql
+	 * @param htmlButton
+	 * @param con
+	 * @param out
+	 * @param page
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawEmpLateOutEarly( String sql,String htmlButton ,Connection con, PrintWriter out,String page)
+			throws SQLException
+	{
+		String resultS = "", Status = "";
+		String  css="table table-striped table-bordered table-hover";
+	
+		
+		String bStatus="0";
+		
+		String msg="";
+
+		//System.out.println("drawEmpLateOutEarly sql :"+sql);
+		//htmlButton="<button id='saveBut' class=\"btn btn-primary \" onclick=\"outExecl()\" type=\"button\">輸出EXECL</button>";
+		
+		if(page.equals("save")){
+			bStatus="0";
+		}
+
+		WebDBTableLO table = new WebDBTableLO(con, sql);
+
+		return table.getHTMLTableLO(out,"無資料",css, msg,htmlButton, bStatus);
+		//System.out.println("table :"+table.toString());
+	}
+	
+	/**
+	 * 選擇小時
 	 * 
 	 * @param StartID
 	 * @param EndID
@@ -864,23 +935,27 @@ public static final String getListStatusJs(){
 		
 		StringBuilder Sb = new StringBuilder("")
 				.append("<SELECT class=\"select2_category form-control\" name='"+ID+"' id='"+ID+"'>  \r");
-		
-		for (int i = 8; i <=18; i++)
+	
+		for (int i = 5; i <=23; i++)
 		{
 			if (i <= 9)
 			{
-						if(Time.equals("0" + i)){
-							Sb.append("<OPTION value=0" + i + " selected>0" + i + "</OPTION>  \r");
+						if(Time.equals("0"+i)){
+							//System.out.println("i : 0" + i);
+							Sb.append("<OPTION value='0" + i + "' selected>0" + i + "</OPTION>  \r");
 						}else{
-							Sb.append("<OPTION value=0" + i + " >0" + i + "</OPTION>  \r");
+							
+							Sb.append("<OPTION value='0" + i + "' >0" + i + "</OPTION>  \r");
 						}
 			}
 			else
 			{	
-						if(Time.equals(i)){
-							Sb.append("<OPTION value=" + i + " selected>" + i + "</OPTION>  \r");
+						if(Time.equals(String.valueOf(i))){
+						
+							
+							Sb.append("<OPTION value='" + i + "' selected>" + i + "</OPTION>  \r");
 						}else{
-							Sb.append("<OPTION value=" + i + " >" + i + "</OPTION>  \r");
+							Sb.append("<OPTION value='" + i + "' >" + i + "</OPTION>  \r");
 						}
 			}
 
@@ -889,6 +964,54 @@ public static final String getListStatusJs(){
 		
 		return Sb.toString();
 	}
+	
+	
+	/**
+	 * 選擇分鐘
+	 * 
+	 * @param StartID
+	 * @param EndID
+	 * @param StartTime
+	 * @param EndTime
+	 * @return
+	 */
+	public static final String getLeaveCardMinuteDiv(String ID, String Time)
+	{
+	
+		
+		
+		StringBuilder Sb = new StringBuilder("")
+				.append("<SELECT class=\"select2_category form-control\" name='"+ID+"' id='"+ID+"'>  \r");
+	
+		for (int i = 0; i <=59; i++)
+		{
+			if (i <= 9)
+			{
+						if(Time.equals("0"+i)){
+							//System.out.println("i : 0" + i);
+							Sb.append("<OPTION value='0" + i + "' selected>0" + i + "</OPTION>  \r");
+						}else{
+							
+							Sb.append("<OPTION value='0" + i + "' >0" + i + "</OPTION>  \r");
+						}
+			}
+			else
+			{	
+						if(Time.equals(String.valueOf(i))){
+						
+							
+							Sb.append("<OPTION value='" + i + "' selected>" + i + "</OPTION>  \r");
+						}else{
+							Sb.append("<OPTION value='" + i + "' >" + i + "</OPTION>  \r");
+						}
+			}
+
+		}
+		Sb.append("</SELECT> \r");
+		
+		return Sb.toString();
+	}
+	
 	
 	public static final String getLabelHtml (String value)
 	{
@@ -1034,4 +1157,254 @@ public static String getIsLate(lateOutEarlyVO eaVo ){
 			 return ControlUtil.drawCustomSelectShared("queryIsLate",Options,eaVo.getQueryIsLate());
 }
 	
+/**
+ * 產生當月月歷html
+ * @param eaVo
+ * @return
+ */
+public static calendarVO getCalendar( Date date ){
+
+		calendarVO cv=new calendarVO();
+	    Calendar ca = Calendar.getInstance();
+		int day=DateUtil.getweekday(date,ca)-1;
+		System.out.println("day : "+day);
+		int dayCount= DateUtil.getDaysOfTheMonth(date);
+		StringBuilder Sb = new StringBuilder("");
+		Sb.append("<table class=\"table\"> \r\n");
+		int thcount=1;
+		//第一行
+		for(int i=0;i<7;i++){
+			if(i==0){
+				Sb.append(" <th width='12.5%'>打卡時段</th>  \r\n");
+			}
+			if(i>=day){
+				Sb.append(" <th width='12.5%'>"+thcount+"</th>\r\n");
+				thcount++;
+			}else{
+				Sb.append(" <th width='12.5%'> </th>\r\n");
+			}
+		
+		}
+		Sb.append(" </tr> </thead><tbody><tr>\r\n");
+		int tducount=1;
+		//第2行
+		for(int i=0;i<7;i++){
+			if(i==0){
+				Sb.append(" <td>上班 </td>\r\n");
+			}
+			if(i>=day){
+				Sb.append("<td><LateWT"+tducount+"/></th>\r\n");
+				tducount++;
+			}else{
+				Sb.append(" <td> </td>\r\n");
+			}
+		
+		}
+		Sb.append(" </tr><tr>\r");
+		//第3行
+		int tddcount=1;
+		for(int i=0;i<7;i++){
+			if(i==0){
+				Sb.append(" <td>下班 </td>\r");
+			}
+			if(i>=day){
+				Sb.append("<td><EarlyWT"+tddcount+"/></th> \r\n");
+				tddcount++;
+			}else{
+				Sb.append(" <td> </td>\r");
+			}
+		
+		}
+		Sb.append(" </tr> </tbody></table> <table class=\"table\"><thead>  <tr>\r\n");
+	
+		//table2 第一行
+		
+		
+		//table3 第一行
+				for(int i=0;i<8;i++){
+					if(i==0){
+						Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+					}else{
+					
+						Sb.append(" <th width='12.5%'>"+thcount+"</th>\r\n");
+						thcount++;
+					}
+				
+				}
+				Sb.append(" </tr> </thead><tbody><tr>\r\n");
+			
+				//第2行
+				for(int i=0;i<8;i++){
+					if(i==0){
+						Sb.append(" <td>上班 </td>\r\n");
+					}else{
+					
+						Sb.append("<td><LateWT"+tducount+"/></th>\r\n");
+						tducount++;
+					}
+				
+				}
+				Sb.append(" </tr><tr>\r\n");
+				//第3行
+			
+				for(int i=0;i<8;i++){
+					if(i==0){
+						Sb.append(" <td>下班 </td>\r\n");
+					}else{
+					
+						Sb.append("<td><EarlyWT"+tddcount+"/></th>\r\n");
+						tddcount++;
+					}
+					
+					
+				}
+				Sb.append(" </tr> </tbody></table> <table class=\"table\"><thead>  <tr>\r\n");
+		
+				//table4 第一行
+				for(int i=0;i<8;i++){
+					if(i==0){
+						Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+					}else{
+					
+						Sb.append(" <th width='12.5%'>"+thcount+"</th>\r\n");
+						thcount++;
+					}
+				
+				}
+				Sb.append(" </tr> </thead><tbody><tr>  \r\n");
+			
+				//第2行
+				for(int i=0;i<8;i++){
+					if(i==0){
+						Sb.append(" <td>上班 </td> \r\n");
+					}else{
+					
+						Sb.append("<td><LateWT"+tducount+"/></th> \r\n");
+						tducount++;
+					}
+				
+				}
+				Sb.append(" </tr><tr> \r\n");
+				//第3行
+			
+				for(int i=0;i<8;i++){
+					if(i==0){
+						Sb.append(" <td>下班 </td>\r\n");
+					}else{
+						Sb.append("<td><EarlyWT"+tddcount+"/></th>\r\n");
+						tddcount++;
+					}
+					
+				}
+				Sb.append(" </tr> </tbody></table> <table class=\"table\"><thead>  <tr>\r\n");
+				
+				if(dayCount>thcount){
+					//table5 第一行
+					for(int i=0;i<8;i++){
+						
+						if(i==0){
+							Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+						}else if(thcount<=dayCount){
+						
+							Sb.append(" <th width='12.5%'>"+thcount+"</th>\r\n");
+							thcount++;
+						}else{
+							Sb.append(" <th width='12.5%'></th>\r\n");
+							thcount++;
+						}
+					
+					}
+					Sb.append(" </tr> </thead><tbody><tr>  \r\n");
+				
+					//第2行
+					for(int i=0;i<8;i++){
+						if(i==0){
+							Sb.append(" <td>上班 </td> \r\n");
+						}else if(tducount<=dayCount){
+						
+							Sb.append("<td><LateWT"+tducount+"/></th> \r\n");
+							tducount++;
+						}else{
+							Sb.append("<td></th> \r\n");
+							tducount++;
+						}
+					
+					}
+					Sb.append(" </tr><tr> \r\n");
+					//第3行
+				
+					for(int i=0;i<8;i++){
+						if(i==0){
+							Sb.append(" <td>下班 </td>\r\n");
+						}else if(tddcount<=dayCount){
+						
+							Sb.append("<td><EarlyWT"+tddcount+"/></th> \r\n");
+							tddcount++;
+						}else{
+							Sb.append("<td></th>\r\n");
+							tddcount++;
+						}
+						
+					}
+					Sb.append(" </tr> </tbody></table> <table class=\"table\"><thead>  <tr>\r\n");
+				}		
+				if(dayCount>thcount){
+					//table6 第一行
+					for(int i=0;i<8;i++){
+						
+						if(i==0){
+							Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+						}else if(thcount<=dayCount){
+						
+							Sb.append(" <th width='12.5%'>"+thcount+"</th>\r\n");
+							thcount++;
+						}else{
+							Sb.append(" <th width='12.5%'></th>\r\n");
+							thcount++;
+						}
+					
+					}
+					Sb.append(" </tr> </thead><tbody><tr>  \r\n");
+				
+					//第2行
+					for(int i=0;i<8;i++){
+						if(i==0){
+							Sb.append(" <td>上班 </td> \r\n");
+						}else if(tducount<=dayCount){
+						
+							Sb.append("<td><LateWT"+tducount+"/></th> \r\n");
+							tducount++;
+						}else{
+							Sb.append("<td></th> \r\n");
+							tducount++;
+						}
+					
+					}
+					Sb.append(" </tr><tr> \r\n");
+					//第3行
+				
+					for(int i=0;i<8;i++){
+						if(i==0){
+							Sb.append(" <td>下班 </td>\r\n");
+						}else if(tddcount<=dayCount){
+						
+							Sb.append("<td><EarlyWT"+tddcount+"/></th> \r\n");
+							tddcount++;
+						}else{
+							Sb.append("<td></th>\r\n");
+							tddcount++;
+						}
+						
+					}
+					Sb.append(" </tr> </tbody></table> <table class=\"table\"><thead>  <tr>\r\n");
+				}		
+				
+		System.out.println("dayCount:"+dayCount);
+		
+		cv.setCalendarHtml(Sb.toString());
+		cv.setEndDay(dayCount);
+		 return cv;
+}
+
+
 }

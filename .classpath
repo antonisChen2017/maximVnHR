@@ -98,5 +98,7 @@
 	<classpathentry kind="lib" path="D:/jar/mybatis-3.2.0.jar"/>
 	<classpathentry kind="lib" path="D:/jar/mybatis-spring-1.2.0.jar"/>
 	<classpathentry kind="lib" path="D:/jar/commons-dbutils-1.6-bin/commons-dbutils-1.6/commons-dbutils-1.6.jar"/>
+	<classpathentry kind="lib" path="D:/newSystem/estore/eStore/estore_p3cr/lib/include/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="D:/maven/apache-maven-3.3.9/lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

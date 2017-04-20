@@ -1499,4 +1499,38 @@ public class SqlUtil
 		String sql="select ID from VN_DEPARTMENT where DEPARTMENT =N'" + UserEmployeeNo + "'";
 		return sql;
 	}
+	
+	/**
+	 * 假別查詢
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getVnHolidayPeople(leaveCardVO lcVo,String hdID) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_vnOverTimePeople);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		sql=sql.replace("<hdID>",hdID);
+		return sql;
+	}
+	/**
+	 * 曠工查詢
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getVnAbsenteeismPeople(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(UrlUtil.sql_vnAbsenteeismPeople);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		return sql;
+	}
 }

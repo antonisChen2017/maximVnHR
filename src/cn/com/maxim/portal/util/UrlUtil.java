@@ -64,6 +64,8 @@ public class UrlUtil
 	  public static final String sql_vnTurnC2People="/cn/com/maxim/portal/sql/vnTurnC2People.sql";
 	  public static final String sql_vnTurnC3People="/cn/com/maxim/portal/sql/vnTurnC3People.sql";
 	  public static final String sql_vnOverTimePeople="/cn/com/maxim/portal/sql/vnOverTimePeople.sql";
+	  public static final String sql_vnHolidayPeople="/cn/com/maxim/portal/sql/vnHolidayPeople.sql";
+	  public static final String sql_vnAbsenteeismPeople="/cn/com/maxim/portal/sql/vnAbsenteeismPeople.sql";
 	  /**
 		  * properties
 	  */

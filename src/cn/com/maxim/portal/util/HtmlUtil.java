@@ -220,13 +220,35 @@ public class HtmlUtil
 	{
 
 		StringBuilder Sb = new StringBuilder(
-				"<div class=\"input-group input-medium date date-picker\"  data-date-format=\"yyyy/mm\"> \r")
-						.append("  <input type=\"text\" ID='" + ID + "'  name='" + ID
-								+ "' class=\"form-control\"  value='" + Date + "' >  \r")
-						.append("   <span class=\"input-group-btn\"> \r")
-						.append("   <button class=\"btn btn-default\" type=\"button\"><i class=\"fa fa-calendar\"></i></button> \r")
-						.append("    </span></div> \r");
-
+				"<div class=\"input-group input-medium date \" data-date-format=\"yyyy/mm\"> \r\n")
+						.append("  <input type=\"text\" ID='" + ID + "'  name='" + ID+ "' class=\"form-control\"  readonly=\"readonly\" value='"+Date+"' >  \r\n")
+						.append("   <span class=\"input-group-btn\"> \r\n")
+						.append("   <button class=\"btn btn-default\" type=\"button\"><i class=\"fa fa-calendar\"></i></button>\r\n")
+						.append("    </span></div> \r\n");
+						Sb.append("   	<script> \r\n");
+						Sb.append("  $('#"+ID+"').datepicker({  \r\n");
+						Sb.append(" changeMonth: true,    \r\n");
+						Sb.append(" changeYear: true,    \r\n");
+						Sb.append(" dateFormat: 'yy/mm',    \r\n");
+						Sb.append(" showButtonPanel: true,    \r\n");
+						Sb.append(" monthNamesShort: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],    \r\n");
+						Sb.append(" closeText: '选择',    \r\n");
+						Sb.append(" currentText: '本月',    \r\n");
+						Sb.append(" isSelMon:'true',    \r\n");
+						Sb.append(" onClose: function (dateText, inst) {    \r\n");
+						Sb.append("    var month = +$(\"#ui-datepicker-div .ui-datepicker-month :selected\").val() + 1,    \r\n");
+						Sb.append("       year = $(\"#ui-datepicker-div .ui-datepicker-year :selected\").val();    \r\n");
+						Sb.append("    if (month < 10) {    \r\n");
+						Sb.append("        month = '0' + month;    \r\n"); 
+						Sb.append("    }    \r\n");
+						Sb.append("    this.value = year + '/' + month;    \r\n");
+						Sb.append("    if (typeof this.blur === 'function') {    \r\n");
+						Sb.append("         this.blur();    \r\n");
+						Sb.append("    }    \r\n");
+						Sb.append("   }   \r\n");
+						Sb.append("    });   \r\n");
+						Sb.append("   	</script> \r\n");
+		
 		return Sb.toString();
 
 	}
@@ -242,13 +264,25 @@ public class HtmlUtil
 	{
 
 		StringBuilder Sb = new StringBuilder(
-				"<div class=\"input-group input-medium date date-picker\"  data-date-format=\"yyyy/mm/dd\"> \r")
+				"<div class=\"input-group input-medium date \"  data-date-format=\"yyyy/mm/dd\"> \r")
 						.append("  <input type=\"text\" ID='" + ID + "'  name='" + ID
-								+ "' class=\"form-control\"  value='" + Date + "' >  \r")
+								+ "' class=\"form-control\"   readonly=\"readonly\" value='" + Date + "' >  \r")
 						.append("   <span class=\"input-group-btn\"> \r")
 						.append("   <button class=\"btn btn-default\" type=\"button\"><i class=\"fa fa-calendar\"></i></button> \r")
-						.append("    </span></div> \r");
-
+						.append("    </span> \r");
+						Sb.append("   	<script> \r\n");
+						Sb.append("  $('#"+ID+"').datepicker({  \r\n");
+					//	Sb.append(" showOn: \"button\", \r\n");
+					//	Sb.append(" buttonImage: \"\\javascript\\assets\\img\\icons\\color\\calendar.png\",  \r\n");
+					//	Sb.append(" buttonImageOnly: true, \r\n");
+						Sb.append(" dateFormat: 'yy/mm/dd',    \r\n");
+						Sb.append(" showButtonPanel: true,    \r\n");
+					//	Sb.append(" monthNamesShort: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],    \r\n");
+						Sb.append(" closeText: '选择',    \r\n");
+						Sb.append(" currentText: '本月',    \r\n");
+						Sb.append(" isSelMon:'false'   \r\n");
+						Sb.append("    });   \r\n");
+						Sb.append("   	</script> </span></div>\r\n");
 		return Sb.toString();
 
 	}

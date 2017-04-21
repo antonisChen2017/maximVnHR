@@ -2,7 +2,9 @@ package cn.com.maxim.portal.util;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import cn.com.maxim.DB.DBUtils;
 import cn.com.maxim.htmlDBcontrol.WebDBControl;
 import cn.com.maxim.htmlDBcontrol.WebDBForm;
 import cn.com.maxim.htmlDBcontrol.WebDBSelect;
@@ -57,6 +60,7 @@ public class ControlUtil
 		ws.setID(name);
 		ws.setName(name);
 		ws.setClass("select2_category form-control");
+		
 		ws.addOption("0", "未選擇");
 	//	System.out.println("drawSelectDBControl SelectedOption :"+SelectedOption);
 		ws.setSelectedOption(SelectedOption);
@@ -119,6 +123,65 @@ public class ControlUtil
 	
 		return APCustomSelect.toString();
 	}
+	/**
+	 * 可搜尋下拉
+	 * @param con
+	 * @param out
+	 * @param name
+	 * @param tableName
+	 * @param valueField
+	 * @param DisplayField
+	 * @param whereSql
+	 * @param SelectedOption
+	 * @param isDistinct
+	 * @param GroupField
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawChosenSelect(Connection con,  String name, String tableName, String valueField,
+			String DisplayField, String whereSql, String SelectedOption,boolean isDistinct,String GroupField) throws SQLException
+	{
+
+		
+		String sql = "SELECT " + (isDistinct ? "DISTINCT " : " ") + valueField + 
+			      " , " + DisplayField + " FROM " + tableName;
+			    if (whereSql != null) {
+			      sql = sql + " WHERE " + whereSql;
+			    }
+			    if ((GroupField != null))
+			    {
+			    	 sql = sql + " ORDER BY " + GroupField;
+			    }
+			    System.out.println("drawChosenSelect sql : "+sql);
+			    Statement st = con.createStatement();
+			    ResultSet rs = st.executeQuery(sql);
+			    StringBuilder Sb = new StringBuilder("");
+			
+			    int count=0;
+			    while (rs.next()) {
+			    	if(count==0){
+			    		Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\""+rs.getString(2)+"\"  tabindex=\"2\"> \r\n");
+			    		  Sb.append("<option value='0'>未選擇</option> \r\n");
+			    	}
+			    	  if(rs.getString(1).equals(SelectedOption)){
+			    		    Sb.append("<option value='"+rs.getString(1)+"'  selected>"+rs.getString(2)+"</option> \r\n");
+			    	  }else{
+			    		    Sb.append("<option value='"+rs.getString(1)+"'>"+rs.getString(2)+"</option> \r\n");
+			    	  }
+			    	  count=count+1;
+			      }
+			  
+			    Sb.append("</select> \r\n");
+				Sb.append("<script>");
+				Sb.append("	jQuery(document).ready(function() {    "); 
+				Sb.append(" $('#"+name+"').select2(); "); 
+				Sb.append("     }); "); 
+				Sb.append("</script>  ");
+			   
+
+		return Sb.toString();
+	}
+	
 	/**
 	 * 手風琴式介面
 	 * @param Name
@@ -371,96 +434,94 @@ public class ControlUtil
 		dr.setHt(ht);
 		
 		/**管理部 管理部**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"4",3,18,dt, dr);
-		
+		 Control=DataStringUtil.updateDayTableRow(Control,"4",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**管理部 1.人事課**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"5",3,18,dt, dr);
-		
+		 Control=DataStringUtil.updateDayTableRow(Control,"5",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**管理部 2.行政課**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"6",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"6",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**管理部 3.總務課**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"7",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"7",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**管理部 4.資訊課**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"8",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"8",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**管理部 5.機修課**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"9",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"9",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**管理部 合計**/
-		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"10",3,18,4,9,dr);
+		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"10",KeyUtil.colStart,KeyUtil.colEnd,4,9,dr);
 		/**財務部 財務部**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"11",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"11",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**財務部 海關**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"12",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"12",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**財務部 會計**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"13",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"13",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**合計**/
-		Control=DataStringUtil.replaceAddUpDayTableRow(Control,"14",3,18,11,13,dr);
-	
+		Control=DataStringUtil.replaceAddUpDayTableRow(Control,"14",KeyUtil.colStart,KeyUtil.colEnd,11,13,dr);
 		/**業務部 業務部**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"15",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"15",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**業務部  業務A**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"16",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"16",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**業務部 業務B**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"17",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"17",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**合計**/
-		Control=DataStringUtil.replaceAddUpDayTableRow(Control,"18",3,18,15,17,dr);
+		Control=DataStringUtil.replaceAddUpDayTableRow(Control,"18",KeyUtil.colStart,KeyUtil.colEnd,15,17,dr);
 		/**Prinshop Prinshop**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"19",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"19",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**Prinshop cs**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"20",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"20",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**Prinshop DPS**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"21",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"21",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**合計**/
-		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"22",3,18,19,21,dr);
+		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"22",KeyUtil.colStart,KeyUtil.colEnd,19,21,dr);
 		/**資材部 資材部**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"23",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"23",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**資材部 倉管**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"24",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"24",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**資材部 外發採購**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"25",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"25",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**資材部  原料採購**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"26",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"26",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**資材部  核價**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"27",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"27",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**資材部  合計**/
-		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"28",3,18,23,27,dr);
+		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"28",KeyUtil.colStart,KeyUtil.colEnd,23,27,dr);
 		/**生管部  生管部**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"29",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"29",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**生管部  開單**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"30",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"30",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**生管部  外發**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"31",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"31",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**生管部  原料採購**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"32",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"32",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**生管部  工程**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"33",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"33",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**生管部  合計**/
-		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"34",3,18,29,33,dr);
+		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"34",KeyUtil.colStart,KeyUtil.colEnd,29,33,dr);
 		/**印前部  畫稿**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"35",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"35",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**印前部 出菲林**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"36",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"36",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**印前部  EBS**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"37",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"37",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**印前部  合計**/
-		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"38",3,18,35,37,dr);
+		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"38",KeyUtil.colStart,KeyUtil.colEnd,35,37,dr);
 		/**品保部  QC**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"39",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"39",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**品保部 QA,實驗,助理**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"40",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"40",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**品保部   切折**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"41",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"41",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**品保部  合計**/
-		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"42",3,18,39,41,dr);
+		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"42",KeyUtil.colStart,KeyUtil.colEnd,39,41,dr);
 		/**印務部  凸版,柔印,絲網**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"43",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"43",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**印務部 後道**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"44",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"44",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**印務部   平板**/
-		 Control=DataStringUtil.updateDayTableRow(Control,"45",3,18,dt, dr);
+		 Control=DataStringUtil.updateDayTableRow(Control,"45",KeyUtil.colStart,KeyUtil.colEnd,dt, dr);
 		/**印務部  合計**/
-		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"46",3,18,43,45,dr);
+		 Control=DataStringUtil.replaceAddUpDayTableRow(Control,"46",KeyUtil.colStart,KeyUtil.colEnd,43,45,dr);
 		/** 合計**/
-	//	 Control=DataStringUtil.replaceDayTableRow(Control,"47",3,18,);
+		 String[] addRow={"10","14","18","22","28","34","38","42","46"};
+		 Control=DataStringUtil.updateMaxAddUpTableRow(Control,"47",KeyUtil.colStart,KeyUtil.colEnd,addRow,dr);
 		return Control;
 	}
 	

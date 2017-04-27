@@ -1,0 +1,347 @@
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets//fonts/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//plugins/bootstrap/css/bootstrap.min.css" />
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN THEME STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-bootstrap-custom.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-responsive.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/theme-default.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/plugins.css" />
+
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
+<![endif]-->
+<!-- END THEME STYLES -->
+<!-- BEGIN PAGE CONTAINER -->
+<div id="content" class="page-container">
+	<!-- BEGIN PAGE CONTENT -->
+	<div class="page-content-wrapper">
+		<!-- END TICKER-->
+		<div class="page-content fullwidth">
+			<!-- BEGIN PAGE HEADER-->
+			<div class="row">
+				<!-- BEGIN PAGE TITLE-->
+				<h3 class="page-title">
+					員工待工明細表<small>填寫</small>
+				</h3>
+				<!-- END PAGE TITLE-->
+			</div>
+			<div class="clearfix"></div>
+			<!-- END PAGE ROW-->
+			<!-- BEGIN PAGE ROW-->
+			<div class="row ">
+				<div class="col-md-12 col-sm-12">
+					<div class="portlet no-border">
+						<div class="tab-pane" id="tab_form_1">
+							<div class="portlet">
+								<div class="portlet-title">
+									<div class="caption">
+										<i class="fa fa-search"></i>選擇
+									</div>
+									<div class="tools">
+										<a href="javascript:;" class="collapse"></a>
+									</div>
+								</div>
+								<div class="portlet-body form">
+									<!-- BEGIN FORM-->
+									<form class="form-horizontal" name="ActionForm" method="post" action="<ActionURI/>">
+										<input type='hidden' name='act'> <input type='hidden' name='rowID' id='rowID'>
+										<div class="form-body">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">部門:</SPAN>
+
+														<div class="col-md-9">
+															<SPAN class="control-label col-md-3"><UserEmployeeNo/></SPAN>
+															<hiddenEmployeeNo/>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">單位:</SPAN>
+														<div id='UnitDiv' class="col-md-9">
+															<SearchUnit/><hiddenUnit/>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">工號:</SPAN>
+														<div id='EmployeeNoDiv' class="col-md-9">
+															<SearchEmployeeNo/><hiddenUserNo/>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">姓名:</SPAN>
+														<div id='EmployeeDiv' class="col-md-9">
+															<SearchEmployee/><hiddenUser/>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											
+
+
+
+										<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">待料時間:</SPAN>
+														<getDaterangeHtml/>
+
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">總天數:</SPAN>
+														<div class="col-md-9">
+															<addDay/>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">待工原因:</SPAN>
+														<div class="col-md-9">
+
+															<searchReasons/>
+
+
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">備註:</SPAN>
+														<div class="col-md-9">
+															<Note/>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+										</div>
+								</div>
+								<div class="form-actions right">
+									<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查詢</button>
+									<button id='saveBut' class="btn btn-primary " onclick="saveData()" type="button">保存</button>
+								</div>
+								</FORM>
+								<msg />
+							</div>
+							<drawTableM/>
+						</div>
+					</div>
+					<!-- END PAGE CONTENT -->
+				</div>
+				<!-- END PAGE CONTAINER -->
+				<!-- BEGIN FOOTER -->
+				<div id="footer" class="footer">
+					<div class="footer-inner"></div>
+					<div class="footer-tools"></div>
+					<!-- END FOOTER -->
+				</div>
+				<!-- END WRAPPER -->
+
+				<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/ie8.css"/>
+<![endif]-->
+				<!-- END THEME STYLES -->
+				<!--[if lt IE 9]>
+<script type="text/javascript" src="javascript/assets//plugins/respond.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/excanvas.min.js"></script> 
+
+<script type="text/javascript" src="javascript/assets//plugins/jquery-1.11.1.min.js"></script> 
+<![endif]-->
+				<script type="text/javascript" src="javascript/assets//plugins/jquery-migrate-1.1.0.js"></script>
+				<script type="text/javascript" src="javascript/assets//plugins/bootstrap/js/bootstrap.min.js"></script>
+				<script type="text/javascript" src="javascript/assets//plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+				<script type="text/javascript" src="javascript/assets//plugins/jquery-cookie-master/src/jquery.cookie.js"></script>
+				<!-- END CORE PLUGINS -->
+				<!-- BEGIN PAGE LEVEL PLUGINS -->
+				<script type="text/javascript" src="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/select2/select2.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js"></script>
+				<script type="text/javascript" src="javascript/assets/plugins/spinner/jquery.mousewheel.js"></script>
+				<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/jquery.dataTables.min.js"></script>
+				<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/DT_bootstrap.js"></script>
+				<!-- END PAGE LEVEL PLUGINS -->
+				<!-- BEGIN PAGE LEVEL SCRIPTS -->
+				<script type="text/javascript" src="javascript/assets//scripts/app.js"></script>
+				<script type="text/javascript" src="javascript/assets/scripts/form-components.js"></script>
+				<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-sliders.js"></script>
+				<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script>
+				<script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script>
+				<script type="text/javascript" src="javascript/assets/layer/layer.js"></script>
+				<!-- END PAGE LEVEL SCRIPTS -->
+				<script>
+				jQuery(document).ready(function() {    
+					  //var fnSetData=null;
+					   App.init(); // init layout and core plugins
+					   TableAdvanced.init();
+					   FormComponents.init();
+
+					   
+					   $('#searchDepartmen').change(function(){  
+							
+							 var p1= $('#searchDepartmen').val();
+						  
+						   jQuery.ajax({
+								url:'<ActionURI/>&doajax=SwEmpNo',
+								type:'POST',
+								data:{searchDepartmen:p1},
+								success:function(data){
+									 $('#EmployeeNoDiv').html(data);    
+									 $('#searchEmployeeNo').change(function(){  
+									     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+										 $('#searchEmployee').val(p1);       
+									   }) 
+								}
+							});
+						   jQuery.ajax({
+								url:'<ActionURI/>&doajax=SwEmp',
+								type:'POST',
+								data:{searchDepartmen:p1},
+								success:function(data){
+									 $('#EmployeeDiv').html(data);    
+									 $('#searchEmployee').change(function(){  
+									     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+									 	$('#searchEmployeeNo').val(p1);       
+									   })  
+								}
+							});
+						   
+						   jQuery.ajax({
+								url:'<ActionURI/>&doajax=SwUnit',
+								type:'POST',
+								data:{searchDepartmen:p1},
+								success:function(data){
+									var datas=data.split("#");
+									  $('#UnitDiv').html(datas[0]); 
+									  updateUnit();
+							 		  $('#EmployeeNoDiv').html(datas[1]);  
+									  $('#EmployeeDiv').html(datas[2]);  
+
+									  $('#searchEmployee').change(function(){  
+										     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+										 	$('#searchEmployeeNo').val(p1);       
+										   })  
+									   $('#searchEmployeeNo').change(function(){  
+											  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+										      $('#searchEmployee').val(p1);       
+									   }) 
+									}
+								});
+						   
+						   
+							});
+					   
+					   
+					  
+					  		
+					});
+
+
+
+
+					function    updateUnit(){  
+						 // layer.msg(' 0 ');  
+						 $('#searchUnit').change(function(){  
+						//	   layer.msg(' 1 ');  
+							var p1=$(this).children('option:selected').val();  //这就是selected的值  
+						//   layer.msg(' searchUnit :'+ p1);  
+
+						   jQuery.ajax({
+								url:'<ActionURI/>&doajax=SwDUnit',
+								type:'POST',
+								data:{searchUnit:p1,searchDepartmen:$('#searchDepartmen').val()},
+								success:function(data){
+									var datas=data.split("#");
+							 		  $('#EmployeeNoDiv').html(datas[0]);  
+									  $('#EmployeeDiv').html(datas[1]);  
+								//      layer.msg(' data :'+ data);  
+									  $('#searchEmployee').change(function(){  
+										     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+										 	$('#searchEmployeeNo').val(p1);       
+										   })  
+									   $('#searchEmployeeNo').change(function(){  
+											  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+										      $('#searchEmployee').val(p1);       
+									   }) 
+									}
+								});
+						 });
+						 
+					} 
+
+					function checkOK() {
+
+						ActionForm.act.value = 'I';
+						ActionForm.submit();
+					}
+					function checkNO() {
+
+						ActionForm.act.value = 'R';
+						ActionForm.submit();
+					}
+
+					function saveData() {
+						//	layer.msg('stop1'); 
+
+						if ($('#searchReasons').val() == '0') {
+							layer.msg('請選擇待料事由');
+							return;
+
+						}
+						//layer.msg('stop2'); 
+						/*	if($('#startTimeHhmm').val()=='00'){ 
+								layer.msg('請選擇待料開始時間');  
+								return; 
+						}
+						//	layer.msg('stop3'); 
+						if($('#endTimeHhmm').val()=='00'){  
+								layer.msg('請選擇待料結束時間');
+										return;  
+								}  
+							//	layer.msg('stop4'); 
+
+							if($('#endTimeHhmm').val()=='00'){  
+								layer.msg('請選擇待料結束時間');
+										return;  
+								}  
+						 */
+						//	layer.msg('stop5'); 
+						if ($('#searchEmployeeNo').val() == '0') {
+							layer.msg('請選擇員工');
+							return;
+						}
+						//	 layer.msg('stop6'); 
+						ActionForm.act.value = 'Save';
+						ActionForm.submit();
+
+					}
+				</script>
+				<!-- END JAVASCRIPTS -->
+			</div>

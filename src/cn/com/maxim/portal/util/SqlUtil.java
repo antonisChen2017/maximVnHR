@@ -13,6 +13,7 @@ import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.repAttendanceVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
+import cn.com.maxim.potral.consts.sqlConsts;
 
 public class SqlUtil
 {
@@ -808,7 +809,7 @@ public class SqlUtil
 		HtmlUtil hu=new HtmlUtil();
 		String sql="";
 		//遲到名單
-		sql=hu.gethtml(UrlUtil.sql_rep_daily);
+		sql=hu.gethtml(sqlConsts.sql_rep_daily);
 		sql=sql.replace("<FDate/>", lcVo.getApplicationDate());
 		sql=sql.replace("<DEPARTMENT/>", lcVo.getSearchDepartmen());
 		sql=sql.replace("<UNIT/>", lcVo.getSearchUnit());
@@ -826,7 +827,7 @@ public class SqlUtil
 		HtmlUtil hu=new HtmlUtil();
 		String sql="";
 		//遲到名單
-		sql=hu.gethtml(UrlUtil.sql_month_Attendance);
+		sql=hu.gethtml(sqlConsts.sql_month_Attendance);
 		sql=sql.replace("<year/>", raVo.getQueryYearMonth().split("/")[0]);
 		sql=sql.replace("<Month/>",raVo.getQueryYearMonth().split("/")[1]);
 		sql=sql.replace("<DEPARTMENT_ID/>",raVo.getSearchDepartmen());
@@ -910,7 +911,7 @@ public class SqlUtil
 				if(erVo.getQueryIsLate().equals("2")){
 					IsLate="0";
 				}
-		    sql=hu.gethtml(UrlUtil.sql_emp_IsQueryLate);
+		    sql=hu.gethtml(sqlConsts.sql_emp_IsQueryLate);
 			sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
 			sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
 			sql=sql.replace("<isLate/>",IsLate);
@@ -918,7 +919,7 @@ public class SqlUtil
 			String LATE=DBUtil.queryDBField(con,sql,"LATE");
 			if(Integer.valueOf(LATE)==0){
 					if(erVo.getQueryIsLate().equals("1")){
-						sql=hu.gethtml(UrlUtil.sql_empLate);
+						sql=hu.gethtml(sqlConsts.sql_empLate);
 						
 						sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
 						sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
@@ -927,7 +928,7 @@ public class SqlUtil
 						DBUtil.workLateOperationSql(con,sql);
 					}
 					if(erVo.getQueryIsLate().equals("2")){
-						sql=hu.gethtml(UrlUtil.sql_empEarly);
+						sql=hu.gethtml(sqlConsts.sql_empEarly);
 					
 						sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
 						sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
@@ -958,20 +959,20 @@ public class SqlUtil
 		if(erVo.getQueryIsLate().equals("2")){
 			IsLate="0";
 		}
-		 sql=hu.gethtml(UrlUtil.sql_lateIsQuery);
+		 sql=hu.gethtml(sqlConsts.sql_lateIsQuery);
 			sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
 			sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
 			sql=sql.replace("<isLate/>",IsLate);
 			String LATE=DBUtil.queryDBField(con,sql,"LATE");
 		if(Integer.valueOf(LATE)==0){
 			if(erVo.getQueryIsLate().equals("1")){
-				sql=hu.gethtml(UrlUtil.sql_yearMonthLate);
+				sql=hu.gethtml(sqlConsts.sql_yearMonthLate);
 				sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
 				sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
 				DBUtil.workLateOperationSql(con,sql);
 			}
 			if(erVo.getQueryIsLate().equals("2")){
-				sql=hu.gethtml(UrlUtil.sql_yesrMonthEarly);
+				sql=hu.gethtml(sqlConsts.sql_yesrMonthEarly);
 				sql=sql.replace("<year/>", erVo.getQueryYearMonth().split("/")[0]);
 				sql=sql.replace("<Month/>", erVo.getQueryYearMonth().split("/")[1]);
 				DBUtil.workLateOperationSql(con,sql);
@@ -1186,7 +1187,7 @@ public class SqlUtil
 		String sql="";
 		//遲到名單
 		
-		 sql=hu.gethtml(UrlUtil.sql_dept);
+		 sql=hu.gethtml(sqlConsts.sql_dept);
 		 sql=sql.replace("<DEPTID/>", lcVo.getSearchDepartmen());
 
 		return sql;
@@ -1219,7 +1220,7 @@ public class SqlUtil
 		String sql="";
 		//遲到名單
 		
-		 sql=hu.gethtml(UrlUtil.sql_excelDaily);
+		 sql=hu.gethtml(sqlConsts.sql_excelDaily);
 		 sql=sql.replace("<FDate/>", lcVo.getApplicationDate());
 		 sql=sql.replace("<DEPARTMENT/>", lcVo.getSearchDepartmen());
 		 sql=sql.replace("<UNIT/>", lcVo.getSearchUnit());
@@ -1342,7 +1343,7 @@ public class SqlUtil
 	public static final String getNoVnMaxPeople(leaveCardVO lcVo)
 	{
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_noVnMaxPeople);
+		String sql=hu.gethtml(sqlConsts.sql_noVnMaxPeople);
 		sql=sql.replace("<toDay>", lcVo.getApplicationDate().replaceAll("/", ""));
 		return sql;
 	}
@@ -1358,7 +1359,7 @@ public class SqlUtil
 	{
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMdd" );
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_VnMaxPeople);
+		String sql=hu.gethtml(sqlConsts.sql_VnMaxPeople);
 		Date date = sdf.parse( lcVo.getApplicationDate().replaceAll("/", "") );
 		date=DateUtil.addDays(date, -1);
 		
@@ -1377,7 +1378,7 @@ public class SqlUtil
 	{
 	
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_VnMaxPeople);
+		String sql=hu.gethtml(sqlConsts.sql_VnMaxPeople);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		return sql;
 	}
@@ -1394,7 +1395,7 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_VnActualPeople);
+		String sql=hu.gethtml(sqlConsts.sql_VnActualPeople);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		//logger.info("getActualMaxPeople sql :"+sql);
 		return sql;
@@ -1412,7 +1413,7 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_vnTurnA1People);
+		String sql=hu.gethtml(sqlConsts.sql_vnTurnA1People);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		//logger.info("getActualMaxPeople sql :"+sql);
 		return sql;
@@ -1429,7 +1430,7 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_vnTurnC1People);
+		String sql=hu.gethtml(sqlConsts.sql_vnTurnC1People);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		//logger.info("getActualMaxPeople sql :"+sql);
 		return sql;
@@ -1446,7 +1447,7 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_vnTurnC2People);
+		String sql=hu.gethtml(sqlConsts.sql_vnTurnC2People);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		//logger.info("getActualMaxPeople sql :"+sql);
 		return sql;
@@ -1463,7 +1464,7 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_vnTurnC3People);
+		String sql=hu.gethtml(sqlConsts.sql_vnTurnC3People);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		//logger.info("getActualMaxPeople sql :"+sql);
 		return sql;
@@ -1481,7 +1482,7 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_vnOverTimePeople);
+		String sql=hu.gethtml(sqlConsts.sql_vnOverTimePeople);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 
 		return sql;
@@ -1512,7 +1513,7 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_vnOverTimePeople);
+		String sql=hu.gethtml(sqlConsts.sql_vnOverTimePeople);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		sql=sql.replace("<hdID>",hdID);
 		return sql;
@@ -1529,8 +1530,56 @@ public class SqlUtil
 		Log4jUtil lu=new Log4jUtil();
 		Logger logger  =lu.initLog4j(SqlUtil.class);
 		HtmlUtil hu=new HtmlUtil();
-		String sql=hu.gethtml(UrlUtil.sql_vnAbsenteeismPeople);
+		String sql=hu.gethtml(sqlConsts.sql_vnAbsenteeismPeople);
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		return sql;
 	}
+	
+	/**
+	 * 新人報道查詢
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getVnInDatePeople(leaveCardVO lcVo) throws ParseException
+	{
+		Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(sqlConsts.sql_vnInDatePeople);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		return sql;
+	}
+	
+	/**
+	 * 離職查詢
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getvnNoLeavePeople(leaveCardVO lcVo) throws ParseException
+	{
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(sqlConsts.sql_vnNoLeavePeople);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		return sql;
+	}
+	
+	/**
+	 * 1年以下查詢
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getVnLessYear(leaveCardVO lcVo,String sqlConsts) throws ParseException
+	{
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(sqlConsts);
+		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
+		return sql;
+	}
+	
 }

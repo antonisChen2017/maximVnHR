@@ -1,0 +1,4 @@
+SELECT COUNT(*) AS LATE
+   FROM [hr].[dbo].[VN_INEMP_LATE]
+  WHERE YEAR='<year/>'  AND  MONTH='<Month/>'   AND ISLATE='<isLate/>'
+  AND EMPLOYEENO='<EMPLOYEENO/>'

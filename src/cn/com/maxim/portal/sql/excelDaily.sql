@@ -1,0 +1,159 @@
+SELECT  
+	ROW_NUMBER() over(order by TotalTime) as ID,
+	VE.EMPLOYEENO ,
+	VE.EMPLOYEE ,
+	VD.DEPARTMENT ,
+	VU.UNIT ,
+	(
+	select TotalTime 
+	from   PWERP_MS.dbo.RsKQResult SK,
+	PWERP_MS.dbo.RsEmployee SE ,
+    PWERP_MS.dbo.RsBasTurn SB,
+    VN_EMPLOYEE SVE,
+    VN_UNIT SVU,
+    VN_DEPARTMENT SVD
+	Where 1=1
+	AND SK.EmpCode=SE.EmpCode
+	AND SK.Turn= SB.Code
+	AND SVE.EMPLOYEENO= SE.EmpID
+	AND SVU.ID= SVE.UNIT_ID
+	AND SVD.ID= SVE.DEPARTMENT_ID
+	AND FDate='<FDate/>'
+	AND SVE.DEPARTMENT_ID='<DEPARTMENT/>'
+	AND SVE.UNIT_ID='<UNIT/>'
+	AND Code NOT in ('C3','CD','CD1')
+	AND SVE.EMPLOYEENO=VE.EMPLOYEENO
+	)
+	AS WorkTime,
+	(
+	select TotalTime 
+	from   PWERP_MS.dbo.RsKQResult SK,
+	PWERP_MS.dbo.RsEmployee SE ,
+    PWERP_MS.dbo.RsBasTurn SB,
+    VN_EMPLOYEE SVE,
+    VN_UNIT SVU,
+    VN_DEPARTMENT SVD
+	Where 1=1
+	AND SK.EmpCode=SE.EmpCode
+	AND SK.Turn= SB.Code
+	AND SVE.EMPLOYEENO= SE.EmpID
+	AND SVU.ID= SVE.UNIT_ID
+	AND SVD.ID= SVE.DEPARTMENT_ID
+	AND FDate='<FDate/>'
+	AND SVE.DEPARTMENT_ID='<DEPARTMENT/>'
+	AND SVE.UNIT_ID='<UNIT/>'
+	AND Code  in ('C3','CD','CD1')
+	AND SVE.EMPLOYEENO=VE.EMPLOYEENO
+	) 
+	AS NigthWorkTime,
+	(
+	select APPLICATION_HOURS from VN_OVERTIME_S
+	where EP_ID=VE.ID
+	AND STATUS='I'
+	and  OVERTIME_START>='<FDate/> 00:00:00'
+	AND OVERTIME_END<='<FDate/> 23:59:59'
+	)
+	 AS OverWorkTime,
+	(
+	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) from VN_LEAVECARD L,VN_HOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M')--審核通過
+	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
+	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND  HD_ID='8'
+	) AS HolidayH,
+	(
+	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M')--審核通過
+	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
+	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND  HD_ID='2'
+	) AS HolidayB,
+	(
+	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M')--審核通過
+	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
+	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND  HD_ID='1'
+	) AS HolidayA,
+	(
+	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M')--審核通過
+	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
+	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND  HD_ID='3'
+	) AS HolidayC,
+	(
+	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M')--審核通過
+	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
+	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND  HD_ID='5'
+	) AS HolidayE,
+	(
+	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M')--審核通過
+	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
+	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND  HD_ID='6'
+	) AS HolidayF,
+	(
+	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M')--審核通過
+	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
+	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND  HD_ID='15'
+	) AS HolidayK,
+	K.LTime ,
+	(
+	select datediff(hh,K.STARTSTOPDATE,K.ENDENDDATE) from VN_STOPWORKING K,VN_STOPWORKRESON S
+	where EP_ID=VE.ID
+	AND K.REASON_ID= S.ID
+	and  K.STARTSTOPDATE>='<FDate/> 00:00:00'
+	AND K.ENDENDDATE<='<FDate/> 23:59:59'
+	) AS StopWork,
+	'' AS SubsidyMeals,
+	(
+	select convert(nvarchar(max),isnull((
+	select NOTE from VN_OVERTIME_S
+	where EP_ID=VE.ID
+	AND STATUS='I'
+	and  OVERTIME_START>='2017/01/26 00:00:00'
+	AND OVERTIME_END<='2017/01/26 23:59:59' 
+	) ,''))+'  '+convert(nvarchar(max),isnull((
+	select NOTE from VN_LEAVECARD
+	where EP_ID=VE.ID
+	AND STATUS IN ('L','M')--審核通過
+	and  STARTLEAVEDATE>='2017/01/26 00:00:00'
+	AND ENDLEAVEDATE<='2017/01/26 23:59:59'
+	),'')) 
+	) AS Note
+	from   PWERP_MS.dbo.RsKQResult K,
+	PWERP_MS.dbo.RsEmployee E ,
+    PWERP_MS.dbo.RsBasTurn B,
+    VN_EMPLOYEE VE,
+    VN_UNIT VU,
+    VN_DEPARTMENT VD
+	Where 1=1
+	AND K.EmpCode=E.EmpCode
+	AND K.Turn= B.Code
+	AND VE.EMPLOYEENO= E.EmpID
+	AND VU.ID= VE.UNIT_ID
+	AND VD.ID= VE.DEPARTMENT_ID
+	AND FDate='<FDate/>'
+	AND VE.DEPARTMENT_ID='<DEPARTMENT/>'
+	AND VE.UNIT_ID='<UNIT/>'
+    AND E.LeaveFlag='0' --在職

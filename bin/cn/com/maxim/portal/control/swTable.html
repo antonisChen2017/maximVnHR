@@ -1,0 +1,119 @@
+<input type="hidden" name="user_on">
+<input type="hidden" name="user_off">
+<table><tr>
+<table><tr>
+<th>非此业务仓的使用者</th>
+<td>&nbsp;</td>
+<th>此业务仓的使用者</th>
+<tr><td valign="top">
+<!-- Start DB HTML Table -->
+<table border="0" cellspacing="2" cellpadding="2">
+  <tr class="HeaderRow">
+    <th nowrap>选择</th>
+    <th nowrap>序号</th>
+    <th nowrap>登入代号</th>
+    <th nowrap>姓名</th>
+  </tr>
+  <tr class="OddRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="admin"></td>
+    <td >1</td>
+    <td >admin</td>
+    <td >Admin</td>
+  </tr>
+  <tr class="EvenRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="antonis"></td>
+    <td >2</td>
+    <td >antonis</td>
+    <td >吳忠孝</td>
+  </tr>
+  <tr class="OddRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="DTMaster"></td>
+    <td >3</td>
+    <td >DTMaster</td>
+    <td >裴氏金嬌</td>
+  </tr>
+  <tr class="EvenRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="General"></td>
+    <td >4</td>
+    <td >General</td>
+    <td >辈原法</td>
+  </tr>
+  <tr class="OddRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="linda"></td>
+    <td >5</td>
+    <td >linda</td>
+    <td >陈氏小</td>
+  </tr>
+  <tr class="EvenRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="Natasha"></td>
+    <td >6</td>
+    <td >Natasha</td>
+    <td >陈氏红</td>
+  </tr>
+  <tr class="OddRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="ranger"></td>
+    <td >7</td>
+    <td >ranger</td>
+    <td >Ranger</td>
+  </tr>
+  <tr class="EvenRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="sales"></td>
+    <td >8</td>
+    <td >sales</td>
+    <td >Sales</td>
+  </tr>
+  <tr class="OddRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="unitMaster"></td>
+    <td >9</td>
+    <td >unitMaster</td>
+    <td >吳氏良</td>
+  </tr>
+  <tr class="EvenRow">
+    <td ><INPUT TYPE="checkbox"  name="user_off" value="武氏日秋"></td>
+    <td >10</td>
+    <td >武氏日秋</td>
+    <td >武氏日秋</td>
+  </tr>
+</table>
+<!-- End DB HTML Table -->
+</td><td valign="top">
+<br>
+<INPUT onclick="addRoleUser()" name="add_user" type="button" class="ButtonStyle" value="新增使用者->">
+<br>
+<INPUT onclick="removeRoleUser()" name="remove_user" type="button" class="ButtonStyle" value="<-移除使用者">
+</td><td valign="top">
+<!-- Start DB HTML Table -->
+<table border="0" cellspacing="2" cellpadding="2">
+  <tr class="HeaderRow">
+    <th nowrap>选择</th>
+    <th nowrap>序号</th>
+    <th nowrap>登入代号</th>
+    <th nowrap>姓名</th>
+  </tr>
+</table>
+<!-- End DB HTML Table -->
+</td></tr></table>
+<SCRIPT language="JavaScript">
+  function addRoleUser(){
+  var postable=false;
+  RUForm.act.value='A';
+  for(i=1;i<RUForm.user_off.length;i++){
+    if(RUForm.user_off[i].checked){
+       postable=true;
+       break;
+     }
+  }
+  postable?RUForm.submit():alert('未選取任何可新增的使用者!!');
+}
+  function removeRoleUser(){
+  var postable=false;
+  RUForm.act.value='R';
+  for(i=1;i<RUForm.user_on.length;i++){
+    if(RUForm.user_on[i].checked){
+       postable=true;
+       break;
+     }
+  }
+  postable?RUForm.submit():alert('未選取任何可移除的使用者!!');
+}
+</SCRIPT>

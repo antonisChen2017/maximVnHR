@@ -1,0 +1,217 @@
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets//fonts/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets//plugins/bootstrap/css/bootstrap.min.css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN THEME STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-bootstrap-custom.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/plugins.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/jquery.monthpicker.css"/>
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
+<![endif]-->
+<!-- END THEME STYLES -->
+<!-- BEGIN PAGE CONTAINER --> 
+<div id="content" class="page-container">  
+<!-- BEGIN PAGE CONTENT -->  
+<div class="page-content-wrapper">   
+<!-- END TICKER-->  
+<div class="page-content fullwidth">   
+  <!-- BEGIN PAGE HEADER-->  
+ <div class="row">   
+   <!-- BEGIN PAGE TITLE-->  
+   <h3 class="page-title">考績查詢</small> </h3>
+   <!-- END PAGE TITLE-->   
+ </div>  
+<div class="clearfix"> </div>
+<!-- END PAGE ROW--> 
+<!-- BEGIN PAGE ROW--> 
+<div class="row "> 
+<div class="col-md-12 col-sm-12"> 
+<div class="portlet no-border"> 
+<div class="tab-pane" id="tab_form_1"> 
+<div class="portlet"> 
+ <div class="portlet-title"> 
+   <div class="caption"> <i class="fa fa-search"></i>查詢</div> 
+  <div class="tools"> <a href="javascript:;" class="collapse"></a>  </div> 
+</div> 
+<div class="portlet-body form">  
+   <!-- BEGIN FORM--> 
+<form class="form-horizontal"  name="ActionForm"  method="post"  action="<ActionURI/>"> 
+ <input type='hidden' name='act'>
+ <input type='hidden' name='rowID' id='rowID' >
+ <input type='hidden' name='returnMsg' id='returnMsg' >
+ <input type='hidden' name='_name' id='_name' >
+<input type='hidden'   name='_content'   value='<Exceltable/>'  id='_content' >
+
+<div class="form-body">
+
+
+<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">部門:</SPAN>
+
+														<div class="col-md-9">
+															<SPAN class="control-label col-md-3"><UserEmployeeNo/></SPAN>
+															<hiddenEmployeeNo/>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">單位:</SPAN>
+														<div id='UnitDiv' class="col-md-9">
+															<SearchUnit/><hiddenUnit/>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">工號:</SPAN>
+														<div id='EmployeeNoDiv' class="col-md-9">
+															<SearchEmployeeNo/><hiddenUserNo/>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">姓名:</SPAN>
+														<div id='EmployeeDiv' class="col-md-9">
+															<SearchEmployee/><hiddenUser/>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">年月:</SPAN>
+
+<div class="col-md-9">
+<queryYearMonth/>
+
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3"></SPAN>
+<div     id='EmployeeNoDiv'  class="col-md-9">
+
+ </div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="form-actions right">  
+<button class="btn btn-success "   onclick="queryData();"   type="button">查詢</button> 
+</div></FORM> 
+<msg/>
+</div> 
+<drawTableM/>
+</div> 
+</div>
+  <!-- END PAGE CONTENT --> 
+</div>
+<!-- END PAGE CONTAINER -->  <!-- BEGIN FOOTER --> 
+<div id="footer" class="footer"> 
+<div class="footer-inner"> </div> 
+<div class="footer-tools"></div> 
+<!-- END FOOTER -->  
+</div> 
+<!-- END WRAPPER -->  
+
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/ie8.css"/>
+<![endif]-->
+<!-- END THEME STYLES -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="javascript/assets//plugins/respond.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/excanvas.min.js"></script> 
+
+<script type="text/javascript" src="javascript/assets//plugins/jquery-1.11.1.min.js"></script> 
+<![endif]--> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-migrate-1.1.0.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/bootstrap/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-cookie-master/src/jquery.cookie.js"></script> 
+<!-- END CORE PLUGINS --> 
+<!-- BEGIN PAGE LEVEL PLUGINS --> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="javascript/assets/plugins/select2/select2.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/spinner/jquery.mousewheel.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/DT_bootstrap.js"></script> 
+<!-- END PAGE LEVEL PLUGINS --> 
+<!-- BEGIN PAGE LEVEL SCRIPTS --> 
+<script type="text/javascript" src="javascript/assets//scripts/app.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/form-components.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-sliders.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script> 
+<script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script> 
+<script type="text/javascript" src="javascript/assets/layer/layer.js"></script> 
+<script type="text/javascript" src="javascript/assets//scripts/jquery.monthpicker.js"></script> 
+<!-- END PAGE LEVEL SCRIPTS --> 
+<script>
+jQuery(document).ready(function() {    
+
+   App.init(); // init layout and core plugins
+   TableAdvanced.init();
+   FormComponents.init();
+
+ 
+  
+   
+});
+
+
+
+
+
+function    checkNO(){  
+
+	ActionForm.act.value='R';  
+	ActionForm.submit();   
+}  
+
+ function    queryData(){  
+	 
+	    if($('#queryIsLate').val()=='0'){   
+			 layer.msg('請選擇查詢遲到或早退');  
+			return;  
+		}  
+	    ActionForm.action="<ActionURI/>";  
+	    ActionForm.act.value='QUE';  
+	  //loading层
+	    var index = layer.load(1, {
+	      shade: [0.1,'#fff'] //0.1透明度的白色背景
+	    });
+		ActionForm.submit();   
+}  
+ function     outExecl(){
+		ActionForm.action="/ExcelOutService?"
+	  	ActionForm._name.value='lateOutEarly';  
+		ActionForm.submit();   
+ }
+
+</script> 
+<!-- END JAVASCRIPTS -->
+</div>

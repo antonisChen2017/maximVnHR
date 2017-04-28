@@ -26,6 +26,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 /**
  * 每日考勤表
  * @author Antonis.chen
@@ -217,7 +218,7 @@ public class rep_daily extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", " DEPARTMENT_ID='" +lcVo.getSearchDepartmen( ) + "'", lcVo.getSearchUnit()));
 			if(lcVo.isShowDataTable()){
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLateOutEarlyTable(
-						SqlUtil.getdailyReport(lcVo),HtmlUtil.drawTableMExcelButton(),  con, out,UrlUtil.pageMsList));
+						SqlUtil.getdailyReport(lcVo),HtmlUtil.drawTableMExcelButton(),  con, out,keyConts.pageMsList));
 				 repDailyRO rdRo=new repDailyRO();
 				 List<repDailyRO> eaRolist=( List<repDailyRO>)DBUtil.queryDailyList(con,SqlUtil.getDailyExcelSql(lcVo),rdRo);
 

@@ -44,7 +44,9 @@
 								<div class="portlet-body form">
 									<!-- BEGIN FORM-->
 									<form class="form-horizontal" name="ActionForm" method="post" action="<ActionURI/>">
-										<input type='hidden' name='act'> <input type='hidden' name='rowID' id='rowID'>
+										<input type='hidden'  name='act'> 
+										<input type='hidden'  name='rowID'  id='rowID'>
+										 <input type='hidden'  name='_name'  id='_name' >
 										<div class="form-body">
 											<div class="row">
 												<div class="col-md-6">
@@ -68,7 +70,7 @@
 								<div class="form-actions right">
 									<button class="btn btn-success "  onclick="queryTable();" type="button">查詢</button>
 								</div>
-								</FORM>
+								</form>
 								<msg />
 							</div>
 							 <drawTableM/>
@@ -76,19 +78,12 @@
 </div>  
 </div>  
 </div>   
-<div class="clearfix"> </div>   
  <!-- END PAGE ROW-->   
 
 </div> 
 </div>
   <!-- END PAGE CONTENT --> 
-				<!-- BEGIN FOOTER -->
-				<div id="footer" class="footer">
-					<div class="footer-inner"></div>
-					<div class="footer-tools"></div>
-					<!-- END FOOTER -->
-				</div>
-				<!-- END WRAPPER -->
+			
 
 				<!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" href="javascript/assets/css/ie8.css"/>
@@ -145,6 +140,13 @@
 						ActionForm.submit();
 
 					}
+					
+					 function  outExecl(){	
+							ActionForm.action="/ExcelOutService?"			
+						  	ActionForm._name.value='attendanceDay';  
+							ActionForm.submit();   
+					 }
+
 				</script>
 				<!-- END JAVASCRIPTS -->
 			</div>

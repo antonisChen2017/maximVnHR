@@ -5,9 +5,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Vector;
 
-import cn.com.maxim.service.ExcelClientService;
+
+
 
 public class testSql {
 
@@ -15,20 +15,20 @@ public class testSql {
 		// TODO Auto-generated method stub
 		 try
 		    {
-		String sql = " SELECT  *  FROM PT_MODEL";
+		String sql = " SELECT  *  FROM VN_CONFIG";
 		    
 	
 		  Class.forName("net.sourceforge.jtds.jdbc.Driver");
 	      Connection con = DriverManager.getConnection(
-	        "jdbc:jtds:sqlserver://192.168.4.199/jj;charset=gb2312", "sa", "!Q@W3e4r");
+	        "jdbc:jtds:sqlserver://192.168.4.199:1434/hr;charset=gb2312", "sa", "!Q@W3e4r");
 	      Statement stmt = con.createStatement();
 	   //   String sql = "SELECT bh, xm FROM employee";
 	      
 	      ResultSet rs = stmt.executeQuery(sql);
 	      if (rs.next()) 
 	      {
-	        String id = rs.getString("MODEL");
-	        System.out.println("[MODEL]:"+id);
+	        String id = rs.getString("VALUE");
+	        System.out.println("VALUE :"+id);
 	       
 	      }
 	      rs.close();

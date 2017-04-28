@@ -20,34 +20,32 @@ public class repAttendanceDayBean
 	  private   String c8;
 	  /**中班**/
 	  private   String c9;
-	  /**晚班**/
-	  private   String c10;
 	  /**夜班**/
-	  private   String c11;
+	  private   String c10;
 	  /**特加班次**/
-	  private   String c12;
+	  private   String c11;
 	  /**產假**/
-	  private   String c13;
+	  private   String c12;
 	  /**請假**/
-	  private   String c14;
+	  private   String c13;
 	  /**年假**/
-	  private   String c15;
+	  private   String c14;
 	  /**出差**/
-	  private   String c16;
+	  private   String c15;
 	  /**工傷**/
-	  private   String c17;
+	  private   String c16;
 	  /**曠工**/
-	  private   String c18;
+	  private   String c17;
 	  /**周六排休**/
-	  private   String c19;
+	  private   String c18;
 	  /**新人報到**/
-	  private   String c20;
+	  private   String c19;
 	  /**調動**/
-	  private   String c21;
+	  private   String c20;
 	  /**離職**/
-	  private   String c22;
+	  private   String c21;
 	  /**離職率**/
-	  private   String c23;
+	  private   String c22;
 	  
 	public String getC1()
 	{
@@ -225,19 +223,18 @@ public class repAttendanceDayBean
 	{
 		this.c22 = c22;
 	}
-	public String getC23()
-	{
-		return c23;
-	}
-	public void setC23(String c23)
-	{
-		this.c23 = c23;
-	}
+	
 	  
 	public String getCol(int colIndex)
 	{
 		String re="";
 		switch (colIndex) {
+			case 1:
+				re=getC1();
+			    break;
+			case 2:
+				re=getC2();
+			    break;
 			case 3:
 				re=getC3();
 			    break;
@@ -298,9 +295,7 @@ public class repAttendanceDayBean
 			case 22:
 				re=getC22();
 			    break;
-			case 23:
-				re=getC23();
-			    break;
+		
 			}
 		return re;
 	}
@@ -309,6 +304,12 @@ public class repAttendanceDayBean
 	public void setCol(int colIndex,String Value)
 	{
 		switch (colIndex) {
+			case 1:
+				   setC1(Value);
+			    break;
+			case 2:
+				   setC2(Value);
+			    break;
 			case 3:
 				   setC3(Value);
 			    break;
@@ -368,9 +369,6 @@ public class repAttendanceDayBean
 			    break;
 			case 22:
 				 setC22(Value);
-			    break;
-			case 23:
-				 setC23(Value);
 			    break;
 			}
 	}

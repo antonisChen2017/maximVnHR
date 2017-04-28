@@ -26,6 +26,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 
 /**
  * 停待工,停水,停電
@@ -220,7 +221,7 @@ public class rev_StopWorking extends TemplatePortalPen
 		if(swVo.isShowDataTable()){
 	//	System.out.println("StopWork : " +SqlUtil.getStopWork(swVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawStopWorking(
-					SqlUtil.getStopWork(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageList));
+					SqlUtil.getStopWork(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageList));
 		}
 		
 	    out.println(htmlPart1);

@@ -25,6 +25,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 /**
  *  部門申請  請假卡 
  * @author Antonis.chen
@@ -89,7 +90,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 						String rowID = request.getParameter("rowID");
 						//delete 請假單
 						logger.info("請假卡 員工/Save : Delete: " +lcVo.toString());
-						boolean flag=DBUtil.delDBTableRow(SqlUtil.delDBRow(UrlUtil.dbTableCR,rowID),con);
+						boolean flag=DBUtil.delDBTableRow(SqlUtil.delDBRow(keyConts.dbTableCR,rowID),con);
 						lcVo.setShowDataTable(true);
 						if(flag){
 							lcVo.setMsg("刪除成功!");
@@ -102,7 +103,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 員工/Save : Refer: " +lcVo.toString());
-						DBUtil.updateDbTable(SqlUtil.upLCStatus(UrlUtil.dbTableCRStatuS_T,request.getParameter("rowID")), con);
+						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID")), con);
 						lcVo.setShowDataTable(true);
 						showHtml(con, out, lcVo,UserInformation);
 						
@@ -185,7 +186,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
 		if(lcVo.isShowDataTable()){
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageEmpUnitList));
+					SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageEmpUnitList));
 		}
 		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", lcVo.getSearchUnit()));
 		htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", lcVo.getSearchEmployeeNo()));

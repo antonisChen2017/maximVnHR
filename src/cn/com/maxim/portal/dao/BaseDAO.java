@@ -11,27 +11,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
  
 
 public class BaseDAO {
-    /**
-     * 获取数据库连接
-     * @return
-     */
-    public Connection getConnection() {
-        Connection conn = null;
-        String jdbcURL ="jdbc:mysql://localhost/dbname";
-        String jdbcDriver ="com.mysql.jdbc.Driver";
-        String user = "root";
-        String password = "root";
-        try {
-           DbUtils.loadDriver(jdbcDriver);
-            conn =DriverManager.getConnection(jdbcURL, user, password);
-        } catch (SQLException e) {
-            // handle the exception
-            e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(conn);
-        }
-        return conn;
-    }
+
  
     /**
     * 查找多个对象

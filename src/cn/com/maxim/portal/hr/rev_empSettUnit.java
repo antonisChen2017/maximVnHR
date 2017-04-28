@@ -23,6 +23,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 import cn.com.maxim.potral.consts.sqlConsts;
 /**
  *  審核 設定員工與單位關係
@@ -177,7 +178,7 @@ public class rev_empSettUnit  extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
 			if(lcVo.isShowDataTable()){
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-						SqlUtil.getDept(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageMsList));
+						SqlUtil.getDept(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 			}
 		
 			

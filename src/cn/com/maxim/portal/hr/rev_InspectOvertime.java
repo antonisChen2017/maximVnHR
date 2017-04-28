@@ -25,6 +25,7 @@ import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.Utilities;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 /**
  * 加班申請單 審核
  * @author Antonis.chen
@@ -55,7 +56,7 @@ public class rev_InspectOvertime extends TemplatePortalPen {
 					
 						// 輸出查詢UI
 						out.write(HtmlUtil.drawTableS(
-								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageInspect));
+								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
 						
 						setHtmlPart2(con, out, otVo);
 					}
@@ -67,7 +68,7 @@ public class rev_InspectOvertime extends TemplatePortalPen {
 						//System.out.println("OvertimeNoSave  :   "+SqlUtil.getOvertimeNoSave(otVo));
 						// 輸出查詢UI
 						out.write(HtmlUtil.drawTableS(
-								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageInspect));
+								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
 						
 						setHtmlPart2(con, out, otVo);
 					}
@@ -79,7 +80,7 @@ public class rev_InspectOvertime extends TemplatePortalPen {
 				
 						// 輸出查詢UI
 						out.write(HtmlUtil.drawTableS(
-								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageInspect));
+								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
 						
 						setHtmlPart2(con, out, otVo);
 					}

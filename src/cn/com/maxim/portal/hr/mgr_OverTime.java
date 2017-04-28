@@ -23,6 +23,7 @@ import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 import cn.com.maxim.portal.util.UrlUtil;
 /**
  * 超時加班時數
@@ -144,7 +145,7 @@ public class mgr_OverTime extends TemplatePortalPen
 				if(otVo.isShowDataTable()){
 			//		System.out.println("sql  :  "+SqlUtil.getStopWork(otVo));
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawTableS(
-							SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageInspect));
+							SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
 				}
 				out.println(htmlPart1);
 		}

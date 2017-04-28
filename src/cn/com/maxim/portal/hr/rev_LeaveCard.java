@@ -25,6 +25,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 
 /**
  * 請假卡 三天以下 管理部審核
@@ -60,7 +61,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 						logger.info(" 請假卡 三天以下 管理部審核/MR: " +lcVo.toString());	
 						lcVo.setStatus(actText);
 						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
-							lcVo.setMsg(UrlUtil.returnMsg);
+							lcVo.setMsg(keyConts.returnMsg);
 						}
 						
 						lcVo.setShowDataTable(true);
@@ -74,7 +75,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 						lcVo.setStatus(actText);
 						// 儲存db
 						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
-							lcVo.setMsg(UrlUtil.okMsg);
+							lcVo.setMsg(keyConts.okMsg);
 						}
 				
 						showHtml(con, out, lcVo,UserInformation);
@@ -249,7 +250,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 	//	System.out.println("sql : "+SqlUtil.getDepartmenLeaveCard(lcVo));
 		if(lcVo.isShowDataTable()){
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getMLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageMsList));
+					SqlUtil.getMLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 		}
 	
 		

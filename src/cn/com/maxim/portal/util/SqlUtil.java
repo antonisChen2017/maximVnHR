@@ -13,6 +13,7 @@ import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.repAttendanceVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
+import cn.com.maxim.portal.attendan.wo.dayAttendanceWO;
 import cn.com.maxim.potral.consts.sqlConsts;
 
 public class SqlUtil
@@ -1581,5 +1582,82 @@ public class SqlUtil
 		sql=sql.replace("<toDay>",lcVo.getApplicationDate().replaceAll("/", ""));
 		return sql;
 	}
+	/**
+	 * 新增全廠報表(一行)
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String saveAttendanceDayRow(dayAttendanceWO dw) throws ParseException
+	{
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(sqlConsts.sql_vnInsertAttendanceDay);
+		sql=sql.replace("<YMD>",dw.getYMD());
+		sql=sql.replace("<DEPARTMENT>",dw.getDEPARTMENT());
+		          sql=sql.replace("<UNIT>",dw.getUNIT());
+		          sql=sql.replace("<ROW>",dw.getROW());
+		          sql=sql.replace("<C1>",dw.getC1());
+		          sql=sql.replace("<C2>",dw.getC2());
+		          sql=sql.replace("<C3>",dw.getC3());
+		          sql=sql.replace("<C4>",dw.getC4());
+		          sql=sql.replace("<C5>",dw.getC5());
+		      //    System.out.println("c5 sql="+sql);
+		          sql=sql.replace("<C6>",dw.getC6());
+		          sql=sql.replace("<C7>",dw.getC7());
+		          sql=sql.replace("<C8>",dw.getC8());
+		          sql=sql.replace("<C9>",dw.getC9());
+		          sql=sql.replace("<C10>",dw.getC10());
+		     //     System.out.println("c10 sql="+sql);
+		          sql=sql.replace("<C11>",dw.getC11());
+		          sql=sql.replace("<C12>",dw.getC12());
+		          sql=sql.replace("<C13>",dw.getC13());
+		          sql=sql.replace("<C14>",dw.getC14());
+		          sql=sql.replace("<C15>",dw.getC15());
+		      //    System.out.println("c15 sql="+sql);
+		          sql=sql.replace("<C16>",dw.getC16());
+		          System.out.println("c16 ");
+		          sql=sql.replace("<C17>",dw.getC17());
+		          System.out.println("c17 ");
+		          sql=sql.replace("<C18>",dw.getC18());
+		          System.out.println("c18 ");
+		          sql=sql.replace("<C19>",dw.getC19());
+		          System.out.println("c19 ");
+		          sql=sql.replace("<C20>",dw.getC20());
+		          System.out.println("c20 sql="+sql);
+		       //   sql=sql.replace("<C21/>",dw.getC21());
+		       //   sql=sql.replace("<C22/>",dw.getC22());
+		       
 	
+		return sql;
+	}
+	
+	/**
+	 * 查詢全廠報表
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getAttendanceDay(String YMD) throws ParseException
+	{
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(sqlConsts.sql_vnGetAttendanceDay);
+		sql=sql.replace("<YMD>",YMD);
+		return sql;
+	}
+	/**
+	 * 查詢全廠報表excel
+	 * 
+	 * @param lcVo
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static final String getExcelAttendanceDay(String YMD) throws ParseException
+	{
+		HtmlUtil hu=new HtmlUtil();
+		String sql=hu.gethtml(sqlConsts.sql_vnGetExcelAttendanceDay);
+		sql=sql.replace("<YMD>",YMD);
+		return sql;
+	}
 }

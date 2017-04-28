@@ -26,6 +26,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 /**
  * 停工申請
  * @author Antonis.chen
@@ -193,7 +194,7 @@ public class dep_StopWorking extends TemplatePortalPen
 		if(swVo.isShowDataTable()){
 		//	System.out.println("sql  :  "+SqlUtil.getStopWork(swVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawStopWorking(
-					SqlUtil.getStopWork(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageSave));
+					SqlUtil.getStopWork(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageSave));
 		}
 		
 	    out.println(htmlPart1);

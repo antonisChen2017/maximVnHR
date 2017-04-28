@@ -25,6 +25,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.keyConts;
 /**
  * 請假卡 部門人員申請
  * @author Antonis.chen
@@ -92,7 +93,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 						String rowID = request.getParameter("rowID");
 						//delete 請假單
 						logger.info("請假卡 部門人員申請/Delete  " +lcVo.toString());
-						boolean flag=DBUtil.delDBTableRow(SqlUtil.delDBRow(UrlUtil.dbTableCR,rowID),con);
+						boolean flag=DBUtil.delDBTableRow(SqlUtil.delDBRow(keyConts.dbTableCR,rowID),con);
 						lcVo.setShowDataTable(true);
 						if(flag){
 							lcVo.setMsg("刪除成功!");
@@ -107,7 +108,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 部門人員申請/Refer  " +lcVo.toString());
-						DBUtil.updateDbTable(SqlUtil.upLCStatus(UrlUtil.dbTableCRStatuS_T,request.getParameter("rowID")), con);
+						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID")), con);
 						lcVo.setShowDataTable(true);
 						showHtml(con, out, lcVo,UserInformation);
 						
@@ -230,7 +231,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 			if(lcVo.isShowDataTable()){
 			
 					htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-							SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageSave));
+							SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageSave));
 			}
 		    out.println(htmlPart1);
 	    }

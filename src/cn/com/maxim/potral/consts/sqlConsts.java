@@ -33,4 +33,7 @@ public class sqlConsts
 	public static final String sql_vnOneToTwoYears= "/cn/com/maxim/portal/sql/vnOneToTwoYears.sql";
 	public static final String sql_vnTwoToThreeYears= "/cn/com/maxim/portal/sql/vnTwoToThreeYears.sql";
 	public static final String sql_vnMoreThanThreeYears= "/cn/com/maxim/portal/sql/vnMoreThanThreeYears.sql";
+	public static final String sql_vnInsertAttendanceDay= "/cn/com/maxim/portal/sql/vnInsertAttendanceDay.sql";
+	public static final String sql_vnGetAttendanceDay= "/cn/com/maxim/portal/sql/vnGetAttendanceDay.sql";
+	public static final String sql_vnGetExcelAttendanceDay= "/cn/com/maxim/portal/sql/vnGetExcelAttendanceDay.sql";
 }

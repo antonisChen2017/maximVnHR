@@ -1,35 +1,23 @@
 package cn.com.maxim.portal.util;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.List;
 
-import org.apache.commons.lang3.time.DateUtils;
-
-import cn.com.maxim.htmlcontrol.WebHidden;
-import cn.com.maxim.htmlcontrol.WebLabel;
-import cn.com.maxim.portal.UserDescriptor;
-import cn.com.maxim.portal.attendan.ro.lateOutEarlyRO;
-import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
 import cn.com.maxim.portal.attendan.vo.calendarVO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.repAttendanceVO;
-import cn.com.maxim.portal.attendan.vo.stopWorkVO;
 import cn.com.maxim.portal.webUI.WebDBTableCL;
 import cn.com.maxim.portal.webUI.WebDBTableEx;
 import cn.com.maxim.portal.webUI.WebDBTableLO;
+import cn.com.maxim.potral.consts.keyConts;
 
 public class HtmlUtil
 {
@@ -846,19 +834,19 @@ public static final String getListStatusJs(){
 		if(page.equals("save")){
 			bStatus="0";
 		}
-		if(page.equals(UrlUtil.pageMsList)){
+		if(page.equals(keyConts.pageMsList)){
 			bStatus="2";
 		}
-		if(page.equals(UrlUtil.pageLList)){
+		if(page.equals(keyConts.pageLList)){
 			bStatus="1";
 		}
-		if(page.equals(UrlUtil.pageUsList)){
+		if(page.equals(keyConts.pageUsList)){
 			bStatus="U";
 		}
-		if(page.equals(UrlUtil.pageEmpUnitList)){
+		if(page.equals(keyConts.pageEmpUnitList)){
 			bStatus="E";
 		}
-		if(page.equals(UrlUtil.pageDtmList)){
+		if(page.equals(keyConts.pageDtmList)){
 			bStatus="DT";
 		}
 		WebDBTableEx table = new WebDBTableEx(con, sql);
@@ -1140,10 +1128,10 @@ public static final String getListStatusJs(){
 		if(page.equals("save")){
 			bStatus="0";
 		}
-		if(page.equals(UrlUtil.pageMsList)){
+		if(page.equals(keyConts.pageMsList)){
 			bStatus="2";
 		}
-		if(page.equals(UrlUtil.pageList)){
+		if(page.equals(keyConts.pageList)){
 			bStatus="1";
 		}
 		

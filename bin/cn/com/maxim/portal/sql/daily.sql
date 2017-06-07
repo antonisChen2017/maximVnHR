@@ -1,159 +1,245 @@
+DELETE FROM [hr].[dbo].[VN_DAY_REPORT]
+WHERE DAY='<FDate/>'
+
+INSERT INTO  [dbo].[VN_DAY_REPORT](
+	[DAY] ,
+	[EMPLOYEENO] ,	
+	[EMPLOYEE] ,
+	[DEPARTMENT] ,
+	[UNIT] ,
+	[ATTENDANCE] ,
+	[OVERTIME] ,
+	[HOLIDAYH] ,
+	[HOLIDAYC] ,
+	[HOLIDAYE] ,
+	[HOLIDAYD] ,
+	[HOLIDAYF] ,
+	[HOLIDAYB] ,
+	[HOLIDAYA] ,
+	[HOLIDAYI] ,
+	[NOTWORK] ,
+	[BELATE] ,
+	[STOPWORK] ,
+	[MEALS] ,
+	[NOTE] 
+) 
 SELECT  
-	--ROW_NUMBER() over(order by TotalTime) as 序號,
-	VE.EMPLOYEENO AS 工號,
-	VE.EMPLOYEE AS 姓名,
-	VD.DEPARTMENT AS 部門,
-	VU.UNIT 單位,
+   '<FDate/>',
+	VE.EMPLOYEENO ,
+	VE.EMPLOYEE ,
+	VD.DEPARTMENT,
+	VU.UNIT ,
 	(
-	select TotalTime 
+	  Select 
+	  	case when (WorkFDate='' or WorkEDate='' ) 
+		then 
+			'0'
+		else  
+		 case when (DATEDIFF (HOUR,WorkFDate,WorkEDate))>0  then 
+		     case when (DATEDIFF (HOUR,WorkFDate,WorkEDate))>=8
+		     then 
+				'8'
+				else
+					(DATEDIFF (HOUR,WorkFDate,WorkEDate))
+				end
+			 else '0'
+			end
+	  end 
+	    FROM  
+	 PWERP_MS.dbo.RsKQResult AS K
+	 ,HR_EMPLOYEE SVE
+	 where
+	 SVE.EmpCode=K.EmpCode
+	 AND FDate= '<FDate/>'
+	 and SVE.EMPLOYEENO=VE.EMPLOYEENO
+	)
+	AS ATTENDANCE,
+	(
+	select top 1 APPLICATION_HOURS from VN_OVERTIME_S
+	where EP_ID=VE.ID
+	AND STATUS IN ('U','M','B','D','L','RD')
+	AND NOT (('<FDate/> 23:59:59' < OVERTIME_START) OR ('<FDate/> 00:00:00'> OVERTIME_END))
+	)
+	 AS OVERTIME,
+	(
+	select 
+	case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS='H'
+	)  AS HOLIDAYH, --年假
+	(
+	select  case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS='C'
+	) AS HOLIDAYC,--公傷假
+	(
+    select  case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS='E'
+	) AS HOLIDAYE,--產假
+	(
+    select  case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS='D'
+	) AS HOLIDAYD,--婚假
+	(
+	 select  case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND   H.HOLIDAYCLAS='F'
+	) AS HOLIDAYF,--喪假
+	(
+	select 
+	case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND   H.HOLIDAYCLAS='B'
+	) AS HOLIDAYB,--病假
+	(
+	select 
+	case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS='A'
+	) AS HOLIDAYA,--事假
+	(
+	select 
+	case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS='I'
+	) AS HOLIDAYI,--輪休
+	(
+    select 
+	case when (SK.WorkFDate='' or SK.WorkEDate='' ) 
+	then '8' 
+	else  '0'
+	end 
 	from   PWERP_MS.dbo.RsKQResult SK,
 	PWERP_MS.dbo.RsEmployee SE ,
     PWERP_MS.dbo.RsBasTurn SB,
-    VN_EMPLOYEE SVE,
+    HR_EMPLOYEE SVE,
     VN_UNIT SVU,
     VN_DEPARTMENT SVD
 	Where 1=1
 	AND SK.EmpCode=SE.EmpCode
 	AND SK.Turn= SB.Code
-	AND SVE.EMPLOYEENO= SE.EmpID
+	AND SVE.EMPLOYEENO= SE.RsEmpCode
 	AND SVU.ID= SVE.UNIT_ID
 	AND SVD.ID= SVE.DEPARTMENT_ID
 	AND FDate='<FDate/>'
-	AND SVE.DEPARTMENT_ID='<DEPARTMENT/>'
-	AND SVE.UNIT_ID='<UNIT/>'
-	AND Code NOT in ('C3','CD','CD1')
+	AND <SVEDEPARTMENT/>
+	AND <SVEUNIT/>
 	AND SVE.EMPLOYEENO=VE.EMPLOYEENO
-	)
-	AS 早班時數,
+	) AS NOTWORK,
 	(
-	select TotalTime 
+	select 
+	convert(numeric(8,0),round(( SK.LTime),2))
 	from   PWERP_MS.dbo.RsKQResult SK,
 	PWERP_MS.dbo.RsEmployee SE ,
     PWERP_MS.dbo.RsBasTurn SB,
-    VN_EMPLOYEE SVE,
+    HR_EMPLOYEE SVE,
     VN_UNIT SVU,
     VN_DEPARTMENT SVD
 	Where 1=1
 	AND SK.EmpCode=SE.EmpCode
 	AND SK.Turn= SB.Code
-	AND SVE.EMPLOYEENO= SE.EmpID
+	AND SVE.EMPLOYEENO= SE.RsEmpCode
 	AND SVU.ID= SVE.UNIT_ID
 	AND SVD.ID= SVE.DEPARTMENT_ID
 	AND FDate='<FDate/>'
-	AND SVE.DEPARTMENT_ID='<DEPARTMENT/>'
-	AND SVE.UNIT_ID='<UNIT/>'
-	AND Code  in ('C3','CD','CD1')
+	AND <SVEDEPARTMENT/>
+	AND <SVEUNIT/>
+	AND  1=1
 	AND SVE.EMPLOYEENO=VE.EMPLOYEENO
-	) 
-	AS 晚班時數,
-	(
-	select APPLICATION_HOURS from VN_OVERTIME_S
-	where EP_ID=VE.ID
-	AND STATUS='I'
-	and  OVERTIME_START>='<FDate/> 00:00:00'
-	AND OVERTIME_END<='<FDate/> 23:59:59'
 	)
-	 AS 加班時數,
+	AS BELATE,
 	(
-	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) from VN_LEAVECARD L,VN_HOLIDAY H
-	where EP_ID=VE.ID
-	AND H.ID=L.HD_ID
-	AND STATUS IN ('L','M')--審核通過
-	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
-	AND  HD_ID='8'
-	) AS 年假,
-	(
-	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
-	where EP_ID=VE.ID
-	AND H.ID=L.HD_ID
-	AND STATUS IN ('L','M')--審核通過
-	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
-	AND  HD_ID='2'
-	) AS 病假,
-	(
-	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
-	where EP_ID=VE.ID
-	AND H.ID=L.HD_ID
-	AND STATUS IN ('L','M')--審核通過
-	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
-	AND  HD_ID='1'
-	) AS 事假,
-	(
-	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
-	where EP_ID=VE.ID
-	AND H.ID=L.HD_ID
-	AND STATUS IN ('L','M')--審核通過
-	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
-	AND  HD_ID='3'
-	) AS 公假,
-	(
-	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
-	where EP_ID=VE.ID
-	AND H.ID=L.HD_ID
-	AND STATUS IN ('L','M')--審核通過
-	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
-	AND  HD_ID='5'
-	) AS 產假,
-	(
-	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
-	where EP_ID=VE.ID
-	AND H.ID=L.HD_ID
-	AND STATUS IN ('L','M')--審核通過
-	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
-	AND  HD_ID='6'
-	) AS 喪假,
-	(
-	select datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)  from VN_LEAVECARD L,VN_HOLIDAY H
-	where EP_ID=VE.ID
-	AND H.ID=L.HD_ID
-	AND STATUS IN ('L','M')--審核通過
-	and  L.STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND L.ENDLEAVEDATE<='<FDate/> 23:59:59'
-	AND  HD_ID='15'
-	) AS 曠工,
-	K.LTime AS 遲到,
-	(
-	select datediff(hh,K.STARTSTOPDATE,K.ENDENDDATE) from VN_STOPWORKING K,VN_STOPWORKRESON S
+	select 
+	case 
+	when datediff(hh,K.STARTSTOPDATE,K.ENDENDDATE)>='8' 
+	then '8'
+	else datediff(hh,K.STARTSTOPDATE,K.ENDENDDATE) end 
+	from VN_STOPWORKING K,VN_STOPWORKRESON S
 	where EP_ID=VE.ID
 	AND K.REASON_ID= S.ID
-	and  K.STARTSTOPDATE>='<FDate/> 00:00:00'
-	AND K.ENDENDDATE<='<FDate/> 23:59:59'
-	) AS 待工,
-	'' AS 補貼餐費,
+	AND NOT (('<FDate/> 23:59:59' < K.STARTSTOPDATE) OR ('<FDate/> 00:00:00'> K.ENDENDDATE))
+	) AS STOPWORK,
+	'' AS MEALS,
 	(
 	select convert(nvarchar(max),isnull((
-	select NOTE from VN_OVERTIME_S
+	select top 1 NOTE from VN_OVERTIME_S
 	where EP_ID=VE.ID
-	AND STATUS='I'
-	and  OVERTIME_START>='<FDate/> 00:00:00'
-	AND OVERTIME_END<='<FDate/> 23:59:59' 
+	AND STATUS IN ('U','M','B','D','L','RD')
+	AND NOT (('<FDate/> 23:59:59' < OVERTIME_START) OR ('<FDate/> 00:00:00'> OVERTIME_END))
 	) ,''))+'  '+convert(nvarchar(max),isnull((
 	select NOTE from VN_LEAVECARD
 	where EP_ID=VE.ID
-	AND STATUS IN ('L','M')--審核通過
-	and  STARTLEAVEDATE>='<FDate/> 00:00:00'
-	AND ENDLEAVEDATE<='<FDate/> 23:59:59'
+	AND STATUS IN ('L','M','U','B','D')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> ENDLEAVEDATE))
 	),'')) 
-	) AS 備註
-	from   PWERP_MS.dbo.RsKQResult K,
+	) AS NOTE
+	from   
 	PWERP_MS.dbo.RsEmployee E ,
-    PWERP_MS.dbo.RsBasTurn B,
-    VN_EMPLOYEE VE,
+    HR_EMPLOYEE VE,
     VN_UNIT VU,
     VN_DEPARTMENT VD
 	Where 1=1
-	AND K.EmpCode=E.EmpCode
-	AND K.Turn= B.Code
-	AND VE.EMPLOYEENO= E.EmpID
+	AND VE.EMPLOYEENO= E.RsEmpCode
 	AND VU.ID= VE.UNIT_ID
 	AND VD.ID= VE.DEPARTMENT_ID
-	AND FDate='<FDate/>'
-	AND VE.DEPARTMENT_ID='<DEPARTMENT/>'
-	AND VE.UNIT_ID='<UNIT/>'
+	AND <VEDEPARTMENT/>
+	AND <VEUNIT/>
 	AND E.LeaveFlag='0' --在職

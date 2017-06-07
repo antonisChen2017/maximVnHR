@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import cn.com.maxim.htmlDBcontrol.WebDBControl;
 import cn.com.maxim.htmlDBcontrol.WebDBForm;
 import cn.com.maxim.htmlDBcontrol.WebDBSelect;
@@ -36,7 +38,7 @@ public class ControlUtil
 	static WebHidden APHidden;
 	static WebDBForm Form;
 	static WebSelect  APCustomSelect;
-	
+
 	/**
 	 * 下拉選單
 	 * @param con
@@ -61,7 +63,6 @@ public class ControlUtil
 		ws.setClass("select2_category form-control");
 		
 		ws.addOption("0", "未選擇");
-	//	System.out.println("drawSelectDBControl SelectedOption :"+SelectedOption);
 		ws.setSelectedOption(SelectedOption);
 		return ws.toString();
 	}
@@ -102,11 +103,26 @@ public class ControlUtil
 		APSelector.setSelectedOption(SelectedOption);
 		return APSelector.toString();
 	}
+	
+	
+	public static String drawTranslateSelectShared( )
+	{
+		ArrayList al =new ArrayList();
+		Hashtable ht=new Hashtable();
+		ht.put("中文", "zh-CN");
+		al.add(ht);
+		Hashtable ht1=new Hashtable();
+		ht1.put("英文", "en");
+		al.add(ht1);
+		
+		return drawCustomSelectShared("Translate",al,"0");
+	}
+	
 	public static String drawCustomSelectShared( String Name,ArrayList Options, String SelectedOption)
 	{
 
 		APCustomSelect = new WebSelect();
-		APCustomSelect.setClass("select2_category form-control");
+		APCustomSelect.setClass("populate select2_category form-control");
 		APCustomSelect.setID(Name);
 		APCustomSelect.setName(Name);
 		
@@ -119,8 +135,15 @@ public class ControlUtil
 		
 		//System.out.println("drawCustomSelectShared SelectedOption :"+SelectedOption);
 		APCustomSelect.setSelectedOption(SelectedOption);
-	
-		return APCustomSelect.toString();
+		   StringBuilder Sb = new StringBuilder(APCustomSelect.toString());
+		    Sb.append("</select> \r\n");
+			Sb.append("<script>  \r\n");
+			Sb.append("	jQuery(document).ready(function() {    \r\n");
+			Sb.append(" $('#"+Name+"').select2(); \r\n");
+			Sb.append("     }); \r\n");
+			Sb.append("</script>  \r\n");
+						
+		return Sb.toString();
 	}
 	/**
 	 * 可搜尋下拉
@@ -151,16 +174,17 @@ public class ControlUtil
 			    {
 			    	 sql = sql + " ORDER BY " + GroupField;
 			    }
-			    System.out.println("drawChosenSelect sql : "+sql);
+			   // System.out.println("drawChosenSelect sql : "+sql);
 			    Statement st = con.createStatement();
 			    ResultSet rs = st.executeQuery(sql);
 			    StringBuilder Sb = new StringBuilder("");
-			
+				Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\"\"  tabindex=\"2\"> \r\n");
+	    		Sb.append("<option value='0'>未選擇</option> \r\n");
 			    int count=0;
 			    while (rs.next()) {
 			    	if(count==0){
-			    		Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\""+rs.getString(2)+"\"  tabindex=\"2\"> \r\n");
-			    		  Sb.append("<option value='0'>未選擇</option> \r\n");
+			    	//	Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\""+rs.getString(2)+"\"  tabindex=\"2\"> \r\n");
+			    		//  Sb.append("<option value='0'>未選擇</option> \r\n");
 			    	}
 			    	  if(rs.getString(1).equals(SelectedOption)){
 			    		    Sb.append("<option value='"+rs.getString(1)+"'  selected>"+rs.getString(2)+"</option> \r\n");
@@ -171,11 +195,11 @@ public class ControlUtil
 			      }
 			  
 			    Sb.append("</select> \r\n");
-				Sb.append("<script>");
-				Sb.append("	jQuery(document).ready(function() {    "); 
-				Sb.append(" $('#"+name+"').select2(); "); 
-				Sb.append("     }); "); 
-				Sb.append("</script>  ");
+				Sb.append("<script>  \r\n");
+				Sb.append("	jQuery(document).ready(function() {    \r\n");
+				Sb.append(" $('#"+name+"').select2(); \r\n");
+				Sb.append("     }); \r\n");
+				Sb.append("</script>  \r\n");
 			   
 
 		return Sb.toString();
@@ -189,15 +213,83 @@ public class ControlUtil
 	 * @return
 	 */
 	public static String drawAccordions(Connection con,lateOutEarlyVO eaVo)
-	{
+	{	
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ControlUtil.class);
 		String accordions ="";
 		empLateEarlyRO newEmpLateEarlyRO=new empLateEarlyRO();
 		eaVo.setQueryIsLate("1");//遲到
 		List<empLateEarlyRO> leoLate=DBUtil.queryEmpLateEarlyList(con,SqlUtil.getEmplateOutEarly(con, eaVo), newEmpLateEarlyRO);
-	//	System.out.println("late  sql "+SqlUtil.getEmplateOutEarly(con, eaVo));
+		//logger.info("late  sql "+SqlUtil.getEmplateOutEarly(con, eaVo));
 		eaVo.setQueryIsLate("2");//早退
 		List<empLateEarlyRO> leoEarly=DBUtil.queryEmpLateEarlyList(con,SqlUtil.getEmplateOutEarly(con, eaVo), newEmpLateEarlyRO);
-	//	System.out.println("Early  sql "+SqlUtil.getEmplateOutEarly(con, eaVo));
+	//	logger.info("Early  sql "+SqlUtil.getEmplateOutEarly(con, eaVo));
+		
+		/**調整早上或下午未打卡曠職**/
+		int Latetimes=Integer.valueOf(leoLate.get(0).getLATETIMES());
+		int LateHour=Integer.valueOf(leoLate.get(0).getHOUR());
+		int Earlytimes=Integer.valueOf(leoEarly.get(0).getLATETIMES());
+		int EarlyHour=Integer.valueOf(leoEarly.get(0).getHOUR());
+		int NotWork=0;
+		logger.info("1 Latetimes : "+Latetimes);
+		logger.info("1 LateHour : "+LateHour);
+		logger.info("1 Earlytimes : "+Earlytimes);
+		logger.info("1 EarlyHour : "+EarlyHour);
+		logger.info("1 NotWork : "+NotWork);
+	
+		for(int  i=1;i<32;i++){
+			//遲到
+			String LateWT =leoLate.get(0).getWT(i);
+			String EarlyWT =leoEarly.get(0).getWT(i);
+		
+			if (LateWT.equals("00:00") & (! leoEarly.get(0).getWT(i).equals("00:00"))){
+				
+				Latetimes=Latetimes-1;
+				LateHour=LateHour-8;
+				NotWork=NotWork+1;
+				logger.info(" count "+i +" 遲到 LateWT : "+LateWT);
+				logger.info(" count "+i+" 遲到 EarlyWT : "+EarlyWT);
+				logger.info(" count "+i+" 遲到 Latetimes : "+Latetimes);
+				logger.info(" count "+i+" 遲到 LateHour : "+LateHour);
+				logger.info(" count "+i+" 遲到 NotWork : "+NotWork);
+			}
+			if (EarlyWT.equals("00:00") &(! LateWT.equals("00:00"))){
+				
+				Earlytimes=Earlytimes-1;
+				EarlyHour=EarlyHour-8;
+				NotWork=NotWork+1;
+				logger.info(" count "+i+"早退  LateWT : "+LateWT);
+				logger.info(" count "+i+"早退  EarlyWT : "+EarlyWT);
+				logger.info(" count "+i+"早退  Earlytimes : "+Earlytimes);
+				logger.info(" count "+i+"早退 EarlyHour : "+EarlyHour);
+				logger.info(" count "+i+"早退 NotWork : "+NotWork);
+			}
+		
+		
+		}
+		
+		logger.info("2 Latetimes : "+Latetimes);
+		logger.info("2 LateHour : "+LateHour);
+		logger.info("2 Earlytimes : "+Earlytimes);
+		logger.info("2 EarlyHour : "+EarlyHour);
+		logger.info("2 NotWork : "+NotWork);
+		
+		if(Latetimes<0){
+			Latetimes=0;
+		}
+		if(LateHour<0){
+			LateHour=0;
+		}
+		if(Earlytimes<0){
+			Earlytimes=0;
+		}
+		if(EarlyHour<0){
+			EarlyHour=0;
+		}
+		
+		
+		
+		
 		HtmlUtil hu=new HtmlUtil();
 		if(leoLate.size()==0 && leoEarly.size()==0){
 			accordions =HtmlUtil.getMsgDiv("本月無打卡資料");
@@ -226,8 +318,9 @@ public class ControlUtil
 			
 			//遲到
 			if(leoLate.size()>0){
-				accordions=accordions.replace("<LateTimes/>", leoLate.get(0).getLATETIMES());
-				accordions=accordions.replace("<LateHour/>", leoLate.get(0).getHOUR());
+				accordions=accordions.replace("<NotWork/>", String.valueOf(NotWork));
+				accordions=accordions.replace("<LateTimes/>", String.valueOf(Latetimes));
+				accordions=accordions.replace("<LateHour/>", String.valueOf(LateHour));
 				accordions=accordions.replace("<LateMinute/>", leoLate.get(0).getMINUTE());
 				accordions=accordions.replace("<LateWT1/>", leoLate.get(0).getWT1());
 				accordions=accordions.replace("<LateWT2/>", leoLate.get(0).getWT2());
@@ -261,6 +354,7 @@ public class ControlUtil
 				accordions=accordions.replace("<LateWT30/>", leoLate.get(0).getWT30());
 				accordions=accordions.replace("<LateWT31/>", leoLate.get(0).getWT31());
 			}else{
+				accordions=accordions.replace("<NotWork/>", "0");
 				accordions=accordions.replace("<LateTimes/>", "0");
 				accordions=accordions.replace("<LateHour/>", "0");
 				accordions=accordions.replace("<LateMinute/>", "0");
@@ -299,8 +393,8 @@ public class ControlUtil
 			
 			//早退
 			if(leoEarly.size()>0){
-				accordions=accordions.replace("<EarlyTimes/>", leoEarly.get(0).getLATETIMES());
-				accordions=accordions.replace("<EarlyHour/>", leoEarly.get(0).getHOUR());
+				accordions=accordions.replace("<EarlyTimes/>", String.valueOf(Earlytimes));
+				accordions=accordions.replace("<EarlyHour/>",  String.valueOf(EarlyHour));
 				accordions=accordions.replace("<EarlyMinute/>", leoEarly.get(0).getMINUTE());
 				accordions=accordions.replace("<EarlyWT1/>",leoEarly.get(0).getWT1());
 				accordions=accordions.replace("<EarlyWT2/>",leoEarly.get(0).getWT2());
@@ -380,9 +474,9 @@ public class ControlUtil
 	 * @param Options
 	 * @param SelectedOption
 	 * @return
-	 * @throws ParseException 
+	 * @throws Exception 
 	 */
-	public static String drawAttendanceDayTable(Connection con,leaveCardVO lcVo) throws ParseException
+	public static String drawAttendanceDayTable(Connection con,leaveCardVO lcVo) throws Exception
 	{
 		String Control="";
 		HtmlUtil hu=new HtmlUtil();
@@ -433,7 +527,7 @@ public class ControlUtil
 		/**新人報道人數Data**/
 		dt.setCo19(DBUtil.queryForeignCadres(con, SqlUtil.getVnInDatePeople(lcVo), ra));
 		/**調動人數Data**/
-		dt.setCo20(DBUtil.queryForeignCadres(con, SqlUtil.getvnNoLeavePeople(lcVo), ra));
+		dt.setCo20(DBUtil.queryForeignCadres(con, SqlUtil.getDayTransfer(lcVo), ra));
 		/**離職人數Data**/
 		dt.setCo21(DBUtil.queryForeignCadres(con, SqlUtil.getvnNoLeavePeople(lcVo), ra));
 		/**離職率Data**/
@@ -472,7 +566,7 @@ public class ControlUtil
 		 Control=DataStringUtil.updateMaxAddUpTableRow(Control,"47",attendanceDayKeyConsts.colStart,attendanceDayKeyConsts.colEnd,addRow,dr);
 		 
 		/**存入db**/
-		 String[] allRowS =attendanceDayKeyConsts.allRowS.split(",");
+		String[] allRowS =attendanceDayKeyConsts.allRowS.split(",");
 		DBUtil.saveRepAttendanceDay(con,dr,lcVo,allRowS);
 		 
 		/** 越籍年資分布**/
@@ -485,6 +579,10 @@ public class ControlUtil
 		 Control= Control.replace("<yco7/>",NumberUtil.getPercentFormat(dt.getYco3(),dt.getYmax()));
 		 Control= Control.replace("<yco8/>",NumberUtil.getPercentFormat(dt.getYco4(),dt.getYmax()));
 		 Control= Control.replace("<yco9/>",String.valueOf( dt.getYmax()));
+		 /** 越籍年資分布 存入db**/
+		 DBUtil.saveEmpnum(con,dt,lcVo);
+			
+			
 		return Control;
 	}
 	
@@ -503,5 +601,20 @@ public class ControlUtil
 		Control =hu.gethtml(UrlUtil.control_swTable);
 		return Control;
 	}
+	
+	/**
+	 * 共用名稱工號下拉選單
+	 * @param con
+	 * @param html
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static String sharedLabel(Connection con,String html,leaveCardVO lcVo) throws SQLException
+	{
+		html=html.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + 	lcVo.getSearchDepartmen()+ "'", lcVo.getSearchEmployeeNo(),false,null));
+		html=html.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
+		return html;
+	}
+	
 	
 }

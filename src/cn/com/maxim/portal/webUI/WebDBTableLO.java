@@ -122,7 +122,7 @@ public class WebDBTableLO  extends WebDBTableCL
 		Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
 		Sb.append("   <div class=\"portlet\"> \r");
 		Sb.append("   <div class=\"portlet-title\">  \r");
-		Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查詢結果  \r");
+		Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
 		if (!msg.equals(""))
 		{
 			Sb.append(msg);
@@ -211,7 +211,7 @@ public class WebDBTableLO  extends WebDBTableCL
 		Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
 		Sb.append("   <div class=\"portlet\"> \r");
 		Sb.append("   <div class=\"portlet-title\">  \r");
-		Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查詢結果  \r");
+		Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
 		if (!msg.equals(""))
 		{
 			Sb.append(msg);
@@ -313,7 +313,7 @@ public class WebDBTableLO  extends WebDBTableCL
 						}
 
 					}
-					else if (col.ColumnName.equals("待料開始時間") || col.ColumnName.equals("待料結束時間"))
+					else if (col.ColumnName.equals("待料開始时间") || col.ColumnName.equals("待料結束时间"))
 					{
 						Data = Data.substring(0, Data.length() - 3);
 						Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
@@ -377,6 +377,9 @@ public class WebDBTableLO  extends WebDBTableCL
 					 */
 					du.setDataString(Data);
 
+				}else if (Data.indexOf("旷")!=-1 ){
+					  Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+					  du.setDataString(Data);
 				}
 				else if (col.ColumnName.equals("總共") ){
 					
@@ -406,6 +409,127 @@ public class WebDBTableLO  extends WebDBTableCL
 
 		afterWriteRow(out);
 
+		return Sb.toString();
+	}
+	
+	
+	/**
+	 * 請假卡TABLE
+	 * 
+	 * @param out
+	 * @param NoRowMessage
+	 * @param TableStyle
+	 * @param msg
+	 * @param htmlButton
+	 * @param delbut
+	 * @return
+	 * @throws SQLException
+	 */
+	public String getHTMLTableLE(PrintWriter out, String NoRowMessage, String TableStyle, String msg, String htmlButton, String delbut) throws SQLException
+	{
+		StringBuilder Sb = new StringBuilder("");
+		resetSno();
+		if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+		{
+			Sb.append("<table class=\"" + TableStyle + "\" border=\"" + this.Border + "\" cellspacing=\"" + this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + "\">   \r");
+			Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+			Sb.append("</table>  \r");
+			return Sb.toString();
+		}
+		if (this.OutPutRowCount > 0)
+		{
+			movePage(this.OutPutRowCount, this.PageNumber, this.DBData);
+		}
+
+		Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+		Sb.append("   <div class=\"row \"> \r");
+		Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+		Sb.append("   <div class=\"portlet\"> \r");
+		Sb.append("   <div class=\"portlet-title\">  \r");
+		Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
+		if (!msg.equals(""))
+		{
+			Sb.append(msg);
+		}
+		Sb.append(" </div>  \r");
+		Sb.append("	 </div>  \r");
+		Sb.append("   <div class=\"portlet-body\">    \r");
+		Sb.append("<table  id=\"data_table_1\" class=\"" + TableStyle + "\">    \r");
+		writeFirstRow(out);
+		if (this.MessageRowVisible)
+		{
+			Sb.append(this.getMessageRow(out, this.Message, this.MessageRowStyle));
+		}
+		if (this.OutputHeader)
+		{
+			Sb.append(getHeaderRowLE(out, "", delbut));
+		}
+		int i = 1;
+		Sb.append("<tbody>");
+		while (this.DBData.next())
+		{
+
+			Sb.append(getDataRowLC(out, "blue", delbut));
+
+			if (i == this.OutPutRowCount + 1)
+			{
+				break;
+			}
+		}
+		Sb.append(" </tbody>   \r");
+		if (this.SummaryRowVisible)
+		{
+			Sb.append(this.getMessageRow(out, this.Summary, this.SummaryRowStyle));
+		}
+		writeLastRow(out);
+		Sb.append("</table>   \r");
+		Sb.append("<div class=\"form-actions right\">    \r");
+		// 是否要excel按鈕
+		if (!htmlButton.equals("")){
+			Sb.append(htmlButton + "\r");
+		 }
+		Sb.append(" </div>  \r");
+		Sb.append("</div>  \r");
+		Sb.append("</div>  \r");
+		Sb.append("</div>  \r");
+		Sb.append("</div>   \r");
+		Sb.append("<div class=\"clearfix\"> </div>   \r");
+		Sb.append(" <!-- END PAGE ROW-->   \r");
+
+		return Sb.toString();
+	}
+	
+	private String getHeaderRowLE(PrintWriter out, String TRStyle, String delbut)
+	{
+		StringBuilder Sb = new StringBuilder("");
+		if (TRStyle.equals(""))
+		{
+			TRStyle = "DefaultTR";
+		}
+		Sb.append(" <thead>  \r");
+		Sb.append("  <tr class=\"" + TRStyle + "\"> \r");
+		for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+		{
+			DBColumn col = (DBColumn) i.next();
+			if (col.getColumnVisible())
+			{
+				if (col.ColumnHeader.equals("工號") && col.ColumnHeader.equals("姓名") && col.ColumnHeader.equals("部门") && col.ColumnHeader.equals("单位"))
+				{
+					Sb.append("<th class=\"text-center\"  width='4%'>" + col.ColumnHeader + "</th>  \r");
+				}
+				else if (col.ColumnHeader.equals("遲到次數") )
+				{
+					Sb.append("<th class=\"text-center\"  width='8%'>" + col.ColumnHeader + "</th>  \r");
+				}
+				else
+				{
+					Sb.append("<th class=\"text-center\"  width='2%'>" + col.ColumnHeader + "</th>  \r");
+				}
+			}
+		}
+
+		Sb.append("  </tr>  \r");
+		Sb.append(" </thead>\r");
 		return Sb.toString();
 	}
 	

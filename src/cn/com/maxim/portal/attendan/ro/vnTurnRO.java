@@ -1,6 +1,6 @@
 package cn.com.maxim.portal.attendan.ro;
 /**
- * 查詢班表VN_TURN 資料庫物件
+ * 查询班表VN_TURN 資料表RO
  * @author antonis.chen
  *
  */
@@ -14,11 +14,11 @@ public class vnTurnRO
 	private String  VName;
 	/**中文名稱  **/
 	private String  CBName;
-	/**開始時間**/
+	/**開始时间**/
 	private String  FHM;
-	/**結束時間**/
+	/**結束时间**/
 	private String  EHM;
-	/**總時間(分)**/
+	/**總时间(分)**/
 	private String  AllMin;
 	
 	public String getID()

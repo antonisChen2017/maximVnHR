@@ -4,9 +4,9 @@ Set @EDate=DateAdd(Day,-1,DateAdd(Month,1,Convert(DateTime,'<year/>/<Month/>/01'
 
 Truncate Table PWERP_MS.dbo.Tmp_RSKQMonthDay
 
-delete VN_YEAR_MONTH_ATTENDANCE where YEAR='<year/>' and MONTH='<Month/>'  and  DEPARTMENT='<DEPARTMENT_ID/>'
-and UNIT='<UNIT_ID/>'
-
+delete VN_YEAR_MONTH_ATTENDANCE where YEAR='<year/>' and MONTH='<Month/>'  and <DEPT_ID/> 
+--and UNIT='<UNIT_ID/>'
+and <UNIT_ID/>
 
 Create Table #Tmp
 (
@@ -267,10 +267,14 @@ ZBHour30+OTHour30+OTTHour30,
 ZBHour31+OTHour31+OTTHour31,
 ''
 From #All A Inner Join PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
-Inner Join hr.dbo.VN_EMPLOYEE VE On B.RsEmpCode=VE.EMPLOYEENO 
+Inner Join hr.dbo.HR_EMPLOYEE VE On B.RsEmpCode=VE.EMPLOYEENO 
 Left Join PWERP_MS.dbo.RsBasDept C On C.Code=B.DeptCode 
-where VE.DEPARTMENT_ID='<DEPARTMENT_ID/>'
-and VE.UNIT_ID='<UNIT_ID/>'
+
+where 1=1  
+ and(B.LeaveFlag = '0')
+and <VEDEPT_ID/> 
+--and VE.UNIT_ID='<UNIT_ID/>'
+and <VEUNIT_ID/>
 Order By B.DeptCode,B.RsEmpCode
 
 
@@ -289,8 +293,10 @@ declare @DAY1 nvarchar(500),@DAY2 nvarchar(500),@DAY3 nvarchar(500),@DAY4 nvarch
 declare Select_late cursor for
         select YEAR ,MONTH,VY.EMPLOYEENO,VY.EMPLOYEE,DAY1,DAY2,DAY3,DAY4,DAY5,DAY6,DAY7,DAY8,DAY9,DAY10,DAY11,DAY12,DAY13,DAY14,DAY15
         ,DAY16,DAY17,DAY18,DAY19,DAY20,DAY21,DAY22,DAY23,DAY24,DAY25,DAY26,DAY27,DAY28,DAY29,DAY30,DAY31 from hr.dbo.VN_YEAR_MONTH_ATTENDANCE as VY
-        Inner Join hr.dbo.VN_EMPLOYEE VE On VY.EMPLOYEENO=VE.EMPLOYEENO 
-        WHERE YEAR='<year/>' and MONTH='<Month/>' and VE.DEPARTMENT_ID='<DEPARTMENT_ID/>' and VE.UNIT_ID='<UNIT_ID/>' 
+        Inner Join hr.dbo.HR_EMPLOYEE VE On VY.EMPLOYEENO=VE.EMPLOYEENO 
+        WHERE YEAR='<year/>' and MONTH='<Month/>' and <DEPARTMENT_ID/> 
+        --and VE.UNIT_ID='<UNIT_ID/>' 
+        and <VEUNIT_ID/>
 
 open Select_late
 fetch next from Select_late into @YEAR,@MONTH,@EMPLOYEENO,@EMPLOYEE,@DAY1,@DAY2,@DAY3,@DAY4,@DAY5,@DAY6,@DAY7,@DAY8,@DAY9,@DAY10,@DAY11,@DAY12,@DAY13,@DAY14,@DAY15
@@ -301,7 +307,7 @@ fetch next from Select_late into @YEAR,@MONTH,@EMPLOYEENO,@EMPLOYEE,@DAY1,@DAY2,
    while @@fetch_status=0      --返回被 FETCH 语句执行的最后游标的状态
 	  begin
 	 
-		 --比較當天班表應上班時數 小於應上班時數 查詢有無請假
+		 --比較當天班表應上班時數 小於應上班時數 查询有無請假
 		  if(convert(decimal(18, 2),@DAY1)<convert(decimal(18, 2),hr.dbo.Func_TurnHour('<year/>/<Month/>/01',@EMPLOYEENO)) )
 	    begin 
 		

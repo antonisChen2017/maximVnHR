@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
+import cn.com.maxim.portal.attendan.ro.empnumRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
@@ -27,6 +28,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.TranslateConsts;
 
 /**
  * 日報表
@@ -55,7 +57,7 @@ public class rep_AttendanceDay extends TemplatePortalPen
 
 				BeanUtils.populate(swVo, request.getParameterMap());
 
-				// 查詢
+				// 查询
 				if (actText.equals("QUE"))
 				{
 					swVo.setShowDataTable(true);
@@ -85,7 +87,7 @@ public class rep_AttendanceDay extends TemplatePortalPen
 
 	}
 
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo, UserDescriptor UserInformation, HttpServletRequest request) throws SQLException, ParseException
+	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo, UserDescriptor UserInformation, HttpServletRequest request) throws SQLException, Exception
 	{
 		HtmlUtil hu = new HtmlUtil();
 		String htmlPart1 = hu.gethtml(htmlConsts.html_rep_AttendanceDay);
@@ -97,9 +99,14 @@ public class rep_AttendanceDay extends TemplatePortalPen
 			dayAttendanceRO daRo = new dayAttendanceRO();
 			List<dayAttendanceRO> daRolist = (List<dayAttendanceRO>) DBUtil.
 					queryExcelAttendanceDay(con, SqlUtil.getExcelAttendanceDay(lcVo.getApplicationDate().replaceAll("/", "")), daRo);
-			System.out.println("daRolist : "+daRolist);
+			//System.out.println("daRolist : "+daRolist);
 			request.getSession().setAttribute("daRolist", daRolist);
+			empnumRO eRo = new empnumRO();
+			List<empnumRO> eRolist = (List<empnumRO>) DBUtil.
+					queryExcelEmpnum(con, SqlUtil.getExcelEmpnum(lcVo.getApplicationDate().replaceAll("/", "")), eRo);
+		//	System.out.println("ExcelEmpnum : "+SqlUtil.getExcelEmpnum(lcVo.getApplicationDate().replaceAll("/", "")));
+			request.getSession().setAttribute("eRolist", eRolist);
 		}
-		out.println(htmlPart1);
+		 out.println(TranslateConsts.tw2cn(htmlPart1));
 	}
 }

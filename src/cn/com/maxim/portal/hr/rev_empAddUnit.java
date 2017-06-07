@@ -42,22 +42,22 @@ public class rev_empAddUnit extends TemplatePortalPen
 				{		
 					
 					BeanUtils.populate(lcVo,request.getParameterMap()); 
-					// 查詢
+					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
 						showHtml(con, out, lcVo,UserInformation);
 					}
 					if (actText.equals("update")) {
-						logger.info("審核 設定員工與單位關係/update: " +lcVo.toString());	
+						logger.info("審核 設定員工與单位關係/update: " +lcVo.toString());	
 						lcVo.setShowDataTable(true);
 						String Sql=hu.gethtml(sqlConsts.sql_updateUnit);
 					    Sql=Sql.replace("<UNITID>", lcVo.getSearchUnit());
 					    Sql=Sql.replace("<EMPID>", lcVo.getSearchEmployee());
 						boolean flag=DBUtil.updateSql(Sql, con) ;
 						if(flag){
-							lcVo.setMsg("更新單位成功!");
+							lcVo.setMsg("更新单位成功!");
 						}else{
-							lcVo.setMsg("更新單位失敗!");
+							lcVo.setMsg("更新单位失敗!");
 						}
 						showHtml(con, out, lcVo,UserInformation);
 					}
@@ -112,7 +112,7 @@ public class rev_empAddUnit extends TemplatePortalPen
 				System.out.println("searchDepartmen : "+searchDepartmen);
 				try
 				{
-					out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " DEPARTMENT_ID='" + searchDepartmen + "'", "0"));
+					out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " DEPARTMENT_ID='" + searchDepartmen + "'", "0"));
 				}
 				catch (SQLException e)
 				{
@@ -135,8 +135,8 @@ public class rev_empAddUnit extends TemplatePortalPen
 			try
 			
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo())
-						+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo());
+				html = ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo())
+						+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo());
 			}
 			catch (SQLException e)
 			{

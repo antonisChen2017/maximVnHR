@@ -70,8 +70,17 @@ public class empLateEarlyRO
 	private String  HOUR;
 	/**遲到次數**/
 	private String  LATETIMES;
-
+	/**曠工**/
+	private String  NOTWORK;
 	
+	public String getNOTWORK()
+	{
+		return NOTWORK;
+	}
+	public void setNOTWORK(String nOTWORK)
+	{
+		NOTWORK = nOTWORK;
+	}
 	public String getWT1()
 	{
 		return WT1;
@@ -345,7 +354,106 @@ public class empLateEarlyRO
 		LATETIMES = lATETIMES;
 	}
 	
-	
+	public String getWT(int colIndex)
+	{
+		String re="";
+		switch (colIndex) {
+			case 1:
+				re=getWT1();
+			    break;
+			case 2:
+				re=getWT2();
+			    break;
+			case 3:
+				re=getWT3();
+			    break;
+			case 4:
+				re=getWT4();
+			    break;
+			case 5:
+				re=getWT5();
+			    break;
+			case 6:
+				re=getWT6();
+			    break;
+			case 7:
+				re=getWT7();
+			    break;
+			case 8:
+				re=getWT8();
+			    break;
+			case 9:
+				re=getWT9();
+			    break;
+			case 10:
+				re=getWT10();
+			    break;
+			case 11:
+				re=getWT11();
+			    break;
+			case 12:
+				re=getWT12();
+			    break;
+			case 13:
+				re=getWT13();
+			    break;
+			case 14:
+				re=getWT14();
+			    break;
+			case 15:
+				re=getWT15();
+			    break;
+			case 16:
+				re=getWT16();
+			    break;
+			case 17:
+				re=getWT17();
+			    break;
+			case 18:
+				re=getWT18();
+			    break;
+			case 19:
+				re=getWT19();
+			    break;
+			case 20:
+				re=getWT20();
+			    break;
+			case 21:
+				re=getWT21();
+			    break;
+			case 22:
+				re=getWT22();
+			    break;
+			case 23:
+				re=getWT23();
+			    break;
+			case 24:
+				re=getWT24();
+			    break;
+			case 25:
+				re=getWT25();
+			    break;
+			case 26:
+				re=getWT26();
+			    break;
+			case 27:
+				re=getWT27();
+			    break;
+			case 28:
+				re=getWT28();
+			    break;
+			case 29:
+				re=getWT29();
+			    break;
+			case 30:
+				re=getWT30();
+			    break;
+			case 31:
+				re=getWT31();
+			    break;
+			}
+		return re;
+	}
 	
 	
 	

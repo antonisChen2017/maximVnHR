@@ -4,7 +4,7 @@ public class repAttendanceDayBean
 {
 	  /**部**/
 	  private   String c1;
-	  /**單位**/
+	  /**单位**/
 	  private   String c2;
 	  /**外籍幹部人數**/
 	  private   String c3;

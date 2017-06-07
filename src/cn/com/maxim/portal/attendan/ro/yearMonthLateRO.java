@@ -1,6 +1,6 @@
 package cn.com.maxim.portal.attendan.ro;
 /**
- * 查詢遲到早退名單 資料庫物件
+ * 查询遲到早退名單 資料表RO
  * @author antonis.chen
  *
  */
@@ -12,9 +12,9 @@ public class yearMonthLateRO
 	private String  EMPLOYEENO;
 	/** 員工名稱 **/
 	private String  EMPLOYEE;
-	/**部門 */
+	/**部门 */
 	private String DEPARTMENT;
-	/**單位*/
+	/**单位*/
 	private String UNIT;
 	/**1日 */
 	private String DAY1;

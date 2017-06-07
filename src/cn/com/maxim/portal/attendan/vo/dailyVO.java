@@ -13,11 +13,11 @@ public class dailyVO  implements Serializable
 
 	/**年月日 */
 	private String  queryYearMonth;
-	/**部門 */
+	/**部门 */
 	private String searchDepartmen;
-	/**單位 */
+	/**单位 */
 	private String searchUnit;
-	/**是否顯示查詢結果*/
+	/**是否顯示查询結果*/
 	private boolean  showDataTable;
 	/**資料庫訊息*/
 	private String  msg;

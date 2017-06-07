@@ -11,9 +11,9 @@ public class repAttendanceVO implements Serializable
 
 	private static final long serialVersionUID = 1937575219098094082L;
 	
-	/**部門 */
+	/**部门 */
 	private String searchDepartmen;
-	/**單位 */
+	/**单位 */
 	private String searchUnit;
 	/**ActionURI**/
 	private String  ActionURI;
@@ -21,10 +21,10 @@ public class repAttendanceVO implements Serializable
 	private String  queryYearMonth;
 	/**資料庫訊息*/
 	private String  msg;
-	/**是否顯示查詢結果*/
+	/**是否顯示查询結果*/
 	private boolean  showDataTable;
 	/**總共*/
-	private String  NOTE;;
+	private String  NOTE;
 	/**工號*/
 	private String  EMPLOYEENO;
 	

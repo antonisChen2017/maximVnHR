@@ -30,7 +30,6 @@ public class dayTableMoble
 	 private List<repAttendanceDayRO> co22 ;
 	 private List<repAttendanceDayRO> co23 ;
 	 private List<repAttendanceDayRO> co24 ;
-	 
 	 private int yco1;//小於一年
 	 private int yco2;//1年~2年
 	 private int yco3;//2年~3年

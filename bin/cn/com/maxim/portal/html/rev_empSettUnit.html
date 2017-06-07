@@ -31,7 +31,7 @@
   <!-- BEGIN PAGE HEADER-->  
  <div class="row">   
    <!-- BEGIN PAGE TITLE-->  
-   <h3 class="page-title">員工設定單位</small> </h3>
+   <h3 class="page-title">員工設定单位</small> </h3>
    <!-- END PAGE TITLE-->   
  </div>  
 <div class="clearfix"> </div>
@@ -58,7 +58,7 @@
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">部門:</SPAN>
+<SPAN class="control-label col-md-3">部门:</SPAN>
 
 <div class="col-md-9">
 <UserEmployeeNo/>
@@ -79,7 +79,7 @@
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">設定單位:</SPAN>
+<SPAN class="control-label col-md-3">設定单位:</SPAN>
 <div   id='UnitDiv' class="col-md-9">
 <SearchUnit/>
 </div> 
@@ -87,9 +87,10 @@
 </div>
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3"></SPAN>
-<div  class="col-md-9">
- </div>
+<SPAN class="control-label col-md-3">工號</SPAN>
+<div id='EmployeeNoDiv'  class="col-md-9">
+<SearchEmployeeNo/>
+</div> 
  </div>
 </div>
 </div>
@@ -97,7 +98,7 @@
 </div>
 </div>
 <div class="form-actions right">  
-<button class="btn btn-primary " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查詢</button> 
+<button class="btn btn-primary " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button> 
 <button class="btn btn-success " onclick="updateData();" type="button">更新</button> 
 </div></FORM> 
 <msg/>
@@ -151,7 +152,6 @@
 <script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script> 
 <script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script> 
 <script type="text/javascript" src="javascript/assets/layer/layer.js"></script> 
-<script type="text/javascript" src="assets/plugins/select2/select2.js"></script> 
 <!-- END PAGE LEVEL SCRIPTS --> 
 <script>
 jQuery(document).ready(function() {    
@@ -161,6 +161,17 @@ jQuery(document).ready(function() {
    FormComponents.init();
    $("#searchEmployee").select2();
    
+   $('#searchEmployee').change(function(){  
+	     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+		 $('#searchEmployeeNo').select2('val',p1);     
+	   }) 
+   
+    $('#searchEmployeeNo').change(function(){  
+			var p1=$(this).children('option:selected').val();  //这就是selected的值  
+		 $('#searchEmployee').select2('val',p1);     
+    }) 
+					   
+					   
    $('#searchDepartmen').change(function(){  
 		
 		 var p1= $('#searchDepartmen').val();
@@ -171,6 +182,10 @@ jQuery(document).ready(function() {
 			data:{searchDepartmen:p1},
 			success:function(data){	
 				 $('#EmployeeDiv').html(data);    
+				 $('#searchEmployee').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 $('#searchEmployeeNo').select2('val',p1);     
+				   }) 
 			}
 		});
 
@@ -185,6 +200,19 @@ jQuery(document).ready(function() {
 				}
 			});
 
+	     jQuery.ajax({
+				url:'<ActionURI/>&doajax=SwEmpNo',
+				type:'POST',
+				data:{searchDepartmen:p1},
+				success:function(data){
+					 $('#EmployeeNoDiv').html(data);    
+					 $('#searchEmployeeNo').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+						 $('#searchEmployee').select2('val',p1);     
+					   }) 
+				}
+			});
+	     
 		});
    
    
@@ -233,7 +261,7 @@ function    checkNO(){
  function    updateData(){  
 	 
 		if($('#searchDepartmen').val()=='0'){   
-			 layer.msg('請選擇部門');  
+			 layer.msg('请选择部门');  
 				return;  
 		}  
 	if($('#searchEmployee').val()=='0'){   
@@ -241,7 +269,7 @@ function    checkNO(){
 				return;  
 		}  
 	if($('#searchUnit').val()=='0'){   
-		 layer.msg('請選擇單位');  
+		 layer.msg('請選擇单位');  
 			return;  
 	}  
  

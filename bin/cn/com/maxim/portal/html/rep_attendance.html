@@ -1,13 +1,23 @@
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//fonts/font-awesome/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//plugins/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/fonts/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap/css/bootstrap.min.css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-datepicker/css/datepicker.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
+<!-- END PAGE LEVEL STYLES -->
 <!-- BEGIN THEME STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-bootstrap-custom.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-responsive.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/theme-default.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/plugins.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-bootstrap-custom.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-upgrade.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/plugins.css"/>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
@@ -50,7 +60,7 @@
 										<div class="row">
 										<div class="col-md-6">
 										<div class="form-group">
-										<SPAN class="control-label col-md-3">部門:</SPAN>
+										<SPAN class="control-label col-md-3">部门:</SPAN>
 										
 										<div class="col-md-9">
 										<UserEmployeeNo/>
@@ -59,7 +69,7 @@
 										</div>
 										<div class="col-md-6">
 										<div class="form-group">
-										<SPAN class="control-label col-md-3">單位:</SPAN>
+										<SPAN class="control-label col-md-3">单位:</SPAN>
 										<div  id='UnitDiv'     class="col-md-9">
 										<SearchUnit/>
 										 </div>
@@ -86,11 +96,14 @@
 										</div>
 								</div>
 								<div class="form-actions right">
-									<button class="btn btn-success " onclick="queryTable();" type="button">查詢</button>
+									<button class="btn btn-success " onclick="queryTable();" type="button">查询</button>
 								</div>
 								</FORM>
 								<msg />
 							</div>
+							 <div class="alert alert-success">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+  <strong>备注：</strong> 1/旷工:O 2/病假：B 3/事假:R 4/公假:N 5/特休:P 6/丧假:T 8/产假:TS。如有上班:X。公伤:F轮休:L</div>
 			 <drawTableM/>
 <div class="form-actions right">    
 
@@ -99,7 +112,8 @@
 </div>  
 </div>  
 </div>   
-<div class="clearfix"> </div>   
+<div class="clearfix">
+  </div>   
  <!-- END PAGE ROW-->   
 
 </div> 
@@ -229,16 +243,16 @@
 					function queryTable() {
 					
 
-						if ($('#searchDepartmen').val() == '0') {
-							layer.msg('請選擇部門');
-							return;
+					//	if ($('#searchDepartmen').val() == '0') {
+					//		layer.msg('请选择部门');
+					//		return;
 
-						}
+					//	}
 					
-						if ($('#searchUnit').val() == '0') {
-							layer.msg('請選擇單位');
-							return;
-						}
+					//	if ($('#searchUnit').val() == '0') {
+					//		layer.msg('請選擇单位');
+					///		return;
+					//	}
 						   //loading层
 					    var index = layer.load(1, {
 					      shade: [0.1,'#fff'] //0.1透明度的白色背景
@@ -266,14 +280,17 @@
 							  });
 					 }
 					 function  showAllData(data){
-							//	 alert(data);
+							if(data==''){
+								 layer.msg('無請假曠工記錄');
+							}else{
 								 layer.alert(data, {
 									    skin: 'layui-layer-lan'
 									    ,closeBtn: 0
 									    ,anim: 0 //动画类型
-									    ,title:'當月請假詳細訊息'
+									    ,title:'當月詳細訊息'
 									  });
 							 }
+					 }
 				</script>
 				<!-- END JAVASCRIPTS -->
 			</div>

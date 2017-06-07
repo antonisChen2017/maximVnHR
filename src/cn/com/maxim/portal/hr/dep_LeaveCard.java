@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
+import cn.com.maxim.portal.attendan.ro.exLeaveCardRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.util.ControlUtil;
@@ -27,7 +28,7 @@ import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 /**
- *  部門申請  請假卡 
+ *  部门申請  請假卡 
  * @author Antonis.chen
  *
  */
@@ -45,14 +46,15 @@ public class dep_LeaveCard extends TemplatePortalPen
 		leaveCardVO lcVo = new leaveCardVO(); 
 		System.out.println("ActionURI : "+ActionURI);
 		lcVo.setActionURI(ActionURI);
+		lcVo.setApplicationDate(DateUtil.NowDateTime());
 		try
 		{
 				if (actText != null)
 				{		
 					
 					BeanUtils.populate(lcVo,request.getParameterMap()); 
-					
-					// 查詢
+				
+					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
 						showHtml(con, out, lcVo,UserInformation);
@@ -63,26 +65,37 @@ public class dep_LeaveCard extends TemplatePortalPen
 					}
 					
 					if (actText.equals("Save")) {
-						
-						lcVo.setShowDataTable(true);
-						lcVo.setStatus("S");
-						// 儲存db
-						logger.info("請假卡 員工/Save : " +lcVo.toString());
-						String msg=DBUtil.saveLeaveCard(lcVo , con);
-						if(msg.equals("x")){
-							lcVo.setMsg("儲存失敗!");
-						}else if(msg.equals("o")){
-							lcVo.setMsg("已有打卡紀錄!無法保存");
-							logger.info("請假卡 部門人員申請/已有打卡紀錄!無法保存!");
-						}else if(msg.equals("w")){
-							lcVo.setMsg("已請假!無法保存");
-							logger.info("請假卡 部門人員申請/已請假!無法保存!");
-						}else if(msg.equals("v")){
-							lcVo.setMsg("請假天數為0!無法儲存!");
+						if(lcVo.getRowID().equals("0")){
+								lcVo.setShowDataTable(true);
+								lcVo.setStatus("S");
+								lcVo.setApplicationDate(DateUtil.NowDateTime());
+								// 儲存db
+								logger.info("請假卡 員工/Save : " +lcVo.toString());
+								String msg=DBUtil.saveLeaveCard(lcVo , con);
+								if(msg.equals("x")){
+									lcVo.setMsg("儲存失敗!");
+								}else if(msg.equals("o")){
+									lcVo.setMsg("已有打卡纪录!無法保存");
+									logger.info("請假卡 部门人員申請/已有打卡纪录!無法保存!");
+								}else if(msg.equals("w")){
+									lcVo.setMsg("已請假!無法保存");
+									logger.info("請假卡 部门人員申請/已請假!無法保存!");
+								}else if(msg.equals("v")){
+									lcVo.setMsg("請假天數為0!無法儲存!");
+								}else{
+									lcVo.setMsg("儲存成功!");
+								}
 						}else{
-							lcVo.setMsg("儲存成功!");
+							lcVo.setShowDataTable(true);
+							logger.info("updateDepLeavecard : " +SqlUtil.updateDepLeavecard(lcVo));
+							boolean flag =DBUtil.updateSql(SqlUtil.updateDepLeavecard(lcVo), con);
+							if(flag){
+								lcVo.setMsg(keyConts.editOK);
+							}else{
+								lcVo.setMsg(keyConts.editNO);
+							}
+						//	lcVo.setMsg("開發中!");
 						}
-					
 						showHtml(con, out,  lcVo,UserInformation);
 						
 					}
@@ -108,7 +121,17 @@ public class dep_LeaveCard extends TemplatePortalPen
 						showHtml(con, out, lcVo,UserInformation);
 						
 					}
-					
+					if (actText.equals("Update"))//送交
+					{
+						//lcVo.setSubmitDate(DateUtil.NowDateTime());
+						logger.info("部门申請請假/Update : " +lcVo.toString());
+						String rowID = request.getParameter("rowID");
+				
+						lcVo.setShowDataTable(true);
+						lcVo.setRowID(rowID);
+						lcVo=SharedCode(con,lcVo);
+						showHtml(con, out,  lcVo,UserInformation);	
+					}
 					
 				}else{
 					//預設
@@ -121,11 +144,15 @@ public class dep_LeaveCard extends TemplatePortalPen
 					lcVo.setEndLeaveTime("0");
 					lcVo.setSearchAgent("0");
 					lcVo.setStartLeaveMinute("0");
+					lcVo.setDayCount("0");
+					lcVo.setHourCount("0");
+					lcVo.setMinuteCount("0");
 					lcVo.setEndLeaveMinute("0");
-					lcVo.setApplicationDate(DateUtil.NowDate());
 					lcVo.setStartLeaveDate(DateUtil.NowDate());
 					lcVo.setEndLeaveDate(DateUtil.NowDate());
 					lcVo.setNote("");
+					lcVo.setRowID("0");
+					lcVo.setSearchRole(keyConts.EmpRoleE);
 					showHtml(con, out, lcVo,UserInformation);
 				
 				}
@@ -143,7 +170,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 			 String html="";
 			try
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID);
+				html = ControlUtil.drawChosenSelect(con, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID,false,null);
 			}
 			catch (SQLException e)
 			{
@@ -160,38 +187,137 @@ public class dep_LeaveCard extends TemplatePortalPen
 			// System.out.println("TimeDiv :"+TimeDiv);
 			  out.println(data);
 	 	}
+		 
+		 if(ajax.equals("SwDUnit")){
+			
+			 String searchUnit = request.getParameter("searchUnit");
+			 String searchDepartmen = request.getParameter("searchDepartmen");
+			 String html="",subSql="";
+			 overTimeVO otVo = new overTimeVO(); 
+			 otVo.setSearchEmployeeNo("0");
+			 //只能查出員工
+			 if(searchUnit.equals("0")){
+				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "' and role='E'  ";
+			 }else{
+				 subSql=" UNIT_ID ='" + searchUnit + "' and role='E'  ";
+			 }
+			// System.out.println("subSql : "+subSql);
+			try
+			
+			{
+				html = ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo(),false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo(),false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchAgent", "HR_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo(),false,null);
+			}
+			catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// System.out.println("html : "+html);
+			 out.println(html);
+	 	}
+		 if(ajax.equals("SwUnit")){
+			 String searchDepartmen = request.getParameter("searchDepartmen");
+			 String unitID= DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(searchDepartmen,"  V.UNIT_ID "),"UNIT_ID");
+			 String html="";
+			 overTimeVO otVo = new overTimeVO(); 
+			 otVo.setSearchEmployeeNo("0");
+			try
+			{
+				html = ControlUtil.drawChosenSelect(con, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + searchDepartmen + "'", "0",false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo(),false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo(),false,null);
+			}
+			catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//System.out.println("html : "+html);
+			 out.println(html);
+	 	}
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation) throws Exception {
-		employeeUserRO eo=new employeeUserRO();
-		List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNameDate(UserInformation.getUserName()) ,eo);	
-		HtmlUtil hu=new HtmlUtil();
-		String htmlPart1=hu.gethtml(htmlConsts.html_dep_LeaveCard);
-		htmlPart1=htmlPart1.replace("<ActionURI/>", 	lcVo.getActionURI());
-		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	UserInformation.getUserEmployeeNo());
-		htmlPart1=htmlPart1.replace("<hiddenEmployeeNo/>",ControlUtil.drawHidden(DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()), "searchDepartmen"));	
-		htmlPart1=htmlPart1.replace("<SearchAgent/>",ControlUtil.drawSelectDBControl(con, out, "searchAgent", "VN_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", lcVo.getSearchAgent()));
-		htmlPart1=htmlPart1.replace("<searchHoliday/>",ControlUtil.drawSelectShared(con, out, "searchHoliday", "VN_HOLIDAY", "ID", "HOLIDAYNAME", "", lcVo.getSearchHoliday(),true));
-		htmlPart1=htmlPart1.replace("<applicationDate/>",HtmlUtil.getDateDiv("applicationDate", lcVo.getApplicationDate()));
-		htmlPart1=htmlPart1.replace("<startLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("startLeaveTime",lcVo.getStartLeaveDate()));
-		htmlPart1=htmlPart1.replace("<endLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("endLeaveTime",lcVo.getEndLeaveTime()));
-		htmlPart1=htmlPart1.replace("<startLeaveDate/>",HtmlUtil.getDateDiv("startLeaveDate", lcVo.getStartLeaveDate()));
-		htmlPart1=htmlPart1.replace("<endLeaveDate/>",HtmlUtil.getDateDiv("endLeaveDate", lcVo.getEndLeaveDate()));
-		htmlPart1=htmlPart1.replace("<startLeaveMinute/>",HtmlUtil.getLeaveCardMinuteDiv("startLeaveMinute",lcVo.getStartLeaveMinute()));
-		htmlPart1=htmlPart1.replace("<endLeaveMinute/>",HtmlUtil.getLeaveCardMinuteDiv("endLeaveMinute",lcVo.getEndLeaveMinute()));
+		private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation) throws Exception {
+			employeeUserRO eo=new employeeUserRO();
+			List<employeeUserRO> lro=null;
 	
-		htmlPart1=htmlPart1.replace("&Note",HtmlUtil.getNoteDiv("note", lcVo.getNote()));
-		htmlPart1=htmlPart1.replace("<SPAN  id='dutiesDiv' ></SPAN>",lro.get(0).getDUTIES()) ;
-		htmlPart1=htmlPart1.replace("<SPAN  id='entrydateDiv' ></SPAN>",String.valueOf(lro.get(0).getENTRYDATE())) ;
-		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
-		if(lcVo.isShowDataTable()){
-			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageEmpUnitList));
-		}
-		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", lcVo.getSearchUnit()));
-		htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", lcVo.getSearchEmployeeNo()));
-		htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", lcVo.getSearchEmployee()));
+			if( lcVo.getSearchEmployee().equals("0")){
+			     lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
+			}else{
+				
+			     logger.info("SqlUtil getEmployeeID"+SqlUtil.getEmployeeID(lcVo.getSearchEmployee()));
+				 lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeID(lcVo.getSearchEmployee()) ,eo);	
+			}
+			String UnitSql="";
+			if(lcVo.getSearchDepartmen( ).equals("0")){
+				UnitSql=" DEPARTMENT_ID='0' ";
+			}else{
+				UnitSql=" DEPARTMENT_ID= '"+lcVo.getSearchDepartmen( )+"'";
+			}
+			//System.out.println("lro : "+lro);
+			HtmlUtil hu=new HtmlUtil();
+			String htmlPart1=hu.gethtml(htmlConsts.html_dep_LeaveCard);
+			htmlPart1=htmlPart1.replace("<ActionURI/>", 	lcVo.getActionURI());
+			htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,lcVo.getSearchDepartmen( ),false,null));
+			htmlPart1=htmlPart1.replace("<SearchAgent/>",ControlUtil.drawChosenSelect(con,  "searchAgent", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lro.get(0).getDID()+ "'", lcVo.getSearchAgent(),false,null));
+			htmlPart1=htmlPart1.replace("<searchHoliday/>",ControlUtil.drawChosenSelect(con, "searchHoliday", "VN_LHOLIDAY", "ID", "HOLIDAYNAME", null, lcVo.getSearchHoliday(),false,null));
+			htmlPart1=htmlPart1.replace("<applicationDate/>", lcVo.getApplicationDate());
+			htmlPart1=htmlPart1.replace("<startLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("startLeaveTime",lcVo.getStartLeaveDate()));
+			htmlPart1=htmlPart1.replace("<endLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("endLeaveTime",lcVo.getEndLeaveTime()));
+			htmlPart1=htmlPart1.replace("<startLeaveDate/>",HtmlUtil.getDateDiv("startLeaveDate", lcVo.getStartLeaveDate()));
+			htmlPart1=htmlPart1.replace("<endLeaveDate/>",HtmlUtil.getDateDiv("endLeaveDate", lcVo.getEndLeaveDate()));
+			htmlPart1=htmlPart1.replace("<startLeaveMinute/>",HtmlUtil.getLeaveCardMinuteDiv("startLeaveMinute",lcVo.getStartLeaveMinute()));
+			htmlPart1=htmlPart1.replace("<endLeaveMinute/>",HtmlUtil.getLeaveCardMinuteDiv("endLeaveMinute",lcVo.getEndLeaveMinute()));
+			htmlPart1=htmlPart1.replace("<dayCount/>",HtmlUtil.getSpinnerDiv("dayCount",lcVo.getDayCount(),keyConts.spinnerDayMax,keyConts.spinnerDayMin,keyConts.spinnerDayStep));
+			htmlPart1=htmlPart1.replace("<hourCount/>",HtmlUtil.getSpinnerDiv("hourCount",lcVo.getHourCount(),keyConts.spinnerHourMax,keyConts.spinnerHourMin,keyConts.spinnerHourStep));
+			htmlPart1=htmlPart1.replace("<minuteCount/>",HtmlUtil.getSpinnerDiv("minuteCount",lcVo.getMinuteCount(),keyConts.spinnerMinuteMax,keyConts.spinnerMinuteMin,keyConts.spinnerMinuteStep));
+			htmlPart1=htmlPart1.replace("&Note",HtmlUtil.getNoteDiv("note", lcVo.getNote()));
+			htmlPart1=htmlPart1.replace("<rowID/>",lcVo.getRowID()) ;
+			htmlPart1=htmlPart1.replace("<dutiesDiv/>",lro.get(0).getDUTIES()) ;
+			htmlPart1=htmlPart1.replace("<entrydateDiv/>",String.valueOf(lro.get(0).getENTRYDATE())) ;
+			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
+		//	logger.info("getLeaveCard"+SqlUtil.getLeaveCard(lcVo));
+			if(lcVo.isShowDataTable()){
+				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
+						SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageEmpUnitList));
+			}
+			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", UnitSql, lcVo.getSearchUnit(),false,null));
+			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + 	lcVo.getSearchDepartmen()+ "'", lcVo.getSearchEmployeeNo(),false,null));
+			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
+			
+		    out.println(htmlPart1);
+	}
+	/**
+	 * 共用查询區塊
+	 */
+	 private leaveCardVO SharedCode(Connection con,leaveCardVO lcVo){
+		    exLeaveCardRO er=new exLeaveCardRO();
+			List<exLeaveCardRO> ero=DBUtil.queryLeaveCardList(con,SqlUtil.getBeLeaveCard(lcVo.getRowID()),er);
+			logger.info("getBeLeaveCard : " +SqlUtil.getBeLeaveCard(lcVo.getRowID()));
+			lcVo.setSearchHoliday(ero.get(0).getHID());
+			lcVo.setRowID(ero.get(0).getID());
+			String [] StartsLeaves = ero.get(0).getSTARTLEAVEDATE().split("\\s+");
+			lcVo.setStartLeaveDate(StartsLeaves[0].replace("-", "/"));
+			String [] StartsLeavess =StartsLeaves[1].split(":");
+			lcVo.setStartLeaveTime(StartsLeavess[0]);
+			lcVo.setStartLeaveMinute(StartsLeavess[1]);
 		
-	    out.println(htmlPart1);
-}
+			String [] EndLeaves = ero.get(0).getENDLEAVEDATE().split("\\s+");
+			lcVo.setEndLeaveDate(EndLeaves[0].replace("-", "/"));
+			String [] EndLeavess =EndLeaves[1].split(":");
+			lcVo.setEndLeaveTime(EndLeavess[0]);
+			lcVo.setEndLeaveMinute(EndLeavess[1]);
+			lcVo.setSearchAgent( ero.get(0).getAgent());
+			lcVo.setDayCount( ero.get(0).getDAYCOUNT());
+			lcVo.setHourCount( ero.get(0).getHOURCOUNT());
+			lcVo.setMinuteCount( ero.get(0).getMINUTECOUNT());
+			lcVo.setNote( ero.get(0).getNOTE());
+			lcVo.setSearchEmployee(ero.get(0).getEMPLOYEE());
+			lcVo.setSearchEmployeeNo(ero.get(0).getEMPLOYEENO());
+			lcVo.setSearchDepartmen(ero.get(0).getDEPARTMENT());
+			lcVo.setSearchUnit(ero.get(0).getUNIT());
+		 return lcVo;
+	 }
 }

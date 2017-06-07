@@ -27,7 +27,7 @@ import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 /**
- * 加班申請單 審核
+ *  管理部審核 加班申請單
  * @author Antonis.chen
  *
  */
@@ -47,45 +47,45 @@ public class rev_InspectOvertime extends TemplatePortalPen {
 				if (actText != null)
 				{		
 					BeanUtils.populate(otVo,request.getParameterMap()); 
-					// 查詢UI
+					// 查询UI
 					otVo.setSearchReasons("0");
-					otVo.setMonthOverTime("0");//查詢有無超過時間
+					otVo.setMonthOverTime("0");//查询有無超過时间
 					if (actText.equals("QUE")) {
 					
 						setHtmlPart1(con, out, otVo,UserInformation);
 					
-						// 輸出查詢UI
-						out.write(HtmlUtil.drawTableS(
-								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
+						// 輸出查询UI
+						out.write(HtmlUtil.drawOvertimeTable(
+								SqlUtil.getOvertimeRev(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 						
 						setHtmlPart2(con, out, otVo);
 					}
-					if (actText.equals("I")) {
+					if (actText.equals("M")) {
 						logger.info("加班申請單 審核/I: " +otVo.toString());		
-						DBUtil.updateTimeOverSStatus("I", request.getParameter("rowID"), con);
+						DBUtil.updateTimeOverSStatus("M", request.getParameter("rowID"), con);
 						
 						setHtmlPart1(con, out, otVo,UserInformation);
 						//System.out.println("OvertimeNoSave  :   "+SqlUtil.getOvertimeNoSave(otVo));
-						// 輸出查詢UI
-						out.write(HtmlUtil.drawTableS(
-								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
+						// 輸出查询UI
+						out.write(HtmlUtil.drawOvertimeTable(
+								SqlUtil.getOvertimeRev(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 						
 						setHtmlPart2(con, out, otVo);
 					}
-					if (actText.equals("R")) {
+					if (actText.equals("MR")) {
 						logger.info("加班申請單 審核/R: " +otVo.toString());		
-						DBUtil.updateTimeOverSStatus("R", request.getParameter("rowID"), con);
+						DBUtil.updateTimeOverSStatus("MR", request.getParameter("rowID"), con);
 						DBUtil.updateSql(SqlUtil.setStatusReturnMsg(otVo.getReturnMsg(), request.getParameter("rowID")), con);
 						setHtmlPart1(con, out, otVo,UserInformation);
 				
-						// 輸出查詢UI
-						out.write(HtmlUtil.drawTableS(
-								SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
+						// 輸出查询UI
+						out.write(HtmlUtil.drawOvertimeTable(
+								SqlUtil.getOvertimeRev(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 						
 						setHtmlPart2(con, out, otVo);
 					}
 				}else{
-					otVo.setSearchDepartmen(DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()));
+					otVo.setSearchDepartmen("0");
 					otVo.setSearchEmployeeNo("0");
 					otVo.setSearchEmployee("0");
 					otVo.setStartSubmitDate(DateUtil.NowDate());
@@ -113,7 +113,7 @@ public class rev_InspectOvertime extends TemplatePortalPen {
 			otVo.setSearchEmployeeNo("0");
 			try
 			{
-				out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + searchDepartmen + "'", otVo.getSearchEmployeeNo()));
+				out.println(ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + searchDepartmen + "'", otVo.getSearchEmployeeNo(),false,null));
 			}
 			catch (SQLException e)
 			{
@@ -126,7 +126,7 @@ public class rev_InspectOvertime extends TemplatePortalPen {
 			otVo.setSearchEmployee("0");
 			try
 			{
-				out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + searchDepartmen + "'", otVo.getSearchEmployee()));
+				out.println(ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + searchDepartmen + "'", otVo.getSearchEmployee(),false,null));
 			}
 			catch (SQLException e)
 			{
@@ -153,10 +153,10 @@ public class rev_InspectOvertime extends TemplatePortalPen {
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_rev_inspectOvertimePart1);
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
-			htmlPart1=htmlPart1.replace("&SearchDepartmen", drawSelectShared(con, out, "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", "",otVo.getSearchDepartmen( )));
+			htmlPart1=htmlPart1.replace("&SearchDepartmen", ControlUtil.drawChosenSelect(con, "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,otVo.getSearchDepartmen( ),false,null));
 			htmlPart1=htmlPart1.replace("&submitDate",HtmlUtil.getDateDivSw("startSubmitDate","endSubmitDate", otVo.getStartSubmitDate(),otVo.getEndSubmitDate()));
-			htmlPart1=htmlPart1.replace("	<SearchEmployeeNo/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + otVo.getSearchDepartmen( ) + "'", otVo.getSearchEmployeeNo()));
-			htmlPart1=htmlPart1.replace("&SearchEmployee",ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + otVo.getSearchDepartmen( ) + "'", otVo.getSearchEmployee()));
+			htmlPart1=htmlPart1.replace("	<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='0'", otVo.getSearchEmployeeNo(),false,null));
+			htmlPart1=htmlPart1.replace("&SearchEmployee",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='0'", otVo.getSearchEmployee(),false,null));
 			out.println(htmlPart1);
 	}
 	private void setHtmlPart2(Connection con, PrintWriter out, overTimeVO otVo) throws SQLException {

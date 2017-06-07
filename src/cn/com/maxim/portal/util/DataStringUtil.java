@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import cn.com.maxim.portal.attendan.ro.repAttendanceDayRO;
 import cn.com.maxim.portal.bean.dayTableMoble;
 import cn.com.maxim.portal.bean.dayTableRowMoble;
@@ -33,7 +35,11 @@ public class DataStringUtil
 	private int LeaveTypeJ;
 	/** 旷工 **/
 	private int LeaveTypeK;
-
+	/** 旷 **/
+	private int LeaveTypeL;
+	
+	private static Logger logger = Logger.getLogger(DataStringUtil.class);
+	
 	public void setDataString(String Data)
 	{
 		String[] Datas = Data.split("R");
@@ -43,7 +49,7 @@ public class DataStringUtil
 		{
 
 			System.out.println("Datas  :  " + Datas[i]);
-
+			
 			if (Datas[i].indexOf("事假:") != -1)
 			{
 				String value = Datas[i].replaceAll("事假:", "");
@@ -110,6 +116,13 @@ public class DataStringUtil
 				value = value.replaceAll("HOU", "");
 				LeaveTypeK = LeaveTypeK + Integer.valueOf(value);
 			}
+			
+			if (Datas[i].indexOf("旷") != -1)
+			{
+				//String value = Datas[i].replaceAll("旷工:", "");
+			//	value = value.replaceAll("HOU", "");
+				LeaveTypeL = LeaveTypeL + 8;
+			}
 		}
 
 	}
@@ -161,6 +174,10 @@ public class DataStringUtil
 		{
 			max = max + "旷工:" + LeaveTypeK + "HOUR";
 		}
+		if (LeaveTypeL != 0)
+		{
+			max = max + "旷工:" + LeaveTypeL + "HOUR";
+		}
 		return max;
 	}
 
@@ -177,6 +194,7 @@ public class DataStringUtil
 		LeaveTypeI = 0;
 		LeaveTypeJ = 0;
 		LeaveTypeK = 0;
+		LeaveTypeL = 0;
 	}
 
 	/** AttendanceDayTable 判斷key取值 **/
@@ -258,6 +276,7 @@ public class DataStringUtil
 			if (i == 22)
 			{// 百分比
 				Control = Control.replace("<r" + srow + "c" + i + "/>", NumberUtil.getPercentFormat(row.getCol(i)));
+				row.setCol(i, NumberUtil.getPercentFormat(row.getCol(i)));
 			}
 			else
 			{
@@ -315,8 +334,16 @@ public class DataStringUtil
 		for (int i = cin; i <= cout; i++)
 		{
 			rowBean = (repAttendanceDayBean) dr.getHt().get("row" + i);
-			if (!rowBean.getCol(sCol).equals("-"))
-			{
+			String sColValue=rowBean.getCol(sCol);
+			boolean isColValueInt=true;
+			if (sColValue.equals("-") ){
+				isColValueInt=false;
+			}
+			if (sColValue.indexOf("%")!=-1 ){
+				isColValueInt=false;
+			}
+			if (isColValueInt ){
+				//logger.info("rowBean.getCol(sCol) :" +rowBean.getCol(sCol));
 				count = count + Integer.valueOf(rowBean.getCol(sCol));
 			}
 		}
@@ -355,7 +382,8 @@ public class DataStringUtil
 			if (i == 22)
 			{
 				Control = Control.replace("<r" + srow + "c" + i + "/>", NumberUtil.getPercentFormat(temp));
-				row.setCol(i, temp);
+				row.setCol(i, NumberUtil.getPercentFormat(temp));
+				
 			}
 			else
 			{
@@ -442,9 +470,17 @@ public class DataStringUtil
 	public static int addUpDayTableRow(int sCol, int count, repAttendanceDayBean rowBean) throws ParseException
 	{
 		// System.out.println(" updateMax 3");
-		if (!rowBean.getCol(sCol).equals("-"))
-		{
-			// System.out.println(" updateMax 4");
+		
+		String sColValue=rowBean.getCol(sCol);
+		boolean isColValueInt=true;
+		if (sColValue.equals("-") ){
+			isColValueInt=false;
+		}
+		if (sColValue.indexOf("%")!=-1 ){
+			isColValueInt=false;
+		}
+		if (isColValueInt ){
+			//logger.info("rowBean.getCol(sCol) :" +rowBean.getCol(sCol));
 			count = count + Integer.valueOf(rowBean.getCol(sCol));
 		}
 		return count;

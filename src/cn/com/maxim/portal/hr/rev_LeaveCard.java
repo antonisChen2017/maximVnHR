@@ -28,7 +28,7 @@ import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 
 /**
- * 請假卡 三天以下 管理部審核
+ *  管理部審核  請假卡 三天以下 
  * @author Antonis.chen
  *
  */
@@ -50,10 +50,10 @@ public class rev_LeaveCard extends TemplatePortalPen
 				{		
 					
 					BeanUtils.populate(lcVo,request.getParameterMap()); 
-					// 查詢
+					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
-						
+						lcVo.setStatus("L");
 						showHtml(con, out, lcVo,UserInformation);
 					}
 					//管理部退回
@@ -113,9 +113,9 @@ public class rev_LeaveCard extends TemplatePortalPen
 			 otVo.setSearchEmployeeNo("0");
 			try
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + searchDepartmen + "'", "0")
-						+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo())
-						+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo());
+				html = ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + searchDepartmen + "'", "0",false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo(),false,null)
+						+"%"+ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo(),false,null);
 			}
 			catch (SQLException e)
 			{
@@ -140,7 +140,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 			 otVo.setSearchEmployeeNo("0");
 			 try
 				{
-				 out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" + searchUnit + "'", otVo.getSearchEmployeeNo()));
+				 out.println(ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" + searchUnit + "'", otVo.getSearchEmployeeNo(),false,null));
 				}
 				catch (SQLException e)
 				{
@@ -153,7 +153,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 			 otVo.setSearchEmployeeNo("0");
 			 try
 				{
-				 out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" + searchUnit + "'", otVo.getSearchEmployeeNo()));
+				 out.println(ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" + searchUnit + "'", otVo.getSearchEmployeeNo(),false,null));
 				}
 				catch (SQLException e)
 				{
@@ -166,7 +166,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 			otVo.setSearchEmployeeNo("0");
 			try
 			{
-				out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", " DEPARTMENT_ID='" + searchDepartmen + "' ", otVo.getSearchEmployeeNo()));
+				out.println(ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", " DEPARTMENT_ID='" + searchDepartmen + "' ", otVo.getSearchEmployeeNo(),false,null));
 			}
 			catch (SQLException e)
 			{
@@ -179,7 +179,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 			otVo.setSearchEmployee("0");
 			try
 			{
-				out.println(ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + searchDepartmen + "'", otVo.getSearchEmployee()));
+				out.println(ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + searchDepartmen + "'", otVo.getSearchEmployee(),false,null));
 			}
 			catch (SQLException e)
 			{
@@ -192,7 +192,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 			 String html="";
 			try
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID);
+				html = ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID,false,null);
 			}
 			catch (SQLException e)
 			{
@@ -217,8 +217,8 @@ public class rev_LeaveCard extends TemplatePortalPen
 			try
 			
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo())
-						+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo());
+				html = ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo(),false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo(),false,null);
 			}
 			catch (SQLException e)
 			{
@@ -239,18 +239,20 @@ public class rev_LeaveCard extends TemplatePortalPen
 		HtmlUtil hu=new HtmlUtil();
 		String htmlPart1=hu.gethtml(htmlConsts.html_rev_LeaveCard);
 		htmlPart1=htmlPart1.replace("<ActionURI/>", 	lcVo.getActionURI());
-		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	ControlUtil.drawSelectShared(con, out, "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", "",lcVo.getSearchDepartmen( )));
+		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	ControlUtil.drawChosenSelect(con, "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,lcVo.getSearchDepartmen( ),false,null));
 		htmlPart1=htmlPart1.replace("<hiddenEmployeeNo/>",ControlUtil.drawHidden(DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()), "searchDepartmen"));	
 		htmlPart1=htmlPart1.replace("<applicationDate/>",HtmlUtil.getDateDivSw("startLeaveDate","endLeaveDate", lcVo.getStartLeaveDate(),lcVo.getEndLeaveDate()));
-		htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", " 1=1", lcVo.getSearchEmployeeNo()));
-		htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", " 1=1", lcVo.getSearchEmployee()));
+		htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", " UNIT_ID ="+lcVo.getSearchUnit() , lcVo.getSearchEmployeeNo(),
+				false,null));
+		htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,"searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", " UNIT_ID ="+lcVo.getSearchUnit(), lcVo.getSearchEmployee(),
+				false,null));
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
-		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", " 1=1 ", lcVo.getSearchUnit()));
-	////	System.out.println("select util : "+ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", " 1=1 ", lcVo.getSearchUnit()));
-	//	System.out.println("sql : "+SqlUtil.getDepartmenLeaveCard(lcVo));
+		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", null, lcVo.getSearchUnit(),false,null));
+
 		if(lcVo.isShowDataTable()){
+			logger.info(" sql BLeaveCard="+SqlUtil.getBLeaveCard(lcVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getMLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
+					SqlUtil.getBLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 		}
 	
 		

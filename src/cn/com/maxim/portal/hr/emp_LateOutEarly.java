@@ -26,7 +26,7 @@ import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 /**
- * 員工查詢考勤
+ * 員工查询考勤
  * @author Antonis.chen
  *
  */
@@ -49,7 +49,7 @@ public class emp_LateOutEarly extends TemplatePortalPen
 				{		
 					
 					BeanUtils.populate(eaVo,request.getParameterMap()); 
-					// 查詢
+					// 查询
 					if (actText.equals("QUE")) {
 						eaVo.setShowDataTable(true);
 						showHtml(con, out, eaVo,UserInformation,request);
@@ -78,25 +78,23 @@ public class emp_LateOutEarly extends TemplatePortalPen
 	private void showHtml(Connection con, PrintWriter out,lateOutEarlyVO eaVo  , UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
 		
 			employeeUserRO eo=new employeeUserRO();
-			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNameDate(UserInformation.getUserName()) ,eo);	
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
 			eaVo.setEmpID(lro.get(0).getEMPLOYEENO());
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_emp_lateOutEarly);
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	eaVo.getActionURI());
 			htmlPart1=htmlPart1.replace("<queryYearMonth/>",HtmlUtil.getYearMonthDiv("queryYearMonth",eaVo.getQueryYearMonth()));
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",HtmlUtil.getLabelHtml(lro.get(0).getUNIT()));
-			htmlPart1=htmlPart1.replace("<SearchEmployee/>",HtmlUtil.getLabelHtml(UserInformation.getUserName()));
+			htmlPart1=htmlPart1.replace("<SearchEmployee/>",HtmlUtil.getLabelHtml(lro.get(0).getEMPLOYEE()));
 			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",HtmlUtil.getLabelHtml(lro.get(0).getEMPLOYEENO()));
 			htmlPart1=htmlPart1.replace("<hiddenUserNo/>",ControlUtil.drawHidden(lro.get(0).getID(), "searchEmployee"));	
 			htmlPart1=htmlPart1.replace("<hiddenUnit/>",ControlUtil.drawHidden(lro.get(0).getUID(), "searchUnit"));	
 			htmlPart1=htmlPart1.replace("<hiddenUser/>",ControlUtil.drawHidden(lro.get(0).getID(), "searchEmployeeNo"));	
 			htmlPart1=htmlPart1.replace("<hiddenEmployeeNo/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));
-			htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	UserInformation.getUserEmployeeNo());
-			//System.out.println("ateOutEarly sql "+SqlUtil.getlateOutEarly(eaVo));
+			htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	 lro.get(0).getDEPARTMENT());
+		
 			if(eaVo.isShowDataTable()){
-				//String drawTableM =HtmlUtil.drawEmpLateOutEarly(
-				//		SqlUtil.getEmplateOutEarly(con, eaVo),HtmlUtil.drawTableMcheckButton(),  con, out,UrlUtil.pageSave);
-				
+
 				htmlPart1=htmlPart1.replace("<drawTableM/>",ControlUtil.drawAccordions( con,eaVo));
 			
 			}			

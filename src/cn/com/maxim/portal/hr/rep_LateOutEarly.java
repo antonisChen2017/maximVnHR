@@ -16,11 +16,10 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
-import cn.com.maxim.portal.attendan.ro.lateOutEarlyRO;
+
 import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
-import cn.com.maxim.portal.attendan.vo.leaveCardVO;
-import cn.com.maxim.portal.attendan.vo.overTimeVO;
+
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -28,10 +27,12 @@ import cn.com.maxim.portal.util.ExcelUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
+import cn.com.maxim.portal.util.TranslateUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
+import cn.com.maxim.potral.consts.TranslateConsts;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -77,7 +78,7 @@ public class rep_LateOutEarly extends TemplatePortalPen
 				{		
 					
 					BeanUtils.populate(eaVo,request.getParameterMap()); 
-					// 查詢
+					// 查询
 					if (actText.equals("QUE")) {
 						eaVo.setShowDataTable(true);
 						showHtml(con, out, eaVo,UserInformation,request);
@@ -103,7 +104,7 @@ public class rep_LateOutEarly extends TemplatePortalPen
 		
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out,lateOutEarlyVO eaVo  , UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
+	private void showHtml(Connection con, PrintWriter out,lateOutEarlyVO eaVo  , UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
 		
 		
 			HtmlUtil hu=new HtmlUtil();
@@ -111,11 +112,11 @@ public class rep_LateOutEarly extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	eaVo.getActionURI());
 			htmlPart1=htmlPart1.replace("<queryYearMonth/>",HtmlUtil.getYearMonthDiv("queryYearMonth",eaVo.getQueryYearMonth()));
 			htmlPart1=htmlPart1.replace("<queryIsLate/>",HtmlUtil.getIsLate(eaVo));
-			//System.out.println("ateOutEarly sql "+SqlUtil.getlateOutEarly(eaVo));
+			htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null ,eaVo.getSearchDepartmen( ),false,null));
 			if(eaVo.isShowDataTable()){
-				String drawTableM =HtmlUtil.drawLateOutEarlyTable(
-						SqlUtil.getlateOutEarly(con, eaVo),HtmlUtil.drawTableMExcelButton(),  con, out,keyConts.pageSave);
-				htmlPart1=htmlPart1.replace("<drawTableM/>",drawTableM);
+		
+				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLateOutEarlyTable(
+						SqlUtil.getlateOutEarly(con, eaVo),HtmlUtil.drawTableMExcelButton(),  con, out,keyConts.pageSave));
 			
 				yearMonthLateRO ymRo=new yearMonthLateRO();
 				 List<yearMonthLateRO> eaRolist=( List<yearMonthLateRO>)DBUtil.queryLateList(con,SqlUtil.getLateOutEarlyExcelSql(eaVo),ymRo);
@@ -123,7 +124,7 @@ public class rep_LateOutEarly extends TemplatePortalPen
 			}
 		
 			
-		    out.println(htmlPart1);
+			   out.println(TranslateConsts.tw2cn(htmlPart1));
 		    }
 	
 	

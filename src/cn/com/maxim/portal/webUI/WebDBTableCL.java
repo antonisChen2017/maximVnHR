@@ -93,7 +93,7 @@ public class WebDBTableCL extends WebDBTableEx
 		Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
 		Sb.append("   <div class=\"portlet\"> \r");
 		Sb.append("   <div class=\"portlet-title\">  \r");
-		Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查詢結果  \r");
+		Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
 		if (!msg.equals(""))
 		{
 			Sb.append(msg);
@@ -202,7 +202,7 @@ public class WebDBTableCL extends WebDBTableEx
 						}
 
 					}
-					else if (col.ColumnName.equals("待料開始時間") || col.ColumnName.equals("待料結束時間"))
+					else if (col.ColumnName.equals("待料開始时间") || col.ColumnName.equals("待料結束时间"))
 					{
 						Data = Data.substring(0, Data.length() - 3);
 						Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");

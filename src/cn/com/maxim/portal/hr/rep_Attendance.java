@@ -29,6 +29,7 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
+import cn.com.maxim.potral.consts.TranslateConsts;
 
 /**
  * 月份考勤綜合表
@@ -56,7 +57,7 @@ public class rep_Attendance extends TemplatePortalPen
 			{		
 				
 				BeanUtils.populate(raVo,request.getParameterMap()); 
-				// 查詢
+				// 查询
 				if (actText.equals("QUE")) {
 					raVo.setShowDataTable(true);
 					showHtml(con, out, raVo,UserInformation,request);
@@ -87,7 +88,7 @@ public class rep_Attendance extends TemplatePortalPen
 
 			try
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + searchDepartmen + "'", "0");
+				html = ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + searchDepartmen + "'", "0",false,null);
 			}
 			catch (SQLException e)
 			{
@@ -105,26 +106,21 @@ public class rep_Attendance extends TemplatePortalPen
 		String htmlPart1=hu.gethtml(htmlConsts.html_rep_attendance);
 		htmlPart1=htmlPart1.replace("<ActionURI/>", 	raVo.getActionURI());
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(raVo.getMsg()));
-		if(raVo.getSearchDepartmen().equals("0")){
-			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", " 1=1 ", raVo.getSearchUnit()));
-		}else{
-			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" +raVo.getSearchDepartmen() + "'", raVo.getSearchUnit()));
-		}
-	
+		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" +raVo.getSearchDepartmen() + "'", raVo.getSearchUnit(),false,null));
 		htmlPart1=htmlPart1.replace("<queryYearMonth/>",HtmlUtil.getYearMonthDiv("queryYearMonth",raVo.getQueryYearMonth()));
-		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	ControlUtil.drawSelectShared(con, out, "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", "",raVo.getSearchDepartmen( )));
+		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null ,raVo.getSearchDepartmen( ),false,null));
 		if(raVo.isShowDataTable()){
+		
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawRepAttendanceTable(
 					SqlUtil.getMonthReport(con,raVo),HtmlUtil.drawTableMExcelButton(),  con, out,raVo));
-			
-		
-			
+
 			 repAttendanceRO raRo=new repAttendanceRO();
+		
 			 List<repAttendanceRO> raRolist=( List<repAttendanceRO>)DBUtil.queryMonthAttendanceExcel(con,SqlUtil.getvnMonthAttendanceExcel(raVo),raRo);
-			
+			 request.getSession().setAttribute("Departmen", DBUtil.queryDBField(con,SqlUtil.getDeptName(raVo.getSearchDepartmen()),"DEPARTMENT"));
 			 request.getSession().setAttribute("raRolist", raRolist);
 		}
 		
-	    out.println(htmlPart1);
+		 out.println(TranslateConsts.tw2cn(htmlPart1));
 	    }
 }

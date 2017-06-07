@@ -12,11 +12,11 @@ public class overTimeVO implements Serializable
 {
 
 	private static final long serialVersionUID = -8717143017939146669L;
-	/**部門 */
+	/**部门 */
 	private String searchDepartmen;
 	/** 加班日期 */
 	private String queryDate;
-	/**單位 */
+	/**单位 */
 	private String searchUnit;
 	/**加班原因 */
 	private String searchReasons;
@@ -28,7 +28,7 @@ public class overTimeVO implements Serializable
 	private String endTimeHh;
 	/**加班結束-分 */
 	private String endTimemm;
-	/**總共小時 */
+	/**总共小时 */
 	private String addTime;
 	/**姓名 */
 	private String searchEmployee;
@@ -48,10 +48,14 @@ public class overTimeVO implements Serializable
 	private String  status;
 	/**資料庫訊息*/
 	private String  msg;
-	/**是否顯示查詢結果*/
+	/**是否顯示查询結果*/
 	private boolean  showDataTable;
+	/**是否顯示超時資料查询結果*/
+	private boolean showExOverTimeData;
 	/**行ID**/
 	private String  rowID;
+	/**主表行ID**/
+	private String  mID;
 	/**start 提交日期*/
 	private String startSubmitDate;
 	/**end 提交日期*/
@@ -62,13 +66,62 @@ public class overTimeVO implements Serializable
 	private String endQueryDate;
 	/** 退回原因*/
 	private String returnMsg;
-	/** 查詢是否超過加班時數  **/
+	/** 查询是否超過加班時數  **/
 	private String  monthOverTime;
-	/** 超過時間是否可以寫入  **/
+	/** 超過时间是否可以寫入  **/
 	private boolean  OverTimeSave;
 	/**ActionURI**/
 	private String  ActionURI;
+	/**年月日 */
+	private String  queryYearMonth;
+	/**員工ID**/
+	private String EP_ID;
+	/**部门ID */
+	private String DID;
+	/**单位ID**/
+	private String UID;
 	
+	
+	public String getUID()
+	{
+		return UID;
+	}
+	public void setUID(String uID)
+	{
+		UID = uID;
+	}
+	public String getDID()
+	{
+		return DID;
+	}
+	public void setDID(String dID)
+	{
+		DID = dID;
+	}
+	public String getEP_ID()
+	{
+		return EP_ID;
+	}
+	public void setEP_ID(String eP_ID)
+	{
+		EP_ID = eP_ID;
+	}
+	public boolean isShowExOverTimeData()
+	{
+		return showExOverTimeData;
+	}
+	public void setShowExOverTimeData(boolean showExOverTimeData)
+	{
+		this.showExOverTimeData = showExOverTimeData;
+	}
+	public String getQueryYearMonth()
+	{
+		return queryYearMonth;
+	}
+	public void setQueryYearMonth(String queryYearMonth)
+	{
+		this.queryYearMonth = queryYearMonth;
+	}
 	public String getSearchDepartmen()
 	{
 		return searchDepartmen;
@@ -314,12 +367,23 @@ public class overTimeVO implements Serializable
 	{
 		ActionURI = actionURI;
 	}
+	
+	
+	public String getmID()
+	{
+		return mID;
+	}
+	public void setmID(String mID)
+	{
+		this.mID = mID;
+	}
 	@Override
 	public String toString()
 	{
-		return "overTimeVO [searchDepartmen=" + searchDepartmen + ", queryDate=" + queryDate + ", searchUnit=" + searchUnit + ", searchReasons=" + searchReasons + ", startTimeHh=" + startTimeHh + ", startTimemm=" + startTimemm + ", endTimeHh=" + endTimeHh + ", endTimemm=" + endTimemm + ", addTime=" + addTime + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", overTimeClass=" + overTimeClass + ", submitDate=" + submitDate + ", userReason=" + userReason + ", act=" + act + ", status=" + status + ", msg=" + msg + ", showDataTable=" + showDataTable + ", rowID=" + rowID + ", startSubmitDate=" + startSubmitDate + ", EndSubmitDate=" + EndSubmitDate + ", startQueryDate=" + startQueryDate + ", endQueryDate=" + endQueryDate + ", returnMsg="
-				+ returnMsg + ", monthOverTime=" + monthOverTime + ", OverTimeSave=" + OverTimeSave + ", ActionURI=" + ActionURI + "]";
+		return "overTimeVO [searchDepartmen=" + searchDepartmen + ", queryDate=" + queryDate + ", searchUnit=" + searchUnit + ", searchReasons=" + searchReasons + ", startTimeHh=" + startTimeHh + ", startTimemm=" + startTimemm + ", endTimeHh=" + endTimeHh + ", endTimemm=" + endTimemm + ", addTime=" + addTime + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", overTimeClass=" + overTimeClass + ", submitDate=" + submitDate + ", userReason=" + userReason + ", act=" + act + ", status=" + status + ", msg=" + msg + ", showDataTable=" + showDataTable + ", rowID=" + rowID + ", mID=" + mID + ", startSubmitDate=" + startSubmitDate + ", EndSubmitDate=" + EndSubmitDate + ", startQueryDate=" + startQueryDate + ", endQueryDate=" + endQueryDate
+				+ ", returnMsg=" + returnMsg + ", monthOverTime=" + monthOverTime + ", OverTimeSave=" + OverTimeSave + ", ActionURI=" + ActionURI + "]";
 	}
+	
 	
 	
 	

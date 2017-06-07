@@ -1,13 +1,23 @@
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//fonts/font-awesome/css/font-awesome.min.css"/>
-<link rel="stylesheet" type="text/css" href="javascript/assets//plugins/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/fonts/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap/css/bootstrap.min.css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-datepicker/css/datepicker.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
+<!-- END PAGE LEVEL STYLES -->
 <!-- BEGIN THEME STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-bootstrap-custom.css"/>
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style.css"/>
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-responsive.css"/>
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/theme-default.css"/>
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/plugins.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-bootstrap-custom.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-upgrade.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/plugins.css"/>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
@@ -41,12 +51,13 @@
    <!-- BEGIN FORM--> 
 <form class="form-horizontal" name="ActionForm"  method="post"  action="<ActionURI/>"> 
  <input type='hidden' name='act'>
-<input type='hidden' name='rowID' id='rowID' >
+<input type='hidden' name='rowID'   value='<rowID/>'   id='rowID' >
+<input type='hidden' name='mID'   value='<mID/>'    id='mID' >
 <div class="form-body">
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">部門:</SPAN>
+<SPAN class="control-label col-md-3">部门:</SPAN>
 
 <div class="col-md-9">
 <SPAN class="control-label col-md-3"><UserEmployeeNo/></SPAN>
@@ -56,7 +67,7 @@
 </div>
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">單位:</SPAN>
+<SPAN class="control-label col-md-3">单位:</SPAN>
 <div  id='UnitDiv'     class="col-md-9">
 <SearchUnit/><hiddenUnit/>
  </div>
@@ -68,7 +79,7 @@
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">工號:</SPAN>
+<SPAN class="control-label col-md-3">工号:</SPAN>
 <div  id='EmployeeNoDiv'  class="col-md-9">
 <SearchEmployeeNo/><hiddenUserNo/></div> 
  </div>
@@ -86,14 +97,37 @@
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
+<SPAN class="control-label col-md-3">職務:</SPAN>
+<div  id='EmployeeNoDiv'  class="col-md-9">
+<SPAN class="control-label col-md-3">
+<SPAN  id='dutiesDiv' ></SPAN>
+</SPAN>
+</div> 
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">到職日:</SPAN>
+<div  id='EmployeeDiv'   class="col-md-9">
+<SPAN class="control-label col-md-3">
+<SPAN  id='entrydateDiv' ></SPAN>
+</SPAN>
+ </div>
+ </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
 <SPAN class="control-label col-md-3">加班事由:</SPAN>
 <div class="col-md-9">
 <div class="row">
 <div class="col-md-6"> 
-&SearchReasons
+ &userReason
 </div>  
  <div class="col-md-6"> 
- &userReason
+&SearchReasons
  </div> 
 </div>  
 </div>
@@ -114,7 +148,7 @@
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">加班時間:</SPAN>
+<SPAN class="control-label col-md-3">加班时间:</SPAN>
 <div class="col-md-9">
 
 <div class="row">
@@ -123,7 +157,7 @@
   </div> 
   <!--  ROW-->
 <div class="col-md-2"> 
-班別
+班別:
 </div> 
 <div class="col-md-4"> 
 &OverTimeClass
@@ -136,7 +170,7 @@
 </div>
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">總共小時:</SPAN>
+<SPAN class="control-label col-md-3">总共小时:</SPAN>
 <div class="col-md-9">
 &addTime
 </div> 
@@ -148,12 +182,11 @@
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3"></SPAN>
-<div id='TimeDiv'  class="col-md-9">
+<div id='TimeDiv'  class="col-md-12">
 
-<!--  多選時間區塊開始-->
+<!--  多選时间區塊開始-->
 <TimeDiv/>
-<!--  多選時間區塊結束-->
+<!--  多選时间區塊結束-->
 
 
 </div> 
@@ -173,7 +206,7 @@
 </div>
 </div>
 <div class="form-actions right">  
-<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查詢</button> 
+<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button> 
 <button id='saveBut' class="btn btn-primary " onclick="saveData()" type="button">保存</button> 
 </div></FORM> 
 <msg/>
@@ -246,6 +279,24 @@ jQuery(document).ready(function() {
 		$('#butR').attr('disabled','disabled')  
 		} 
 	
+	
+	  $('#searchDepartmen').change(function(){  
+			//	layer.msg('玩命提示中');
+			   var p1= $('#searchDepartmen').val();  //这就是selected的值  
+			   jQuery.ajax({
+					url:'<ActionURI/>&doajax=SwEmpNo',
+					type:'POST',
+					data:{searchDepartmen:p1},
+					success:function(data){
+						 $('#EmployeeNoDiv').html(data);    
+						 $('#searchEmployeeNo').change(function(){  
+						     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+							 $('#searchEmployee').select2('val',p1);          
+						   }) 
+					}
+				});
+	  })  
+	  
 	$('#searchEmployee').change(function(){  
 	     var p1=$(this).children('option:selected').val();  //这就是selected的值  
 
@@ -288,11 +339,13 @@ jQuery(document).ready(function() {
 				data:{overTimeClass:p1},
 				success:function(data){
 					 $('#TimeDiv').html(data);    
+					 $('#addTime').val('5');
 				}
 			});
 		  	 
 		   })  
-		 
+		   
+		  
 });
 
 function    checkOK(){  
@@ -321,17 +374,17 @@ function    checkNO(){
 		} 
 
 	if($('#searchUnit').val()=='0'){ 
-		layer.msg('請選擇單位');  
+		layer.msg('請選擇单位');  
 			return;  
 	}  
 
 		if($('#startTimeHh').val()=='00'){ 
-			layer.msg('請選擇開始時間');  
+			layer.msg('請選擇開始时间');  
 			return; 
 	}
 
 	if($('#endTimeHh').val()=='00'){  
-		layer.msg('請選擇結束時間');
+		layer.msg('請選擇結束时间');
 				return;  
 		}  
 

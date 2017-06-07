@@ -46,7 +46,10 @@ While @i<=DateDiff(Day,@AFDate,@AEDate)
 	Insert Into #Tmp(YEAR ,MONTH,EmpID,CBName,DeptCode ,DAYCOUNT,ISLATE,lateETime)
 	select  
    	'<year/>','<Month/>',E.EmpID,E.CBName,E.DeptCode,(@i+1),'0'
-   	,ABS(datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime))) as lateETime
+   	,Case 
+   	  when K.WorkETime='00:00' then replace((B.AllMin-B.DinnTime),'.00','')
+   	  when K.WorkETime<>'00:00' then ABS(datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime))) 
+   	 END  as lateETime
 	from   PWERP_MS.dbo.RsKQResult K,   PWERP_MS.dbo.RsEmployee E ,  PWERP_MS.dbo.RsBasTurn B
 	Where  K.EmpCode=E.EmpCode
 	AND K.Turn= B.Code
@@ -58,7 +61,10 @@ While @i<=DateDiff(Day,@AFDate,@AEDate)
 	Union All
 	select 
 	'<year/>','<Month/>',E.EmpID,E.CBName,E.DeptCode,(@i+1),'0'
-	,ABS(datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime))) as lateETime
+	,Case 
+   	  when K.WorkETime='00:00' then replace((B.AllMin-B.DinnTime),'.00','')
+   	  when K.WorkETime<>'00:00' then ABS(datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime))) 
+   	 END  as lateETime
 	from   PWERP_MS.dbo.RsKQResult K,   PWERP_MS.dbo.RsEmployee E ,  PWERP_MS.dbo.RsBasTurn B
 	Where  K.EmpCode=E.EmpCode
 	AND K.Turn= B.Code
@@ -70,7 +76,10 @@ While @i<=DateDiff(Day,@AFDate,@AEDate)
 	Union All--把中餐的人加进来,这些人一定只排了一个班的
 	select 
 	'<year/>','<Month/>',E.EmpID,E.CBName,E.DeptCode,(@i+1),'0'
-	,ABS(datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime))) as lateETime	
+	,Case 
+   	  when K.WorkETime='00:00' then replace((B.AllMin-B.DinnTime),'.00','')
+   	  when K.WorkETime<>'00:00' then ABS(datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime))) 
+   	 END  as lateETime
 	from   PWERP_MS.dbo.RsKQResult K,   PWERP_MS.dbo.RsEmployee E ,  PWERP_MS.dbo.RsBasTurn B
 	Where  K.EmpCode=E.EmpCode
 	AND K.Turn= B.Code
@@ -184,171 +193,171 @@ fetch next from Select_late into @YEAR,@MONTH,@ISLATE,@EMPLOYEENO,@EMPLOYEE,@DAY
 	   Set @lateTime=0
 	   Set @lateH=0
 	   Set @lateM=0
-	   if(@DAY1 is not null)
+	   if(@DAY1 is not null  AND @DAY1<>'00:00')
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY1 as int)
 		END
 		
-	   if(@DAY2 is not null)
+	   if(@DAY2 is not null   AND @DAY2<>'00:00')
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY2 as int)
 		END
-	   if(@DAY3 is not null)
+	   if(@DAY3 is not null   AND @DAY3<>'00:00')
 	    begin 
 			Set @lateTime=@lateTime+cast(@DAY3 as int)
 			Set @lateCount=@lateCount+1
 		END
 		
-	   if(@DAY4 is not null) 
+	   if(@DAY4 is not null AND @DAY4<>'00:00') 
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY4 as int)
 		END
-	   if(@DAY5 is not null)
+	   if(@DAY5 is not null  AND @DAY5<>'00:00')
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY5 as int)
 		END
-	   if(@DAY6 is not null)
+	   if(@DAY6 is not null AND @DAY6<>'00:00')
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY6 as int)
 		END
-	   if(@DAY7 is not null)
+	   if(@DAY7 is not null  AND @DAY7<>'00:00')
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY7 as int)
 		END
-	   if(@DAY8 is not null)
+	   if(@DAY8 is not null AND @DAY8<>'00:00')
 		 begin 	
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY8 as int)
 		 END
-	   if(@DAY9 is not null)
+	   if(@DAY9 is not null AND @DAY9<>'00:00')
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY9 as int)
 		END
-	   if(@DAY10 is not null)
+	   if(@DAY10 is not null AND @DAY10<>'00:00')
 	    begin 
 			SET @lateTime=@lateTime+cast(@DAY10 as int)
 			Set @lateCount=@lateCount+1 
 		END
 
-	   if(@DAY11 is not null)
+	   if(@DAY11 is not null AND @DAY11<>'00:00')
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY11 as int)
 		END
-	   if(@DAY12 is not null)
+	   if(@DAY12 is not null AND @DAY12<>'00:00')
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY12 as int)
 		END
-	   if(@DAY13 is not null)
+	   if(@DAY13 is not null AND @DAY13<>'00:00')
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY13 as int)
 		END
-	   if(@DAY14 is not null)
+	   if(@DAY14 is not null AND @DAY14<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY14 as int)
 		END
-	   if(@DAY15 is not null)
+	   if(@DAY15 is not null  AND @DAY15<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY15 as int)
 		END
-	   if(@DAY16 is not null)
+	   if(@DAY16 is not null AND @DAY16<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY16 as int)
 		END
-	   if(@DAY17 is not null)
+	   if(@DAY17 is not null  AND @DAY17<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY17 as int)
 		END
-	   if(@DAY18 is not null)
+	   if(@DAY18 is not null  AND @DAY18<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY18 as int)
 		END
-	   if(@DAY19 is not null)
+	   if(@DAY19 is not null AND @DAY19<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY19 as int)
 		END
 		
-	   if(@DAY20 is not null)
+	   if(@DAY20 is not null  AND @DAY20<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY20 as int)
 		END
 		
-	   if(@DAY21 is not null)
+	   if(@DAY21 is not null AND @DAY21<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY21 as int)
 		END
 		
-	   if(@DAY22 is not null)
+	   if(@DAY22 is not null AND @DAY22<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY22 as int)
 		END
 		
-	   if(@DAY23 is not null)
+	   if(@DAY23 is not null AND @DAY23<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY23 as int)
 		END
 		
-	   if(@DAY24 is not null)
+	   if(@DAY24 is not null AND @DAY24<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY24 as int)
 		END
 		
-	   if(@DAY25 is not null)
+	   if(@DAY25 is not null  AND @DAY25<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY25 as int)
 		END
 		
-	   if(@DAY26 is not null)
+	   if(@DAY26 is not null  AND @DAY26<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY26 as int)
 		END
-	   if(@DAY27 is not null)
+	   if(@DAY27 is not null  AND @DAY27<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY27 as int)
 		END
 		
-	   if(@DAY28 is not null)
+	   if(@DAY28 is not null AND @DAY28<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY28 as int)
 		END
 		
-	   if(@DAY29 is not null)
+	   if(@DAY29 is not null AND @DAY29<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY29 as int)
 		END
 		
-	   if(@DAY30 is not null)
+	   if(@DAY30 is not null  AND @DAY30<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY30 as int)
 		END
 		
-	   if(@DAY31 is not null)
+	   if(@DAY31 is not null  AND @DAY31<>'00:00')
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY31 as int)
@@ -363,7 +372,7 @@ fetch next from Select_late into @YEAR,@MONTH,@ISLATE,@EMPLOYEENO,@EMPLOYEE,@DAY
 		if(@lateTime>=60)
 		begin
 			Set @lateH=@lateTime/60
-			Set @lateM=floor(@lateTime/60)
+			Set @lateM=@lateTime%60
 		END
 	    Set @SQL=' update VN_EMP_LATE set LATETIMES='+convert(varchar(20),@lateCount)+' , HOUR='+cast(@lateH as nvarchar(10))+' ,MINUTE='+cast(@lateM as nvarchar(10))+' where EMPLOYEENO='''+@EMPLOYEENO+''' and YEAR='+@YEAR+' and MONTH='+@MONTH+' and ISLATE=0'
 	  

@@ -1,13 +1,23 @@
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//fonts/font-awesome/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//plugins/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/fonts/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap/css/bootstrap.min.css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-datepicker/css/datepicker.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
+<!-- END PAGE LEVEL STYLES -->
 <!-- BEGIN THEME STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-bootstrap-custom.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-responsive.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/theme-default.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/plugins.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-bootstrap-custom.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-upgrade.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/plugins.css"/>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
@@ -51,7 +61,7 @@
 										<div class="row">
 										<div class="col-md-6">
 										<div class="form-group">
-										<SPAN class="control-label col-md-3">部門:</SPAN>
+										<SPAN class="control-label col-md-3">部门:</SPAN>
 										
 										<div class="col-md-9">
 										<UserEmployeeNo/>
@@ -61,7 +71,7 @@
 										</div>
 										<div class="col-md-6">
 										<div class="form-group">
-										<SPAN class="control-label col-md-3">單位:</SPAN>
+										<SPAN class="control-label col-md-3">单位:</SPAN>
 										<div  id='UnitDiv'     class="col-md-9">
 										<SearchUnit/>
 										 </div>
@@ -88,7 +98,7 @@
 										</div>
 								</div>
 								<div class="form-actions right">
-									<button class="btn btn-success " onclick="queryTable();" type="button">查詢</button>
+									<button class="btn btn-success " onclick="queryTable();" type="button">查询</button>
 								</div>
 								</FORM>
 								<msg />
@@ -152,38 +162,7 @@
 
 							var p1 = $('#searchDepartmen').val();
 
-							jQuery.ajax(
-								{
-									url : '<ActionURI/>&doajax=SwEmpNo',
-									type : 'POST',
-									data :
-										{
-											searchDepartmen : p1
-										},
-									success : function(data) {
-										$('#EmployeeNoDiv').html(data);
-										$('#searchEmployeeNo').change(function() {
-											var p1 = $(this).children('option:selected').val(); //这就是selected的值  
-											$('#searchEmployee').val(p1);
-										})
-									}
-								});
-							jQuery.ajax(
-								{
-									url : '<ActionURI/>&doajax=SwEmp',
-									type : 'POST',
-									data :
-										{
-											searchDepartmen : p1
-										},
-									success : function(data) {
-										$('#EmployeeDiv').html(data);
-										$('#searchEmployee').change(function() {
-											var p1 = $(this).children('option:selected').val(); //这就是selected的值  
-											$('#searchEmployeeNo').val(p1);
-										})
-									}
-								});
+							
 
 							jQuery.ajax(
 								{
@@ -194,20 +173,8 @@
 											searchDepartmen : p1
 										},
 									success : function(data) {
-										var datas = data.split("#");
+										var datas = data.split("%");
 										$('#UnitDiv').html(datas[0]);
-										updateUnit();
-										$('#EmployeeNoDiv').html(datas[1]);
-										$('#EmployeeDiv').html(datas[2]);
-
-										$('#searchEmployee').change(function() {
-											var p1 = $(this).children('option:selected').val(); //这就是selected的值  
-											$('#searchEmployeeNo').val(p1);
-										})
-										$('#searchEmployeeNo').change(function() {
-											var p1 = $(this).children('option:selected').val(); //这就是selected的值  
-											$('#searchEmployee').val(p1);
-										})
 									}
 								});
 
@@ -264,16 +231,16 @@
 					function queryTable() {
 					
 
-						if ($('#searchDepartmen').val() == '0') {
-							layer.msg('請選擇部門');
-							return;
+					//	if ($('#searchDepartmen').val() == '0') {
+					//		layer.msg('请选择部门');
+					//		return;
 
-						}
+					//	}
 					
-						if ($('#searchUnit').val() == '0') {
-							layer.msg('請選擇單位');
-							return;
-						} 
+					//	if ($('#searchUnit').val() == '0') {
+						//	layer.msg('請選擇单位');
+					//		return;
+					//	} 
 						ActionForm.action="<ActionURI/>"
 						ActionForm.act.value='QUE';
 						   //loading层

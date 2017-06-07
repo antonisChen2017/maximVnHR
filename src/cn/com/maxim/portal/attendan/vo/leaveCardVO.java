@@ -16,9 +16,9 @@ public class leaveCardVO implements Serializable
 	private String searchHoliday;
 	/** 代理人 **/
 	private String  searchAgent;
-	/**部門 */
+	/**部门 */
 	private String searchDepartmen;
-	/**單位 */
+	/**单位 */
 	private String searchUnit;
 	/**姓名 */
 	private String searchEmployee;
@@ -26,7 +26,7 @@ public class leaveCardVO implements Serializable
 	private String searchEmployeeNo;
 	/**申請日期 */
 	private String  applicationDate ;
-	/**是否顯示查詢結果*/
+	/**是否顯示查询結果*/
 	private boolean  showDataTable;
 	/**資料庫訊息*/
 	private String  msg;
@@ -45,6 +45,10 @@ public class leaveCardVO implements Serializable
 	private String  status;
 	/**請假天數*/
 	private String  dayCount;
+	/**請假小時*/
+	private String  hourCount;
+	/**請假分*/
+	private String  minuteCount;
 	/** 退回原因*/
 	private String returnMsg;
 	/**行ID**/
@@ -55,6 +59,8 @@ public class leaveCardVO implements Serializable
 	private String startLeaveMinute;
 	/**請假結束-分 */
 	private String endLeaveMinute;
+	/**員工角色 */
+	private String searchRole;
 	
 	public String getSearchHoliday()
 	{
@@ -242,11 +248,41 @@ public class leaveCardVO implements Serializable
 	{
 		this.endLeaveMinute = endLeaveMinute;
 	}
+	public String getSearchRole()
+	{
+		return searchRole;
+	}
+	public void setSearchRole(String searchRole)
+	{
+		this.searchRole = searchRole;
+	}
+	
+	
+	
+	public String getHourCount()
+	{
+		return hourCount;
+	}
+	public void setHourCount(String hourCount)
+	{
+		this.hourCount = hourCount;
+	}
+	public String getMinuteCount()
+	{
+		return minuteCount;
+	}
+	public void setMinuteCount(String minuteCount)
+	{
+		this.minuteCount = minuteCount;
+	}
 	@Override
 	public String toString()
 	{
-		return "leaveCardVO [searchHoliday=" + searchHoliday + ", searchAgent=" + searchAgent + ", searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", applicationDate=" + applicationDate + ", showDataTable=" + showDataTable + ", msg=" + msg + ", startLeaveTime=" + startLeaveTime + ", endLeaveTime=" + endLeaveTime + ", startLeaveDate=" + startLeaveDate + ", endLeaveDate=" + endLeaveDate + ", note=" + note + ", status=" + status + ", dayCount=" + dayCount + ", returnMsg=" + returnMsg + ", rowID=" + rowID + ", ActionURI=" + ActionURI + ", startLeaveMinute=" + startLeaveMinute + ", endLeaveMinute=" + endLeaveMinute + "]";
+		return "leaveCardVO [searchHoliday=" + searchHoliday + ", searchAgent=" + searchAgent + ", searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", applicationDate=" + applicationDate + ", showDataTable=" + showDataTable + ", msg=" + msg + ", startLeaveTime=" + startLeaveTime + ", endLeaveTime=" + endLeaveTime + ", startLeaveDate=" + startLeaveDate + ", endLeaveDate=" + endLeaveDate + ", note=" + note + ", status=" + status + ", dayCount=" + dayCount + ", hourCount=" + hourCount + ", minuteCount=" + minuteCount + ", returnMsg=" + returnMsg + ", rowID=" + rowID + ", ActionURI=" + ActionURI + ", startLeaveMinute=" + startLeaveMinute + ", endLeaveMinute=" + endLeaveMinute + ", searchRole="
+				+ searchRole + "]";
 	}
+	
+	
 	
 	
 	

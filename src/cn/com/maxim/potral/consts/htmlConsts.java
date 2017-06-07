@@ -32,4 +32,16 @@ public class htmlConsts
 	  public static final String html_emp_lateOutEarly="/cn/com/maxim/portal/html/emp_lateOutEarly.html";
 	  public static final String html_rep_attendance="/cn/com/maxim/portal/html/rep_attendance.html";
 	  public static final String html_rev_empAddUnit="/cn/com/maxim/portal/html/rev_empAddUnit.html";
+	  public static final String html_emp_SalesLeave="/cn/com/maxim/portal/html/emp_SalesLeave.html";
+	  public static final String html_dep_SalesLeave="/cn/com/maxim/portal/html/dep_SalesLeave.html";
+	  public static final String html_ad_editLreasons="/cn/com/maxim/portal/html/ad_editLreasons.html";
+	  public static final String html_ad_editLholiday="/cn/com/maxim/portal/html/ad_editLholiday.html";
+	  public static final String html_ad_editSWReson="/cn/com/maxim/portal/html/ad_editSWReson.html";
+	  public static final String html_ad_TransferStaff="/cn/com/maxim/portal/html/ad_TransferStaff.html";
+	  public static final String html_ad_OvertimePermission="/cn/com/maxim/portal/html/ad_OvertimePermission.html";
+	  public static final String html_dem_InspectOvertime="/cn/com/maxim/portal/html/dem_InspectOvertime.html";
+	  public static final String html_unt_InspectOvertime="/cn/com/maxim/portal/html/unt_InspectOvertime.html";
+	  public static final String html_ad_editRole="/cn/com/maxim/portal/html/ad_editRole.html";
+	  public static final String html_ad_exceedOvertime="/cn/com/maxim/portal/html/unt_exceedOvertime.html";
+	  public static final String html_rev_ExceedOvertime="/cn/com/maxim/portal/html/rev_ExceedOvertime.html";
 }

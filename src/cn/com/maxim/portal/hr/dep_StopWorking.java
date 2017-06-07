@@ -51,7 +51,7 @@ public class dep_StopWorking extends TemplatePortalPen
 				{		
 					
 					BeanUtils.populate(swVo,request.getParameterMap()); 
-					// 查詢
+					// 查询
 					if (actText.equals("QUE")) {
 						swVo.setShowDataTable(true);
 						showHtml(con, out, swVo,UserInformation);
@@ -90,9 +90,10 @@ public class dep_StopWorking extends TemplatePortalPen
 					swVo.setAddDay("1");
 					swVo.setStartStopWorkDate(DateUtil.NowDate());
 					swVo.setEndStopWorkDate(DateUtil.NowDate());
-					swVo.setStartTimeHhmm("0");
-				
-					swVo.setEndTimeHhmm("0");
+					swVo.setStartTimemm("0");
+					swVo.setStartTimeHh("0");
+					swVo.setEndTimeHh("0");
+					swVo.setEndTimemm("0");
 				
 					swVo.setNote("");
 					showHtml(con, out, swVo,UserInformation);
@@ -124,8 +125,8 @@ public class dep_StopWorking extends TemplatePortalPen
 			try
 			
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo())
-						+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo());
+				html = ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo(),false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo(),false,null);
 			}
 			catch (SQLException e)
 			{
@@ -150,7 +151,7 @@ public class dep_StopWorking extends TemplatePortalPen
 			 String html="";
 			try
 			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID);
+				html = ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID,false,null);
 			}
 			catch (SQLException e)
 			{
@@ -159,38 +160,62 @@ public class dep_StopWorking extends TemplatePortalPen
 			}
 			 out.println(html);
 	 	}
+		 if(ajax.equals("SwUnit")){
+			 String searchDepartmen = request.getParameter("searchDepartmen");
+			 String unitID= DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(searchDepartmen,"  V.UNIT_ID "),"UNIT_ID");
+			 String html="";
+			 overTimeVO otVo = new overTimeVO(); 
+			 otVo.setSearchEmployeeNo("0");
+			try
+			{
+				html = ControlUtil.drawChosenSelect(con, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + searchDepartmen + "'", "0",false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo(),false,null)
+						+"%"+ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" + unitID + "'", otVo.getSearchEmployeeNo(),false,null);
+			}
+			catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//System.out.println("html : "+html);
+			 out.println(html);
+	 	}
 	 }
 	
 	private void showHtml(Connection con, PrintWriter out, stopWorkVO swVo , UserDescriptor UserInformation) throws SQLException {
 		HtmlUtil hu=new HtmlUtil();
 		String htmlPart1=hu.gethtml(htmlConsts.html_dep_StopWorking);
 		String DepartmentID=DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo());
-		
+		String UnitSql="";
+		if(swVo.getSearchDepartmen( ).equals("0")){
+			UnitSql=" DEPARTMENT_ID='0' ";
+		}else{
+			UnitSql=" DEPARTMENT_ID= '"+swVo.getSearchDepartmen( )+"'";
+		}
 		htmlPart1=htmlPart1.replace("<ActionURI/>", 	swVo.getActionURI());
-		htmlPart1=htmlPart1.replace("&UserEmployeeNo", 	UserInformation.getUserEmployeeNo());
-	
-		htmlPart1=htmlPart1.replace("&hiddenEmployeeNo",ControlUtil.drawHidden(DepartmentID, "searchDepartmen"));
-	
-		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DepartmentID + "'", swVo.getSearchUnit()));
+		htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,swVo.getSearchDepartmen( ),false,null));
+			
+		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", UnitSql, swVo.getSearchUnit(),false,null));
 		
-		htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "VN_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + DepartmentID + "'", swVo.getSearchEmployeeNo()));
+		htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" +	swVo.getSearchDepartmen() + "'", swVo.getSearchEmployeeNo(),false,null));
 	
-		htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "VN_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + DepartmentID + "'", swVo.getSearchEmployee()));
+		htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + swVo.getSearchDepartmen()+ "'", swVo.getSearchEmployee(),false,null));
 	
-		htmlPart1=htmlPart1.replace("<searchReasons/>",ControlUtil.drawSelectShared(con, out, "searchReasons", "VN_STOPWORKRESON", "ID", "STOPRESON", "", swVo.getSearchReasons(),true));
+		htmlPart1=htmlPart1.replace("<searchReasons/>",ControlUtil.drawChosenSelect(con,  "searchReasons", "VN_STOPWORKRESON", "ID", "STOPRESON", null, swVo.getSearchReasons(),false,null));
 	
-		htmlPart1=htmlPart1.replace("<addDay/>",HtmlUtil.getSpinnerDiv("addDay",swVo.getAddDay()));
+		htmlPart1=htmlPart1.replace("<addDay/>",HtmlUtil.getSpinnerDiv("addDay",swVo.getAddDay(),keyConts.spinnerDayMax,keyConts.spinnerDayMin,keyConts.spinnerDayStep));
 	
 		htmlPart1=htmlPart1.replace("<Note/>",HtmlUtil.getNoteDiv("note", swVo.getNote()));
 	
 		
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(swVo.getMsg()));
-		htmlPart1=htmlPart1.replace("<getDaterangeHtml/>",HtmlUtil.getDaterangeHtml(
-				  swVo.getStartStopWorkDate()
-				 ,swVo.getEndStopWorkDate()
-				 ,swVo.getStartTimeHhmm()
-				 , swVo.getEndTimeHhmm() 
-				));
+		htmlPart1=htmlPart1.replace("<startTimeHh/>",HtmlUtil.getLeaveCardTimeDiv("startTimeHh",swVo.getStartTimeHh()));
+		htmlPart1=htmlPart1.replace("<endTimeHh/>",HtmlUtil.getLeaveCardTimeDiv("endTimeHh",swVo.getEndTimeHh()));
+		htmlPart1=htmlPart1.replace("<startTimemm/>",HtmlUtil.getLeaveCardMinuteDiv("startTimemm",swVo.getStartTimemm()));
+		htmlPart1=htmlPart1.replace("<endTimemm/>",HtmlUtil.getLeaveCardMinuteDiv("endTimemm",swVo.getEndTimemm()));
+		htmlPart1=htmlPart1.replace("<startStopWorkDate/>",HtmlUtil.getDateDiv("startStopWorkDate", swVo.getStartStopWorkDate()));
+		htmlPart1=htmlPart1.replace("<endStopWorkDate/>",HtmlUtil.getDateDiv("endStopWorkDate", swVo.getEndStopWorkDate()));
+
 		if(swVo.isShowDataTable()){
 		//	System.out.println("sql  :  "+SqlUtil.getStopWork(swVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawStopWorking(

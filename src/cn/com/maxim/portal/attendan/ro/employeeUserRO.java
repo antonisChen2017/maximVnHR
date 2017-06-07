@@ -3,7 +3,7 @@ package cn.com.maxim.portal.attendan.ro;
 import java.io.Serializable;
 import java.util.Date;
 /**
- * 員工個人資料  資料庫物件
+ * 員工個人資料  資料表RO
  * @author Antonis.chen
  *
  */
@@ -11,8 +11,9 @@ public class employeeUserRO
 {
 	/**員工個人資料  ID **/
 	private String  ID;
-	
-	/** 單位 ID **/
+	/**員工個人資料  人名 **/
+	private String EMPLOYEE;
+	/** 单位 ID **/
 	private String  UID;
 	
 	/** 到職日 **/
@@ -21,20 +22,19 @@ public class employeeUserRO
 	/** 職稱 **/
 	private String  DUTIES;
 	
-	/**單位 */
+	/**单位 */
 	private String UNIT;
 	
-	/**部門 */
+	/**部门 */
 	private String DEPARTMENT;
-	
-	
 	
 	/**工號 */
 	private String EMPLOYEENO;
 	
-	/** 部門 ID **/
+	/** 部门 ID **/
 	private String  DID;
-	
+	/** 角色 **/
+	private String  ROLE;
 	
 	public String getENTRYDATE()
 	{
@@ -99,6 +99,22 @@ public class employeeUserRO
 	public void setDID(String dID)
 	{
 		DID = dID;
+	}
+	public String getROLE()
+	{
+		return ROLE;
+	}
+	public void setROLE(String rOLE)
+	{
+		ROLE = rOLE;
+	}
+	public String getEMPLOYEE()
+	{
+		return EMPLOYEE;
+	}
+	public void setEMPLOYEE(String eMPLOYEE)
+	{
+		EMPLOYEE = eMPLOYEE;
 	}
 	
 	

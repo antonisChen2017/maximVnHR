@@ -26,7 +26,7 @@ public class Log4jUtil
 		prop.setProperty("log4j.appender.D.Threshold", "INFO");
 		prop.setProperty("log4j.appender.D.layout", "org.apache.log4j.PatternLayout");
 		prop.setProperty("log4j.appender.D.layout.ConversionPattern", " %-d{yyyy-MM-dd HH:mm:ss}  [%F:%L ] - [ %p ]  %m%n");
-
+		prop.setProperty("log4j.appender.D.encoding","UTF-8");
 
 		// ### 保存异常信息到单独文件 ###
 		prop.setProperty("log4j.appender.E", "org.apache.log4j.DailyRollingFileAppender");
@@ -35,7 +35,7 @@ public class Log4jUtil
 		prop.setProperty("log4j.appender.E.Threshold" , "ERROR");
 		prop.setProperty("log4j.appender.E.layout", "org.apache.log4j.PatternLayout");
 		prop.setProperty("log4j.appender.E.layout.ConversionPattern", "%-d{yyyy-MM-dd HH:mm:ss} [%F:%L ]  - [ %p ]  %m%n");
-
+		prop.setProperty("log4j.appender.E.encoding","UTF-8");
 		PropertyConfigurator.configure(prop);
 		return Logger.getLogger(czass);
 	}

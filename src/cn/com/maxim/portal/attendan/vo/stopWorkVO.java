@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class stopWorkVO implements Serializable
 {
 	private static final long serialVersionUID = -7902613727843012480L;
-	/**部門 */
+	/**部门 */
 	private String searchDepartmen;
-	/**單位 */
+	/**单位 */
 	private String searchUnit;
 	/**原因 */
 	private String searchReasons;
@@ -16,11 +16,13 @@ public class stopWorkVO implements Serializable
 	/**end 待料結束日期*/
 	private String endStopWorkDate;
 	/**待料開始-時 */
-	private String startTimeHhmm;
-
+	private String startTimeHh;
+	/**待料開始-分 */
+	private String startTimemm;
 	/**待料結束-時 */
-	private String endTimeHhmm;
-
+	private String endTimeHh;
+	/**待料結束-時 */
+	private String endTimemm;
 	/**總天數 */
 	private String addDay;
 	/**姓名 */
@@ -29,7 +31,7 @@ public class stopWorkVO implements Serializable
 	private String searchEmployeeNo;
 	/**註解*/
 	private String note;
-	/**是否顯示查詢結果*/
+	/**是否顯示查询結果*/
 	private boolean  showDataTable;
 	/**資料庫訊息*/
 	private String  msg;
@@ -78,21 +80,38 @@ public class stopWorkVO implements Serializable
 		this.endStopWorkDate = endStopWorkDate;
 	}
 
-	public String getStartTimeHhmm()
+	
+	public String getStartTimeHh()
 	{
-		return startTimeHhmm;
+		return startTimeHh;
 	}
-	public void setStartTimeHhmm(String startTimeHhmm)
+	public void setStartTimeHh(String startTimeHh)
 	{
-		this.startTimeHhmm = startTimeHhmm;
+		this.startTimeHh = startTimeHh;
 	}
-	public String getEndTimeHhmm()
+	public String getStartTimemm()
 	{
-		return endTimeHhmm;
+		return startTimemm;
 	}
-	public void setEndTimeHhmm(String endTimeHhmm)
+	public void setStartTimemm(String startTimemm)
 	{
-		this.endTimeHhmm = endTimeHhmm;
+		this.startTimemm = startTimemm;
+	}
+	public String getEndTimeHh()
+	{
+		return endTimeHh;
+	}
+	public void setEndTimeHh(String endTimeHh)
+	{
+		this.endTimeHh = endTimeHh;
+	}
+	public String getEndTimemm()
+	{
+		return endTimemm;
+	}
+	public void setEndTimemm(String endTimemm)
+	{
+		this.endTimemm = endTimemm;
 	}
 	public String getAddDay()
 	{
@@ -156,8 +175,9 @@ public class stopWorkVO implements Serializable
 	@Override
 	public String toString()
 	{
-		return "stopWorkVO [searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchReasons=" + searchReasons + ", startStopWorkDate=" + startStopWorkDate + ", endStopWorkDate=" + endStopWorkDate + ", startTimeHhmm=" + startTimeHhmm + ", endTimeHhmm=" + endTimeHhmm + ", addDay=" + addDay + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", showDataTable=" + showDataTable + ", msg=" + msg + ", ActionURI=" + ActionURI + "]";
+		return "stopWorkVO [searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchReasons=" + searchReasons + ", startStopWorkDate=" + startStopWorkDate + ", endStopWorkDate=" + endStopWorkDate + ", startTimeHh=" + startTimeHh + ", startTimemm=" + startTimemm + ", endTimeHh=" + endTimeHh + ", endTimemm=" + endTimemm + ", addDay=" + addDay + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", showDataTable=" + showDataTable + ", msg=" + msg + ", ActionURI=" + ActionURI + "]";
 	}
+	
 	
 	
 	

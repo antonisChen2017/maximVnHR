@@ -219,6 +219,12 @@ public class DateUtil   {
     	return df.format(new Date());// new Date()为获取当前系统时间
     	}
 
+ public static final String  NowDateTime() {
+    	
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd  HH:mm:ss");//设置日期格式
+    	return df.format(new Date());// new Date()为获取当前系统时间
+    	}
+    
     /**
      * 取得日期之時分秒之LabelValueBean Object
      * @param type 1:start date; 2:end date。 
@@ -519,6 +525,46 @@ public class DateUtil   {
     	 return re;
     } 
     
+    public static ArrayList getMonthDates(String year, String month) {
+    	int maxDate = 0;
+    	Date first = null;
+    	Date two = null;
+    	Date[] dates =null;
+    	String newDay="";
+    	ArrayList listDates=new ArrayList();
+    	try {
+    		Calendar cal = Calendar.getInstance();
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+    		first = sdf.parse(year + month);
+    		cal.setTime(first);
+    		maxDate = cal.getMaximum(Calendar.DAY_OF_MONTH);
+
+    	//	 System.out.println("maxDate="+maxDate);
+    	SimpleDateFormat srf = new SimpleDateFormat("yyyy/MM/dd");
+    	 dates = new Date[maxDate];
+    	for (int i = 1; i <= maxDate; i++) {
+    		dates[i - 1] = new Date(first.getTime());
+    		first.setDate(first.getDate() + 1);
+    		newDay=srf.format(dates[i - 1]);
+    	
+    	    cal.setTime(dates[i - 1]);
+    		if(cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)
+    		 {
+    		//	System.out.println("no SUNDAY");
+    		 }else{
+    			 if(newDay.split("/")[1].equals(month)) {
+    				 System.out.println(newDay);
+    				 listDates.add(newDay);
+    			 }
+    		 }
+    	
+    		//System.out.println(String.valueOf(dates[i - 1]));
+    	}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return listDates;
+    }
     
 }
 

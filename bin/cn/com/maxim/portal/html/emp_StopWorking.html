@@ -1,13 +1,23 @@
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
 <!-- BEGIN GLOBAL MANDATORY STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//fonts/font-awesome/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//plugins/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/fonts/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap/css/bootstrap.min.css"/>
 <!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-datepicker/css/datepicker.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
+<!-- END PAGE LEVEL STYLES -->
 <!-- BEGIN THEME STYLES -->
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-bootstrap-custom.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/style-responsive.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/theme-default.css" />
-<link rel="stylesheet" type="text/css" href="javascript/assets//css/plugins.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-bootstrap-custom.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-upgrade.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/plugins.css"/>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
@@ -51,7 +61,7 @@
 											<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
-														<SPAN class="control-label col-md-3">部門:</SPAN>
+														<SPAN class="control-label col-md-3">部门:</SPAN>
 
 														<div class="col-md-9">
 															<SPAN class="control-label col-md-3"><UserEmployeeNo/></SPAN>
@@ -61,7 +71,7 @@
 												</div>
 												<div class="col-md-6">
 													<div class="form-group">
-														<SPAN class="control-label col-md-3">單位:</SPAN>
+														<SPAN class="control-label col-md-3">单位:</SPAN>
 														<div id='UnitDiv' class="col-md-9">
 															<SearchUnit/><hiddenUnit/>
 														</div>
@@ -73,7 +83,7 @@
 											<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
-														<SPAN class="control-label col-md-3">工號:</SPAN>
+														<SPAN class="control-label col-md-3">工号:</SPAN>
 														<div id='EmployeeNoDiv' class="col-md-9">
 															<SearchEmployeeNo/><hiddenUserNo/>
 														</div>
@@ -94,37 +104,79 @@
 
 
 										<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
-														<SPAN class="control-label col-md-3">待料時間:</SPAN>
-														<getDaterangeHtml/>
-
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="form-group">
-														<SPAN class="control-label col-md-3">總天數:</SPAN>
-														<div class="col-md-9">
-															<addDay/>
-														</div>
-													</div>
-												</div>
-											</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">待料開始时间:</SPAN>
+<div class="col-md-9">
+		<div class="row">
+				<div class="col-md-6">
+				<startStopWorkDate/>
+				</div>
+				<div class="col-md-2"> 
+				<startTimeHh/>
+				</div> 
+				<div class="col-md-1"> 
+				時
+				</div>
+				<div class="col-md-2"> 
+				<startTimemm/>
+				</div>
+				<div class="col-md-1"> 
+				分
+				</div>
+		</div>
+ </div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">待料結束时间:</SPAN>
+<div class="col-md-9">
+<div class="row">
+<div class="col-md-6"> 
+<endStopWorkDate/>
+  </div> 
+  <!--  ROW-->
+<div class="col-md-2"> 
+<endTimeHh/>
+</div> 
+<div class="col-md-1"> 
+時
+</div> 
+<div class="col-md-2"> 
+<endTimemm/>
+</div> 
+<div class="col-md-1"> 
+分
+</div> 
+</div>  
+</div>
+ </div>
+</div>
+</div>
 
 
 
 											<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
-														<SPAN class="control-label col-md-3">待工原因:</SPAN>
+														<SPAN class="control-label col-md-3">總天數:</SPAN>
 														<div class="col-md-9">
-
-															<searchReasons/>
-
-
+																<addDay/>
 														</div>
 													</div>
 												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3">待工原因:</SPAN>
+														<div class="col-md-9">
+																<searchReasons/>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+										<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
 														<SPAN class="control-label col-md-3">備註:</SPAN>
@@ -133,13 +185,20 @@
 														</div>
 													</div>
 												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<SPAN class="control-label col-md-3"></SPAN>
+														<div class="col-md-9">
+												
+														</div>
+													</div>
+												</div>
 											</div>
-
 
 										</div>
 								</div>
 								<div class="form-actions right">
-									<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查詢</button>
+									<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button>
 									<button id='saveBut' class="btn btn-primary " onclick="saveData()" type="button">保存</button>
 								</div>
 								</FORM>
@@ -317,18 +376,18 @@
 						}
 						//layer.msg('stop2'); 
 						/*	if($('#startTimeHhmm').val()=='00'){ 
-								layer.msg('請選擇待料開始時間');  
+								layer.msg('請選擇待料開始时间');  
 								return; 
 						}
 						//	layer.msg('stop3'); 
 						if($('#endTimeHhmm').val()=='00'){  
-								layer.msg('請選擇待料結束時間');
+								layer.msg('請選擇待料結束时间');
 										return;  
 								}  
 							//	layer.msg('stop4'); 
 
 							if($('#endTimeHhmm').val()=='00'){  
-								layer.msg('請選擇待料結束時間');
+								layer.msg('請選擇待料結束时间');
 										return;  
 								}  
 						 */

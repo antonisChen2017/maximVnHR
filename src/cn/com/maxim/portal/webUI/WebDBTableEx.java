@@ -2,6 +2,10 @@ package cn.com.maxim.portal.webUI;
 
 import cn.com.maxim.htmlcontrol.PostableControl;
 import cn.com.maxim.pdf.script.PipeString;
+import cn.com.maxim.portal.hr.dep_LeaveCard;
+import cn.com.maxim.portal.util.Log4jUtil;
+import cn.com.maxim.potral.consts.keyConts;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -15,6 +19,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
+import org.apache.log4j.Logger;
+
 import cn.com.maxim.htmltable.CheckBoxRule;
 import cn.com.maxim.htmltable.ConstantColumn;
 import cn.com.maxim.htmltable.DBColumn;
@@ -51,6 +58,10 @@ public class WebDBTableEx  {
 	  public String Status = "";
 	  public String css = "";
 	  public boolean excel ;
+	  
+	  Log4jUtil lu=new Log4jUtil();
+	  Logger logger  =lu.initLog4j(WebDBTableEx.class);
+	  
 	  public WebDBTableEx(Connection DBCon)
 	  {
 	    this.DBColumns = new Vector();
@@ -455,6 +466,155 @@ public class WebDBTableEx  {
 	  }
 	  
 	  
+	  private String getDataRowEdit(PrintWriter out, String TRStyle,String delbut)
+	  {
+			StringBuilder Sb = new StringBuilder("");
+			beforeWriteRow(out);
+	   
+			Sb.append("  <tr > \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible())
+	      {
+	        String Data = getValue(col.ColumnName, true);
+	        String TDStyle = col.getColumnStyle();
+	        if ((Data == null) || (Data.equals(""))) {
+	          Data = "&nbsp;";
+	        }
+	        if (TDStyle.length() > 0) {
+	          TDStyle = " class=\"" + TDStyle + "\" ";
+	        }
+	        //System.out.println("ColumnName  -  >"+col.ColumnName);
+	        if(col.ColumnName.equals(delbut) && delbut.equals(keyConts.overTimeReasons)){
+	           String rowID = getValue(keyConts.rowID, true);
+	           String rowR = getValue(keyConts.overTimeReasons, true);
+	           String rowS = getValue(keyConts.sortNO, true);
+	           if(rowS==null){
+	        	   rowS="";
+	           }
+	           String rowV = getValue(keyConts.VLanguage, true);
+	           if(rowV==null){
+	        	   rowV="";
+	           }
+	           String rowE = getValue(keyConts.ELanguage, true);
+	           if(rowE==null){
+	        	   rowE="";
+	           }
+	           rowID=rowID+"%"+rowR+"%"+rowS+"%"+rowV+"%"+rowE;
+		       Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "><i class=\"icon-info-sign\"></i><a href=\"javascript:void(0);\" onclick=\"showData('"+rowID+"');\"   >" + Data + "</a> </td> \r");
+	      
+	        }else if(col.ColumnName.equals(delbut) && delbut.equals(keyConts.holidayReasons)){
+	        	
+	        	 String rowID = getValue(keyConts.rowID, true);
+		           String rowR = getValue(keyConts.holidayReasons, true);
+		           String rowS = getValue(keyConts.sortNO, true);
+		           if(rowS==null){
+		        	   rowS="";
+		           }
+		           String rowV = getValue(keyConts.VLanguage, true);
+		           if(rowV==null){
+		        	   rowV="";
+		           }
+		           String rowE = getValue(keyConts.ELanguage, true);
+		           if(rowE==null){
+		        	   rowE="";
+		           }
+		           String rowC = getValue(keyConts.Clas, true);
+		           if(rowC==null){
+		        	   rowC="";
+		           }
+		           
+		           rowID=rowID+"%"+rowR+"%"+rowS+"%"+rowV+"%"+rowE+"%"+rowC;
+			       Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "><i class=\"icon-info-sign\"></i><a href=\"javascript:void(0);\" onclick=\"showData('"+rowID+"');\"   >" + Data + "</a> </td> \r");
+		      
+	        	
+	       }else if(col.ColumnName.equals(delbut) && delbut.equals(keyConts.stopReasons)){
+	        	
+	        	 String rowID = getValue(keyConts.rowID, true);
+		           String rowR = getValue(keyConts.stopReasons, true);
+		           String rowS = getValue(keyConts.sortNO, true);
+		           if(rowS==null){
+		        	   rowS="";
+		           }
+		           String rowV = getValue(keyConts.VLanguage, true);
+		           if(rowV==null){
+		        	   rowV="";
+		           }
+		           String rowE = getValue(keyConts.ELanguage, true);
+		           if(rowE==null){
+		        	   rowE="";
+		           }
+		         
+		           
+		           rowID=rowID+"%"+rowR+"%"+rowS+"%"+rowV+"%"+rowE;
+			       Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "><i class=\"icon-info-sign\"></i><a href=\"javascript:void(0);\" onclick=\"showData('"+rowID+"');\"   >" + Data + "</a> </td> \r");
+		      
+	        	
+	       }else{
+	            Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+	        }
+	      }
+	    }
+	  //  if(delbut){
+    	//  	String rowID = getValue("ID", true);
+    	//  	String rowHOURS = getValue("APPLICATION_HOURS", true);
+	   //  	Sb.append("<td class=\"" + TRStyle + "\"  ><button onclick=\"ActionForm.act.value='Delete';ActionForm.deleteID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info btn-sm\">DELETE</button></td> \r");
+	  //  }
+	    Sb.append("  </tr> \r");
+	
+	    afterWriteRow(out);
+	    
+	    return Sb.toString();
+	  }
+	  
+	  private String getDataRowSup(PrintWriter out, String TRStyle,boolean delbut)
+	  {
+			StringBuilder Sb = new StringBuilder("");
+			beforeWriteRow(out);
+	   
+			Sb.append("  <tr > \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible())
+	      {
+	        String Data = getValue(col.ColumnName, true);
+	        String TDStyle = col.getColumnStyle();
+	        if ((Data == null) || (Data.equals(""))) {
+	          Data = "&nbsp;";
+	        }
+	        if (TDStyle.length() > 0) {
+	          TDStyle = " class=\"" + TDStyle + "\" ";
+	        }
+	        if(!col.ColumnName.equals("action")){
+		        switch (col.getDataAlignment())
+		        {
+		        case 2: 
+		        	Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "align=\"center\">" + 
+		            Data + "</td>  \r");
+		          break;
+		        case 3: 
+		        	Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "align=\"right\">" + 
+		            Data + "</td> \r");
+		          break;
+		        default: 
+		        	Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+		        }
+	        }else {
+	        	String rowID = getValue("action", true);
+	        	Sb.append("<td class=\"" + TRStyle + "\"  ><button onclick=\"delData("+rowID+")\"   type=\"button\" class=\"btn btn-info btn-sm\">DELETE</button></td> \r");
+	        }
+	      }
+	    }
+	    
+	    Sb.append("  </tr> \r");
+	
+	    afterWriteRow(out);
+	    
+	    return Sb.toString();
+	  }
+	  
 	  private String getDataRow(PrintWriter out, String TRStyle,boolean delbut)
 	  {
 			StringBuilder Sb = new StringBuilder("");
@@ -620,7 +780,7 @@ public class WebDBTableEx  {
 	    out.println("   <div class=\"col-md-12 col-sm-12\">");
 	    out.println("   <div class=\"portlet\">");
 	    out.println("   <div class=\"portlet-title\">");
-	    out.println("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查詢結果");
+	    out.println("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果");
 	    if(!msg.equals("")){
 	        out.println(msg);
 	    }
@@ -1023,7 +1183,7 @@ public class WebDBTableEx  {
 			    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
 			    Sb.append("   <div class=\"portlet\"> \r");
 			    Sb.append("   <div class=\"portlet-title\">  \r");
-			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查詢結果  \r");
+			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
 			    if(!msg.equals("")){
 			    	Sb.append(msg);
 			    }
@@ -1072,6 +1232,79 @@ public class WebDBTableEx  {
 			    return Sb.toString();
 			  }
 	  
+	  public String getHTMLTableNo( PrintWriter out,String NoRowMessage,String TableStyle,String msg,String htmlButton,String delbut)
+			    throws SQLException
+			  {
+		  		StringBuilder Sb = new StringBuilder("");
+			    resetSno();
+			    if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+			    {
+			    	Sb.append("<table class=\""+TableStyle+"\" border=\"" + this.Border + "\" cellspacing=\"" + 
+			        this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + 
+			        "\">   \r");
+			    	Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+			    	Sb.append("</table>  \r");
+			      return Sb.toString();
+			    }
+			    if (this.OutPutRowCount > 0) {
+			      movePage(this.OutPutRowCount, 
+			        this.PageNumber, this.DBData);
+			    }
+			   
+			    Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+			    Sb.append("   <div class=\"row \"> \r");
+			    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+			    Sb.append("   <div class=\"portlet\"> \r");
+			    Sb.append("   <div class=\"portlet-title\">  \r");
+			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
+			    if(!msg.equals("")){
+			    	Sb.append(msg);
+			    }
+			    Sb.append(" </div>  \r");
+			    Sb.append("	 </div>  \r");
+			    Sb.append("   <div class=\"portlet-body\">    \r");
+			    Sb.append("<table  id=\"data_table_1\" class=\""+TableStyle+  "\">    \r");
+			    writeFirstRow(out);
+			    if (this.MessageRowVisible) {
+			    	  Sb.append(	getMessageRow(out, this.Message, 
+			        this.MessageRowStyle));
+			    }
+			    if (this.OutputHeader) {
+			    	Sb.append(getHeaderRow(out,"", false));
+			    }
+			    int i = 1;
+			    Sb.append("<tbody>");
+			    while (this.DBData.next())
+			    {
+			    
+				    Sb.append(getDataRow(out, "blue", false));
+				    
+				     if (i == this.OutPutRowCount + 1) {
+				       break;
+				     }
+			    }
+			    Sb.append(" </tbody>   \r");
+			    if (this.SummaryRowVisible) {
+			    	Sb.append(getMessageRow(out, this.Summary, 
+			        this.SummaryRowStyle));
+			    }
+			    writeLastRow(out);
+			    Sb.append("</table>   \r");
+			    Sb.append("<div class=\"form-actions right\">    \r");
+			    //是否要excel按鈕
+			   // if(execl){
+			    	Sb.append(htmlButton+ "\r");
+			  //  }
+			    Sb.append(" </div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>   \r");
+			    Sb.append("<div class=\"clearfix\"> </div>   \r");
+			    Sb.append(" <!-- END PAGE ROW-->   \r");
+			   
+			    return Sb.toString();
+			  }
 	  
 	  
 	  private String getHeaderRowVoS(PrintWriter out, String TRStyle,String delbut)
@@ -1086,7 +1319,38 @@ public class WebDBTableEx  {
 	    {
 	      DBColumn col = (DBColumn)i.next();
 	      if (col.getColumnVisible()) {
-	    	  if( !col.ColumnHeader.equals("ID")  &&   !col.ColumnHeader.equals("MOTime") &&   !col.ColumnHeader.equals("returnMSG")){
+	    	  if( !col.ColumnHeader.equals("ID")  
+	    			  &&   !col.ColumnHeader.equals("MOTime") 
+	    			  &&   !col.ColumnHeader.equals("returnMSG")	
+	    			  ){
+		    	  Sb.append("    <th class=\"text-center\">" + 
+		          col.ColumnHeader + "</th>  \r");
+	    	  }
+	      }
+	    }
+	   
+	    Sb.append("  </tr>  \r");
+	    Sb.append(" </thead>\r");
+	    return Sb.toString();
+	  }
+	  private String getHeaderRowLC(PrintWriter out, String TRStyle,String delbut)
+	  {
+			StringBuilder Sb = new StringBuilder("");
+	    if (TRStyle.equals("")) {
+	      TRStyle = "DefaultTR";
+	    }
+	    Sb.append(" <thead>  \r");
+	    Sb.append("  <tr class=\"" + TRStyle + "\"> \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible()) {
+	    	  if( !col.ColumnHeader.equals("ID")  
+	    			  &&   !col.ColumnHeader.equals("MOTime") 
+	    			  &&   !col.ColumnHeader.equals("returnMSG")
+	    			  &&   !col.ColumnHeader.equals("ROLE")
+	    			  &&   !col.ColumnHeader.equals("DAYCOUNT")
+	    			  ){
 		    	  Sb.append("    <th class=\"text-center\">" + 
 		          col.ColumnHeader + "</th>  \r");
 	    	  }
@@ -1098,6 +1362,66 @@ public class WebDBTableEx  {
 	    return Sb.toString();
 	  }
 	  
+	  /**
+	   * 加班用
+	   * @param out
+	   * @param TRStyle
+	   * @param delbut
+	   * @return
+	   */
+	  private String getHeaderRowOV(PrintWriter out, String TRStyle,String delbut)
+	  {
+			StringBuilder Sb = new StringBuilder("");
+	    if (TRStyle.equals("")) {
+	      TRStyle = "DefaultTR";
+	    }
+	    Sb.append(" <thead>  \r");
+	    Sb.append("  <tr class=\"" + TRStyle + "\"> \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible()) {
+	    	  if( !col.ColumnHeader.equals("ID")  
+	    			  &&   !col.ColumnHeader.equals("MOTime") 
+	    			  &&   !col.ColumnHeader.equals("returnMSG")
+	    			  &&   !col.ColumnHeader.equals("ROLE")
+	    			//  &&   !col.ColumnHeader.equals("DAYCOUNT")
+	    			  ){
+		    	  Sb.append("    <th class=\"text-center\">" + 
+		          col.ColumnHeader + "</th>  \r");
+	    	  }
+	      }
+	    }
+	   
+	    Sb.append("  </tr>  \r");
+	    Sb.append(" </thead>\r");
+	    return Sb.toString();
+	  }
+	  
+	  
+	  private String getHeaderRowEdit(PrintWriter out, String TRStyle,String delbut)
+	  {
+			StringBuilder Sb = new StringBuilder("");
+	    if (TRStyle.equals("")) {
+	      TRStyle = "DefaultTR";
+	    }
+	    Sb.append(" <thead>  \r");
+	    Sb.append("  <tr class=\"" + TRStyle + "\"> \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible()) {
+	    	  if( !col.ColumnHeader.equals("MOTime") &&   !col.ColumnHeader.equals("returnMSG")){
+		    	  Sb.append("    <th class=\"text-center\">" + 
+		          col.ColumnHeader + "</th>  \r");
+	    	  }
+	      }
+	    }
+	   
+	    Sb.append("  </tr>  \r");
+	    Sb.append(" </thead>\r");
+	    return Sb.toString();
+	  }
 	  
 	  private String getDataRowVoS(PrintWriter out, String TRStyle,String delbut)
 	  {
@@ -1164,7 +1488,7 @@ public class WebDBTableEx  {
 		        			
 		        		}
 		        	
-		        	}else if(col.ColumnName.equals("加班開始時間") ||  col.ColumnName.equals("加班結束時間")){
+		        	}else if(col.ColumnName.equals("加班開始时间") ||  col.ColumnName.equals("加班結束时间")){
 		        		Data=Data.substring(0,Data.length()-3);
 		        		Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
 		        	}else{
@@ -1206,7 +1530,7 @@ public class WebDBTableEx  {
 			    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
 			    Sb.append("   <div class=\"portlet\"> \r");
 			    Sb.append("   <div class=\"portlet-title\">  \r");
-			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查詢結果  \r");
+			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
 			    if(!msg.equals("")){
 			    	Sb.append(msg);
 			    }
@@ -1262,6 +1586,166 @@ public class WebDBTableEx  {
 			    return Sb.toString();
 			  }
 	  
+	  public String getHTMLTableSupplement( PrintWriter out,String NoRowMessage,String TableStyle,String msg,String htmlButton,String delbut)
+			    throws SQLException
+			  {
+		  		StringBuilder Sb = new StringBuilder("");
+			    resetSno();
+			    if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+			    {
+			    	Sb.append("<table class=\""+TableStyle+"\" border=\"" + this.Border + "\" cellspacing=\"" + 
+			        this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + 
+			        "\">   \r");
+			    	Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+			    	Sb.append("</table>  \r");
+			      return Sb.toString();
+			    }
+			    if (this.OutPutRowCount > 0) {
+			      movePage(this.OutPutRowCount, 
+			        this.PageNumber, this.DBData);
+			    }
+			   
+			    Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+			    Sb.append("   <div class=\"row \"> \r");
+			    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+			    Sb.append("   <div class=\"portlet\"> \r");
+			    Sb.append("   <div class=\"portlet-title\">  \r");
+			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
+			    if(!msg.equals("")){
+			    	Sb.append(msg);
+			    }
+			    Sb.append(" </div>  \r");
+			    Sb.append("	 </div>  \r");
+			    Sb.append("   <div class=\"portlet-body\">    \r");
+			    Sb.append("<table  id=\"data_table_1\" class=\""+TableStyle+  "\">    \r");
+			    writeFirstRow(out);
+			    if (this.MessageRowVisible) {
+			    	  Sb.append(	getMessageRow(out, this.Message, 
+			        this.MessageRowStyle));
+			    }
+			    if (this.OutputHeader) {
+			    	Sb.append(getHeaderRowVoS(out,"", delbut));
+			    }
+			    int i = 1;
+			    Sb.append("<tbody>");
+			    while (this.DBData.next())
+			    {
+				    Sb.append(getDataRowSup(out, "blue", true));
+
+				     if (i == this.OutPutRowCount + 1) {
+				       break;
+				     }
+			    }
+			    Sb.append(" </tbody>   \r");
+			    if (this.SummaryRowVisible) {
+			    	Sb.append(getMessageRow(out, this.Summary, 
+			        this.SummaryRowStyle));
+			    }
+			    writeLastRow(out);
+			    Sb.append("</table>   \r");
+			    Sb.append("<div class=\"form-actions right\">    \r");
+			    //是否要excel按鈕
+			   // if(execl){
+			    	Sb.append(htmlButton+ "\r");
+			  //  }
+			    Sb.append(" </div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>   \r");
+			    Sb.append("<div class=\"clearfix\"> </div>   \r");
+			    Sb.append(" <!-- END PAGE ROW-->   \r");
+			   
+			    return Sb.toString();
+			  }
+	  /**
+		  * 編輯TABLE
+		  * @param out
+		  * @param NoRowMessage
+		  * @param TableStyle
+		  * @param msg
+		  * @param htmlButton
+		  * @param delbut
+		  * @return
+		  * @throws SQLException
+		  */
+public String getHTMLTableEdit( PrintWriter out,String NoRowMessage,String TableStyle,String msg,String htmlButton,String delbut)
+		    throws SQLException
+		  {
+	  		StringBuilder Sb = new StringBuilder("");
+		    resetSno();
+		    if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+		    {
+		    	Sb.append("<table class=\""+TableStyle+"\" border=\"" + this.Border + "\" cellspacing=\"" + 
+		        this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + 
+		        "\">   \r");
+		    	Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+		    	Sb.append("</table>  \r");
+		      return Sb.toString();
+		    }
+		    if (this.OutPutRowCount > 0) {
+		      movePage(this.OutPutRowCount, 
+		        this.PageNumber, this.DBData);
+		    }
+		   
+		    Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+		    Sb.append("   <div class=\"row \"> \r");
+		    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+		    Sb.append("   <div class=\"portlet\"> \r");
+		    Sb.append("   <div class=\"portlet-title\">  \r");
+		    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
+		  //  if(!msg.equals("")){
+		  //  	Sb.append(msg);
+		  //  }
+		    Sb.append(" </div>  \r");
+		    Sb.append("	 </div>  \r");
+		    Sb.append("   <div class=\"portlet-body\">    \r");
+		    Sb.append("<table  id=\"data_table_1\" class=\""+TableStyle+  "\">    \r");
+		    writeFirstRow(out);
+		    if (this.MessageRowVisible) {
+		    	  Sb.append(	getMessageRow(out, this.Message, 
+		        this.MessageRowStyle));
+		    }
+		    if (this.OutputHeader) {
+		    	Sb.append(getHeaderRowEdit(out,"", delbut));
+		    }
+		    int i = 1;
+		    Sb.append("<tbody>");
+		    while (this.DBData.next())
+		    {
+
+			    Sb.append(getDataRowEdit(out, "blue", delbut));
+			    
+		    	
+			     if (i == this.OutPutRowCount + 1) {
+			       break;
+			     }
+		    }
+		    Sb.append(" </tbody>   \r");
+		    if (this.SummaryRowVisible) {
+		    	Sb.append(getMessageRow(out, this.Summary, 
+		        this.SummaryRowStyle));
+		    }
+		    writeLastRow(out);
+		    Sb.append("</table>   \r");
+		    Sb.append("<div class=\"form-actions right\">    \r");
+		    //是否要excel按鈕
+		   // if(execl){
+		    	Sb.append(htmlButton+ "\r");
+		  //  }
+		    Sb.append(" </div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>   \r");
+		    Sb.append("<div class=\"clearfix\"> </div>   \r");
+		    Sb.append(" <!-- END PAGE ROW-->   \r");
+		   
+		    return Sb.toString();
+		  }
+	  
+	  
+	  
 	  		 /**
 	  		  * 請假卡TABLE
 	  		  * @param out
@@ -1297,7 +1781,7 @@ public class WebDBTableEx  {
 			    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
 			    Sb.append("   <div class=\"portlet\"> \r");
 			    Sb.append("   <div class=\"portlet-title\">  \r");
-			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查詢結果  \r");
+			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
 			    if(!msg.equals("")){
 			    	Sb.append(msg);
 			    }
@@ -1311,15 +1795,22 @@ public class WebDBTableEx  {
 			        this.MessageRowStyle));
 			    }
 			    if (this.OutputHeader) {
-			    	Sb.append(getHeaderRowVoS(out,"", delbut));
+			    	Sb.append(getHeaderRowLC(out,"", delbut));
 			    }
 			    int i = 1;
 			    Sb.append("<tbody>");
 			    while (this.DBData.next())
 			    {
 
-				    		Sb.append(getDataRowLC(out, "blue", delbut));
-				    
+				    		
+				    	//	String MOTime = DBData.getString("MOTime");
+					    //	if(MOTime!=null){
+						  //  	if(MOTime.equals("1")){
+						    		Sb.append(getDataRowLC(out, "blue", delbut));
+						 //   	}else{
+						 //   		Sb.append(getDataRowLC(out, "blue", delbut));
+						  //  	}
+					    //	}
 			    	
 				     if (i == this.OutPutRowCount + 1) {
 				       break;
@@ -1348,6 +1839,376 @@ public class WebDBTableEx  {
 			    return Sb.toString();
 			  }
 	  
+	  
+	  /**
+		  * 加班卡TABLE
+		  * @param out
+		  * @param NoRowMessage
+		  * @param TableStyle
+		  * @param msg
+		  * @param htmlButton
+		  * @param delbut
+		  * @return
+		  * @throws SQLException
+		  */
+public String getOvertimeTable( PrintWriter out,String NoRowMessage,String TableStyle,String msg,String htmlButton,String delbut)
+		    throws SQLException
+		  {
+	  		StringBuilder Sb = new StringBuilder("");
+		    resetSno();
+		    if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+		    {
+		    	Sb.append("<table class=\""+TableStyle+"\" border=\"" + this.Border + "\" cellspacing=\"" + 
+		        this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + 
+		        "\">   \r");
+		    	Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+		    	Sb.append("</table>  \r");
+		      return Sb.toString();
+		    }
+		    if (this.OutPutRowCount > 0) {
+		      movePage(this.OutPutRowCount, 
+		        this.PageNumber, this.DBData);
+		    }
+		   
+		    Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+		    Sb.append("   <div class=\"row \"> \r");
+		    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+		    Sb.append("   <div class=\"portlet\"> \r");
+		    Sb.append("   <div class=\"portlet-title\">  \r");
+		    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询结果 \r");
+		    if(!msg.equals("")){
+		    	Sb.append(msg);
+		    }
+		    Sb.append(" </div>  \r");
+		    Sb.append("	 </div>  \r");
+		    Sb.append("   <div class=\"portlet-body\">    \r");
+		    Sb.append("<table  id=\"data_table_1\" class=\""+TableStyle+  "\">    \r");
+		    writeFirstRow(out);
+		    if (this.MessageRowVisible) {
+		    	  Sb.append(	getMessageRow(out, this.Message, 
+		        this.MessageRowStyle));
+		    }
+		    if (this.OutputHeader) {
+		    	Sb.append(getHeaderRowOV(out,"", delbut));
+		    }
+		    int i = 1;
+		    Sb.append("<tbody>");
+		    while (this.DBData.next())
+		    {
+
+			    		
+			    		String MOTime = DBData.getString("MOTime");
+				    	if(MOTime!=null){
+					    	if(MOTime.equals("1")){
+					    		Sb.append(getDataRowOV(out, "red", delbut));
+					   	}else{
+					 		Sb.append(getDataRowOV(out, "blue", delbut));
+					    	}
+				    	}
+		    	
+			     if (i == this.OutPutRowCount + 1) {
+			       break;
+			     }
+		    }
+		    Sb.append(" </tbody>   \r");
+		    if (this.SummaryRowVisible) {
+		    	Sb.append(getMessageRow(out, this.Summary, 
+		        this.SummaryRowStyle));
+		    }
+		    writeLastRow(out);
+		    Sb.append("</table>   \r");
+		    Sb.append("<div class=\"form-actions right\">    \r");
+		    //是否要excel按鈕
+		   // if(execl){
+		    	Sb.append(htmlButton+ "\r");
+		  //  }
+		    Sb.append(" </div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>   \r");
+		    Sb.append("<div class=\"clearfix\"> </div>   \r");
+		    Sb.append(" <!-- END PAGE ROW-->   \r");
+		   
+		    return Sb.toString();
+		  }
+	  
+
+		/**
+		 * 加班卡 tableRow
+		 * @param out
+		 * @param TRStyle
+		 * @param delbut
+		 * @return
+		 */
+		private String getDataRowOV(PrintWriter out, String TRStyle,String delbut)
+		{
+				StringBuilder Sb = new StringBuilder("");
+				beforeWriteRow(out);
+		 
+				Sb.append("  <tr > \r");
+		  for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+		  {
+		    DBColumn col = (DBColumn)i.next();
+		    if (col.getColumnVisible())
+		    {
+		      String Data = getValue(col.ColumnName, true);
+		      String TDStyle = col.getColumnStyle();
+		      if ((Data == null) || (Data.equals(""))) {
+		        Data = "&nbsp;";
+		      }
+		      if (TDStyle.length() > 0) {
+		        TDStyle = " class=\"" + TDStyle + "\" ";
+		      }
+		      
+		      if(!col.ColumnName.equals("ID")  
+		      		&&   !col.ColumnName.equals("MOTime") 
+		      		&&   !col.ColumnName.equals("returnMSG")
+		      		&&   !col.ColumnName.equals("ROLE")
+		      		//&&   !col.ColumnName.equals("DAYCOUNT")
+		      		){
+			         
+			        
+			        	if(col.ColumnName.equals("action")){
+			        		String rowID = getValue("ID", true);
+			        		String rowaction = getValue("action", true);
+			        		String returnMSG = getValue("returnMSG", true);
+			        		String ROLE = getValue("ROLE", true);
+			        		//String DAYCOUNT = getValue("DAYCOUNT", true);
+			        		//int idaycount=Integer.valueOf(DAYCOUNT);
+			        		logger.info("ROLE : "+ROLE);
+			        		//logger.info("idaycount : "+idaycount);
+			        		if(returnMSG==null){
+			        			returnMSG="";
+			        		}
+			        		
+			        		if(rowaction.equals("S")){//記錄
+			        			
+			        			if(delbut.equals("0")){
+			        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+			        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">删除</button>"
+			        							+ "\n <button onclick=\"ActionForm.act.value='Update';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">编辑</button>"
+			        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else  if(delbut.equals("E")){
+			        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+			        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">删除</button>"
+			        						+ "\n <button onclick=\"ActionForm.act.value='Update';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">编辑</button>"
+			        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else{
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+			        			}
+			        		}else if(rowaction.equals("T")){//申請人提交
+			        			logger.info("T delbut : "+delbut);
+			        			if(delbut.equals("0")){
+			        			
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+			        			}else  if(delbut.equals("E")){
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+			        			}else{
+			        			
+			        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+					        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='U';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+			        			}
+				        			
+			        		}else if(rowaction.equals("UR")){//单位退回
+			        			if(delbut.equals("0")){
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">单位主管退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else  if(delbut.equals("E")){
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else{
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管退回</td> \r");
+			        			
+			        			}
+			        		}else if(rowaction.equals("DR")){//部门退回
+			        			if(delbut.equals("0")){
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else  if(delbut.equals("E")){
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else{
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管退回</td> \r");
+			        			
+			        			}
+			        		}else if(rowaction.equals("MR")){//管理退回
+			        			if(delbut.equals("0")){
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else  if(delbut.equals("E")){
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else{
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部退回</td> \r");
+			        			
+			        			}
+			        		}else if(rowaction.equals("LR")){//經理退回
+			        			if(delbut.equals("0")){
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">经理退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else{
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">经理退回</td> \r");
+			        			
+			        			}
+			        		}else if(rowaction.equals("BR")){//副总退回
+			        			logger.info("BR delbut : "+delbut);
+			        			if(delbut.equals("0")){//經理查看
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">副总退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else{
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副总退回</td> \r");
+			        			
+			        			}
+			        		}else if(rowaction.equals("U")){//单位主管審核ok
+			        			
+			        			if(delbut.equals("0")){
+			        				logger.info("0 ROLE : "+ROLE);
+			        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+					        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">单位主管退回</button>"
+					        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+			        			}else if(delbut.equals("2")){
+			        				//logger.info("人事部查看 ");
+			        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+			        			}else if(delbut.equals("DT")){/**部门主管查看**/
+			        				logger.info("DT 1 ");
+			        			//	if(ROLE.equals(keyConts.EmpRoleE) &&  idaycount<=3){
+			        					logger.info("DT 2 ");
+			        					Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+			        			//	}else{
+			        			//		logger.info("DT 3 ");
+			        			//		Sb.append(getUnitmsg(TRStyle,TDStyle,col));
+			        			//	}
+			        			}
+			        			else  if(delbut.equals("U")){
+			        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+			        			}else  if(delbut.equals("1")){
+			        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+			        			}else  if(delbut.equals("E")){
+			        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+			        			}
+			        			
+			        		}else if(rowaction.equals("D")){//部门主管審核ok
+			        		
+			        			if(delbut.equals("0")){//单位主管查看介面
+			        				logger.info("D 0 ");
+			        				//Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+					        		//		+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+					        		//				+ " \n <button onclick=\"ActionForm.act.value='M';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管审核通过</td> \r");
+			        				
+			        			}else  if(delbut.equals("1")){//經理查看介面
+			        				logger.info("D 3 ");
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管审核通过</td> \r");
+			        		
+			        			}else if(delbut.equals("DT")){
+			        				logger.info("D 4 ");
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管审核通过</td> \r");
+		  				
+			        			}
+			        			else if(delbut.equals("2")){//管理部查看介面
+			        				logger.info("D 5 ");
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管审核通过</td> \r");
+			        				//Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
+			        			}else{
+			        				logger.info("D 6 ");
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管审核通过</td> \r");
+			        			}
+			        			
+			        		}else if(rowaction.equals("L")){//經理審核ok
+			        			
+			        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">"+keyConts.masterCheck+"</td> \r");
+			        			
+			        		}
+			        		else if(rowaction.equals("B")){//副理審核ok
+			        			
+			        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">"+keyConts.bossCheck+"</td> \r");
+			        			
+			        		}
+			        		else if(rowaction.equals("M")){//管理部審核ok
+			        			
+			        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部已審核通過</td> \r");
+			        			
+			        		}else if(rowaction.equals("UT")){//单位超時加班提交狀態
+			        			if(delbut.equals("DT")){//部门主管查看介面
+			        			
+			        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+					        			+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+					        			+ " \n <button onclick=\"ActionForm.act.value='D';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   "
+					        			+ "type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+			        			}
+			        		}else if(rowaction.equals("UD")){//部门主管超時通過狀態
+			        			if(delbut.equals("DT")){//部门主管查看介面
+			        			
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管审核通过</td> \r");
+			        			}else  if(delbut.equals("1")){//經理查看介面
+			        				
+			        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+					        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+					        						+ " \n <button onclick=\"ActionForm.act.value='UB';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+
+			        			}
+			        		}else if(rowaction.equals("UB")){//副總超時通過狀態
+			        			logger.info("UB 0 delbut:"+delbut);
+			        			if(delbut.equals("DT")){//部门主管查看介面
+			        			
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副总审核通过</td> \r");
+			        			}else  if(delbut.equals("1")){//經理/副總查看介面
+			        				
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副总审核通过</td> \r");
+			        			}else  if(delbut.equals("E")){//单位查看介面
+			        				
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副总审核通过</td> \r");
+			        			}else  if(delbut.equals("PL")){//人事查看介面
+			        				
+			        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+					        						+ " <button onclick=\"ActionForm.act.value='PL';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">編輯时间</button></td> \r");
+
+			        			}else  if(delbut.equals("0")){//個人查看介面
+			        				
+			        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副总审核通过</td> \r");
+			        			}
+			        			
+			        		}else if(rowaction.equals("RD")){//人事超時申請狀態
+			        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">超时加班申请完成</td> \r");
+			        		}
+			        	
+			        	}else if(col.ColumnName.equals("請假開始时间") ||  col.ColumnName.equals("請假結束时间")){
+			        		Data=Data.substring(0,Data.length()-3);
+			        		Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+			        	}else{
+			        		Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+			        	}
+		      }
+		    
+		    }
+		  }
+		 
+		  Sb.append("  </tr> \r");
+		
+		  afterWriteRow(out);
+		  
+		  return Sb.toString();
+		}
+
 	  /**
 	   * 請假卡 tableRow
 	   * @param out
@@ -1358,6 +2219,327 @@ public class WebDBTableEx  {
 	  private String getDataRowLC(PrintWriter out, String TRStyle,String delbut)
 	  {
 			StringBuilder Sb = new StringBuilder("");
+			beforeWriteRow(out);
+	   
+			Sb.append("  <tr > \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible())
+	      {
+	        String Data = getValue(col.ColumnName, true);
+	        String TDStyle = col.getColumnStyle();
+	        if ((Data == null) || (Data.equals(""))) {
+	          Data = "&nbsp;";
+	        }
+	        if (TDStyle.length() > 0) {
+	          TDStyle = " class=\"" + TDStyle + "\" ";
+	        }
+	        
+	        if(!col.ColumnName.equals("ID")  
+	        		&&   !col.ColumnName.equals("MOTime") 
+	        		&&   !col.ColumnName.equals("returnMSG")
+	        		&&   !col.ColumnName.equals("ROLE")
+	        		&&   !col.ColumnName.equals("DAYCOUNT")
+	        		){
+		         
+		        
+		        	if(col.ColumnName.equals("action")){
+		        		String rowID = getValue("ID", true);
+		        		String rowaction = getValue("action", true);
+		        		String returnMSG = getValue("returnMSG", true);
+		        		String ROLE = getValue("ROLE", true);
+		        		String DAYCOUNT = getValue("DAYCOUNT", true);
+		        		logger.info("DAYCOUNT : "+DAYCOUNT);
+		        		Double idaycount=Double.parseDouble(DAYCOUNT);
+		        		logger.info("ROLE : "+ROLE);
+		        		logger.info("idaycount : "+idaycount);
+		        		if(returnMSG==null){
+		        			returnMSG="";
+		        		}
+		        		
+		        		if(rowaction.equals("S")){//記錄
+		        			
+		        			if(delbut.equals("0")){
+		        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+		        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+		        							+ "\n <button onclick=\"ActionForm.act.value='Update';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">更新</button>"
+		        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+		        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+		        							+ "\n <button onclick=\"ActionForm.act.value='Update';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">更新</button>"
+		        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else{
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+		        			}
+		        		}else if(rowaction.equals("T")){//申請人提交
+		        			logger.info("T delbut : "+delbut);
+		        			if(delbut.equals("0")){
+		        			
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+		        			}else{
+		        			
+		        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+				        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='U';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+		        			}
+			        			
+		        		}else if(rowaction.equals("UR")){//单位退回
+		        			if(delbut.equals("0")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">单位主管退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else{
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管退回</td> \r");
+		        			
+		        			}
+		        		}else if(rowaction.equals("DR")){//部门退回
+		        			if(delbut.equals("0")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else{
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管退回</td> \r");
+		        			
+		        			}
+		        		}else if(rowaction.equals("MR")){//管理退回
+		        			if(delbut.equals("0")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else{
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部退回</td> \r");
+		        			
+		        			}
+		        		}else if(rowaction.equals("LR")){//經理退回
+		        			if(delbut.equals("0")){
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">经理退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else{
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">经理退回</td> \r");
+		        			
+		        			}
+		        		}else if(rowaction.equals("BR")){//副总退回
+		        			logger.info("BR delbut : "+delbut);
+		        			if(delbut.equals("0")){//經理查看
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">副总退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else{
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副总退回</td> \r");
+		        			
+		        			}
+		        		}else if(rowaction.equals("U")){//单位主管審核ok
+		        			
+		        			if(delbut.equals("0")){
+		        				logger.info("0 ROLE : "+ROLE);
+		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">单位主管退回</button>"
+				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
+		        			}else if(delbut.equals("2")){
+		        				//logger.info("人事部查看 ");
+		        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+		        			}else if(delbut.equals("DT")){/**部门主管查看**/
+		        				logger.info("DT 1 ");
+		        				if(ROLE.equals(keyConts.EmpRoleE) &&  idaycount<=3){
+		        					logger.info("DT 2 ");
+		        					Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+		        				}else{
+		        					logger.info("DT 3 ");
+		        					Sb.append(getUnitmsg(TRStyle,TDStyle,col));
+		        				}
+		        			}
+		        			else  if(delbut.equals("U")){
+		        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+		        			}else  if(delbut.equals("1")){
+		        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+		        			}else  if(delbut.equals("E")){
+		        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
+		        			}
+		        			
+		        		}else if(rowaction.equals("D")){//部门主管審核ok
+		        		
+		        			if(delbut.equals("0")){//单位主管查看介面
+		        				logger.info("D 0 ");
+		        				//Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+				        		//		+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+				        		//				+ " \n <button onclick=\"ActionForm.act.value='M';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
+		        				
+		        			}else  if(delbut.equals("1")){//經理查看介面
+		        				logger.info("D 3 ");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
+		        		
+		        			}else if(delbut.equals("DT")){
+		        				logger.info("D 4 ");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
+        				
+		        			}
+		        			else if(delbut.equals("2")){//管理部查看介面
+		        				logger.info("D 5 ");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
+		        				//Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
+		        			}else{
+		        				logger.info("D 6 ");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
+		        			}
+		        			
+		        		}else if(rowaction.equals("L")){//經理審核ok
+		        			
+		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">"+keyConts.masterCheck+"</td> \r");
+		        			
+		        		}
+		        		else if(rowaction.equals("B")){//副理審核ok
+		        			
+		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">"+keyConts.bossCheck+"</td> \r");
+		        			
+		        		}
+		        		else if(rowaction.equals("M")){//管理部審核ok
+		        			
+		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部已審核通過</td> \r");
+		        			
+		        		}
+		        	
+		        	}else if(col.ColumnName.equals("請假開始时间") ||  col.ColumnName.equals("請假結束时间")){
+		        		Data=Data.substring(0,Data.length()-3);
+		        		Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+		        	}else{
+		        		Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+		        	}
+	        }
+	      
+	      }
+	    }
+	   
+	    Sb.append("  </tr> \r");
+	
+	    afterWriteRow(out);
+	    
+	    return Sb.toString();
+	  }
+	  	
+	
+	  /**
+		  * 銷假卡TABLE
+		  * @param out
+		  * @param NoRowMessage
+		  * @param TableStyle
+		  * @param msg
+		  * @param htmlButton
+		  * @param delbut
+		  * @return
+		  * @throws SQLException
+		  */
+public String getHTMLTableSales( PrintWriter out,String NoRowMessage,String TableStyle,String msg,String htmlButton,String delbut)
+		    throws SQLException
+		  {
+	  		StringBuilder Sb = new StringBuilder("");
+		    resetSno();
+		    if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+		    {
+		    	Sb.append("<table class=\""+TableStyle+"\" border=\"" + this.Border + "\" cellspacing=\"" + 
+		        this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + 
+		        "\">   \r");
+		    	Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+		    	Sb.append("</table>  \r");
+		      return Sb.toString();
+		    }
+		    if (this.OutPutRowCount > 0) {
+		      movePage(this.OutPutRowCount, 
+		        this.PageNumber, this.DBData);
+		    }
+		   
+		    Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+		    Sb.append("   <div class=\"row \"> \r");
+		    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+		    Sb.append("   <div class=\"portlet\"> \r");
+		    Sb.append("   <div class=\"portlet-title\">  \r");
+		    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
+		    if(!msg.equals("")){
+		    	Sb.append(msg);
+		    }
+		    Sb.append(" </div>  \r");
+		    Sb.append("	 </div>  \r");
+		    Sb.append("   <div class=\"portlet-body\">    \r");
+		    Sb.append("<table  id=\"data_table_1\" class=\""+TableStyle+  "\">    \r");
+		    writeFirstRow(out);
+		    if (this.MessageRowVisible) {
+		    	  Sb.append(	getMessageRow(out, this.Message, 
+		        this.MessageRowStyle));
+		    }
+		    if (this.OutputHeader) {
+		    	Sb.append(getHeaderRowVoS(out,"", delbut));
+		    }
+		    int i = 1;
+		    Sb.append("<tbody>");
+		    while (this.DBData.next())
+		    {
+
+			    		Sb.append(getHTMLRowSales(out, "blue", delbut));
+			    
+		    	
+			     if (i == this.OutPutRowCount + 1) {
+			       break;
+			     }
+		    }
+		    Sb.append(" </tbody>   \r");
+		    if (this.SummaryRowVisible) {
+		    	Sb.append(getMessageRow(out, this.Summary, 
+		        this.SummaryRowStyle));
+		    }
+		    writeLastRow(out);
+		    Sb.append("</table>   \r");
+		    Sb.append("<div class=\"form-actions right\">    \r");
+		    //是否要excel按鈕
+		   // if(execl){
+		    	Sb.append(htmlButton+ "\r");
+		  //  }
+		    Sb.append(" </div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>  \r");
+		    Sb.append("</div>   \r");
+		    Sb.append("<div class=\"clearfix\"> </div>   \r");
+		    Sb.append(" <!-- END PAGE ROW-->   \r");
+		   
+		    return Sb.toString();
+		  }
+	  
+	  
+	  /**
+	   * 銷假卡 tableRow
+	   * @param out
+	   * @param TRStyle
+	   * @param delbut
+	   * @return
+	   */
+	  private String getHTMLRowSales(PrintWriter out, String TRStyle,String delbut){
+		   StringBuilder Sb = new StringBuilder("");
 			beforeWriteRow(out);
 	   
 			Sb.append("  <tr > \r");
@@ -1388,6 +2570,14 @@ public class WebDBTableEx  {
 		        			returnMSG="";
 		        		}
 		        		
+		        		if(rowaction==null || rowaction.equals("")){
+		        			
+	        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "> \r");
+	        				Sb.append("    <button id='saveBut' class=\"btn btn-primary \" onclick=\"showWin('"+rowID+"')\" type=\"button\">銷假設定</button> \r");
+	        				Sb.append("</td> \r");
+	        				rowaction="";
+		        		}
+		        		
 		        		if(rowaction.equals("S")){
 		        			
 		        			if(delbut.equals("0")){
@@ -1415,34 +2605,34 @@ public class WebDBTableEx  {
 				        						+ " \n <button onclick=\"ActionForm.act.value='U';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
 		        			}
 			        			
-		        		}else if(rowaction.equals("UR")){//單位退回
+		        		}else if(rowaction.equals("UR")){//单位退回
 		        			if(delbut.equals("0")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
-				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">單位主管退回</button>"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">单位主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
 		        			}else  if(delbut.equals("E")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
-				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部門主管退回</button>"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
 		        			}else{
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管退回</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管退回</td> \r");
 		        			
 		        			}
-		        		}else if(rowaction.equals("DR")){//部門退回
+		        		}else if(rowaction.equals("DR")){//部门退回
 		        			if(delbut.equals("0")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
-				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部門主管退回</button>"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
 		        			}else  if(delbut.equals("E")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
-				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部門主管退回</button>"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">部门主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
 		        			}else{
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部門主管退回</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管退回</td> \r");
 		        			
 		        			}
 		        		}else if(rowaction.equals("MR")){//管理退回
@@ -1470,11 +2660,11 @@ public class WebDBTableEx  {
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副總退回</td> \r");
 		        			
 		        			}
-		        		}else if(rowaction.equals("U")){//單位主管審核ok
+		        		}else if(rowaction.equals("U")){//单位主管審核ok
 		        			
 		        			if(delbut.equals("0")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
-				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">單位主管退回</button>"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">单位主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">提交</button></td> \r");
 		        			}else if(delbut.equals("2")){
@@ -1489,14 +2679,14 @@ public class WebDBTableEx  {
         				
 		        			}
 		        			else  if(delbut.equals("U")){
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管審核通過</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管審核通過</td> \r");
 		        			}else  if(delbut.equals("1")){
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管審核通過</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管審核通過</td> \r");
 		        			}else  if(delbut.equals("E")){
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">單位主管審核通過</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管審核通過</td> \r");
 		        			}
 		        			
-		        		}else if(rowaction.equals("D")){//部門主管審核ok
+		        		}else if(rowaction.equals("D")){//部门主管審核ok
 		        			
 		        			if(delbut.equals("0")){//
 		        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
@@ -1509,7 +2699,7 @@ public class WebDBTableEx  {
 				        						+ " \n <button onclick=\"ActionForm.act.value='M';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
 		        		
 		        			}else if(delbut.equals("DT")){
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部門主管審核通過</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
         				
 		        			}
 		        			else if(delbut.equals("2")){
@@ -1518,14 +2708,14 @@ public class WebDBTableEx  {
 				        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='M';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
 		        				
-		        				//Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部門主管審核通過</td> \r");
+		        				//Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
 		        			}else{
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部門主管審核通過</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管審核通過</td> \r");
 		        			}
 		        			
 		        		}else if(rowaction.equals("L")){//副總審核ok
 		        			
-		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">副總已審核通過</td> \r");
+		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">"+keyConts.masterCheck+"</td> \r");
 		        			
 		        		}
 		        		else if(rowaction.equals("M")){//管理部審核ok
@@ -1534,7 +2724,7 @@ public class WebDBTableEx  {
 		        			
 		        		}
 		        	
-		        	}else if(col.ColumnName.equals("請假開始時間") ||  col.ColumnName.equals("請假結束時間")){
+		        	}else if(col.ColumnName.equals("請假開始时间") ||  col.ColumnName.equals("請假結束时间")){
 		        		Data=Data.substring(0,Data.length()-3);
 		        		Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
 		        	}else{
@@ -1547,10 +2737,212 @@ public class WebDBTableEx  {
 	   
 	    Sb.append("  </tr> \r");
 	
+	      afterWriteRow(out);
+		   return Sb.toString();
+	  }
+	  
+	  
+	  /**
+	   * 退回與審核按鈕
+	   * @param rowID
+	   * @param TRStyle
+	   * @return
+	   */
+	  private String getRUButton(String rowID, String TRStyle){
+	  
+		  String html="<td class=\"text-right  "+TRStyle+"\"  >"
+			+ "\n <button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+			+ " \n <button onclick=\"ActionForm.act.value='D';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">審核通過</button></td> \r";
+		  return html;
+	  }
+	  /**
+	   * 单位審核通過顯示
+	   * @param rowID
+	   * @param TRStyle
+	   * @return
+	   */
+	  private String getUnitmsg(String TDStyle, String TRStyle,DBColumn col){
+		  
+		  String html=" <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管审核通过</td> \r";
+		  return html;
+	  }
+	  /**
+	   * 部门審核通過顯示
+	   * @param rowID
+	   * @param TRStyle
+	   * @return
+	   */
+	  private String getDtmsg(String TDStyle, String TRStyle,DBColumn col){
+		  
+		  String html=" <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">部门主管审核通过</td> \r";
+		  return html;
+	  }
+	  
+	  /**
+	   * 超時人員查詢
+	   * @param out
+	   * @param NoRowMessage
+	   * @param TableStyle
+	   * @param msg
+	   * @param htmlButton
+	   * @param delbut
+	   * @return
+	   * @throws SQLException
+	   */
+	  public String getHTMLTableCondition( PrintWriter out,String NoRowMessage,String TableStyle,String msg,String htmlButton,String delbut)
+			    throws SQLException
+			  {
+		  		StringBuilder Sb = new StringBuilder("");
+			    resetSno();
+			    if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+			    {
+			    	Sb.append("<table class=\""+TableStyle+"\" border=\"" + this.Border + "\" cellspacing=\"" + 
+			        this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + 
+			        "\">   \r");
+			    	Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+			    	Sb.append("</table>  \r");
+			      return Sb.toString();
+			    }
+			    if (this.OutPutRowCount > 0) {
+			      movePage(this.OutPutRowCount, 
+			        this.PageNumber, this.DBData);
+			    }
+			   
+			    Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+			    Sb.append("   <div class=\"row \"> \r");
+			    Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+			    Sb.append("   <div class=\"portlet\"> \r");
+			    Sb.append("   <div class=\"portlet-title\">  \r");
+			    Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
+			    if(!msg.equals("")){
+			    	Sb.append(msg);
+			    }
+			    Sb.append(" </div>  \r");
+			    Sb.append("	 </div>  \r");
+			    Sb.append("   <div class=\"portlet-body\">    \r");
+			    Sb.append("<table  id=\"data_table_1\" class=\""+TableStyle+  "\">    \r");
+			    writeFirstRow(out);
+			    if (this.MessageRowVisible) {
+			    	  Sb.append(	getMessageRow(out, this.Message, 
+			        this.MessageRowStyle));
+			    }
+			    if (this.OutputHeader) {
+			    	Sb.append(getHeaderRowCondition(out,"", false));
+			    }
+			    int i = 1;
+			    Sb.append("<tbody>");
+			    while (this.DBData.next())
+			    {
+			    
+				    Sb.append(getDataRowCondition(out, "red", false));
+				    
+				     if (i == this.OutPutRowCount + 1) {
+				       break;
+				     }
+			    }
+			    Sb.append(" </tbody>   \r");
+			    if (this.SummaryRowVisible) {
+			    	Sb.append(getMessageRow(out, this.Summary, 
+			        this.SummaryRowStyle));
+			    }
+			    writeLastRow(out);
+			    Sb.append("</table>   \r");
+			    Sb.append("<div class=\"form-actions right\">    \r");
+			    //是否要excel按鈕
+			   // if(execl){
+			    	Sb.append(htmlButton+ "\r");
+			  //  }
+			    Sb.append(" </div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>  \r");
+			    Sb.append("</div>   \r");
+			    Sb.append("<div class=\"clearfix\"> </div>   \r");
+			    Sb.append(" <!-- END PAGE ROW-->   \r");
+			   
+			    return Sb.toString();
+			  }
+	  
+	  private String getDataRowCondition(PrintWriter out, String TRStyle,boolean delbut)
+	  {
+			StringBuilder Sb = new StringBuilder("");
+			beforeWriteRow(out);
+	   
+			Sb.append("  <tr > \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible())
+	      {
+	        String Data = getValue(col.ColumnName, true);
+	        String TDStyle = col.getColumnStyle();
+	        if ((Data == null) || (Data.equals(""))) {
+	          Data = "&nbsp;";
+	        }
+	        if (TDStyle.length() > 0) {
+	          TDStyle = " class=\"" + TDStyle + "\" ";
+	        }
+	     
+		    	if(col.ColumnName.equals("action")){
+		    		String rowID = getValue("action", true);
+		    		   logger.info("rowID "+rowID);
+		    			Sb.append("<td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "align=\"right\">"
+		    					+ "<button onclick=\"ActionForm.act.value='Edit';ActionForm.rowID.value='"+rowID+"';"
+		    							+ "ActionForm.submit();\"   type=\"button\" class=\"btn btn-info btn-sm\">设定人员</button></td> \r");
+		    	}else{
+		    		   switch (col.getDataAlignment())
+				        {
+				        case 2: 
+				        	Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "align=\"center\">" + 
+				            Data + "</td>  \r");
+				          break;
+				        case 3: 
+				        	Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "align=\"right\">" + 
+				            Data + "</td> \r");
+				          break;
+				        default: 
+				        	Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+				        }
+		    	}
+	        }
+	      
+	    }
+	    if(delbut){
+    	  	//String rowID = getValue("ID", true);
+	    	   String rowID ="";
+    	    //String rowHOURS = getValue("APPLICATION_HOURS", true);
+	     	Sb.append("<td class=\"" + TRStyle + "\"  ><button onclick=\"ActionForm.act.value='Update';ActionForm.deleteID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info btn-sm\">DELETE</button></td> \r");
+	    }
+	    Sb.append("  </tr> \r");
+	
 	    afterWriteRow(out);
 	    
 	    return Sb.toString();
 	  }
-	  	
-	
+	  
+	  private String getHeaderRowCondition(PrintWriter out, String TRStyle,boolean delbut)
+	  {
+			StringBuilder Sb = new StringBuilder("");
+	    if (TRStyle.equals("")) {
+	      TRStyle = "DefaultTR";
+	    }
+	    Sb.append(" <thead>  \r");
+	    Sb.append("  <tr class=\"" + TRStyle + "\"> \r");
+	    for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+	    {
+	      DBColumn col = (DBColumn)i.next();
+	      if (col.getColumnVisible()) {
+	    	
+		    	  Sb.append("    <th class=\"text-center\">" + 
+		          col.ColumnHeader + "</th>  \r");
+	    	  
+	      }
+	    }
+	    if(delbut){
+	  	    Sb.append("    <th class=\"text-center\"></th>  \r");
+	    }
+	    Sb.append("  </tr>  \r");
+	    Sb.append(" </thead>\r");
+	    return Sb.toString();
+	  }
 }

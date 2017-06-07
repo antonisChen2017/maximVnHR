@@ -12,11 +12,14 @@ public class lateOutEarlyVO  implements Serializable
 	 */
 	private static final long serialVersionUID = 7213593713535360585L;
 
+	
+	/**部门 */
+	private String searchDepartmen;
 	/**年月 */
 	private String  queryYearMonth;
 	/** 遲到:1/早退:2  */
 	private String  queryIsLate;
-	/**是否顯示查詢結果*/
+	/**是否顯示查询結果*/
 	private boolean  showDataTable;
 	/**資料庫訊息*/
 	private String  msg;
@@ -73,6 +76,16 @@ public class lateOutEarlyVO  implements Serializable
 	public void setEmpID(String empID)
 	{
 		EmpID = empID;
+	}
+	
+	
+	public String getSearchDepartmen()
+	{
+		return searchDepartmen;
+	}
+	public void setSearchDepartmen(String searchDepartmen)
+	{
+		this.searchDepartmen = searchDepartmen;
 	}
 	@Override
 	public String toString()

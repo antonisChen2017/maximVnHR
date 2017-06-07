@@ -12,38 +12,38 @@ public class repDailyRO
 	private String EMPLOYEENO;
 	/** 名子  **/
 	private String EMPLOYEE;
-	/** 部門  **/
+	/** 部门  **/
 	private String DEPARTMENT;
-	/** 單位 **/
+	/** 单位 **/
 	private String UNIT;
 	/** 正班出勤 **/
-	private String WorkTime;
-	/** 晚班時數 **/
-	private String NigthWorkTime;
+	private String ATTENDANCE;
 	/** 加班時數 **/
-	private String OverWorkTime;
+	private String OVERTIME;
 	/** 年假 **/
-	private String HolidayH;
+	private String HOLIDAYH;
 	/** 病假**/
-	private String HolidayB;
-	/** 事假**/
-	private String HolidayA;
-	/** 公假**/
-	private String HolidayC;
+	private String HOLIDAYC;
 	/** 產假**/
-	private String HolidayE;
+	private String HOLIDAYE;
+	/** 公假**/
+	private String HOLIDAYD;
 	/** 喪假**/
-	private String HolidayF;
+	private String HOLIDAYF;
+	/** 喪假**/
+	private String HOLIDAYB;
+	/** 事假**/
+	private String HOLIDAYA;
 	/** 曠工**/
-	private String HolidayK;
+   private String NOTWORK;
 	/** 遲到**/
-	private String LTime;
+	private String BELATE;
 	/** 待工**/
-	private String StopWork;
+	private String STOPWORK;
 	/** 補貼餐費**/
-	private String SubsidyMeals;
+	private String MEALS;
 	/** 加班備註**/
-	private String Note;
+	private String NOTE;
 
 	
 	public String getEMPLOYEENO()
@@ -78,118 +78,118 @@ public class repDailyRO
 	{
 		UNIT = uNIT;
 	}
-	public String getWorkTime()
+	
+	public String getATTENDANCE()
 	{
-		return WorkTime;
+		return ATTENDANCE;
 	}
-	public void setWorkTime(String workTime)
+	public void setATTENDANCE(String aTTENDANCE)
 	{
-		WorkTime = workTime;
+		ATTENDANCE = aTTENDANCE;
 	}
-	public String getNigthWorkTime()
+	public String getOVERTIME()
 	{
-		return NigthWorkTime;
+		return OVERTIME;
 	}
-	public void setNigthWorkTime(String nigthWorkTime)
+	public void setOVERTIME(String oVERTIME)
 	{
-		NigthWorkTime = nigthWorkTime;
+		OVERTIME = oVERTIME;
 	}
-	public String getOverWorkTime()
+	public String getHOLIDAYH()
 	{
-		return OverWorkTime;
+		return HOLIDAYH;
 	}
-	public void setOverWorkTime(String overWorkTime)
+	public void setHOLIDAYH(String hOLIDAYH)
 	{
-		OverWorkTime = overWorkTime;
+		HOLIDAYH = hOLIDAYH;
 	}
-	public String getHolidayH()
+	public String getHOLIDAYC()
 	{
-		return HolidayH;
+		return HOLIDAYC;
 	}
-	public void setHolidayH(String holidayH)
+	public void setHOLIDAYC(String hOLIDAYC)
 	{
-		HolidayH = holidayH;
+		HOLIDAYC = hOLIDAYC;
 	}
-	public String getHolidayC()
+	public String getHOLIDAYE()
 	{
-		return HolidayC;
+		return HOLIDAYE;
 	}
-	public void setHolidayC(String holidayC)
+	public void setHOLIDAYE(String hOLIDAYE)
 	{
-		HolidayC = holidayC;
+		HOLIDAYE = hOLIDAYE;
 	}
-	public String getHolidayE()
+	public String getHOLIDAYD()
 	{
-		return HolidayE;
+		return HOLIDAYD;
 	}
-	public void setHolidayE(String holidayE)
+	public void setHOLIDAYD(String hOLIDAYD)
 	{
-		HolidayE = holidayE;
+		HOLIDAYD = hOLIDAYD;
 	}
-	public String getHolidayF()
+	public String getHOLIDAYF()
 	{
-		return HolidayF;
+		return HOLIDAYF;
 	}
-	public void setHolidayF(String holidayF)
+	public void setHOLIDAYF(String hOLIDAYF)
 	{
-		HolidayF = holidayF;
+		HOLIDAYF = hOLIDAYF;
 	}
-	public String getHolidayB()
+	public String getHOLIDAYB()
 	{
-		return HolidayB;
+		return HOLIDAYB;
 	}
-	public void setHolidayB(String holidayB)
+	public void setHOLIDAYB(String hOLIDAYB)
 	{
-		HolidayB = holidayB;
+		HOLIDAYB = hOLIDAYB;
 	}
-	public String getHolidayA()
+	public String getHOLIDAYA()
 	{
-		return HolidayA;
+		return HOLIDAYA;
 	}
-	public void setHolidayA(String holidayA)
+	public void setHOLIDAYA(String hOLIDAYA)
 	{
-		HolidayA = holidayA;
+		HOLIDAYA = hOLIDAYA;
 	}
-	public String getHolidayK()
+	public String getNOTWORK()
 	{
-		return HolidayK;
+		return NOTWORK;
 	}
-	public void setHolidayK(String holidayK)
+	public void setNOTWORK(String nOTWORK)
 	{
-		HolidayK = holidayK;
+		NOTWORK = nOTWORK;
 	}
-	public String getLTime()
+	public String getBELATE()
 	{
-		return LTime;
+		return BELATE;
 	}
-	public void setLTime(String lTime)
+	public void setBELATE(String bELATE)
 	{
-		LTime = lTime;
+		BELATE = bELATE;
 	}
-	public String getStopWork()
+	public String getSTOPWORK()
 	{
-		return StopWork;
+		return STOPWORK;
 	}
-	public void setStopWork(String stopWork)
+	public void setSTOPWORK(String sTOPWORK)
 	{
-		StopWork = stopWork;
+		STOPWORK = sTOPWORK;
 	}
-	public String getSubsidyMeals()
+	public String getMEALS()
 	{
-		return SubsidyMeals;
+		return MEALS;
 	}
-	public void setSubsidyMeals(String subsidyMeals)
+	public void setMEALS(String mEALS)
 	{
-		SubsidyMeals = subsidyMeals;
+		MEALS = mEALS;
 	}
-
-	public String getNote()
+	public String getNOTE()
 	{
-		return Note;
+		return NOTE;
 	}
-	public void setNote(String note)
+	public void setNOTE(String nOTE)
 	{
-		Note = note;
+		NOTE = nOTE;
 	}
 	public String getID()
 	{

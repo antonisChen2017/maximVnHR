@@ -1,0 +1,6 @@
+UPDATE [hr].[dbo].[VN_OVERTIME_S]
+   SET 
+       [APPLICATION_HOURS] = '<HOURS/>'
+      ,[OVERTIME_START] =  '<OVERTIMESTART/>'
+      ,[OVERTIME_END] = '<OVERTIMEEND/>'
+ WHERE ID='<ID/>'

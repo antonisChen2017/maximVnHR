@@ -1,0 +1,6 @@
+UPDATE [hr].[dbo].[VN_YEAR_MONTH_ATTENDANCE]
+   SET 
+	 <DAYX>
+	 WHERE EMPLOYEENO='<EMPLOYEENO/>'
+      and YEAR='<YEAR/>'
+      and MONTH='<MONTH/>'

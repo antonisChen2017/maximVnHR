@@ -1,0 +1,55 @@
+<form class="form-horizontal" name="ActionForm"  method="post"  action="<ActionURI/>">
+<div class="row"  >
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">請假開始时间:</SPAN>
+<div class="col-md-9">
+		<div class="row">
+				<div class="col-md-6">
+				<startLeaveDate/>
+				</div>
+				<div class="col-md-2"> 
+				<startLeaveTime/>
+				</div> 
+				<div class="col-md-1"> 
+				時
+				</div>
+				<div class="col-md-2"> 
+				<startLeaveMinute/>
+				</div>
+				<div class="col-md-1"> 
+				分
+				</div>
+		</div>
+ </div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">請假結束时间:</SPAN>
+<div class="col-md-9">
+<div class="row">
+<div class="col-md-6"> 
+<endLeaveDate/>
+ </div> 
+<div class="col-md-2"> 
+<endLeaveTime/>
+</div> 
+<div class="col-md-1"> 
+時
+</div>
+<div class="col-md-2"> 
+<endLeaveMinute/>
+</div> 
+<div class="col-md-1"> 
+分
+</div> 
+</div>  
+</div>
+ </div>
+</div>
+</div>
+	    <div class="form-actions right">
+	    <button class="btn btn-success " onclick="ActionForm.act.value="upTime";ActionForm.submit();" type="button">送出</button> 
+	    </div>
+</FORM> 

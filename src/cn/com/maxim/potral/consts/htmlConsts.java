@@ -44,4 +44,7 @@ public class htmlConsts
 	  public static final String html_ad_editRole="/cn/com/maxim/portal/html/ad_editRole.html";
 	  public static final String html_ad_exceedOvertime="/cn/com/maxim/portal/html/unt_exceedOvertime.html";
 	  public static final String html_rev_ExceedOvertime="/cn/com/maxim/portal/html/rev_ExceedOvertime.html";
+	  public static final String html_ad_editProcess="/cn/com/maxim/portal/html/ad_editProcess.html";
+	  public static final String html_ad_editDeptUnit="/cn/com/maxim/portal/html/ad_editDeptUnit.html";
+	  public static final String html_noSet="/cn/com/maxim/portal/html/noSet.html";
 }

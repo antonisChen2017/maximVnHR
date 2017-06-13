@@ -1,0 +1,16 @@
+  select
+       D.DEPARTMENT as 部门
+      ,U.UNIT as 单位
+      ,EMPLOYEE as 姓名
+      ,V.EMPLOYEENO as 工號
+      ,VIETNAMESE as 越文姓名
+      ,CONVERT(varchar(100), TRANSFER_DATE, 111)  as 調職时间
+      ,S.ID as action
+  FROM HR_EMPLOYEE V ,
+  HR_EMPLOYEE_SUPPLEMENT S,
+  VN_DEPARTMENT D,
+  VN_UNIT U
+  WHERE V.DEPARTMENT_ID=D.ID
+  AND V.UNIT_ID=U.ID
+  AND S.EMPLOYEENO=V.ID
+  AND S.TRANSFER_STAFF='1'

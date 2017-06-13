@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,6 +29,8 @@ import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
 import cn.com.maxim.portal.attendan.wo.dayAttendanceWO;
+import cn.com.maxim.portal.attendan.wo.monthReportNoteWO;
+import cn.com.maxim.portal.attendan.wo.monthSumDataWo;
 import cn.com.maxim.portal.bean.dayTableMoble;
 import cn.com.maxim.portal.bean.dayTableRowMoble;
 import cn.com.maxim.portal.bean.repAttendanceDayBean;
@@ -1164,7 +1167,7 @@ public class DBUtil
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(DBUtil.class);
 		String MID = "";
-
+	
 		try
 		{
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -1508,6 +1511,11 @@ public class DBUtil
 		    Sql=Sql.replace("<EMPID>", lcVo.getSearchEmployee());
 		    logger.info("update Sql : "+ Sql);
 			flag=DBUtil.updateSql(Sql, con) ;
+			Sql=hu.gethtml(sqlConsts.sql_updateHREmployee);
+			Sql=Sql.replace("<UNITID>", lcVo.getSearchUnit());
+			Sql=Sql.replace("<EMPID>", lcVo.getSearchEmployee());
+			logger.info("sql_updateHREmployee Sql : "+ Sql);
+		    flag=DBUtil.updateSql(Sql, con) ;
 		}
 		if(flag){
 			lcVo.setMsg("更新单位成功!");
@@ -1854,4 +1862,120 @@ public class DBUtil
 		}
 		
 	}
+	
+	/**
+	 * 取得日報表每日改寫過查詢結果
+	 * @param con
+	 * @param lcVo
+	 * @return
+	 */
+public static List<dayReportRO> getDayReportMonth(Connection con, leaveCardVO lcVo) {
+	
+		
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		boolean flag=false;
+		HtmlUtil hu=new HtmlUtil();
+	
+		String Sql=hu.gethtml(sqlConsts.sql_getDayReportMonth);
+		Sql=Sql.replace("<DAY/>", lcVo.getApplicationDate());
+
+		logger.info("sql_getDayReportMonth Sql : "+ Sql);
+		dayReportRO er=new dayReportRO();
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<dayReportRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(Sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<dayReportRO>) rh.getBean(rs, er);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+	//	logger.info("sql_getDayReportMonth leo : "+leo);
+		return leo;
+}
+	
+	/**
+	 * 月份考勤查出統計結果值
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final 	Hashtable  getMonthSumData(Connection con, leaveCardVO lcVo,String Day)
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_getMonthSumData);
+		sql = sql.replace("<DAY>", Day);
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+			sql = sql.replace("<DEPARTMENT/>", " 1=1");
+		}
+		else
+		{
+			sql = sql.replace("<DEPARTMENT/>", " D.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+			sql = sql.replace("<UNIT/>", " 1=1");
+		}
+		else
+		{
+			sql = sql.replace("<UNIT/>", "  U.ID='" + lcVo.getSearchUnit() + "'  ");
+		}
+		// 建立資料表資料
+		logger.info("sql_getMonthSumData Sql : "+ sql);
+		monthSumDataWo mw=new monthSumDataWo();
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<monthSumDataWo> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<monthSumDataWo>) rh.getBean(rs, mw);
+	
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		Hashtable listmW = new Hashtable();
+		logger.info("leo.size() : "+leo.size());
+		logger.info("(monthReportNoteWO)leo.get(0): "+leo.get(0).getEMPLOYEENO());
+		for(int i=0;i<leo.size();i++){
+			mw=(monthSumDataWo)leo.get(i);
+			listmW.put(mw.getEMPLOYEENO(), mw);
+			
+		}
+		return listmW;
+	}
+	/**
+	 * 更新人員
+	 */
+	public static final void changeHrEmployee(Connection con){
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_changeHrEmployee);
+		try
+		{
+			updateSql(sql,con);
+			logger.info("更新人員ok");
+		}catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+			logger.info("更新人員error");
+		}
+	}
+	
 }

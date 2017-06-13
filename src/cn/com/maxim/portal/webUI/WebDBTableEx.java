@@ -4,6 +4,7 @@ import cn.com.maxim.htmlcontrol.PostableControl;
 import cn.com.maxim.pdf.script.PipeString;
 import cn.com.maxim.portal.hr.dep_LeaveCard;
 import cn.com.maxim.portal.util.Log4jUtil;
+import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.keyConts;
 
 import java.io.PrintStream;
@@ -551,7 +552,32 @@ public class WebDBTableEx  {
 			       Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "><i class=\"icon-info-sign\"></i><a href=\"javascript:void(0);\" onclick=\"showData('"+rowID+"');\"   >" + Data + "</a> </td> \r");
 		      
 	        	
-	       }else{
+	       }else if(col.ColumnName.equals(delbut) && delbut.equals(keyConts.ColDept)){
+	        	
+	        	   String rowID = getValue(keyConts.ColDeptID, true);
+		           String ColENAME =vnStringUtil.changeString( getValue(keyConts.ColENAME, true));
+		           String ColDept = getValue(keyConts.ColDept, true);
+		         
+		         
+		           
+		           rowID=rowID+"%"+ColDept+"%"+ColENAME+"%";
+			       Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "><i class=\"icon-info-sign\"></i><a href=\"javascript:void(0);\" onclick=\"showEData('"+rowID+"');\"   >" + Data + "</a> </td> \r");
+		      
+	        	
+	       }else if(col.ColumnName.equals(delbut) && delbut.equals(keyConts.ColUnit)){
+	        	
+        	   String rowID = getValue("ID", true);
+        	   String ColDeptID = getValue(keyConts.ColDeptID, true);
+	           String ColENAME = vnStringUtil.changeString( getValue(keyConts.ColENAME, true));
+	           String ColUnit = getValue(keyConts.ColUnit, true);
+	         
+	         
+	           
+	           rowID=rowID+"%"+ColUnit+"%"+ColENAME+"%"+ColDeptID+"%";
+		       Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + "><i class=\"icon-info-sign\"></i><a href=\"javascript:void(0);\" onclick=\"showUData('"+rowID+"');\"   >" + Data + "</a> </td> \r");
+	      
+        	
+       }else{
 	            Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
 	        }
 	      }
@@ -1744,7 +1770,91 @@ public String getHTMLTableEdit( PrintWriter out,String NoRowMessage,String Table
 		    return Sb.toString();
 		  }
 	  
-	  
+/**
+ * 編輯TABLE2
+ * @param out
+ * @param NoRowMessage
+ * @param TableStyle
+ * @param msg
+ * @param htmlButton
+ * @param delbut
+ * @return
+ * @throws SQLException
+ */
+public String getHTMLTableEditT( PrintWriter out,String NoRowMessage,String TableStyle,String msg,String htmlButton,String delbut)
+   throws SQLException
+ {
+		StringBuilder Sb = new StringBuilder("");
+   resetSno();
+   if ((this.DBData.isAfterLast()) && (!NoRowMessage.equals("")))
+   {
+   	Sb.append("<table class=\""+TableStyle+"\" border=\"" + this.Border + "\" cellspacing=\"" + 
+       this.CellSpacing + "\" cellpadding=\"" + this.CellPadding + 
+       "\">   \r");
+   	Sb.append("  <tr><td>" + NoRowMessage + "</td></tr> \r");
+   	Sb.append("</table>  \r");
+     return Sb.toString();
+   }
+   if (this.OutPutRowCount > 0) {
+     movePage(this.OutPutRowCount, 
+       this.PageNumber, this.DBData);
+   }
+  
+   Sb.append("<!-- BEGIN PAGE ROW-->  \r");
+   Sb.append("   <div class=\"row \"> \r");
+   Sb.append("   <div class=\"col-md-12 col-sm-12\"> \r");
+   Sb.append("   <div class=\"portlet\"> \r");
+   Sb.append("   <div class=\"portlet-title\">  \r");
+   Sb.append("   <div class=\"caption\"> <i class=\"fa fa-list\"></i>查询結果  \r");
+ //  if(!msg.equals("")){
+ //  	Sb.append(msg);
+ //  }
+   Sb.append(" </div>  \r");
+   Sb.append("	 </div>  \r");
+   Sb.append("   <div class=\"portlet-body\">    \r");
+   Sb.append("<table  id=\"data_table_2\" class=\""+TableStyle+  "\">    \r");
+   writeFirstRow(out);
+   if (this.MessageRowVisible) {
+   	  Sb.append(	getMessageRow(out, this.Message, 
+       this.MessageRowStyle));
+   }
+   if (this.OutputHeader) {
+   	Sb.append(getHeaderRowEdit(out,"", delbut));
+   }
+   int i = 1;
+   Sb.append("<tbody>");
+   while (this.DBData.next())
+   {
+
+	    Sb.append(getDataRowEdit(out, "blue", delbut));
+	    
+   	
+	     if (i == this.OutPutRowCount + 1) {
+	       break;
+	     }
+   }
+   Sb.append(" </tbody>   \r");
+   if (this.SummaryRowVisible) {
+   	Sb.append(getMessageRow(out, this.Summary, 
+       this.SummaryRowStyle));
+   }
+   writeLastRow(out);
+   Sb.append("</table>   \r");
+   Sb.append("<div class=\"form-actions right\">    \r");
+   //是否要excel按鈕
+  // if(execl){
+   	Sb.append(htmlButton+ "\r");
+ //  }
+   Sb.append(" </div>  \r");
+   Sb.append("</div>  \r");
+   Sb.append("</div>  \r");
+   Sb.append("</div>  \r");
+   Sb.append("</div>   \r");
+   Sb.append("<div class=\"clearfix\"> </div>   \r");
+   Sb.append(" <!-- END PAGE ROW-->   \r");
+  
+   return Sb.toString();
+ }
 	  
 	  		 /**
 	  		  * 請假卡TABLE

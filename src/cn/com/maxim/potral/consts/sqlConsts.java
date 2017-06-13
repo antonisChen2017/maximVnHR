@@ -69,5 +69,16 @@ public class sqlConsts
 	public static final String sql_queryExOverTimeC="/cn/com/maxim/portal/sql/queryExOverTimeC.sql";
 	public static final String sql_getDayReport="/cn/com/maxim/portal/sql/getDayReport.sql";
 	public static final String sql_getDayReportData="/cn/com/maxim/portal/sql/getDayReportData.sql";
+	public static final String sql_getDayReportMonth="/cn/com/maxim/portal/sql/getDayReportMonth.sql";
+	public static final String sql_InsterMonthReport="/cn/com/maxim/portal/sql/InsterMonthReport.sql";
+	public static final String sql_updateMonthReport="/cn/com/maxim/portal/sql/updateMonthReport.sql";
+	public static final String sql_setDailyMonth="/cn/com/maxim/portal/sql/setDailyMonth.sql";
+	public static final String sql_getMonthSumData="/cn/com/maxim/portal/sql/getMonthSumData.sql";
+	public static final String sql_updateHREmployee="/cn/com/maxim/portal/sql/updateHREmployee.sql";
+	public static final String sql_changeHrEmployee="/cn/com/maxim/portal/sql/changeHrEmployee.sql";
+	public static final String sql_checkMonthMark="/cn/com/maxim/portal/sql/checkMonthMark.sql";
+	public static final String sql_deleteUnit="/cn/com/maxim/portal/sql/deleteUnit.sql";
+	public static final String sql_updateUnitData="/cn/com/maxim/portal/sql/updateUnitData.sql";
+	public static final String sql_InsterUnit="/cn/com/maxim/portal/sql/InsterUnit.sql";
 	
 }

@@ -55,10 +55,10 @@ public class rev_empSettUnit  extends TemplatePortalPen
 						showHtml(con, out, lcVo,UserInformation);
 					}
 					if (actText.equals("update")) {
-						logger.info("審核 設定員工與单位關係/update: " +lcVo.toString());	
+						logger.info("審核 設定員工與单位關係 and 角色/update: " +lcVo.toString());	
 						lcVo.setShowDataTable(true);
 						lcVo=DBUtil.updateUnit(con,lcVo);
-						
+						lcVo=DBUtil.updateRole(con,lcVo);
 						showHtml(con, out, lcVo,UserInformation);
 					}
 					
@@ -76,6 +76,8 @@ public class rev_empSettUnit  extends TemplatePortalPen
 					lcVo.setStartLeaveDate(DateUtil.NowDate());
 					lcVo.setEndLeaveDate(DateUtil.NowDate());
 					lcVo.setNote("");
+					/**預設copy新的人員**/
+					DBUtil.changeHrEmployee(con);
 					showHtml(con, out, lcVo,UserInformation);
 				
 				}
@@ -192,14 +194,15 @@ public class rev_empSettUnit  extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con, "searchEmployee", 
 					"HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE",emp_subSql, lcVo.getSearchEmployee(),
 					false,null));
-			
+			htmlPart1=htmlPart1.replace("<SearchRole/>",ControlUtil.drawChosenSelect(con,"searchRole", "VN_ROLE", "ID", "TITLE", null, lcVo.getSearchRole(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,"searchUnit", "VN_UNIT", "ID", "UNIT", unit_subSql, lcVo.getSearchUnit(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEENO", emp_subSql, lcVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
 			if(lcVo.isShowDataTable()){
+				logger.info("getRole : "+SqlUtil.getRole(lcVo));
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawTable(
-						SqlUtil.getDept(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
-			}		
+						SqlUtil.getRole(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
+			}			
 
 		    out.println(htmlPart1);
 		    }

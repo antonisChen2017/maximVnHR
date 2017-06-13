@@ -1,0 +1,3 @@
+update HR_EMPLOYEE
+set UNIT_ID='<UNITID>'
+where EMPLOYEENO='<EMPID>'

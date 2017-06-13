@@ -1,0 +1,3 @@
+update VN_EMPLOYEE_UNIT
+set ROLE='<ROLE/>'
+where EMPLOYEENO='<EMPID/>'

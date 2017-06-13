@@ -844,7 +844,7 @@ public class HtmlUtil
 				Sb.append(" jQuery(document).ready(function() { ");
 				Sb.append("   layer.msg('");
 				Sb.append(msg);
-				Sb.append("' ); ");
+				Sb.append("'  ,  {offset: ['200px']} ); ");
 				Sb.append("  });   ");
 				Sb.append("</script>  ");
 			}
@@ -1050,6 +1050,32 @@ public class HtmlUtil
 		WebDBTableEx table = new WebDBTableEx(con, sql);
 
 		return table.getHTMLTableEdit(out, "無資料", css, htmlButton, msg, page);
+		// System.out.println("table :"+table.toString());
+	}
+	
+	
+	/**
+	 * 編輯資料表格
+	 * @param sql
+	 * @param htmlButton
+	 * @param con
+	 * @param out
+	 * @param page
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawTableEditT(String sql, String htmlButton, Connection con, PrintWriter out, String page) throws SQLException
+	{
+	
+		String css = "table table-striped table-bordered table-hover";
+
+
+		String msg = "";
+
+
+		WebDBTableEx table = new WebDBTableEx(con, sql);
+
+		return table.getHTMLTableEditT(out, "無資料", css, htmlButton, msg, page);
 		// System.out.println("table :"+table.toString());
 	}
 	

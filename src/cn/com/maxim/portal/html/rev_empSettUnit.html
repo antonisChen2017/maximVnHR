@@ -23,7 +23,7 @@
 <![endif]-->
 <!-- END THEME STYLES -->
 <!-- BEGIN PAGE CONTAINER --> 
-<div id="content" class="page-container">  
+<div id="content" class="page-container"  style="height: 100%">  
 <!-- BEGIN PAGE CONTENT -->  
 <div class="page-content-wrapper">   
 <!-- END TICKER-->  
@@ -31,7 +31,7 @@
   <!-- BEGIN PAGE HEADER-->  
  <div class="row">   
    <!-- BEGIN PAGE TITLE-->  
-   <h3 class="page-title">員工設定单位</small> </h3>
+   <h3 class="page-title">員工設定单位权限</small> </h3>
    <!-- END PAGE TITLE-->   
  </div>  
 <div class="clearfix"> </div>
@@ -87,11 +87,26 @@
 </div>
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">工號</SPAN>
+<SPAN class="control-label col-md-3">工號:</SPAN>
 <div id='EmployeeNoDiv'  class="col-md-9">
 <SearchEmployeeNo/>
 </div> 
  </div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">設定角色:</SPAN>
+<div   id='RoleDiv' class="col-md-9">
+<SearchRole/>
+</div> 
+ </div>
+</div>
+<div class="col-md-6">
+
 </div>
 </div>
 
@@ -272,7 +287,10 @@ function    checkNO(){
 		 layer.msg('請選擇单位');  
 			return;  
 	}  
- 
+	if($('#searchRole').val()=='0'){   
+		 layer.msg('請選擇单位');  
+			return;  
+	}  
 		   
 		ActionForm.act.value='update';
 		ActionForm.submit();

@@ -524,8 +524,9 @@ public class DateUtil   {
     	 }
     	 return re;
     } 
-    
+    /**全月天數**/
     public static ArrayList getMonthDates(String year, String month) {
+    
     	int maxDate = 0;
     	Date first = null;
     	Date two = null;
@@ -553,7 +554,6 @@ public class DateUtil   {
     		//	System.out.println("no SUNDAY");
     		 }else{
     			 if(newDay.split("/")[1].equals(month)) {
-    				 System.out.println(newDay);
     				 listDates.add(newDay);
     			 }
     		 }
@@ -565,6 +565,83 @@ public class DateUtil   {
     	}
     	return listDates;
     }
+    /**當月最大天數**/
+    public static int getMonthDateMax(String year, String month) {
     
+    	int maxDate = 0;
+    	Date first = null;
+    	Date two = null;
+    	Date[] dates =null;
+    	String newDay="";
+    
+    	try {
+    		Calendar cal = Calendar.getInstance();
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+    		first = sdf.parse(year + month);
+    		cal.setTime(first);
+    		maxDate = cal.getMaximum(Calendar.DAY_OF_MONTH);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return maxDate;
+    }
+    /**當月有幾個星期天**/
+    public static int getMonthSunDateMax(String year, String month) {
+    
+    	int maxDate = 0;
+    	Date first = null;
+    	Date two = null;
+    	Date[] dates =null;
+    	String newDay="";
+    
+    	try {
+    		Calendar cal = Calendar.getInstance();
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+    		first = sdf.parse(year + month);
+    		cal.setTime(first);
+    		maxDate = cal.getMaximum(Calendar.DAY_OF_MONTH);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return maxDate;
+    }
+    
+    /**當月須扣除星期天曠職**/
+    public static int getSun(String year, String month) {
+    	int maxDate = 0;
+    	Date first = null;
+    	Date two = null;
+    	Date[] dates =null;
+    	String newDay="";
+    	ArrayList listDates=new ArrayList();
+    	int sun=0;
+    	try {
+    		Calendar cal = Calendar.getInstance();
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+    		first = sdf.parse(year + month);
+    		cal.setTime(first);
+    		maxDate = cal.getMaximum(Calendar.DAY_OF_MONTH);
+
+    	//	 System.out.println("maxDate="+maxDate);
+    	SimpleDateFormat srf = new SimpleDateFormat("yyyy/MM/dd");
+    	 dates = new Date[maxDate];
+    	for (int i = 1; i <= maxDate; i++) {
+    		dates[i - 1] = new Date(first.getTime());
+    		first.setDate(first.getDate() + 1);
+    		newDay=srf.format(dates[i - 1]);
+    	
+    	    cal.setTime(dates[i - 1]);
+    		if(cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY)
+    		 {
+    			sun++;
+    		 }
+    	
+    		//System.out.println(String.valueOf(dates[i - 1]));
+    	}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return sun*8;
+    }
 }
 

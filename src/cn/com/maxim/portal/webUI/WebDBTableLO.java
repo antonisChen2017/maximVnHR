@@ -366,36 +366,16 @@ public class WebDBTableLO  extends WebDBTableCL
 				if (TDStyle.length() > 0)
 				{
 					TDStyle = " class=\"" + TDStyle + "\" ";
-				}
-				
-				if(Data.indexOf(":")!=-1){
-					Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" );
-					Sb.append("    <a href=\"javascript:void(0);\" onclick=\"showData('"+Data+"');\"   > ");
-					Sb.append("    假</a></td> \r");
-					/**
-					 * 	處理文字做統計
-					 */
-					du.setDataString(Data);
-
-				}else if (Data.indexOf("旷")!=-1 ){
-					  Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
-					  du.setDataString(Data);
-				}
-				else if (col.ColumnName.equals("總共") ){
+				}else if (col.ColumnName.equals("总共") ){
 					
 					Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" );
-					Sb.append("    <a href=\"javascript:void(0);\" onclick=\"showAllData('"+du.getDataString()+"');\"   > ");
-					Sb.append("    統計</a></td> \r");
-					if(!du.getDataString().equals("")){
-						//寫入資料表
-						
-						raVo.setNOTE(du.getDataString());
-						DBUtil.updateSql	(SqlUtil.upRepAttendance(raVo),con);
-					}
+					Sb.append("    <a href=\"javascript:void(0);\" onclick=\"showAllData('"+Data+"');\"   > ");
+					Sb.append("    统计</a></td> \r");
+			
 				}
 				else{
 					
-					if (col.ColumnName.equals("工號") ){
+					if (col.ColumnName.equals("工号") ){
 						raVo.setEMPLOYEENO(Data);
 					}
 				    Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");

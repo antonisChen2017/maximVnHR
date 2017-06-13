@@ -1,6 +1,8 @@
 package cn.com.maxim.portal.attendan.vo;
 
 import java.io.Serializable;
+
+import cn.com.maxim.portal.attendan.wo.monthReportNoteWO;
 /**
  * 請假卡 頁面參數 物件
  * @author Antonis.chen

@@ -829,7 +829,19 @@ public class HtmlUtil
 		// class=\"form-control\" placeholder=\"可輸入自訂加班事由\">
 		return "<input type=\"text\"   name='" + ID + "'   id='" + ID + "'  class=\"form-control\" value='" + Value + "'placeholder='" + placeholder + "'>";
 	}
-
+    /**
+     * email
+     * @param ID
+     * @param Value
+     * @param placeholder
+     * @return
+     */
+	public static final String getEmailDiv(String ID, String Value, String placeholder)
+	{
+		// return "<input type=\"text\" name=\"userReasons\" id=\"userReasons\"
+		// class=\"form-control\" placeholder=\"可輸入自訂加班事由\">
+		return "<input type=\"email\"   name='" + ID + "'   id='" + ID + "'  class=\"form-control\" value='" + Value + "'placeholder='" + placeholder + "'>";
+	}
 	/*
 	 * 訊息
 	 */

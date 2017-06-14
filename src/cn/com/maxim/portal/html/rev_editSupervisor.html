@@ -52,58 +52,19 @@
 <form class="form-horizontal"  name="ActionForm"  method="post"  action="<ActionURI/>"> 
  <input type='hidden' name='act'>
  <input type='hidden' name='rowID' id='rowID' >
-  <input type='hidden' name='status' id='status' >
- <input type='hidden' name='returnMsg' id='returnMsg' >
+  <input type='hidden' name='Romance'  id='Romance'  value='o'>
+ <input type='hidden' name='returnMsg'  id='returnMsg' >
 <div class="form-body">
 
 
 <ul class="nav nav-tabs">
-  <li class="active"> <a href="#tab_1_1" data-toggle="tab">現有主管資料 </a> </li>
-  <li> <a href="#tab_1_2" data-toggle="tab">新增主管資料</a> </li>
+  <li id='tab1'  class="active"> <a href="#tab_1_1" data-toggle="tab"   onclick="SaveRomance('n')"  >新增主管資料</a> </li>
+  <li  id='tab2' > <a href="#tab_1_2"  data-toggle="tab"  onclick="SaveRomance('o')">現有主管資料 </a> </li>
 </ul>
+
 <div class="tab-content">
-  <div class="tab-pane fade active in" id="tab_1_1">
-  
-   <div class="row">
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">角色:</SPAN>
-<div class="col-md-9">
-<ORole/>
-</div>
- </div>
-</div>
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">現有主管姓名:</SPAN>
-<div  id='EmployeeDiv'     class="col-md-9">
-<OEmployee/>
- </div>
-</div>
-</div>
-</div>
 
-<div class="row">
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">現有主管工号:</SPAN>
-<div id='EmployeeNoDiv'   class="col-md-9">
-<OEmployeeNo/>
-</div> 
- </div>
-</div>
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">EMAIL:</SPAN>
-<div class="col-md-9">
-<OEmail/>
-</div>
- </div>
-</div>
-</div>
-
-  </div>
-  <div class="tab-pane fade" id="tab_1_2">
+  <div class="tab-pane fade active in "  id="tab_1_1">
    <div class="row">
 <div class="col-md-6">
 <div class="form-group">
@@ -127,7 +88,7 @@
 <div class="col-md-6">
 <div class="form-group">
 <SPAN class="control-label col-md-3">单位:</SPAN>
-<div class="col-md-9">
+<div  id='UnitDiv' class="col-md-9">
 <NUnit/>
 </div> 
  </div>
@@ -203,13 +164,56 @@
 </div>
 
   </div>
+  
+    <div class="tab-pane fade " id="tab_1_2">
+  
+   <div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">角色:</SPAN>
+<div class="col-md-9">
+<ORole/>
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">現有主管姓名:</SPAN>
+<div  id='EmployeeDiv'     class="col-md-9">
+<OEmployee/>
+ </div>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">現有主管工号:</SPAN>
+<div id='EmployeeNoDiv'   class="col-md-9">
+<OEmployeeNo/>
+</div> 
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">EMAIL:</SPAN>
+<div class="col-md-9">
+<OEmail/>
+</div>
+ </div>
+</div>
+</div>
+
+  </div>
+  
 </div>
 
 
 </div>
 </div>
 <div class="form-actions right">  
-<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button> 
+<button class="btn btn-success " onclick="queryData()" type="button">查询</button> 
 <button id='updateBut' class="btn btn-primary " onclick="SaveData()" type="button"   >保存</button> 
 </div></FORM> 
 </div> 
@@ -271,10 +275,21 @@ jQuery(document).ready(function() {
    TableAdvanced.init();
    FormComponents.init();
 
+	var tab='<tab/>';
+    if(tab=='o'){
+    	$('#tab2').addClass("active"); 
+    	$('#tab1').removeClass("active"); 
+    	$('#tab_1_1').removeClass("tab-pane fade active in"); 
+    	$('#tab_1_1').addClass("tab-pane fade"); 
+   		$('#tab_1_2').removeClass("tab-pane fade "); 
+    	$('#tab_1_2').addClass("tab-pane fade active in"); 
+    }
+    
    
    $('#ORole').change(function(){  
 		
 		 var p1= $('#ORole').val();
+		 
 	   jQuery.ajax({
 			url:'<ActionURI/>&doajax=SwEmpNo',
 			type:'POST',
@@ -301,18 +316,24 @@ jQuery(document).ready(function() {
 				   })  
 			}
 		});
-	   
-	   
+	});
+   
+   $('#NDepartment').change(function(){  
+	
+		 var p1= $('#NDepartment').val();
+		
+		   jQuery.ajax({
+				url:'<ActionURI/>&doajax=SwUnit',
+				type:'POST',
+				data:{searchDepartmen:p1},			
+				success:function(data){
+					  $('#UnitDiv').html(data); 
+				
+					}
+				});   
+	});
 
-	   
-	   
-		});
-   
-   
-  
-  		
 });
-
 
 
 
@@ -345,69 +366,34 @@ function    updateUnit(){
 	 });
 	 
 } 
-function    checkNO(){  
-
-	ActionForm.act.value='R';  
-	ActionForm.submit();   
+function   SaveRomance(n){  
+	$('#Romance').val(n);
 }  
 
- function    saveData(){  
+ function  SaveData(){  
 	 
-	if($('#searchEmployeeNo').val()=='0'){   
-			 layer.msg('請選擇姓名工號');  
-				return;  
-		}  
-	if($('#searchHoliday').val()=='0'){ 
-		
-		
-			layer.msg('請選擇請假事由'); 
-				return; 
-		
-		} 
-
-		if($('#startLeaveTime').val()=='00'){ 
-			layer.msg('請選擇請假開始时间');  
-			return; 
-	}
-
-		if($('#endLeaveTime').val()=='00'){  
-				layer.msg('請選擇請假結束时间');
-				return;  
-		}  
-		
-		if(   parseInt($('#startLeaveTime').val())  > parseInt($('#endLeaveTime').val()) ){
-			layer.msg('請假開始时间大於結束时间');  
-			return; 
-		}
-		
-		if($('#searchAgent').val()=='0'){  
-					layer.msg('請選擇代理人');
-					return;  
-			}  
-		if($('#searchAgent').val()==$('#searchEmployeeNo').val()){  
-					layer.msg('代理人不可為本人');
-					return;  
-			}  
- 
-		   
-		ActionForm.act.value='Save'; 
+	  if($('#Romance').val()=='o'){
+		ActionForm.act.value='SaveO'; 
 		ActionForm.submit();   
-
-	}  
-  
- function    upReturn(rowID){  
-
-		layer.prompt({title: '退回理由:', formType: 2}, function(text, index){
-			ActionForm.act.value='MR';
-			ActionForm.returnMsg.value=text;
-			ActionForm.rowID.value=rowID;
-			ActionForm.submit();
-		 });
-	}  
-
+	}
+	 if($('#Romance').val()=='n'){
+		ActionForm.act.value='SaveN'; 
+		ActionForm.submit();   
+	}
+ }
  
+ function  queryData(){  
+	 
+	  if($('#Romance').val()=='o'){
+		ActionForm.act.value='QueryO'; 
+		ActionForm.submit();   
+	}
+	 if($('#Romance').val()=='n'){
+		ActionForm.act.value='QueryN'; 
+		ActionForm.submit();   
+	}
+}
  
-
 </script> 
 <!-- END JAVASCRIPTS -->
 </div>

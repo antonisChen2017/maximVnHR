@@ -85,5 +85,6 @@ public class sqlConsts
 	public static final String sql_deleteDept="/cn/com/maxim/portal/sql/deleteDept.sql";
 	public static final String sql_updateDept="/cn/com/maxim/portal/sql/updateDept.sql";
 	public static final String sql_getDeptIDCount="/cn/com/maxim/portal/sql/getDeptIDCount.sql";
+	public static final String sql_updateHROEmail="/cn/com/maxim/portal/sql/updateHROEmail.sql";
 	
 }

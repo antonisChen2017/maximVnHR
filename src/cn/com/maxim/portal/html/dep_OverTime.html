@@ -99,7 +99,7 @@
 <SPAN class="control-label col-md-3">職務:</SPAN>
 <div  id='EmployeeNoDiv'  class="col-md-9">
 <SPAN class="control-label col-md-3">
-<SPAN  id='dutiesDiv' ></SPAN>
+<SPAN  id='dutiesDiv' ><duties/></SPAN>
 </SPAN>
 </div> 
  </div>
@@ -109,7 +109,7 @@
 <SPAN class="control-label col-md-3">到職日:</SPAN>
 <div  id='EmployeeDiv'   class="col-md-9">
 <SPAN class="control-label col-md-3">
-<SPAN  id='entrydateDiv' ></SPAN>
+<SPAN  id='entrydateDiv' ><entryDate/></SPAN>
 </SPAN>
  </div>
  </div>
@@ -312,11 +312,11 @@ jQuery(document).ready(function() {
 
 				  $('#searchEmployee').change(function(){  
 					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					 	$('#searchEmployeeNo').val(p1);       
+					 	$('#searchEmployeeNo').select2('val',p1);      
 					   })  
 				   $('#searchEmployeeNo').change(function(){  
 						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					      $('#searchEmployee').val(p1);       
+					      $('#searchEmployee').select2('val',p1);     
 				   }) 
 				}
 			});
@@ -326,7 +326,16 @@ jQuery(document).ready(function() {
    
    
   
-  		
+	   $('#searchEmployee').change(function(){  
+		     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+		 	$('#searchEmployeeNo').select2('val',p1);     
+		 	changeDuties();
+		   })  
+	   $('#searchEmployeeNo').change(function(){  
+			  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+		      $('#searchEmployee').select2('val',p1);           
+		      changeDuties();
+	   }) 
 });
 
 

@@ -16,6 +16,7 @@ import cn.com.maxim.portal.attendan.vo.editDeptUnit;
 import cn.com.maxim.portal.attendan.vo.editLholidayVO;
 import cn.com.maxim.portal.attendan.vo.editLreasonsVO;
 import cn.com.maxim.portal.attendan.vo.editStopReasonVO;
+import cn.com.maxim.portal.attendan.vo.editSupervisorVO;
 import cn.com.maxim.portal.attendan.vo.editSupplementVO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
@@ -706,7 +707,7 @@ public class SqlUtil
 		StringBuilder Sb = new StringBuilder(" declare @Res varchar(10)		 ");
 		Sb.append("  select @Res = ");
 		Sb.append("  case  when (   (  SELECT  sum( convert(float,APPLICATION_HOURS)) as maxah FROM VN_OVERTIME_S WHERE EP_ID=" + ID + " ");
-		Sb.append("   and STATUS IN ('RD','U','B','D','L','M') ");/** 已通過加班 **/
+	//	Sb.append("   and STATUS IN ('RD','U','B','D','L','M') ");/** 已通過加班 **/
 		Sb.append("   and DATEPART(yyyy,OVERTIME_START) ='" + yyyy + "' and DATEPART ( mm ,OVERTIME_START )='" + mm + "' )    >=   (select VALUE from VN_CONFIG where [key]='CTIME')");
 		Sb.append("    )  then '1' else '0' end  select @Res as flag ");
 		return Sb.toString();
@@ -3389,6 +3390,18 @@ public class SqlUtil
 		HtmlUtil hu = new HtmlUtil();
 		String sql = hu.gethtml(sqlConsts.sql_getDeptIDCount);
 		sql = sql.replace("<ID/>", edVo.getDID());
+		return sql;
+	}
+	/**
+	 * 更新現有主管email資料
+	 */
+	
+	public static final String updateHROEmail(editSupervisorVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_updateHROEmail);
+		sql = sql.replace("<ID/>", edVo.getOEmployeeNo());
+		sql = sql.replace("<Email/>", edVo.getOEmail());
 		return sql;
 	}
 }

@@ -13,13 +13,13 @@ public class editSupervisorVO
 	/**ActionURI*/
 	private String  ActionURI;
 	/**新增或現有人員*/
-	private String Status;
+	private String Romance;
 	/**資料庫角色*/
 	private String ORole;
 	/**現有主管工號*/
 	private String OEmployeeNo;
 	/**現有主管名稱*/
-	private String OEmpployee;
+	private String OEmployee;
 	/**現有主管EMAIL*/
 	private String OEmail;
 	/**資料庫角色(新增用)*/
@@ -40,8 +40,19 @@ public class editSupervisorVO
 	private String NEntryDate;
 	/**新增職稱*/
 	private String NDutes;
+	/**設定頁標籤定位*/
+	private String Tab;
 	
 	
+	
+	public String getTab()
+	{
+		return Tab;
+	}
+	public void setTab(String tab)
+	{
+		Tab = tab;
+	}
 	public String getNUnit()
 	{
 		return NUnit;
@@ -82,13 +93,14 @@ public class editSupervisorVO
 	{
 		NDutes = nDutes;
 	}
-	public String getStatus()
+
+	public String getRomance()
 	{
-		return Status;
+		return Romance;
 	}
-	public void setStatus(String status)
+	public void setRomance(String romance)
 	{
-		Status = status;
+		Romance = romance;
 	}
 	public String getORole()
 	{
@@ -138,13 +150,13 @@ public class editSupervisorVO
 	{
 		OEmployeeNo = oEmployeeNo;
 	}
-	public String getOEmpployee()
+	public String getOEmployee()
 	{
-		return OEmpployee;
+		return OEmployee;
 	}
-	public void setOEmpployee(String oEmpployee)
+	public void setOEmployee(String oEmployee)
 	{
-		OEmpployee = oEmpployee;
+		OEmployee = oEmployee;
 	}
 	public String getOEmail()
 	{

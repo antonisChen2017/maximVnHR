@@ -56,14 +56,11 @@ public class emp_OverTime extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						otVo.setShowDataTable(true);
-						
+						request.getSession().setAttribute("eotEdit","QUE");
 						showHtml(con, out, otVo,UserInformation);
 					}
 					
-					if (actText.equals("SwTime")) {
-					
-						showHtml(con, out, otVo,UserInformation);
-					}
+				
 					
 					if (actText.equals("Save")) {
 						logger.info("個人申請加班/Save : " +otVo.toString());
@@ -72,11 +69,9 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setOverTimeSave(false);
 						// 儲存db
 						String msg="";
-						if(otVo.getRowID().equals("0")){
-							msg=DBUtil.saveOvertime(otVo , con);
-							otVo.setMsg(msg);
-							//DBUtil.saveReasons( con,otVo );
-						}else{
+						String dotEdit=( String)request.getSession().getAttribute("dotEdit");
+						
+						if(dotEdit.equals("Update")){
 							logger.info("updateEmpOverTime : " +SqlUtil.updateEmpOverTime(otVo));
 							boolean flag =DBUtil.updateSql(SqlUtil.updateEmpOverTime(otVo), con);
 							if(flag){
@@ -84,8 +79,12 @@ public class emp_OverTime extends TemplatePortalPen
 							}else{
 								otVo.setMsg(keyConts.editNO);
 							}
-							
+						}else{
+							msg=DBUtil.saveOvertime(otVo , con);
+							otVo.setMsg(msg);
 						}
+						
+						request.getSession().setAttribute("eotEdit","Save");
 						showHtml(con, out,  otVo,UserInformation);
 						
 					}
@@ -97,6 +96,7 @@ public class emp_OverTime extends TemplatePortalPen
 					    DBUtil.delDBTableRow(SqlUtil.delOvertimeS(rowID), con);
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已刪除");
+						request.getSession().setAttribute("eotEdit","Delete");
 						showHtml(con, out, otVo,UserInformation);
 					}
 					if (actText.equals("Refer"))//送交
@@ -106,6 +106,7 @@ public class emp_OverTime extends TemplatePortalPen
 						DBUtil.updateTimeOverSStatus(keyConts.dbTableCRStatuS_T, request.getParameter("rowID"), con);
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已送交");
+						request.getSession().setAttribute("eotEdit","Refer");
 						showHtml(con, out, otVo,UserInformation);
 						
 					}
@@ -118,6 +119,7 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setShowDataTable(true);
 						otVo.setRowID(rowID);
 						otVo=SharedCode(con,otVo);
+						request.getSession().setAttribute("eotEdit","Update");
 						showHtml(con, out,  otVo,UserInformation);	
 					}
 					

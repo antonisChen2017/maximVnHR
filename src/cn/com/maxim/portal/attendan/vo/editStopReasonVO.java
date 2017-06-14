@@ -15,9 +15,13 @@ public class editStopReasonVO implements Serializable
 	private static final long serialVersionUID = -5448082865034433655L;
 	
 	private String rowID;
+	
 	private String stopReason;
+	
 	private String sortNo;
+	
 	private String VName;
+	
 	private String EName;
 	/**是否顯示查询結果*/
 	private boolean  showDataTable;

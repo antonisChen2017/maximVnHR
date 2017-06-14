@@ -99,10 +99,10 @@
 </div>
 </div>
 <div class="form-actions right">  
-<button class="btn btn-primary "  onclick="saveData( )"  type="button">新增</button> 
-<button class="btn btn-info " onclick="ActionForm.act.value='UPD';ActionForm.submit();" type="button">修改</button> 
+<button class="btn btn-primary "  onclick="saveDData( )"  type="button">新增</button> 
+<button class="btn btn-info " onclick="ActionForm.act.value='DUPD';ActionForm.submit();" type="button">修改</button> 
 <button class="btn btn-success " onclick="delDData( )" type="button">删除</button> 
-<button class="btn btn-warning"    onclick="SetData( )"  type="button">清除</button> 
+<button class="btn btn-warning"    onclick="SetDData( )"  type="button">清除</button> 
 </div>
 <msg/>
 </div> 
@@ -230,6 +230,7 @@ jQuery(document).ready(function() {
    App.init(); // init layout and core plugins
    TableAdvanced.init();
    FormComponents.init();
+  // $('#DID').attr("readOnly",true);
 });
 
  function    updateData(){  
@@ -264,11 +265,11 @@ jQuery(document).ready(function() {
 	}  
 
  function     showEData(rowData){ 
-		//layer.msg('rowData:'+rowData);
+		//layer.msg('rowData:'+rowDatas[1]);
 		var rowDatas=rowData.split("%");
 		$('#DrowID').val( rowDatas[0]); 
 		$('#DID').val( rowDatas[0]); 
-		$('#EName').val( rowDatas[1]); 
+		$('#DName').val( rowDatas[1]); 
 		$('#DEName').val( rowDatas[2]); 		
 		////$('#VName').val( rowDatas[3]); 	
 		//$('#EName').val( rowDatas[4]); 
@@ -294,6 +295,14 @@ jQuery(document).ready(function() {
 		$('#UEName').val(''); 		
 		$('#UName').val(''); 	
 		//$('#EName').val( rowDatas[4]); 
+}
+ 
+ function SetDData(){ 
+		
+		$('#DID').val(''); 
+		$('#DrowID').val(''); 
+		$('#DEName').val(''); 		
+		$('#DName').val(''); 	
 }
  
  function    delUData(){  
@@ -333,6 +342,44 @@ jQuery(document).ready(function() {
 			ActionForm.submit();   
 
 		}
+ 
+ function    saveDData(){  
+	 
+		if($('#DName').val()==''){   
+				 layer.msg('请填写部门名稱');  
+					return;  
+			}  
+		 
+		if($('#DID').val()==''){   
+			 layer.msg('请填写部门编号');  
+				return;  
+			}  
+			ActionForm.act.value='DINS'; 
+			ActionForm.submit();   
+
+		}
+ 
+ function     delDData(){  
+
+		if($('#DrowID').val()=='0'){  
+			     layer.msg('请選擇部门');  
+				return;  
+		}  
+		 if($('#DrowID').val()!='0' && $('#DName').val()=='  '){   
+		     layer.msg('请填写部门名称');  
+				return;  
+		}  
+		//询问框
+		 layer.confirm('Are you sure??', {
+		   btn: ['確定','取消'] //按钮
+		 }, function(){
+			 ActionForm.act.value='DDEL'; 
+			 ActionForm.submit();   
+		 }, function(){
+			 
+		   });
+		 }
+
 </script> 
 <!-- END JAVASCRIPTS -->
 </div>

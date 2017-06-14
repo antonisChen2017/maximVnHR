@@ -18,6 +18,7 @@
 <link rel="stylesheet" type="text/css" href="javascript/assets/css/style-upgrade.css"/>
 <link rel="stylesheet" type="text/css" href="javascript/assets/css/theme-default.css"/>
 <link rel="stylesheet" type="text/css" href="javascript/assets/css/plugins.css"/>
+
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
 <![endif]-->
@@ -31,152 +32,193 @@
   <!-- BEGIN PAGE HEADER-->  
  <div class="row">   
    <!-- BEGIN PAGE TITLE-->  
-   <h3 class="page-title">部门单位编辑</small> </h3>
+   <h3 class="page-title">主管資料<small>設定</small> </h3>
    <!-- END PAGE TITLE-->   
  </div>  
- 
 <div class="clearfix"> </div>
 <!-- END PAGE ROW--> 
 <!-- BEGIN PAGE ROW--> 
-<form class="form-horizontal"  name="ActionForm"  method="post"  action="<ActionURI/>"> 
- <input type='hidden' name='act'>
- <input type='hidden' name='DrowID'  id='DrowID'   value='<DrowID/>'>
-  <input type='hidden' name='UrowID'    id='UrowID'     value='<UrowID/>'>
-  <input type='hidden' name='returnMsg' id='returnMsg' >
 <div class="row "> 
-<div class="col-md-6 col-sm-6"> 
+<div class="col-md-12 col-sm-12"> 
 <div class="portlet no-border"> 
 <div class="tab-pane" id="tab_form_1"> 
 <div class="portlet"> 
  <div class="portlet-title"> 
-  <div class="caption"> <i class="fa fa-reorder"></i> 部门</div>
+  <div class="caption"> <i class="fa fa-reorder"></i></div>
   <div class="active"> <a href="javascript:;" class="collapse"></a>  </div> 
 </div> 
 <div class="portlet-body form">  
    <!-- BEGIN FORM--> 
-
-
+<form class="form-horizontal"  name="ActionForm"  method="post"  action="<ActionURI/>"> 
+ <input type='hidden' name='act'>
+ <input type='hidden' name='rowID' id='rowID' >
+  <input type='hidden' name='status' id='status' >
+ <input type='hidden' name='returnMsg' id='returnMsg' >
 <div class="form-body">
 
 
+<ul class="nav nav-tabs">
+  <li class="active"> <a href="#tab_1_1" data-toggle="tab">現有主管資料 </a> </li>
+  <li> <a href="#tab_1_2" data-toggle="tab">新增主管資料</a> </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane fade active in" id="tab_1_1">
+  
+   <div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">角色:</SPAN>
+<div class="col-md-9">
+<ORole/>
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">現有主管姓名:</SPAN>
+<div  id='EmployeeDiv'     class="col-md-9">
+<OEmployee/>
+ </div>
+</div>
+</div>
+</div>
+
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">部门编号:</SPAN>
+<SPAN class="control-label col-md-3">現有主管工号:</SPAN>
+<div id='EmployeeNoDiv'   class="col-md-9">
+<OEmployeeNo/>
+</div> 
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">EMAIL:</SPAN>
+<div class="col-md-9">
+<OEmail/>
+</div>
+ </div>
+</div>
+</div>
+
+  </div>
+  <div class="tab-pane fade" id="tab_1_2">
+   <div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">角色:</SPAN>
 
 <div class="col-md-9">
-<DID/>
+<NRole/>
 </div>
  </div>
 </div>
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">部門:</SPAN>
-<div     id='EmployeeDiv'  class="col-md-9">
-<DName/>
+<SPAN class="control-label col-md-3">部门:</SPAN>
+<div class="col-md-9">
+<NDepartment/>
+ </div>
  </div>
 </div>
 </div>
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">单位:</SPAN>
+<div class="col-md-9">
+<NUnit/>
+</div> 
+ </div>
 </div>
 
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">新增主管姓名:</SPAN>
+<div class="col-md-9">
+<NEmployee/>
+</div>
+ </div>
+</div>
+</div>
 
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
-<SPAN class="control-label col-md-3">英文名:</SPAN>
-
+<SPAN class="control-label col-md-3">新增主管工號:</SPAN>
 <div class="col-md-9">
-<DEName/>
+<NEmployeeNo/>
+</div> 
+ </div>
+</div>
+
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">职称:</SPAN>
+<div class="col-md-9">
+<NDutes/>
 </div>
  </div>
 </div>
+</div>
+
+<div class="row">
 <div class="col-md-6">
 <div class="form-group">
+<SPAN class="control-label col-md-3">到职日:</SPAN>
+<div class="col-md-9">
+<NEntryDate/>
+</div> 
+ </div>
+</div>
+
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">越文姓名:</SPAN>
+<div class="col-md-9">
+<NVietnamese/>
+</div>
+ </div>
 </div>
 </div>
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">EMAIL:</SPAN>
+<div class="col-md-9">
+<NEmail/>
+</div> 
+ </div>
 </div>
+
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3"></SPAN>
+<div class="col-md-9">
+</div>
+ </div>
+</div>
+</div>
+
+  </div>
+</div>
+
 
 </div>
 </div>
 <div class="form-actions right">  
-<button class="btn btn-primary "  onclick="saveDData( )"  type="button">新增</button> 
-<button class="btn btn-info " onclick="ActionForm.act.value='DUPD';ActionForm.submit();" type="button">修改</button> 
-<button class="btn btn-success " onclick="delDData( )" type="button">删除</button> 
-<button class="btn btn-warning"    onclick="SetDData( )"  type="button">清除</button> 
-</div>
-<msg/>
+<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button> 
+<button id='updateBut' class="btn btn-primary " onclick="SaveData()" type="button"   >保存</button> 
+</div></FORM> 
 </div> 
-<drawTableD/>
+<msg/>
+<drawTableM/>
 </div> 
 </div>
   <!-- END PAGE CONTENT --> 
 </div>
-
-<div class="col-md-6 col-sm-6"> 
-<div class="portlet no-border"> 
-<div class="tab-pane" id="tab_form_1"> 
-<div class="portlet"> 
- <div class="portlet-title"> 
-  <div class="caption"> <i class="fa fa-reorder"></i>单位 </div>
-  <div class="active"> <a href="javascript:;" class="collapse"></a>  </div> 
-</div> 
-<div class="portlet-body form">  
-   <!-- BEGIN FORM--> 
-<div class="form-body">
-
-
-<div class="row">
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">部门:</SPAN>
-
-<div class="col-md-9">
-<Dept/>
-</div>
- </div>
-</div>
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">單位:</SPAN>
-<div     id='EmployeeDiv'  class="col-md-9">
-<UName/>
- </div>
-</div>
-</div>
-</div>
-
-<div class="row">
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">英文名:</SPAN>
-
-<div class="col-md-9">
-<UEName/>
-</div>
- </div>
-</div>
-<div class="col-md-6">
-<div class="form-group">
-</div>
-</div>
-</div>
-
-
-</div>
-</div>
-<div class="form-actions right">  
-<button class="btn btn-primary "  onclick="saveUData( )"  type="button">新增</button> 
-<button class="btn btn-info " onclick="ActionForm.act.value='UUPD';ActionForm.submit();" type="button">修改</button> 
-<button class="btn btn-success " onclick="delUData( )" type="button">删除</button> 
-<button class="btn btn-warning"    onclick="SetUData( )"  type="button">清除</button> 
-</div> 
-<msg/>
-</div> 
-<drawTableU/>
-</div> 
-</div>
-
-</FORM>
 <!-- END PAGE CONTAINER -->  <!-- BEGIN FOOTER --> 
 <div id="footer" class="footer"> 
 <div class="footer-inner"> </div> 
@@ -221,8 +263,6 @@
 <script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script> 
 <script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script> 
 <script type="text/javascript" src="javascript/assets/layer/layer.js"></script> 
-
-
 <!-- END PAGE LEVEL SCRIPTS --> 
 <script>
 jQuery(document).ready(function() {    
@@ -230,27 +270,128 @@ jQuery(document).ready(function() {
    App.init(); // init layout and core plugins
    TableAdvanced.init();
    FormComponents.init();
-  // $('#DID').attr("readOnly",true);
+
+   
+   $('#ORole').change(function(){  
+		
+		 var p1= $('#ORole').val();
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmpNo',
+			type:'POST',
+			data:{ORole:p1},
+			success:function(data){
+				 $('#EmployeeNoDiv').html(data);    
+				 $('#OEmployeeNo').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 $('#OEmployee').select2('val',p1);    
+				   }) 
+			}
+		});
+	   
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmp',
+			type:'POST',
+			data:{ORole:p1},
+			success:function(data){
+				 $('#EmployeeDiv').html(data);    
+				 $('#OEmployee').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+				 	$('#OEmployeeNo').select2('val',p1);    
+				 
+				   })  
+			}
+		});
+	   
+	   
+
+	   
+	   
+		});
+   
+   
+  
+  		
 });
 
- function    updateData(){  
+
+
+
+function    updateUnit(){  
+	 // layer.msg(' 0 ');  
+	 $('#searchUnit').change(function(){  
+	//	   layer.msg(' 1 ');  
+		var p1=$(this).children('option:selected').val();  //这就是selected的值  
+	//   layer.msg(' searchUnit :'+ p1);  
+
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwDUnit',
+			type:'POST',
+			data:{searchUnit:p1,searchDepartmen:$('#searchDepartmen').val()},
+			success:function(data){
+				var datas=data.split("%");
+		 		  $('#EmployeeNoDiv').html(datas[0]);  
+				  $('#EmployeeDiv').html(datas[1]);  
+			//      layer.msg(' data :'+ data);  
+				  $('#searchEmployee').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 	$('#searchEmployeeNo').select2('val',p1);       
+					   })  
+				   $('#searchEmployeeNo').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#searchEmployee').select2('val',p1);       
+				   }) 
+				}
+			});
+	 });
 	 
-		if($('#searchDepartmen').val()=='0'){   
-			 layer.msg('请选择部门');  
+} 
+function    checkNO(){  
+
+	ActionForm.act.value='R';  
+	ActionForm.submit();   
+}  
+
+ function    saveData(){  
+	 
+	if($('#searchEmployeeNo').val()=='0'){   
+			 layer.msg('請選擇姓名工號');  
 				return;  
 		}  
-	if($('#searchEmployee').val()=='0'){   
-			 layer.msg('請選擇姓名');  
+	if($('#searchHoliday').val()=='0'){ 
+		
+		
+			layer.msg('請選擇請假事由'); 
+				return; 
+		
+		} 
+
+		if($('#startLeaveTime').val()=='00'){ 
+			layer.msg('請選擇請假開始时间');  
+			return; 
+	}
+
+		if($('#endLeaveTime').val()=='00'){  
+				layer.msg('請選擇請假結束时间');
 				return;  
 		}  
-	if($('#searchUnit').val()=='0'){   
-		 layer.msg('請選擇单位');  
-			return;  
-	}  
+		
+		if(   parseInt($('#startLeaveTime').val())  > parseInt($('#endLeaveTime').val()) ){
+			layer.msg('請假開始时间大於結束时间');  
+			return; 
+		}
+		
+		if($('#searchAgent').val()=='0'){  
+					layer.msg('請選擇代理人');
+					return;  
+			}  
+		if($('#searchAgent').val()==$('#searchEmployeeNo').val()){  
+					layer.msg('代理人不可為本人');
+					return;  
+			}  
  
 		   
-		ActionForm.act.value='update';
-		ActionForm.submit();
+		ActionForm.act.value='Save'; 
+		ActionForm.submit();   
 
 	}  
   
@@ -264,121 +405,8 @@ jQuery(document).ready(function() {
 		 });
 	}  
 
- function     showEData(rowData){ 
-		//layer.msg('rowData:'+rowDatas[1]);
-		var rowDatas=rowData.split("%");
-		$('#DrowID').val( rowDatas[0]); 
-		$('#DID').val( rowDatas[0]); 
-		$('#DName').val( rowDatas[1]); 
-		$('#DEName').val( rowDatas[2]); 		
-		////$('#VName').val( rowDatas[3]); 	
-		//$('#EName').val( rowDatas[4]); 
-}
- function    showUData(rowData){ 
-	
-		var rowDatas=rowData.split("%");
-		//layer.msg('rowDatas[3]:'+rowDatas[3]);
-		//alert(rowDatas[0]);
-		$('#Dept').select2('val',rowDatas[3]); 
-		$('#UrowID').val( rowDatas[0]); 
-		$('#UEName').val( rowDatas[2]); 		
-		$('#UName').val( rowDatas[1]); 	
-		//$('#EName').val( rowDatas[4]); 
-}
- function     SetUData(){ 
-		
-	
-		//layer.msg('rowDatas[3]:'+rowDatas[3]);
-		//alert(rowDatas[0]);
-		$('#Dept').select2('val','0'); 
-		$('#UrowID').val(''); 
-		$('#UEName').val(''); 		
-		$('#UName').val(''); 	
-		//$('#EName').val( rowDatas[4]); 
-}
  
- function SetDData(){ 
-		
-		$('#DID').val(''); 
-		$('#DrowID').val(''); 
-		$('#DEName').val(''); 		
-		$('#DName').val(''); 	
-}
  
- function    delUData(){  
-
-		if($('#UrowID').val()=='0'){  
-			     layer.msg('请選擇單位');  
-				return;  
-		}  
-		 if($('#UrowID').val()!='0' && $('#UName').val()=='  '){   
-		     layer.msg('请填写单位名称');  
-				return;  
-		}  
-		//询问框
-		 layer.confirm('Are you sure??', {
-		   btn: ['確定','取消'] //按钮
-		 }, function(){
-			 ActionForm.act.value='UDEL'; 
-			 ActionForm.submit();   
-		 }, function(){
-			 
-		   });
-		 }
-	 
- 
- function    saveUData(){  
-	 
-		if($('#UName').val()==''){   
-				 layer.msg('请填写單位名稱');  
-					return;  
-			}  
-		 
-		if($('#Dept').val()==''){   
-			 layer.msg('请选择部门');  
-				return;  
-			}  
-			ActionForm.act.value='UINS'; 
-			ActionForm.submit();   
-
-		}
- 
- function    saveDData(){  
-	 
-		if($('#DName').val()==''){   
-				 layer.msg('请填写部门名稱');  
-					return;  
-			}  
-		 
-		if($('#DID').val()==''){   
-			 layer.msg('请填写部门编号');  
-				return;  
-			}  
-			ActionForm.act.value='DINS'; 
-			ActionForm.submit();   
-
-		}
- 
- function     delDData(){  
-
-		if($('#DrowID').val()=='0'){  
-			     layer.msg('请選擇部门');  
-				return;  
-		}  
-		 if($('#DrowID').val()!='0' && $('#DName').val()=='  '){   
-		     layer.msg('请填写部门名称');  
-				return;  
-		}  
-		//询问框
-		 layer.confirm('Are you sure??', {
-		   btn: ['確定','取消'] //按钮
-		 }, function(){
-			 ActionForm.act.value='DDEL'; 
-			 ActionForm.submit();   
-		 }, function(){
-			 
-		   });
-		 }
 
 </script> 
 <!-- END JAVASCRIPTS -->

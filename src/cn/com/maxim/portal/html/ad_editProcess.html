@@ -63,11 +63,7 @@
 <div class="col-md-2">
 <Dept/>
 </div>
-<SPAN class="control-label col-md-1">单位:</SPAN>
-
-<div  id='UnitDiv' class="col-md-2">
-<Unit/>
-</div>
+<SPAN class="control-label col-md-1"></SPAN>
 <div class="col-md-6">
 </div>
  </div>
@@ -84,66 +80,185 @@
 <div class="form-group">
 <SPAN class="control-label col-md-1">簽核流程設定:</SPAN>
 
-<div class="col-md-4">
+<div class="col-md-5">
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">三天以下</h3>
   </div>
-  <div class="panel-body">
-  <div class="row">
-  <div class="col-md-4">
-  普通员工/簽核層級 :
-  </div>
-  <div class="col-md-8">
-  <EDAY3DSING/>
-    </div>
-  </div>
-  </div>
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-md-4">
-      单位主管/簽核層級 :
-        </div>
-          <div class="col-md-8">
-      <Dept/>
-       </div>
-      </div>
-    </div>
-   <div class="panel-body">
-      <div class="row">
-       <div class="col-md-4">
-      部门主管/簽核層級 :
-     </div>
-          <div class="col-md-8">
-      <Dept/>
-       </div>
-        </div>
-  </div>
+  <table class="table">
+    <thead>
+      <tr>
+      <th>员工身份</th>
+        <th>審核者一職稱</th>
+        <th>審核者一</th>
+  		<th>審核者二職稱</th>
+        <th>審核者二</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td> 部門主管 </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+      </tr>
+      <tr>
+        <td> 經理 </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
 </div>
 <div class="col-md-5">
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">三天以上</h3>
   </div>
-  <div class="panel-body">普通员工/ 单位主管 :<Dept/>部门主管 :<Dept/>经理/副理<Dept/>副总 :<Dept/></div>
-  <div class="panel-body">单位主管/ 部门主管 :<Dept/>经理/副理<Dept/>副总:<Dept/></div>
-   <div class="panel-body">部门主管/ 经理/副理<Dept/>副总 :<Dept/></div>
+  <table class="table">
+    <thead>
+      <tr>
+     <th>员工身份</th>
+        <th>经理</th>
+        <th>副总</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td> 部門主管 </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+
+      </tr>
+        <tr>
+        <td> 經理 </td>
+        <td></td>
+        <td> <Unit/> </td>
+
+      </tr>
+    </tbody>
+  </table>
 </div>
 </div>
-<div class="col-md-2"></div>
+<div class="col-md-1">
+<button class="btn btn-success " onclick="updateData();" type="button">设定</button>
+</div>
 
  </div>
 </div>
 </div>
 
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1">部门所属单位:</SPAN>
 
+<div  id='UnitDiv' class="col-md-2">
+<Unit/>
+</div>
+<SPAN class="control-label col-md-1"> </SPAN>
+<div class="col-md-6">
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1">簽核流程設定:</SPAN>
+
+<div class="col-md-5">
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">三天以下</h3>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+      <th>员工身份</th>
+     	<th>審核者一職稱</th>
+        <th>審核者一</th>
+  		<th>審核者二職稱</th>
+        <th>審核者二</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td> 一般員工 </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+      </tr>
+       <tr>
+        <td> 單位主管 </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<div class="col-md-5">
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">三天以上</h3>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+     <th>员工身份</th>
+         <th>單位主管</th>
+         <th>部門主管</th>
+        <th>经理</th>
+        <th>副总</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td> 一般員工 </td>
+        <td><Unit/> </td>
+        <td> <Unit/> </td>
+         <td><Unit/> </td>
+        <td> <Unit/> </td>
+      </tr>
+       <tr>
+        <td> 單位主管 </td>
+        <td> </td>
+        <td> <Unit/> </td>
+         <td><Unit/> </td>
+        <td> <Unit/> </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+<div class="col-md-1">
+<button class="btn btn-success " onclick="updateData();" type="button">设定</button>
+ </div>
+
+ </div>
+</div>
+</div>
 
 </div>
 </div>
 <div class="form-actions right">  
 <button class="btn btn-primary " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button> 
-<button class="btn btn-success " onclick="updateData();" type="button">设定</button> 
+
 </div></FORM> 
 <msg/>
 </div> 

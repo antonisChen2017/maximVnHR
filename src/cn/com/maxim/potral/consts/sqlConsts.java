@@ -80,5 +80,10 @@ public class sqlConsts
 	public static final String sql_deleteUnit="/cn/com/maxim/portal/sql/deleteUnit.sql";
 	public static final String sql_updateUnitData="/cn/com/maxim/portal/sql/updateUnitData.sql";
 	public static final String sql_InsterUnit="/cn/com/maxim/portal/sql/InsterUnit.sql";
+	public static final String sql_getUnitDeptCount="/cn/com/maxim/portal/sql/getUnitDeptCount.sql";
+	public static final String sql_InsterDept="/cn/com/maxim/portal/sql/InsterDept.sql";
+	public static final String sql_deleteDept="/cn/com/maxim/portal/sql/deleteDept.sql";
+	public static final String sql_updateDept="/cn/com/maxim/portal/sql/updateDept.sql";
+	public static final String sql_getDeptIDCount="/cn/com/maxim/portal/sql/getDeptIDCount.sql";
 	
 }

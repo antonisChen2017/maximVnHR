@@ -23,7 +23,6 @@ public class htmlConsts
 	  public static final String html_rep_AttendanceDay= "/cn/com/maxim/portal/html/rep_AttendanceDay.html";
 	  public static final String html_rep_lateOutEarly="/cn/com/maxim/portal/html/rep_lateOutEarly.html";
 	  public static final String html_mgr_OverTime="/cn/com/maxim/portal/html/mgr_OverTime.html";
-	  public static final String excel="/cn/com/maxim/portal/html/excel.html";
 	  public static final String html_rev_empSettUnit="/cn/com/maxim/portal/html/rev_empSettUnit.html";
 	  public static final String html_timeOut="/cn/com/maxim/portal/html/timeOut.html";
 	  public static final String html_emp_OverTime="/cn/com/maxim/portal/html/emp_OverTime.html";
@@ -46,5 +45,5 @@ public class htmlConsts
 	  public static final String html_rev_ExceedOvertime="/cn/com/maxim/portal/html/rev_ExceedOvertime.html";
 	  public static final String html_ad_editProcess="/cn/com/maxim/portal/html/ad_editProcess.html";
 	  public static final String html_ad_editDeptUnit="/cn/com/maxim/portal/html/ad_editDeptUnit.html";
-	  public static final String html_noSet="/cn/com/maxim/portal/html/noSet.html";
+	  public static final String html_editSupervisor="/cn/com/maxim/portal/html/rev_editSupervisor.html";
 }

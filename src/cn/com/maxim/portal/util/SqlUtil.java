@@ -3321,4 +3321,74 @@ public class SqlUtil
 		return sql;
 	}
 
+	/**
+	 * 查詢部門有無相關單位 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String getUnitDeptCount(editDeptUnit edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getUnitDeptCount);
+		sql = sql.replace("<DEPT/>", edVo.getDID());
+		return sql;
+	}
+	/**
+	 * 新增部門
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String InsterDept(editDeptUnit edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_InsterDept);
+		sql = sql.replace("<ID/>", edVo.getDID());
+		sql = sql.replace("<DEPARTMENT/>", edVo.getDName());
+		sql = sql.replace("<ENAME/>", edVo.getDEName());
+		return sql;
+	}
+	/**
+	 * 刪除部門
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String deleteDept(editDeptUnit edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_deleteDept);
+		sql = sql.replace("<rowID/>", edVo.getDrowID());
+		return sql;
+	}
+	/**
+	 * 刪除部門
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String updateDept(editDeptUnit edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_updateDept);
+		sql = sql.replace("<DEPARTMENT/>", edVo.getDName());
+		sql = sql.replace("<ENAME/>", edVo.getDEName());
+		sql = sql.replace("<rowID/>", edVo.getDrowID());
+		return sql;
+	}
+	
+	/**
+	 * 查詢部門有無相關單位 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String getDeptIDCount(editDeptUnit edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getDeptIDCount);
+		sql = sql.replace("<ID/>", edVo.getDID());
+		return sql;
+	}
 }

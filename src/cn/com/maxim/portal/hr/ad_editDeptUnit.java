@@ -37,6 +37,7 @@ public class ad_editDeptUnit extends TemplatePortalPen
 	{
 		String actText = request.getParameter("act");
 		String UrowID = request.getParameter("UrowID");
+		String DrowID = request.getParameter("DrowID");
 		editDeptUnit edVo = new editDeptUnit();
 		edVo.setActionURI(ActionURI);
 		logger.info("actText :"+actText);	
@@ -73,6 +74,26 @@ public class ad_editDeptUnit extends TemplatePortalPen
 				{
 					
 					edVo.setShowDataTable(true);
+					
+					edVo.setDrowID(DrowID);
+					String DID = request.getParameter("DID");
+					edVo.setDID(DID);
+					String DName = request.getParameter("DName");
+					edVo.setDName(DName);
+					String DEName = request.getParameter("DEName");
+					edVo.setDEName(DEName);
+			        //檢查有無單位 有不能刪除
+
+					logger.info("count "+SqlUtil.getUnitDeptCount(edVo));	
+					String COUNT=DBUtil.queryDBField(con,SqlUtil.getUnitDeptCount(edVo),"COUNT");
+					if(Integer.valueOf(COUNT)>0){
+						edVo.setMsg(keyConts.editDeptNoUnit);
+					}else{
+						DBUtil.updateSql(SqlUtil.deleteDept(edVo), con);
+						edVo.setMsg(keyConts.editOK);
+					}
+					edVo.setUrowID("0");
+					edVo.setDrowID("0");
 					showHtml(con, out, edVo, UserInformation);
 				}
 				// 單位修改
@@ -97,8 +118,19 @@ public class ad_editDeptUnit extends TemplatePortalPen
 				if (actText.equals("DUPD"))
 				{
 					edVo.setShowDataTable(true);
-				 
+					String DID = request.getParameter("DID");
+					edVo.setDID(DID);
+					edVo.setDrowID(DID);
+					String DName = request.getParameter("DName");
+					edVo.setDName(DName);
+					String DEName = request.getParameter("DEName");
+					edVo.setDEName(DEName);
+					logger.info("SQL "+SqlUtil.updateDept(edVo));	
+					DBUtil.updateSql(SqlUtil.updateDept(edVo), con);
+					
 					edVo.setMsg(keyConts.editOK);
+					edVo.setUrowID("0");
+					edVo.setDrowID("0");
 					showHtml(con, out, edVo, UserInformation);
 				}
 				// 單位新增
@@ -124,8 +156,23 @@ public class ad_editDeptUnit extends TemplatePortalPen
 				if (actText.equals("DINS"))
 				{
 					edVo.setShowDataTable(true);
-					//DBUtil.updateSql(SqlUtil.saveLholiday(edVo), con);
-					edVo.setMsg(keyConts.saveOK);
+					edVo.setUrowID(UrowID);
+					String Dept = request.getParameter("Dept");
+					edVo.setDept(Dept);
+					String UEName = request.getParameter("UEName");
+					edVo.setUEName(UEName);
+					String UName = request.getParameter("UName");
+					edVo.setUName(UName);
+					/**檢查有無相同ID 有不能新增**/
+					String COUNT=DBUtil.queryDBField(con,SqlUtil.getDeptIDCount(edVo),"COUNT");
+					if(Integer.valueOf(COUNT)>0){
+						edVo.setMsg(keyConts.editDeptIDRepeat);
+					}else{
+						DBUtil.updateSql(SqlUtil.InsterDept(edVo), con);
+						edVo.setMsg(keyConts.saveOK);
+					}
+					edVo.setUrowID("0");
+					edVo.setDrowID("0");
 					showHtml(con, out, edVo, UserInformation);
 				}
 			}

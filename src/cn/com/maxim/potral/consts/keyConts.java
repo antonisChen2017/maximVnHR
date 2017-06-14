@@ -38,6 +38,8 @@ public class keyConts
 	  public static final String  LRessons="加班原因";
 	  public static final String  saveOK="新增成功";
 	  public static final String  editOK="修改成功";
+	  public static final String  editDeptNoUnit="请先将相关单位删除";
+	  public static final String  editDeptIDRepeat="部门ID不可重复";
 	  public static final String  editNO="修改失败";
 	  public static final String   rowID="ID";
 	  public static final String   overTimeReasons="加班原因";

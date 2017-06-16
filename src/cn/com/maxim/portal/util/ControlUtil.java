@@ -205,6 +205,58 @@ public class ControlUtil
 		return Sb.toString();
 	}
 	
+	
+	/**
+	 * 可搜尋下拉-強化版(下拉顯示部門單位)
+	 * @param con
+	 * @param out
+	 * @param name
+	 * @param tableName
+	 * @param valueField
+	 * @param DisplayField
+	 * @param whereSql
+	 * @param SelectedOption
+	 * @param isDistinct
+	 * @param GroupField
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawChosenSql(Connection con,  String name, String sql, String SelectedOption,String valueZ) throws SQLException
+	{
+
+		
+		
+			   // System.out.println("drawChosenSelect sql : "+sql);
+			    Statement st = con.createStatement();
+			    ResultSet rs = st.executeQuery(sql);
+			    StringBuilder Sb = new StringBuilder("");
+				Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\"\"  tabindex=\"2\"> \r\n");
+	    		Sb.append("<option value='0'>"+valueZ+"</option> \r\n");
+			    int count=0;
+			    while (rs.next()) {
+			    	if(count==0){
+			    	//	Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\""+rs.getString(2)+"\"  tabindex=\"2\"> \r\n");
+			    		//  Sb.append("<option value='0'>未選擇</option> \r\n");
+			    	}
+			  	  if(rs.getString(1).equals(SelectedOption)){
+		    		    Sb.append("<option value='"+rs.getString(1)+"'  selected>"+rs.getString(2)+"</option> \r\n");
+		    	  }else{
+		    		    Sb.append("<option value='"+rs.getString(1)+"'>"+rs.getString(2)+"</option> \r\n");
+		    	  }
+			    	  count=count+1;
+			      }
+			  
+			    Sb.append("</select> \r\n");
+				Sb.append("<script>  \r\n");
+				Sb.append("	jQuery(document).ready(function() {    \r\n");
+				Sb.append(" $('#"+name+"').select2(); \r\n");
+				Sb.append("     }); \r\n");
+				Sb.append("</script>  \r\n");
+			   
+
+		return Sb.toString();
+	}
+	
 	/**
 	 * 手風琴式介面
 	 * @param Name

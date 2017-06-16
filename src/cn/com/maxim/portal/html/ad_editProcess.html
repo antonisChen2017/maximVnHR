@@ -89,26 +89,34 @@
     <thead>
       <tr>
       <th>员工身份</th>
-        <th>審核者一職稱</th>
-        <th>審核者一</th>
-  		<th>審核者二職稱</th>
-        <th>審核者二</th>
+        <th>审核者职称</th>
+        <th>审核者</th>
+		<th>代理审核人职称</th>
+        <th>代理审核人</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td> 部門主管 </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
+        <td> 部门主管 </td>
+        <td><oneDAuditorTitle/> </td>
+        <td id='oneDAuditorDiv'>
+        <oneDAuditor/> 
+        </td>
+        <td><oneDAgentTitle/> </td>
+        <td  id='oneDAgentDiv'>
+        <oneDAgent/> 
+        </td>
       </tr>
       <tr>
-        <td> 經理 </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
+        <td> 经理</td>
+        <td><oneMAuditorTitle/> </td>
+        <td  id='oneMAuditorDiv'> 
+         <oneMAuditor/>
+        </td>
+        <td><oneMAgentTitle/> </td>
+        <td   id='oneMAgentDiv'> 
+        <oneMAgent/>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -130,15 +138,15 @@
     </thead>
     <tbody>
       <tr>
-        <td> 部門主管 </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
+        <td> 部门主管 </td>
+        <td><threeDLever3/> </td>
+        <td><threeDLever4/> </td>
 
       </tr>
         <tr>
-        <td> 經理 </td>
+        <td> 经理 </td>
         <td></td>
-        <td> <Unit/> </td>
+        <td><threeMLever4/></td>
 
       </tr>
     </tbody>
@@ -146,10 +154,30 @@
 </div>
 </div>
 <div class="col-md-1">
-<button class="btn btn-success " onclick="updateData();" type="button">设定</button>
+
 </div>
 
  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1"></SPAN>
+
+<div  class="col-md-2">
+<button class="btn btn-success " onclick="saveDeptData();" type="button">部门设定</button>
+</div>
+
+<SPAN class="control-label col-md-1"> </SPAN>
+<div class="col-md-6">
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+</div>
 </div>
 </div>
 
@@ -185,27 +213,27 @@
   <table class="table">
     <thead>
       <tr>
-      <th>员工身份</th>
-     	<th>審核者一職稱</th>
-        <th>審核者一</th>
-  		<th>審核者二職稱</th>
-        <th>審核者二</th>
+     <th>员工身份</th>
+        <th>审核者职称</th>
+        <th>审核者</th>
+		<th>代理审核人职称</th>
+        <th>代理审核人</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td> 一般員工 </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
+        <td> 一般员工 </td>
+         <td><oneEAuditorTitle/> </td>
+        <td    id='oneEAuditorDiv'><oneEAuditor/> </td>
+        <td><oneEAgentTitle/> </td>
+        <td id='oneEAgentDiv'><oneEAgent/> </td>
       </tr>
        <tr>
-        <td> 單位主管 </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
+        <td> 单位主管</td>
+       <td><oneUAuditorTitle/> </td>
+        <td  id='oneUAuditorDiv'> <oneUAuditor/> </td>
+        <td><oneUAgentTitle/> </td>
+        <td  id='oneUAgentDiv'> <oneUAgent/></td>
       </tr>
     </tbody>
   </table>
@@ -221,43 +249,63 @@
     <thead>
       <tr>
      <th>员工身份</th>
-         <th>單位主管</th>
-         <th>部門主管</th>
+         <th>单位主管</th>
+         <th>部门主管</th>
         <th>经理</th>
         <th>副总</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td> 一般員工 </td>
-        <td><Unit/> </td>
-        <td> <Unit/> </td>
-         <td><Unit/> </td>
-        <td> <Unit/> </td>
+        <td> 一般员工</td>
+        <td><threeELever1/> </td>
+        <td><threeELever2/> </td>
+        <td><threeELever3/> </td>
+        <td><threeELever4/> </td>
       </tr>
        <tr>
-        <td> 單位主管 </td>
+        <td>单位主管</td>
         <td> </td>
-        <td> <Unit/> </td>
-         <td><Unit/> </td>
-        <td> <Unit/> </td>
+         <td><threeULever2/> </td>
+        <td><threeULever3/> </td>
+        <td><threeULever4/> </td>
       </tr>
     </tbody>
   </table>
 </div>
 </div>
 <div class="col-md-1">
-<button class="btn btn-success " onclick="updateData();" type="button">设定</button>
+
  </div>
 
  </div>
 </div>
 </div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1"></SPAN>
+
+<div  class="col-md-2">
+<button class="btn btn-success " onclick="updateData();" type="button">单位设定</button>
+</div>
+<SPAN class="control-label col-md-1"> </SPAN>
+<div class="col-md-6">
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+</div>
+</div>
+</div>
+
 
 </div>
 </div>
 <div class="form-actions right">  
-<button class="btn btn-primary " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button> 
+<button class="btn btn-primary " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">流程設定查询</button> 
 
 </div></FORM> 
 <msg/>
@@ -326,9 +374,6 @@ jQuery(document).ready(function() {
    $('#Dept').change(function(){  
 		
 		 var p1= $('#Dept').val();
-	  
-	
-
 	     jQuery.ajax({
 				url:'<ActionURI/>&doajax=SwUnit',
 				type:'POST',
@@ -339,42 +384,134 @@ jQuery(document).ready(function() {
 					  // updateUnit();
 				}
 			});
-
 		});
+   
+   $('#oneDAuditorTitle').change(function(){ 
+	   var p1= $('#oneDAuditorTitle').val();
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneDAuditor'},
+			success:function(data){
+				 $('#oneDAuditorDiv').html(data);    
+			}
+		});
+   });
+   
+   $('#oneDAgentTitle').change(function(){ 
+	   var p1= $('#oneDAgentTitle').val();
+	   jQuery.ajax({
+		   url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneDAgent'},
+			success:function(data){
+				 $('#oneDAgentDiv').html(data);    
+			}
+		});
+   });
+
+   $('#oneMAuditorTitle').change(function(){ 
+	   var p1= $('#oneMAuditorTitle').val();
+	   jQuery.ajax({
+		   url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneMAuditor'},
+			success:function(data){
+				 $('#oneMAuditorDiv').html(data);    
+			}
+		});
+   });
+   
+   
+   $('#oneMAgentTitle').change(function(){ 
+	   var p1= $('#oneMAgentTitle').val();
+	   jQuery.ajax({
+		   url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneMAgent'},
+			success:function(data){
+				 $('#oneMAgentDiv').html(data);    
+			}
+		});
+   });
+   
+   $('#oneEAuditorTitle').change(function(){ 
+	   var p1= $('#oneEAuditorTitle').val();
+	   jQuery.ajax({
+		   url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneEAuditor'},
+			success:function(data){
+				 $('#oneEAuditorDiv').html(data);    
+			}
+		});
+   });
+   $('#oneEAgentTitle').change(function(){ 
+	   var p1= $('#oneEAgentTitle').val();
+	   jQuery.ajax({
+		   url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneEAgent'},
+			success:function(data){
+				 $('#oneEAgentDiv').html(data);    
+			}
+		});
+   });
+   
+   $('#oneUAuditorTitle').change(function(){ 
+	   var p1= $('#oneUAuditorTitle').val();
+	   jQuery.ajax({
+		   url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneUAuditor'},
+			success:function(data){
+				 $('#oneUAuditorDiv').html(data);    
+			}
+		});
+   });
+   
+   $('#oneUAgentTitle').change(function(){ 
+	   var p1= $('#oneUAgentTitle').val();
+	   jQuery.ajax({
+		   url:'<ActionURI/>&doajax=ChosenSqlDiv',
+			type:'POST',
+			data:{role:p1,name:'oneUAgent'},
+			success:function(data){
+				 $('#oneUAgentDiv').html(data);    
+			}
+		});
+   });
+ 
+
+   
 });
 
-
-
-
-function    updateUnit(){  
-	 // layer.msg(' 0 ');  
-	 $('#searchUnit').change(function(){  
-	//	   layer.msg(' 1 ');  
-		var p1=$(this).children('option:selected').val();  //这就是selected的值  
-	//   layer.msg(' searchUnit :'+ p1);  
-
-	   jQuery.ajax({
-			url:'<ActionURI/>&doajax=SwDUnit',
-			type:'POST',
-			data:{searchUnit:p1,searchDepartmen:$('#searchDepartmen').val()},
-			success:function(data){
-				var datas=data.split("#");
-		 		  $('#EmployeeNoDiv').html(datas[0]);  
-				  $('#EmployeeDiv').html(datas[1]);  
-			//      layer.msg(' data :'+ data);  
-				  $('#searchEmployee').change(function(){  
-					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					 	$('#searchEmployeeNo').val(p1);       
-					   })  
-				   $('#searchEmployeeNo').change(function(){  
-						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					      $('#searchEmployee').val(p1);       
-				   }) 
-				}
-			});
-	 });
+function    saveDeptData(){  
 	 
-} 
+	if($('#oneDAuditor').val()=='0'){   
+		 layer.msg('请选择部門主管審核者');  
+			return;  
+	}  
+	if($('#oneMAuditor').val()=='0'){   
+			 layer.msg('请选择經理審核者');  
+				return;  
+		}  
+	if($('#threeDLever3').val()=='0' & $('#threeDLever4').val()=='0' ){   
+		 layer.msg('请选择三天以上部門主管審核流程');  
+			return;  
+	}  
+	if( $('#threeMLever4').val()=='0' ){   
+		 layer.msg('请选择三天以上經理審核流程');  
+			return;  
+	} 
+	ActionForm.act.value=' saveDept';
+	ActionForm.submit();
+
+}  
+
+
+
+
 function    checkNO(){  
 
 	ActionForm.act.value='R';  

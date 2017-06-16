@@ -55,7 +55,7 @@ public class unt_LeaveCard extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					//請假退回
 					if (actText.equals("R")) {
@@ -68,7 +68,7 @@ public class unt_LeaveCard extends TemplatePortalPen
 						}
 				
 						lcVo.setShowDataTable(true);
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					//单位主管通過
 					if (actText.equals("U")) {
@@ -82,7 +82,7 @@ public class unt_LeaveCard extends TemplatePortalPen
 							lcVo.setMsg(keyConts.okMsg);
 						}
 					
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 				}else{
 					//預設
@@ -98,7 +98,7 @@ public class unt_LeaveCard extends TemplatePortalPen
 					lcVo.setStartLeaveDate(DateUtil.NowDate());
 					lcVo.setEndLeaveDate(DateUtil.NowDate());
 					lcVo.setNote("");
-					showHtml(con, out, lcVo,UserInformation);
+					showHtml(con, out, lcVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -182,11 +182,11 @@ public class unt_LeaveCard extends TemplatePortalPen
 	 	}
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation) throws SQLException {
+	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
 		HtmlUtil hu=new HtmlUtil();
 		employeeUserRO eo=new employeeUserRO();
 		
-		List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
+		List<employeeUserRO> lro=getUser(con,UserInformation,request);
 		String UnitSql="";
 		UnitSql=" DEPARTMENT_ID= '"+lro.get(0).getDID()+"'";
 		
@@ -214,5 +214,27 @@ public class unt_LeaveCard extends TemplatePortalPen
 		
 	    out.println(htmlPart1);
 	    }
+	
+	
+	 /**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
+	 }
 }
 

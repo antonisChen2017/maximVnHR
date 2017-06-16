@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class editSupervisorVO
 {
+	
+	/**設定行標籤*/
 	private String rowID;
 	
 	/**是否顯示查询結果*/
@@ -42,8 +44,7 @@ public class editSupervisorVO
 	private String NDutes;
 	/**設定頁標籤定位*/
 	private String Tab;
-	
-	
+
 	
 	public String getTab()
 	{

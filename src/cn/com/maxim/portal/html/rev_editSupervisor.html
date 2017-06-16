@@ -52,7 +52,7 @@
 <form class="form-horizontal"  name="ActionForm"  method="post"  action="<ActionURI/>"> 
  <input type='hidden' name='act'>
  <input type='hidden' name='rowID' id='rowID' >
-  <input type='hidden' name='Romance'  id='Romance'  value='o'>
+  <input type='hidden' name='Romance'  id='Romance'  value='n'>
  <input type='hidden' name='returnMsg'  id='returnMsg' >
 <div class="form-body">
 
@@ -283,6 +283,9 @@ jQuery(document).ready(function() {
     	$('#tab_1_1').addClass("tab-pane fade"); 
    		$('#tab_1_2').removeClass("tab-pane fade "); 
     	$('#tab_1_2').addClass("tab-pane fade active in"); 
+    	$('#Romance').val('o');
+    }else{
+    	$('#Romance').val('n');
     }
     
    
@@ -333,6 +336,18 @@ jQuery(document).ready(function() {
 				});   
 	});
 
+   
+   $('#OEmployeeNo').change(function(){  
+	     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+		 $('#OEmployee').select2('val',p1);    
+	   }) 
+	   $('#OEmployee').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+				 	$('#OEmployeeNo').select2('val',p1);    
+				 
+				   })
+	   
+   
 });
 
 
@@ -366,17 +381,49 @@ function    updateUnit(){
 	 });
 	 
 } 
-function   SaveRomance(n){  
-	$('#Romance').val(n);
-}  
+
+
 
  function  SaveData(){  
 	 
 	  if($('#Romance').val()=='o'){
+		  if($('#OEmail').val()==''){
+			  layer.msg('请填写电子邮件');  
+			  return;
+		  }
+		  if($('#OEmployeeNo').val()=='0'){
+			  layer.msg('请选择主管工号');  
+			  return;
+		  }
 		ActionForm.act.value='SaveO'; 
 		ActionForm.submit();   
 	}
 	 if($('#Romance').val()=='n'){
+		 
+		 if($('#NEmail').val()==''){
+			  layer.msg('请填写电子邮件');  
+			  return;
+		  }
+		  if($('#NEmployeeNo').val()==''){
+			  layer.msg('请填写主管工号');  
+			  return;
+		  }
+		  if($('#NDepartment').val()=='0'){
+			  layer.msg('请选择部门');  
+			  return;
+		  }
+		  if($('#NUnit').val()=='0'){
+			  layer.msg('请选择单位');  
+			  return;
+		  }
+		  if($('#NEmployee').val()==''){
+			  layer.msg('请填写主管姓名');  
+			  return;
+		  }
+		  if($('#NDutes').val()==''){
+			  layer.msg('请填写职称');  
+			  return;
+		  }
 		ActionForm.act.value='SaveN'; 
 		ActionForm.submit();   
 	}
@@ -393,6 +440,11 @@ function   SaveRomance(n){
 		ActionForm.submit();   
 	}
 }
+ 
+ 
+ function   SaveRomance(n){  
+		$('#Romance').val(n);
+	}  
  
 </script> 
 <!-- END JAVASCRIPTS -->

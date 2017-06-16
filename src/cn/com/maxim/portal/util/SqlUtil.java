@@ -11,10 +11,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import cn.com.maxim.portal.attendan.ro.dayReportRO;
+import cn.com.maxim.portal.attendan.ro.editProcessRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.editDeptUnit;
 import cn.com.maxim.portal.attendan.vo.editLholidayVO;
 import cn.com.maxim.portal.attendan.vo.editLreasonsVO;
+import cn.com.maxim.portal.attendan.vo.editProcessVO;
 import cn.com.maxim.portal.attendan.vo.editStopReasonVO;
 import cn.com.maxim.portal.attendan.vo.editSupervisorVO;
 import cn.com.maxim.portal.attendan.vo.editSupplementVO;
@@ -606,7 +608,12 @@ public class SqlUtil
 	public static final String setOvertimeS()
 	{
 
-		StringBuilder Sb = new StringBuilder(" INSERT INTO VN_OVERTIME_S	 ").append(" (M_ID,EP_ID, ").append(" APPLICATION_HOURS,OVERTIME_START, ").append(" OVERTIME_END,REASONS, ").append(" UNIT,NOTE ,STATUS,SAVETIME,USERREASONS,submitDate,TURN) ").append("  VALUES(?,?,?,?,?,?,?,?,?,getdate(),?,?,?) ");
+		StringBuilder Sb = new StringBuilder(" INSERT INTO VN_OVERTIME_S	 ")
+				.append(" (M_ID,EP_ID, ")
+				.append(" APPLICATION_HOURS,OVERTIME_START, ")
+				.append(" OVERTIME_END,REASONS, ")
+				.append(" UNIT,NOTE ,STATUS,SAVETIME,USERREASONS,submitDate,TURN) ")
+				.append("  VALUES(?,?,?,?,?,?,?,?,?,getdate(),?,?,?) ");
 
 		return Sb.toString();
 	}
@@ -708,7 +715,7 @@ public class SqlUtil
 		Sb.append("  select @Res = ");
 		Sb.append("  case  when (   (  SELECT  sum( convert(float,APPLICATION_HOURS)) as maxah FROM VN_OVERTIME_S WHERE EP_ID=" + ID + " ");
 	//	Sb.append("   and STATUS IN ('RD','U','B','D','L','M') ");/** 已通過加班 **/
-		Sb.append("   and DATEPART(yyyy,OVERTIME_START) ='" + yyyy + "' and DATEPART ( mm ,OVERTIME_START )='" + mm + "' )    >=   (select VALUE from VN_CONFIG where [key]='CTIME')");
+		Sb.append("   and DATEPART(yyyy,OVERTIME_START) ='" + yyyy + "' and DATEPART ( mm ,OVERTIME_START )='" + mm + "' )    >   (select VALUE from VN_CONFIG where [key]='CTIME')");
 		Sb.append("    )  then '1' else '0' end  select @Res as flag ");
 		return Sb.toString();
 	}
@@ -3404,4 +3411,135 @@ public class SqlUtil
 		sql = sql.replace("<Email/>", edVo.getOEmail());
 		return sql;
 	}
+	
+	/**
+	 * 查詢現有主管email資料
+	 */
+	
+	public static final String queryEmpLeverTrue(editSupervisorVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryEmpLeverTrue);
+		sql = sql.replace("<ROLE/>", edVo.getORole());
+		return sql;
+	}
+	/**
+	 * 查詢此時段是否有加班時間
+	 */
+	public static final String getOvertimeSCount(overTimeVO otVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getOvertimeSCount);
+		sql = sql.replace("<OTS/>", otVo.getQueryDate()+" "+otVo.getStartTimeHh()+":"+otVo.getStartTimemm());
+		sql = sql.replace("<OTE/>", otVo.getQueryDate()+" "+otVo.getEndTimeHh()+":"+otVo.getEndTimemm());
+		sql = sql.replace("<EMPID/>", otVo.getSearchEmployeeNo());
+		return sql;
+	}
+	
+	/**
+	 * 建立不需打卡主管資料
+	 */
+	public static final String InsterNewEmp(editSupervisorVO otVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_InsterNewEmp);
+		sql = sql.replace("<ID/>", UUIDUtil.generateShortUuid());
+		sql = sql.replace("<EMPLOYEENO/>", otVo.getNEmployeeNo());
+		sql = sql.replace("<EMPLOYEE/>", otVo.getNEmployee());
+		sql = sql.replace("<UNIT_ID/>", otVo.getNUnit());
+		sql = sql.replace("<DEPARTMENT_ID/>", otVo.getNDepartment());
+		sql = sql.replace("<VIETNAMESE/>",otVo.getNVietnamese() );
+		sql = sql.replace("<ENTRYDATE/>", otVo.getNEntryDate());
+		sql = sql.replace("<DUTIES/>", otVo.getNDutes());
+		sql = sql.replace("<ROLE/>", otVo.getNRole());
+		sql = sql.replace("<Email/>", otVo.getNEmail());
+		return sql;
+	}
+	/**
+	 * 查詢員工有無相同工號 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String getEmpNoCount(editSupervisorVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getEmpNoCount);
+		sql = sql.replace("<EMPNO>", edVo.getNEmployeeNo());
+		return sql;
+	}
+	/**
+	 * 查詢不需打卡主管
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String getEmpNoData(editSupervisorVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getEmpNoData);
+		if(!edVo.getNRole().equals("0")){
+			sql = sql.replace("<ROLE/>", "  and ROLE='"+edVo.getNRole()+"' ");
+		}else{
+			sql = sql.replace("<ROLE/>", "   ");
+		}
+		return sql;
+	}
+	
+	/**
+	 * 刪除不需打卡主管資料
+	 */
+	public static final String deleteNewEmp(editSupervisorVO otVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_deleteEmpNoData);
+		sql = sql.replace("<ID/>", otVo.getRowID());
+		return sql;
+	}
+	/**
+	 * 刪除不需打卡主管資料 關連表
+	 */
+	public static final String deleteEmpUnit(editSupervisorVO otVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_deleteEmpUnit);
+		sql = sql.replace("<EMPNO/>", otVo.getOEmployeeNo());
+		return sql;
+	}
+	
+	/**
+	 * 刪除不需打卡主管資料 關連表
+	 */
+	public static final String getEmpDUdata(String Role) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getEmpDUdata);
+		sql = sql.replace("<ROLE>", Role);
+		return sql;
+	}
+	
+	/**
+	 * 刪除不需打卡主管資料 關連表
+	 */
+	public static final String insterDeptLerveRole(editProcessRO ep) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_InsterDeptLerveRole);
+		sql = sql.replace("<ID/>", UUIDUtil.generateShortUuid());
+		sql = sql.replace("<DEPT/>", ep.getDept());
+		sql = sql.replace("<UNIT>",  ep.getUnit());
+		sql = sql.replace("<ROLE/>", ep.getRole());
+		sql = sql.replace("<STATUS>", ep.getStatus());
+		sql = sql.replace("<SINGROLEL1>", ep.getSingRoleL1());
+		sql = sql.replace("<SINGROLEL2>", ep.getSingRoleL2());
+		sql = sql.replace("<SINGROLEL3>", ep.getSingRoleL3());
+		sql = sql.replace("<SINGROLEL4>", ep.getSingRoleL4());
+		sql = sql.replace("<SINGROLEL1EP>", ep.getSingRoleL1EP());
+		sql = sql.replace("<SINGROLEL2EP>", ep.getSingRoleL2EP());
+		sql = sql.replace("<SINGROLEL3EP>", ep.getSingRoleL3EP());
+		sql = sql.replace("<SINGROLEL4EP>", ep.getSingRoleL4EP());
+		return sql;
+	}
+	
+	
 }

@@ -113,5 +113,7 @@ public class keyConts
 	  public static final String monthReportT="T";
 	  /**月報表待工**/
 	  public static final String monthReportW="W";
+	  /**工作流程未選擇**/
+	  public static final String msgZ= "無";
 	 
 }

@@ -46,4 +46,6 @@ public class htmlConsts
 	  public static final String html_ad_editProcess="/cn/com/maxim/portal/html/ad_editProcess.html";
 	  public static final String html_ad_editDeptUnit="/cn/com/maxim/portal/html/ad_editDeptUnit.html";
 	  public static final String html_editSupervisor="/cn/com/maxim/portal/html/rev_editSupervisor.html";
+	  /**測試用 帳號切換人員**/
+	  public static final String html_changeEmp="/cn/com/maxim/portal/html/ts_changeEmp.html";
 }

@@ -57,7 +57,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 				if (actText.equals("QUE"))
 				{
 					lcVo.setShowDataTable(true);
-					showHtml(con, out, lcVo, UserInformation);
+					showHtml(con, out, lcVo, UserInformation,request);
 				}
 				// 請假退回
 				if (actText.equals("DR"))
@@ -70,7 +70,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 					}
 
 					lcVo.setShowDataTable(true);
-					showHtml(con, out, lcVo, UserInformation);
+					showHtml(con, out, lcVo, UserInformation,request);
 				}
 				// 部门主管通過
 				if (actText.equals("D"))
@@ -86,7 +86,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 						lcVo.setMsg(keyConts.okMsg);
 					}
 
-					showHtml(con, out, lcVo, UserInformation);
+					showHtml(con, out, lcVo, UserInformation,request);
 				}
 				// 提交狀態主管通過
 				if (actText.equals("U"))
@@ -102,7 +102,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 						lcVo.setMsg(keyConts.okMsg);
 					}
 
-					showHtml(con, out, lcVo, UserInformation);
+					showHtml(con, out, lcVo, UserInformation,request);
 				}
 			}
 			else
@@ -120,7 +120,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 				lcVo.setStartLeaveDate(DateUtil.NowDate());
 				lcVo.setEndLeaveDate(DateUtil.NowDate());
 				lcVo.setNote("");
-				showHtml(con, out, lcVo, UserInformation);
+				showHtml(con, out, lcVo, UserInformation,request);
 
 			}
 		}
@@ -209,11 +209,11 @@ public class dem_LeaveCard extends TemplatePortalPen
 	 	}
 	}
 
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo, UserDescriptor UserInformation) throws SQLException
+	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo, UserDescriptor UserInformation,HttpServletRequest request) throws SQLException
 	{
 		HtmlUtil hu = new HtmlUtil();
-		employeeUserRO eo = new employeeUserRO();
-		List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);		
+		
+		List<employeeUserRO> lro=getUser(con,UserInformation,request);
 
 		String htmlPart1 = hu.gethtml(htmlConsts.html_dem_LeaveCard);
 		htmlPart1=htmlPart1.replace("<hiddenDepartmen/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
@@ -237,4 +237,25 @@ public class dem_LeaveCard extends TemplatePortalPen
 
 		out.println(htmlPart1);
 	}
+	
+	 /**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
+	 }
 }

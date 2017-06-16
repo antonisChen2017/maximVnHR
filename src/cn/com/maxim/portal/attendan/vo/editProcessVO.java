@@ -43,7 +43,259 @@ public class editProcessVO implements Serializable
 	private String  ActionURI;
 	/**是否顯示查询結果*/
 	private boolean  showDataTable;
+	/**三天以下部門主管審核者職級*/
+	private String  oneDAuditorTitle;
+	/**三天以下部門主管審核者*/
+	private String  oneDAuditor;
+	/**三天以下部門主管代理審核職級*/
+	private String  oneDAgentTitle;
+	/**三天以下部門主管代理審核者*/
+	private String  oneDAgent;
+	/**三天以下經理審核者職級*/
+	private String  oneMAuditorTitle;
+	/**三天以下經理審核者*/
+	private String  oneMAuditor;
+	/**三天以下經理代理審核職級*/
+	private String  oneMAgentTitle;
+	/**三天以下經理代理審核者*/
+	private String  oneMAgent;
+	/**三天以上部門主管審核-经理*/
+	private String  threeDLever3;
+	/**三天以上部門主管審核-副总*/
+	private String  threeDLever4;
+	/**三天以上經理審核-副总*/
+	private String  threeMLever4;
+	/**三天以下一般員工審核者職級*/
+	private String  oneEAuditorTitle;
+	/**三天以下一般員工審核者*/
+	private String  oneEAuditor;
+	/**三天以下一般員工代理審核職級*/
+	private String  oneEAgentTitle;
+	/**三天以下一般員工代理審核者*/
+	private String  oneEAgent;
+	/**三天以下單位主管審核者職級*/
+	private String  oneUAuditorTitle;
+	/**三天以下單位主管審核者*/
+	private String  oneUAuditor;
+	/**三天以下經理代理審核職級*/
+	private String  oneUAgentTitle;
+	/**三天以下經理代理審核者*/
+	private String  oneUAgent;
+	/**三天以上一般員工審核-單位主管*/
+	private String  threeELever1;
+	/**三天以上一般員工審核-部門主管*/
+	private String  threeELever2;
+	/**三天以上一般員工審核-經理*/
+	private String  threeELever3;
+	/**三天以上一般員工審核-副總*/
+	private String  threeELever4;
+	/**三天以上單位主管審核-部門主管*/
+	private String  threeULever2;
+	/**三天以上單位主管審核-經理*/
+	private String  threeULever3;
+	/**三天以上單位主管審核-副總*/
+	private String  threeULever4;
 	
+	public String getOneDAuditorTitle()
+	{
+		return oneDAuditorTitle;
+	}
+	public void setOneDAuditorTitle(String oneDAuditorTitle)
+	{
+		this.oneDAuditorTitle = oneDAuditorTitle;
+	}
+	public String getOneDAuditor()
+	{
+		return oneDAuditor;
+	}
+	public void setOneDAuditor(String oneDAuditor)
+	{
+		this.oneDAuditor = oneDAuditor;
+	}
+	public String getOneDAgentTitle()
+	{
+		return oneDAgentTitle;
+	}
+	public void setOneDAgentTitle(String oneDAgentTitle)
+	{
+		this.oneDAgentTitle = oneDAgentTitle;
+	}
+	public String getOneDAgent()
+	{
+		return oneDAgent;
+	}
+	public void setOneDAgent(String oneDAgent)
+	{
+		this.oneDAgent = oneDAgent;
+	}
+	public String getOneMAuditorTitle()
+	{
+		return oneMAuditorTitle;
+	}
+	public void setOneMAuditorTitle(String oneMAuditorTitle)
+	{
+		this.oneMAuditorTitle = oneMAuditorTitle;
+	}
+	public String getOneMAuditor()
+	{
+		return oneMAuditor;
+	}
+	public void setOneMAuditor(String oneMAuditor)
+	{
+		this.oneMAuditor = oneMAuditor;
+	}
+	public String getOneMAgentTitle()
+	{
+		return oneMAgentTitle;
+	}
+	public void setOneMAgentTitle(String oneMAgentTitle)
+	{
+		this.oneMAgentTitle = oneMAgentTitle;
+	}
+	public String getOneMAgent()
+	{
+		return oneMAgent;
+	}
+	public void setOneMAgent(String oneMAgent)
+	{
+		this.oneMAgent = oneMAgent;
+	}
+	public String getThreeDLever3()
+	{
+		return threeDLever3;
+	}
+	public void setThreeDLever3(String threeDLever3)
+	{
+		this.threeDLever3 = threeDLever3;
+	}
+	public String getThreeMLever4()
+	{
+		return threeMLever4;
+	}
+	public void setThreeMLever4(String threeMLever4)
+	{
+		this.threeMLever4 = threeMLever4;
+	}
+	public String getOneEAuditorTitle()
+	{
+		return oneEAuditorTitle;
+	}
+	public void setOneEAuditorTitle(String oneEAuditorTitle)
+	{
+		this.oneEAuditorTitle = oneEAuditorTitle;
+	}
+	public String getOneEAuditor()
+	{
+		return oneEAuditor;
+	}
+	public void setOneEAuditor(String oneEAuditor)
+	{
+		this.oneEAuditor = oneEAuditor;
+	}
+	public String getOneEAgentTitle()
+	{
+		return oneEAgentTitle;
+	}
+	public void setOneEAgentTitle(String oneEAgentTitle)
+	{
+		this.oneEAgentTitle = oneEAgentTitle;
+	}
+	public String getOneEAgent()
+	{
+		return oneEAgent;
+	}
+	public void setOneEAgent(String oneEAgent)
+	{
+		this.oneEAgent = oneEAgent;
+	}
+	public String getOneUAuditorTitle()
+	{
+		return oneUAuditorTitle;
+	}
+	public void setOneUAuditorTitle(String oneUAuditorTitle)
+	{
+		this.oneUAuditorTitle = oneUAuditorTitle;
+	}
+	public String getOneUAuditor()
+	{
+		return oneUAuditor;
+	}
+	public void setOneUAuditor(String oneUAuditor)
+	{
+		this.oneUAuditor = oneUAuditor;
+	}
+	public String getOneUAgentTitle()
+	{
+		return oneUAgentTitle;
+	}
+	public void setOneUAgentTitle(String oneUAgentTitle)
+	{
+		this.oneUAgentTitle = oneUAgentTitle;
+	}
+	public String getOneUAgent()
+	{
+		return oneUAgent;
+	}
+	public void setOneUAgent(String oneUAgent)
+	{
+		this.oneUAgent = oneUAgent;
+	}
+	public String getThreeELever1()
+	{
+		return threeELever1;
+	}
+	public void setThreeELever1(String threeELever1)
+	{
+		this.threeELever1 = threeELever1;
+	}
+	public String getThreeELever2()
+	{
+		return threeELever2;
+	}
+	public void setThreeELever2(String threeELever2)
+	{
+		this.threeELever2 = threeELever2;
+	}
+	public String getThreeELever3()
+	{
+		return threeELever3;
+	}
+	public void setThreeELever3(String threeELever3)
+	{
+		this.threeELever3 = threeELever3;
+	}
+	public String getThreeELever4()
+	{
+		return threeELever4;
+	}
+	public void setThreeELever4(String threeELever4)
+	{
+		this.threeELever4 = threeELever4;
+	}
+	public String getThreeULever2()
+	{
+		return threeULever2;
+	}
+	public void setThreeULever2(String threeULever2)
+	{
+		this.threeULever2 = threeULever2;
+	}
+	public String getThreeULever3()
+	{
+		return threeULever3;
+	}
+	public void setThreeULever3(String threeULever3)
+	{
+		this.threeULever3 = threeULever3;
+	}
+	public String getThreeULever4()
+	{
+		return threeULever4;
+	}
+	public void setThreeULever4(String threeULever4)
+	{
+		this.threeULever4 = threeULever4;
+	}
 	public String getUnit()
 	{
 		return Unit;
@@ -171,6 +423,14 @@ public class editProcessVO implements Serializable
 	public void setSingRoleL4EP(String singRoleL4EP)
 	{
 		SingRoleL4EP = singRoleL4EP;
+	}
+	public String getThreeDLever4()
+	{
+		return threeDLever4;
+	}
+	public void setThreeDLever4(String threeDLever4)
+	{
+		this.threeDLever4 = threeDLever4;
 	}
 	
 	

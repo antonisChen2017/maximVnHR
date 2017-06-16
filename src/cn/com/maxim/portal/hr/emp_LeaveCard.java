@@ -58,11 +58,11 @@ public class emp_LeaveCard extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					
 					if (actText.equals("SwTime")) {
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					
 					if (actText.equals("Save")) {
@@ -99,7 +99,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 							}
 							lcVo.setShowDataTable(true);
 						}
-						showHtml(con, out,  lcVo,UserInformation);
+						showHtml(con, out,  lcVo,UserInformation,request);
 						
 					}
 					if (actText.equals("Delete")) {
@@ -116,14 +116,14 @@ public class emp_LeaveCard extends TemplatePortalPen
 							logger.info("請假卡 部门人員申請/Delete  刪除失敗!");
 						}
 					
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 部门人員申請/Refer  " +lcVo.toString());
 						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID")), con);
 						lcVo.setShowDataTable(true);
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 						
 					}
 					if (actText.equals("Update"))//送交
@@ -135,7 +135,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 						lcVo.setShowDataTable(true);
 						lcVo.setRowID(rowID);
 						lcVo=SharedCode(con,lcVo);
-						showHtml(con, out,  lcVo,UserInformation);	
+						showHtml(con, out,  lcVo,UserInformation,request);
 					}
 					
 				}else{
@@ -158,7 +158,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 					lcVo.setEndLeaveDate(DateUtil.NowDate());
 					lcVo.setNote("");
 					lcVo.setRowID("0");
-					showHtml(con, out, lcVo,UserInformation);
+					showHtml(con, out, lcVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -223,11 +223,10 @@ public class emp_LeaveCard extends TemplatePortalPen
 		 
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation) throws Exception {
-			employeeUserRO eo=new employeeUserRO();
+	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
 			
-			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserInformation.getUserName()));
-			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
+			
+			List<employeeUserRO> lro= getUser(con,UserInformation,request);
 		
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_emp_LeaveCard);
@@ -297,4 +296,26 @@ public class emp_LeaveCard extends TemplatePortalPen
 		
 			 return lcVo;
 		 }
+		 /**
+		  * 切換成員
+		  * @param con
+		  * @param UserInformation
+		  * @param request
+		  * @return
+		  */
+		 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+			 	employeeUserRO eo=new employeeUserRO();
+				String UserName="";
+				String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+				if(employeeNoSys!=null && !employeeNoSys.equals("")){
+						UserName=employeeNoSys;				
+				}else{
+						UserName=UserInformation.getUserName();
+				}
+				logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+				List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+				return lro;
+		 }
+		 
+		 
 }

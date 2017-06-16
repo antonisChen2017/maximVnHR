@@ -61,7 +61,7 @@ public class WebDBTableCL extends WebDBTableEx
 	}
 
 	/**
-	 * 請假卡TABLE
+	 * 待工
 	 * 
 	 * @param out
 	 * @param NoRowMessage

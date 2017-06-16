@@ -394,10 +394,20 @@ public class DBUtil
 		String mm = otVo.getQueryDate().split("/")[1];
 		String flag = DBUtil.queryExceedMonthOverTime(SqlUtil.getAPPhoursflag(otVo.getSearchEmployeeNo(), yyyy, mm), con);
 		logger.info("saveOvertime flag:"+flag);
+		/**檢查是否同時段已有加班**/
+		String count = DBUtil.queryDBField(con,SqlUtil.getOvertimeSCount(otVo), "count");
+		if(Integer.valueOf(count)>0)
+		{
+			flag="2";
+		}
 		
 		if (flag.equals("1"))
 		{
-			msg = "超過每月規定加班時數";
+			msg = "超过每月规定加班时数";
+			logger.info("saveOvertime msg:"+msg);
+		}else if (flag.equals("2"))
+		{
+			msg = "已有相同时间段加班";
 			logger.info("saveOvertime msg:"+msg);
 		}else{
 				String resultID = "";
@@ -429,20 +439,20 @@ public class DBUtil
 							if (otVo.isOverTimeSave())
 							{
 								updateSql(SqlUtil.updateMonthOverTims(flag, SID), con);
-								msg = "已新增加班申請單";
+								msg = "已新增加班申请单";
 							}
 							else
 							{
 								    DBUtil.delDBTableRow(SqlUtil.delOvertimeM(resultID), con);
 									DBUtil.delDBTableRow(SqlUtil.delOvertimeS(SID), con);
-									msg = "超過每月規定加班時數";
+									msg = "超过每月规定加班时数";
 							
 							}
 						}
 						else
 						{
 							updateSql(SqlUtil.updateMonthOverTims(flag, SID), con);
-							msg = "已新增加班申請單";
+							msg = "已新增加班申请单";
 						}
 		
 					}
@@ -474,21 +484,21 @@ public class DBUtil
 						if (otVo.isOverTimeSave())
 						{
 							updateSql(SqlUtil.updateMonthOverTims(flag, SID), con);
-							msg = "已新增加班申請單";
+							msg = "已新增加班申请单";
 						}
 						else
 						{
 						
 						
 							    DBUtil.delDBTableRow(SqlUtil.delOvertimeS(SID), con);
-								msg = "超過每月規定加班時數";
+								msg = "超过每月规定加班时数";
 							
 						}
 					}
 					else
 					{
 						updateSql(SqlUtil.updateMonthOverTims(flag, SID), con);
-						msg = "已新增加班申請單";
+						msg = "已新增加班申请单";
 					}
 		
 				}

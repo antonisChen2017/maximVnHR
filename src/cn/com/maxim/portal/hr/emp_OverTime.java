@@ -57,7 +57,7 @@ public class emp_OverTime extends TemplatePortalPen
 					if (actText.equals("QUE")) {
 						otVo.setShowDataTable(true);
 						request.getSession().setAttribute("eotEdit","QUE");
-						showHtml(con, out, otVo,UserInformation);
+						showHtml(con, out, otVo,UserInformation,request);
 					}
 					
 				
@@ -69,9 +69,9 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setOverTimeSave(false);
 						// 儲存db
 						String msg="";
-						String dotEdit=( String)request.getSession().getAttribute("dotEdit");
+						String eotEdit=( String)request.getSession().getAttribute("eotEdit");
 						
-						if(dotEdit.equals("Update")){
+						if(eotEdit.equals("Update")){
 							logger.info("updateEmpOverTime : " +SqlUtil.updateEmpOverTime(otVo));
 							boolean flag =DBUtil.updateSql(SqlUtil.updateEmpOverTime(otVo), con);
 							if(flag){
@@ -85,7 +85,7 @@ public class emp_OverTime extends TemplatePortalPen
 						}
 						
 						request.getSession().setAttribute("eotEdit","Save");
-						showHtml(con, out,  otVo,UserInformation);
+						showHtml(con, out,  otVo,UserInformation,request);
 						
 					}
 					if (actText.equals("Delete")) {
@@ -97,7 +97,7 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已刪除");
 						request.getSession().setAttribute("eotEdit","Delete");
-						showHtml(con, out, otVo,UserInformation);
+						showHtml(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("Refer"))//送交
 					{
@@ -107,7 +107,7 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已送交");
 						request.getSession().setAttribute("eotEdit","Refer");
-						showHtml(con, out, otVo,UserInformation);
+						showHtml(con, out, otVo,UserInformation,request);
 						
 					}
 					if (actText.equals("Update"))//送交
@@ -120,7 +120,7 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setRowID(rowID);
 						otVo=SharedCode(con,otVo);
 						request.getSession().setAttribute("eotEdit","Update");
-						showHtml(con, out,  otVo,UserInformation);	
+						showHtml(con, out,  otVo,UserInformation,request);
 					}
 					
 				}else{
@@ -142,7 +142,8 @@ public class emp_OverTime extends TemplatePortalPen
 					otVo.setQueryDate(DateUtil.NowDate());
 					otVo.setUserReason("");
 					otVo.setRowID("0");
-					showHtml(con, out, otVo,UserInformation);
+					request.getSession().setAttribute("eotEdit","");
+					showHtml(con, out, otVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -220,12 +221,12 @@ public class emp_OverTime extends TemplatePortalPen
 	 	}
 	 }
 	 
-	private void showHtml(Connection con, PrintWriter out, overTimeVO otVo , UserDescriptor UserInformation) throws SQLException {
+	private void showHtml(Connection con, PrintWriter out, overTimeVO otVo , UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_emp_OverTime);
 			employeeUserRO eo=new employeeUserRO();
-			logger.info("getEmployeeNODate : "+SqlUtil.getEmployeeNODate(UserInformation.getUserName()));
-			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
+			
+			List<employeeUserRO> lro=getUser(con,UserInformation,request);
 			otVo.setSearchEmployeeNo(lro.get(0).getID());
 			otVo.setSearchEmployee(lro.get(0).getID());
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
@@ -288,5 +289,26 @@ public class emp_OverTime extends TemplatePortalPen
 			otVo.setEndTimemm(overTimeEndds[1]);
 			
 		 return otVo;
+	 }
+	 
+	 /**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
 	 }
 }

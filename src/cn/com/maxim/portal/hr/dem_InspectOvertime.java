@@ -57,14 +57,14 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 						//out.write(HtmlUtil.drawTableS(
 						//		SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
 						otVo.setShowDataTable(true);
-						setHtmlPart(con, out, otVo,UserInformation);
+						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("D")) {
 			
 						logger.info("加班申請單 部门主管審核/D : " + otVo.toString());
 						DBUtil.updateTimeOverSStatus("UD", request.getParameter("rowID"), con);
 						otVo.setShowDataTable(true);
-						setHtmlPart(con, out, otVo,UserInformation);
+						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("U")) {
 						
@@ -72,7 +72,7 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 						DBUtil.updateTimeOverSStatus("D", request.getParameter("rowID"), con);
 						otVo.setShowDataTable(true);
 						// 輸出查询UI
-						setHtmlPart(con, out, otVo,UserInformation);
+						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("R")) {
 						logger.info("加班申請單 審核/R: " +otVo.toString());		
@@ -84,7 +84,7 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 					//	out.write(HtmlUtil.drawTableS(
 							//	SqlUtil.getOvertimeNoSave(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageInspect));
 						otVo.setShowDataTable(true);
-						setHtmlPart(con, out, otVo,UserInformation);
+						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
 				}else{
 					otVo.setSearchDepartmen("0");
@@ -95,7 +95,7 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 					otVo.setStartQueryDate(DateUtil.NowDate());
 					otVo.setEndQueryDate(DateUtil.NowDate());
 					otVo.setQueryDate(DateUtil.NowDate());
-					setHtmlPart(con, out,otVo,UserInformation);
+					setHtmlPart(con, out,otVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -198,11 +198,11 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 		return APSelector.toString();
 	}
 	
-	private void setHtmlPart(Connection con, PrintWriter out, overTimeVO otVo,UserDescriptor UserInformation) throws SQLException {
+	private void setHtmlPart(Connection con, PrintWriter out, overTimeVO otVo,UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_dem_InspectOvertime);
-			employeeUserRO eo = new employeeUserRO();
-			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);		
+
+			List<employeeUserRO> lro=getUser(con,UserInformation,request);
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
 			htmlPart1=htmlPart1.replace("<hiddenDepartmen/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
 			htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	HtmlUtil.getLabelHtml(lro.get(0).getDEPARTMENT()));
@@ -223,4 +223,26 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 			}
 			out.println(htmlPart1);
 	}
+	
+	
+	 /**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
+	 }
 }

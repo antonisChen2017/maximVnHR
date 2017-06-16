@@ -48,7 +48,7 @@ public class emp_StopWorking extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						swVo.setShowDataTable(true);
-						showHtml(con, out, swVo,UserInformation);
+						showHtml(con, out, swVo,UserInformation,request);
 					}
 					if (actText.equals("Save")) {
 						logger.info("個人申請加班/Save : " +swVo.toString());
@@ -57,7 +57,7 @@ public class emp_StopWorking extends TemplatePortalPen
 						String msg=DBUtil.saveStopWorking(swVo , con);
 						swVo.setMsg(msg);
 					
-						showHtml(con, out,  swVo,UserInformation);
+						showHtml(con, out,  swVo,UserInformation,request);
 						
 					}
 					if (actText.equals("Delete")) {
@@ -72,7 +72,7 @@ public class emp_StopWorking extends TemplatePortalPen
 							swVo.setMsg("刪除失敗!");
 						}
 					
-						showHtml(con, out, swVo,UserInformation);
+						showHtml(con, out, swVo,UserInformation,request);
 					}
 				}else{
 					//預設
@@ -90,7 +90,7 @@ public class emp_StopWorking extends TemplatePortalPen
 					swVo.setEndTimemm("0");
 				
 					swVo.setNote("");
-					showHtml(con, out, swVo,UserInformation);
+					showHtml(con, out, swVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -156,12 +156,12 @@ public class emp_StopWorking extends TemplatePortalPen
 	 	}
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out, stopWorkVO swVo , UserDescriptor UserInformation) throws SQLException {
+	private void showHtml(Connection con, PrintWriter out, stopWorkVO swVo , UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
 		HtmlUtil hu=new HtmlUtil();
 		String htmlPart1=hu.gethtml(htmlConsts.html_emp_StopWorking);
 		employeeUserRO eo=new employeeUserRO();
-		logger.info("getEmployeeNODate : "+SqlUtil.getEmployeeNODate(UserInformation.getUserName()));
-		List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
+
+		List<employeeUserRO> lro=getUser(con,UserInformation,request);
 		
 		htmlPart1=htmlPart1.replace("<ActionURI/>", 	swVo.getActionURI());
 		htmlPart1=htmlPart1.replace("<SearchUnit/>",HtmlUtil.getLabelHtml(lro.get(0).getUNIT()));
@@ -171,7 +171,7 @@ public class emp_StopWorking extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<hiddenUnit/>",ControlUtil.drawHidden(lro.get(0).getUID(), "searchUnit"));	
 		htmlPart1=htmlPart1.replace("<hiddenUser/>",ControlUtil.drawHidden(lro.get(0).getID(), "searchEmployeeNo"));	
 		htmlPart1=htmlPart1.replace("<hiddenEmployeeNo/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));
-		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	UserInformation.getUserEmployeeNo());
+		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	lro.get(0).getDEPARTMENT());
 		
 		htmlPart1=htmlPart1.replace("<searchReasons/>",ControlUtil.drawChosenSelect(con, "searchReasons", "VN_STOPWORKRESON", "ID", "STOPRESON", null, swVo.getSearchReasons(),false,null));
 		htmlPart1=htmlPart1.replace("<addDay/>",HtmlUtil.getSpinnerDiv("addDay",swVo.getAddDay(),keyConts.spinnerDayMax,keyConts.spinnerDayMin,keyConts.spinnerDayStep));
@@ -194,5 +194,26 @@ public class emp_StopWorking extends TemplatePortalPen
 		
 	    out.println(htmlPart1);
 	    }
+	
+	 /**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
+	 }
 }
 

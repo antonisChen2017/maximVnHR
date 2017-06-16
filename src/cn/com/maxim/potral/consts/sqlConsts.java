@@ -77,14 +77,35 @@ public class sqlConsts
 	public static final String sql_updateHREmployee="/cn/com/maxim/portal/sql/updateHREmployee.sql";
 	public static final String sql_changeHrEmployee="/cn/com/maxim/portal/sql/changeHrEmployee.sql";
 	public static final String sql_checkMonthMark="/cn/com/maxim/portal/sql/checkMonthMark.sql";
+	/** 刪除單位**/
 	public static final String sql_deleteUnit="/cn/com/maxim/portal/sql/deleteUnit.sql";
 	public static final String sql_updateUnitData="/cn/com/maxim/portal/sql/updateUnitData.sql";
-	public static final String sql_InsterUnit="/cn/com/maxim/portal/sql/InsterUnit.sql";
+	/** 建立單位**/
+	public static final String sql_InsterUnit="/cn/com/maxim/portal/sql/InsterUnit.sql";	
 	public static final String sql_getUnitDeptCount="/cn/com/maxim/portal/sql/getUnitDeptCount.sql";
 	public static final String sql_InsterDept="/cn/com/maxim/portal/sql/InsterDept.sql";
 	public static final String sql_deleteDept="/cn/com/maxim/portal/sql/deleteDept.sql";
 	public static final String sql_updateDept="/cn/com/maxim/portal/sql/updateDept.sql";
 	public static final String sql_getDeptIDCount="/cn/com/maxim/portal/sql/getDeptIDCount.sql";
 	public static final String sql_updateHROEmail="/cn/com/maxim/portal/sql/updateHROEmail.sql";
+	public static final String sql_queryEmpLeverTrue="/cn/com/maxim/portal/sql/queryEmpLeverTrue.sql";
+	/** 查詢加班有無相同時段**/
+	public static final String sql_getOvertimeSCount="/cn/com/maxim/portal/sql/getOvertimeSCount.sql";
+	/** 新增不需打卡主管**/
+	public static final String sql_InsterNewEmp="/cn/com/maxim/portal/sql/InsterNewEmp.sql";
+	/** 查詢員工有無相同工號**/
+	public static final String sql_getEmpNoCount="/cn/com/maxim/portal/sql/getEmpNoCount.sql";
+	/** 查詢不需打卡主管資料**/
+	public static final String sql_getEmpNoData="/cn/com/maxim/portal/sql/getEmpNoData.sql";
+	/** 刪除不需打卡主管資料**/
+	public static final String sql_deleteEmpNoData="/cn/com/maxim/portal/sql/deleteEmpNoData.sql";
+	/** 刪除不需打卡主管關聯資料**/
+	public static final String sql_deleteEmpUnit="/cn/com/maxim/portal/sql/deleteEmpUnit.sql";
+	/** 下拉選單選擇角色 部門/單位/人名**/
+	public static final String sql_getEmpDUdata="/cn/com/maxim/portal/sql/getEmpDUdata.sql";
+	/** 新增請假加班流程**/
+	public static final String sql_InsterDeptLerveRole="/cn/com/maxim/portal/sql/InsterDeptLerveRole.sql";
+	
+	
 	
 }

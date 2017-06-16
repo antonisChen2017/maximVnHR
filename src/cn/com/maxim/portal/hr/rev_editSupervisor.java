@@ -14,6 +14,7 @@ import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.vo.editDeptUnit;
 import cn.com.maxim.portal.attendan.vo.editSupervisorVO;
+import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
@@ -38,8 +39,6 @@ public class rev_editSupervisor extends TemplatePortalPen
 	public void drawPanel(HttpServletRequest request, HttpServletResponse response, UserDescriptor UserInformation, PrintWriter out, String ActionURI, Connection con)
 	{
 		String actText = request.getParameter("act");
-	
-
 		editSupervisorVO edVo = new editSupervisorVO();
 		edVo.setActionURI(ActionURI);
 		logger.info("actText :"+actText);	
@@ -66,9 +65,24 @@ public class rev_editSupervisor extends TemplatePortalPen
 				// 增加編輯新主管資料
 				if (actText.equals("SaveN"))
 				{
-					
+					//檢查是否有工號
+					int COUNT=Integer.valueOf(DBUtil.queryDBField(con,SqlUtil.getEmpNoCount(edVo), "COUNT"));
+					if(COUNT==0){
+						DBUtil.updateSql(SqlUtil.InsterNewEmp(edVo), con);
+						leaveCardVO lcVo=new leaveCardVO();
+						lcVo.setSearchEmployee(edVo.getNEmployeeNo());
+						lcVo.setSearchEmployeeNo(edVo.getNEmployeeNo());
+						lcVo.setSearchUnit(edVo.getNUnit());
+						lcVo.setSearchUnit(edVo.getNDepartment());
+						lcVo.setSearchRole(edVo.getNRole());
+						DBUtil.updateSql(SqlUtil.saveEmployUnit(lcVo), con) ;
+						DBUtil.updateRole(con,lcVo);
+						edVo.setMsg(keyConts.saveOK);
+					}else{
+						edVo.setMsg("已有相同工号");
+					}
+					//建立資料
 					edVo.setShowDataTable(true);
-					edVo.setMsg("增加編輯新主管資料");
 					edVo.setTab("n");
 					showHtml(con, out, edVo, UserInformation);
 				}
@@ -77,22 +91,24 @@ public class rev_editSupervisor extends TemplatePortalPen
 				{
 					
 					edVo.setShowDataTable(true);
-					//edVo.setMsg("進入刪除流程");
-				
-				
-					edVo.setMsg("查詢原資料庫主管資料");
+					//edVo.setMsg("查詢原資料庫主管資料");
 					edVo.setTab("o");
 					showHtml(con, out, edVo, UserInformation);
 				}
 				//查詢編輯新主管資料
 				if (actText.equals("QueryN"))
 				{
-					
 					edVo.setShowDataTable(true);
-					//edVo.setMsg("進入刪除流程");
-					//logger.info("getUrowID "+UrowID);	
+					edVo.setTab("n");
+					showHtml(con, out, edVo, UserInformation);
+				}
 				
-					edVo.setMsg("查詢編輯新主管資料");
+				if (actText.equals("Delete"))
+				{
+					DBUtil.updateSql(SqlUtil.deleteNewEmp(edVo), con);
+					DBUtil.updateSql(SqlUtil.deleteEmpUnit(edVo), con);
+					edVo.setMsg(keyConts.editOK);
+					edVo.setShowDataTable(true);
 					edVo.setTab("n");
 					showHtml(con, out, edVo, UserInformation);
 				}
@@ -108,9 +124,11 @@ public class rev_editSupervisor extends TemplatePortalPen
 				edVo.setOEmployee("0");
 				edVo.setORole("0");
 				edVo.setNRole("0");
+				edVo.setNVietnamese("");
+				edVo.setNDutes("");
 				edVo.setTab("n");
 				edVo.setNEntryDate(DateUtil.NowDate());
-				edVo.setShowDataTable(true);
+				edVo.setShowDataTable(false);
 				showHtml(con, out, edVo, UserInformation);
 
 			}
@@ -188,24 +206,27 @@ public class rev_editSupervisor extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<NDepartment/>", 	ControlUtil.drawChosenSelect(con, "NDepartment", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,edVo.getNDepartment(),false,null));
 		htmlPart1=htmlPart1.replace("<NUnit/>",ControlUtil.drawChosenSelect(con,  "NUnit", "VN_UNIT", "ID", "UNIT", " ID='0' ", edVo.getNUnit(),false,null));
 		htmlPart1=htmlPart1.replace("<NEmployee/>",HtmlUtil.getTextDiv("NEmployee",edVo.getNEmployee(),"必要输入" ));
-		htmlPart1=htmlPart1.replace("<NEmployeeNo/>",HtmlUtil.getTextDiv("NEmployeeNO",edVo.getNEmployeeNo(),"必要输入" ));
-		htmlPart1=htmlPart1.replace("<NDutes/>",HtmlUtil.getTextDiv("NDutes",edVo.getNEmployee(),"必要输入" ));
+		htmlPart1=htmlPart1.replace("<NEmployeeNo/>",HtmlUtil.getTextDiv("NEmployeeNo",edVo.getNEmployeeNo(),"必要输入" ));
+		htmlPart1=htmlPart1.replace("<NDutes/>",HtmlUtil.getTextDiv("NDutes",edVo.getNDutes(),"必要输入" ));
 		htmlPart1=htmlPart1.replace("<NEntryDate/>",HtmlUtil.getDateDiv("NEntryDate", edVo.getNEntryDate()));
-		htmlPart1=htmlPart1.replace("<NVietnamese/>",HtmlUtil.getTextDiv("NVietnamese",edVo.getNEmployee(),"非必要输入" ));
+		htmlPart1=htmlPart1.replace("<NVietnamese/>",HtmlUtil.getTextDiv("NVietnamese",edVo.getNVietnamese(),"非必要输入" ));
 		htmlPart1=htmlPart1.replace("<NEmail/>",HtmlUtil.getEmailDiv("NEmail",edVo.getNEmail(),"必要输入" ));
 		htmlPart1=htmlPart1.replace("<tab/>",edVo.getTab());
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(edVo.getMsg()));
 		if (edVo.isShowDataTable())
 		{
-		if(edVo.getOEmail().equals("o")){
-			//logger.info("UnitSQL :"+SqlUtil.getVnUnit(edVo));	
-			//	htmlPart1 = htmlPart1.replace("<drawTableU/>",
-			//			HtmlUtil.drawTableEditT(SqlUtil.getVnUnit(edVo), 
-			//					HtmlUtil.drawTableMcheckButton(), con, out, keyConts.ColUnit));
-		}
-		if(edVo.getOEmail().equals("n")){
-			
-		}
+			if(edVo.getTab().equals("o")){
+				logger.info("queryEmpLeverTrue :"+SqlUtil.queryEmpLeverTrue(edVo));	
+					htmlPart1 = htmlPart1.replace("<drawTableM/>",
+							HtmlUtil.drawTable(SqlUtil.queryEmpLeverTrue(edVo), 
+								HtmlUtil.drawTableMcheckButton(), con, out, keyConts.ColUnit));
+			}
+			if(edVo.getTab().equals("n")){
+				logger.info("getEmpNoData :"+SqlUtil.getEmpNoData(edVo));	
+				htmlPart1 = htmlPart1.replace("<drawTableM/>",
+						HtmlUtil.drawStopWorking(SqlUtil.getEmpNoData(edVo), 
+							HtmlUtil.drawTableMcheckButton(), con, out, keyConts.pageSave));
+			}
 	
 		}
 

@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
+import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.ro.exOvertimeRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
@@ -151,7 +152,7 @@ public class dep_OverTime extends TemplatePortalPen
 					otVo.setmID("0");
 					otVo.setUserReason("");
 					otVo.setEP_ID("0");
-					//System.out.println("actText null   otVo : "+otVo.toString());
+					request.getSession().setAttribute("dotEdit","QUE");
 					showHtml(con, out, otVo,UserInformation);
 				
 				}
@@ -342,4 +343,26 @@ public class dep_OverTime extends TemplatePortalPen
 			otVo.setSearchEmployeeNo(ero.get(0).getEMPLOYEENO());
 		 return otVo;
 	 }
+	 
+	 /**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
+	 }
+	 
 }

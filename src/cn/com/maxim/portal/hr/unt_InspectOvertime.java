@@ -196,7 +196,7 @@ public class unt_InspectOvertime extends TemplatePortalPen {
 		return APSelector.toString();
 	}
 	
-	private void setHtmlPart(Connection con, PrintWriter out, overTimeVO otVo,UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
+	private void setHtmlPart(Connection con, PrintWriter out, overTimeVO otVo,UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_unt_InspectOvertime);
 			
@@ -214,7 +214,7 @@ public class unt_InspectOvertime extends TemplatePortalPen {
 			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" +lro.get(0).getUID()+ "'", otVo.getSearchEmployee(),false,null));
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + otVo.getSearchDepartmen()+ "'  AND UNIT not like '%部%'  ", otVo.getSearchUnit(),false,null));
-		//	htmlPart1=htmlPart1.replace("<applicationDate/>",HtmlUtil.getDateDivSw("startLeaveDate","endLeaveDate", otVo.getStartLeaveDate(),otVo.getEndLeaveDate()));
+		    htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
 			logger.info("getOvertimeNoSave "+	SqlUtil.getOvertimeNoSave(otVo));
 			if(otVo.isShowDataTable()){
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawOvertimeTable(

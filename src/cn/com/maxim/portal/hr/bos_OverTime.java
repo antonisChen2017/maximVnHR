@@ -3,6 +3,7 @@ package cn.com.maxim.portal.hr;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
+import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
@@ -48,21 +50,21 @@ public class bos_OverTime  extends TemplatePortalPen
 						otVo.setShowDataTable(true);
 						otVo.setStatus("I");
 						otVo.setMonthOverTime("0");
-						setHtmlPart1(con, out, otVo,UserInformation);
+						setHtmlPart1(con, out, otVo,UserInformation,request);
 				
 					}
 					if (actText.equals("NUE")) {
 						otVo.setShowDataTable(true);
 						otVo.setStatus("U");
 						otVo.setMonthOverTime("0");
-						setHtmlPart1(con, out, otVo,UserInformation);
+						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("U")) {
 			    		logger.info("加班時數/I : " +otVo.toString());						
 						DBUtil.updateTimeOverSStatus("B", request.getParameter("rowID"), con);
 						otVo.setShowDataTable(true);
 						otVo.setStatus("U");
-						setHtmlPart1(con, out, otVo,UserInformation);
+						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("R")) {
 						
@@ -72,7 +74,7 @@ public class bos_OverTime  extends TemplatePortalPen
 						
 						otVo.setShowDataTable(true);
 						otVo.setStatus("U");
-						setHtmlPart1(con, out, otVo,UserInformation);
+						setHtmlPart1(con, out, otVo,UserInformation,request);
 					
 					}
 					if (actText.equals("UB")) {
@@ -80,7 +82,7 @@ public class bos_OverTime  extends TemplatePortalPen
 						DBUtil.updateTimeOverSStatus("UB", request.getParameter("rowID"), con);
 						otVo.setShowDataTable(true);
 						otVo.setStatus("U");
-						setHtmlPart1(con, out, otVo,UserInformation);
+						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
 				}else{
 				//	System.out.println("sql : "+SqlUtil.getDeptID(UserInformation.getUserEmployeeNo()));
@@ -95,7 +97,7 @@ public class bos_OverTime  extends TemplatePortalPen
 					otVo.setStatus("U");
 					otVo.setMonthOverTime("0");//查询有無超過时间
 					otVo.setShowDataTable(true);
-					setHtmlPart1(con, out,otVo,UserInformation);
+					setHtmlPart1(con, out,otVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -140,15 +142,17 @@ public class bos_OverTime  extends TemplatePortalPen
 	
 	
 	
-	private void setHtmlPart1(Connection con, PrintWriter out, overTimeVO otVo,UserDescriptor UserInformation) throws Exception {
+	private void setHtmlPart1(Connection con, PrintWriter out, overTimeVO otVo,UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
+		
+		    List<employeeUserRO> lro=getUser(con,UserInformation,request);
 			HtmlUtil hu=new HtmlUtil();
-			String htmlPart1=hu.gethtml(htmlConsts.html_mgr_OverTime);
+			String htmlPart1=hu.gethtml(htmlConsts.html_bos_OverTime);
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
 			htmlPart1=htmlPart1.replace("&SearchDepartmen", ControlUtil.drawChosenSelect(con, "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", " 1=1 ",otVo.getSearchDepartmen( ),false,null));
 			htmlPart1=htmlPart1.replace("&submitDate",HtmlUtil.getDateDivSw("startSubmitDate","endSubmitDate", otVo.getStartSubmitDate(),otVo.getEndSubmitDate()));
 			htmlPart1=htmlPart1.replace("	<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + otVo.getSearchDepartmen( ) + "'", otVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("&SearchEmployee",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + otVo.getSearchDepartmen( ) + "'", otVo.getSearchEmployee(),false,null));
-			
+			 htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(otVo.getMsg()));
 			if(otVo.isShowDataTable()){
 			logger.info("getBOvertime  :  "+SqlUtil.getBOvertime(otVo));
@@ -157,5 +161,26 @@ public class bos_OverTime  extends TemplatePortalPen
 			}
 			out.println(htmlPart1);
 	}
+	
+	/**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
+	 }
 }
 

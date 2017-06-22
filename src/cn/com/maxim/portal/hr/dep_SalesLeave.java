@@ -100,7 +100,7 @@ public class dep_SalesLeave extends TemplatePortalPen
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 員工/Save : Refer: " +lcVo.toString());
-						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID")), con);
+						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
 						lcVo.setShowDataTable(true);
 						showHtml(con, out, lcVo,UserInformation);
 						

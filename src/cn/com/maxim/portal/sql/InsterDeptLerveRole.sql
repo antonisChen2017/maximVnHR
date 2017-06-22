@@ -1,17 +1,19 @@
-INSERT INTO [hr].[dbo].[VN_DEPT_LEAVE_ROLE]
-           ([ID]
-           ,[DEPT]
-           ,[UNIT]
-           ,[ROLE]
-           ,[STATUS]
-           ,[SINGROLEL1]
-           ,[SINGROLEL2]
-           ,[SINGROLEL3]
-           ,[SINGROLEL4]
-           ,[SINGROLEL1EP]
-           ,[SINGROLEL2EP]
-           ,[SINGROLEL3EP]
-           ,[SINGROLEL4EP])
+INSERT INTO VN_DEPT_LEAVE_ROLE
+          (ID
+           ,DEPT
+           ,UNIT
+           ,ROLE
+           ,STATUS
+           ,SINGROLEL1
+           ,SINGROLEL2
+           ,SINGROLEL3
+           ,SINGROLEL4
+           ,SINGROLEL1EP
+           ,SINGROLEL2EP
+           ,SINGROLEL3EP
+           ,SINGROLEL4EP
+           ,oneTitle
+           ,twoTitle)
      VALUES
            ('<ID/>'
            ,'<DEPT/>'
@@ -25,4 +27,6 @@ INSERT INTO [hr].[dbo].[VN_DEPT_LEAVE_ROLE]
            ,'<SINGROLEL1EP/>'
            ,'<SINGROLEL2EP/>'
            ,'<SINGROLEL3EP/>'
-           ,'<SINGROLEL4EP/>')
+           ,'<SINGROLEL4EP/>'
+            ,'<oneTitle/>'
+           ,'<twoTitle/>')

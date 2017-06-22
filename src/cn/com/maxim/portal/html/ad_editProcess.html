@@ -80,7 +80,7 @@
 <div class="form-group">
 <SPAN class="control-label col-md-1">簽核流程設定:</SPAN>
 
-<div class="col-md-5">
+<div class="col-md-10">
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">三天以下</h3>
@@ -97,7 +97,7 @@
     </thead>
     <tbody>
       <tr>
-        <td> 部门主管 </td>
+        <td> 部门主管  <oneDID/> </td>
         <td><oneDAuditorTitle/> </td>
         <td id='oneDAuditorDiv'>
         <oneDAuditor/> 
@@ -108,8 +108,8 @@
         </td>
       </tr>
       <tr>
-        <td> 经理</td>
-        <td><oneMAuditorTitle/> </td>
+        <td> 经理<oneMID/></td>
+        <td><oneMAuditorTitle/>  <oneMAuditoID/></td>
         <td  id='oneMAuditorDiv'> 
          <oneMAuditor/>
         </td>
@@ -123,7 +123,22 @@
 </div>
 
 </div>
-<div class="col-md-5">
+
+<div class="col-md-1">
+
+</div>
+
+ </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1"></SPAN>
+
+
+<div class="col-md-10">
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">三天以上</h3>
@@ -138,13 +153,13 @@
     </thead>
     <tbody>
       <tr>
-        <td> 部门主管 </td>
+        <td> 部门主管 <threeDID/></td>
         <td><threeDLever3/> </td>
         <td><threeDLever4/> </td>
 
       </tr>
         <tr>
-        <td> 经理 </td>
+        <td> 经理 <threeMID/></td>
         <td></td>
         <td><threeMLever4/></td>
 
@@ -160,6 +175,8 @@
  </div>
 </div>
 </div>
+
+
 
 <div class="row">
 <div class="col-md-12">
@@ -205,7 +222,7 @@
 <div class="form-group">
 <SPAN class="control-label col-md-1">簽核流程設定:</SPAN>
 
-<div class="col-md-5">
+<div class="col-md-10">
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">三天以下</h3>
@@ -222,14 +239,14 @@
     </thead>
     <tbody>
       <tr>
-        <td> 一般员工 </td>
+        <td> 一般员工  <oneEID/></td>
          <td><oneEAuditorTitle/> </td>
         <td    id='oneEAuditorDiv'><oneEAuditor/> </td>
         <td><oneEAgentTitle/> </td>
         <td id='oneEAgentDiv'><oneEAgent/> </td>
       </tr>
        <tr>
-        <td> 单位主管</td>
+        <td> 单位主管<oneUID/></td>
        <td><oneUAuditorTitle/> </td>
         <td  id='oneUAuditorDiv'> <oneUAuditor/> </td>
         <td><oneUAgentTitle/> </td>
@@ -240,7 +257,22 @@
 </div>
 
 </div>
-<div class="col-md-5">
+<div class="col-md-1">
+
+ </div>
+
+ </div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1"></SPAN>
+
+
+<div class="col-md-10">
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">三天以上</h3>
@@ -257,14 +289,14 @@
     </thead>
     <tbody>
       <tr>
-        <td> 一般员工</td>
+        <td> 一般员工<threeEID/></td>
         <td><threeELever1/> </td>
         <td><threeELever2/> </td>
         <td><threeELever3/> </td>
         <td><threeELever4/> </td>
       </tr>
        <tr>
-        <td>单位主管</td>
+        <td>单位主管<threeUID/></td>
         <td> </td>
          <td><threeULever2/> </td>
         <td><threeULever3/> </td>
@@ -288,7 +320,7 @@
 <SPAN class="control-label col-md-1"></SPAN>
 
 <div  class="col-md-2">
-<button class="btn btn-success " onclick="updateData();" type="button">单位设定</button>
+<button class="btn btn-success " onclick="saveUnitData();" type="button">单位设定</button>
 </div>
 <SPAN class="control-label col-md-1"> </SPAN>
 <div class="col-md-6">
@@ -373,17 +405,14 @@ jQuery(document).ready(function() {
 					   
    $('#Dept').change(function(){  
 		
-		 var p1= $('#Dept').val();
-	     jQuery.ajax({
-				url:'<ActionURI/>&doajax=SwUnit',
-				type:'POST',
-				data:{searchDepartmen:p1},
-				success:function(data){
-					// layer.msg(' data :'+data);  
-					 $('#UnitDiv').html(data);    
-					  // updateUnit();
-				}
-			});
+	    ActionForm.act.value='queryDept';
+		ActionForm.submit();
+		});
+   
+   $('#Unit').change(function(){  
+		
+	    ActionForm.act.value='queryUnit';
+		ActionForm.submit();
 		});
    
    $('#oneDAuditorTitle').change(function(){ 
@@ -488,8 +517,13 @@ jQuery(document).ready(function() {
 
 function    saveDeptData(){  
 	 
+	if($('#Dept').val()=='0'){   
+		 layer.msg('请选择部门');  
+			return;  
+	}  
+	
 	if($('#oneDAuditor').val()=='0'){   
-		 layer.msg('请选择部門主管審核者');  
+		 layer.msg('请选择部门主管審核者');  
 			return;  
 	}  
 	if($('#oneMAuditor').val()=='0'){   
@@ -497,18 +531,48 @@ function    saveDeptData(){
 				return;  
 		}  
 	if($('#threeDLever3').val()=='0' & $('#threeDLever4').val()=='0' ){   
-		 layer.msg('请选择三天以上部門主管審核流程');  
+		 layer.msg('请选择三天以上部门主管审核流程');  
 			return;  
 	}  
 	if( $('#threeMLever4').val()=='0' ){   
-		 layer.msg('请选择三天以上經理審核流程');  
+		 layer.msg('请选择三天以上经理审核流程');  
 			return;  
 	} 
-	ActionForm.act.value=' saveDept';
+	ActionForm.act.value='saveDept';
 	ActionForm.submit();
 
 }  
 
+function    saveUnitData(){  
+	 
+	if($('#Dept').val()=='0'){   
+		 layer.msg('请选择部门');  
+			return;  
+	}  
+	if($('#Unit').val()=='0'){   
+		 layer.msg('请选择單位');  
+			return;  
+	}  
+	if($('#oneEAuditor').val()=='0'){   
+		 layer.msg('请选择一般员工審核者');  
+			return;  
+	}  
+	if($('#oneUAuditor').val()=='0'){   
+			 layer.msg('请选择单位主管審核者');  
+				return;  
+		}  
+	if($('#threeELever1').val()=='0' & $('#threeELever2').val()=='0' & $('#threeELever2').val()=='0'  & $('#threeELever4').val()=='0' ){   
+		 layer.msg('请选择三天以上一般员工审核流程');  
+			return;  
+	}  
+	if( $('#threeULever2').val()=='0' & $('#threeULever3').val()=='0' & $('#threeULever4').val()=='0'){   
+		 layer.msg('请选择三天以上单位主管审核流程');  
+			return;  
+	} 
+	ActionForm.act.value='saveUnit';
+	ActionForm.submit();
+
+}  
 
 
 

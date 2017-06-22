@@ -210,7 +210,7 @@ public class rev_editSupervisor extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<NDutes/>",HtmlUtil.getTextDiv("NDutes",edVo.getNDutes(),"必要输入" ));
 		htmlPart1=htmlPart1.replace("<NEntryDate/>",HtmlUtil.getDateDiv("NEntryDate", edVo.getNEntryDate()));
 		htmlPart1=htmlPart1.replace("<NVietnamese/>",HtmlUtil.getTextDiv("NVietnamese",edVo.getNVietnamese(),"非必要输入" ));
-		htmlPart1=htmlPart1.replace("<NEmail/>",HtmlUtil.getEmailDiv("NEmail",edVo.getNEmail(),"必要输入" ));
+		htmlPart1=htmlPart1.replace("<NEmail/>",HtmlUtil.getEmailDiv("NEmail",edVo.getNEmail(),"非必要输入" ));
 		htmlPart1=htmlPart1.replace("<tab/>",edVo.getTab());
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(edVo.getMsg()));
 		if (edVo.isShowDataTable())

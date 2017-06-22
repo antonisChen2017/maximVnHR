@@ -57,21 +57,34 @@ public class dep_LeaveCard extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
+						lcVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, lcVo,UserInformation);
 					}
 					
-					if (actText.equals("SwTime")) {
-						showHtml(con, out, lcVo,UserInformation);
-					}
+				
 					
 					if (actText.equals("Save")) {
-						if(lcVo.getRowID().equals("0")){
+						String msg=DBUtil.getPersonalProcess(con,lcVo);
+						if(msg.equals("o")){
+							String depLeaveEdit=( String)request.getSession().getAttribute("depLeaveEdit");
+							if(depLeaveEdit.equals("Update")){
+								
+								lcVo.setShowDataTable(true);
+								logger.info("updateDepLeavecard : " +SqlUtil.updateDepLeavecard(lcVo));
+								boolean flag =DBUtil.updateSql(SqlUtil.updateDepLeavecard(lcVo), con);
+								if(flag){
+									lcVo.setMsg(keyConts.editOK);
+								}else{
+									lcVo.setMsg(keyConts.editNO);
+								}
+							}else{
+											
 								lcVo.setShowDataTable(true);
 								lcVo.setStatus("S");
 								lcVo.setApplicationDate(DateUtil.NowDateTime());
 								// 儲存db
 								logger.info("請假卡 員工/Save : " +lcVo.toString());
-								String msg=DBUtil.saveLeaveCard(lcVo , con);
+								msg=DBUtil.saveLeaveCard(lcVo , con);
 								if(msg.equals("x")){
 									lcVo.setMsg("儲存失敗!");
 								}else if(msg.equals("o")){
@@ -82,20 +95,20 @@ public class dep_LeaveCard extends TemplatePortalPen
 									logger.info("請假卡 部门人員申請/已請假!無法保存!");
 								}else if(msg.equals("v")){
 									lcVo.setMsg("請假天數為0!無法儲存!");
+								}else if(msg.equals("d")){
+									lcVo.setMsg("請假天數不正確!無法保存");
+									logger.info("請假卡 請假天數不正確!無法保存!");
 								}else{
 									lcVo.setMsg("儲存成功!");
 								}
-						}else{
-							lcVo.setShowDataTable(true);
-							logger.info("updateDepLeavecard : " +SqlUtil.updateDepLeavecard(lcVo));
-							boolean flag =DBUtil.updateSql(SqlUtil.updateDepLeavecard(lcVo), con);
-							if(flag){
-								lcVo.setMsg(keyConts.editOK);
-							}else{
-								lcVo.setMsg(keyConts.editNO);
+								
 							}
-						//	lcVo.setMsg("開發中!");
+						}else{
+							lcVo.setMsg(keyConts.noProcessMsg);
+							logger.info(keyConts.noProcessMsg);
 						}
+						lcVo.setSaveButText(keyConts.butSave);
+						request.getSession().setAttribute("depLeaveEdit","Save");
 						showHtml(con, out,  lcVo,UserInformation);
 						
 					}
@@ -105,6 +118,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 						logger.info("請假卡 員工/Save : Delete: " +lcVo.toString());
 						boolean flag=DBUtil.delDBTableRow(SqlUtil.delDBRow(keyConts.dbTableCR,rowID),con);
 						lcVo.setShowDataTable(true);
+						lcVo.setSaveButText(keyConts.butSave);
 						if(flag){
 							lcVo.setMsg("刪除成功!");
 						}else{
@@ -116,8 +130,9 @@ public class dep_LeaveCard extends TemplatePortalPen
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 員工/Save : Refer: " +lcVo.toString());
-						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID")), con);
+						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
 						lcVo.setShowDataTable(true);
+						lcVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, lcVo,UserInformation);
 						
 					}
@@ -130,6 +145,8 @@ public class dep_LeaveCard extends TemplatePortalPen
 						lcVo.setShowDataTable(true);
 						lcVo.setRowID(rowID);
 						lcVo=SharedCode(con,lcVo);
+						lcVo.setSaveButText(keyConts.butUpdate);
+						request.getSession().setAttribute("depLeaveEdit","Update");
 						showHtml(con, out,  lcVo,UserInformation);	
 					}
 					
@@ -153,6 +170,8 @@ public class dep_LeaveCard extends TemplatePortalPen
 					lcVo.setNote("");
 					lcVo.setRowID("0");
 					lcVo.setSearchRole(keyConts.EmpRoleE);
+					lcVo.setSaveButText(keyConts.butSave);
+					request.getSession().setAttribute("depLeaveEdit","query");
 					showHtml(con, out, lcVo,UserInformation);
 				
 				}
@@ -264,7 +283,8 @@ public class dep_LeaveCard extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<SearchAgent/>",ControlUtil.drawChosenSelect(con,  "searchAgent", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lro.get(0).getDID()+ "'", lcVo.getSearchAgent(),false,null));
 			htmlPart1=htmlPart1.replace("<searchHoliday/>",ControlUtil.drawChosenSelect(con, "searchHoliday", "VN_LHOLIDAY", "ID", "HOLIDAYNAME", null, lcVo.getSearchHoliday(),false,null));
 			htmlPart1=htmlPart1.replace("<applicationDate/>", lcVo.getApplicationDate());
-			htmlPart1=htmlPart1.replace("<startLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("startLeaveTime",lcVo.getStartLeaveDate()));
+			
+			htmlPart1=htmlPart1.replace("<startLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("startLeaveTime",lcVo.getStartLeaveTime()));
 			htmlPart1=htmlPart1.replace("<endLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("endLeaveTime",lcVo.getEndLeaveTime()));
 			htmlPart1=htmlPart1.replace("<startLeaveDate/>",HtmlUtil.getDateDiv("startLeaveDate", lcVo.getStartLeaveDate()));
 			htmlPart1=htmlPart1.replace("<endLeaveDate/>",HtmlUtil.getDateDiv("endLeaveDate", lcVo.getEndLeaveDate()));
@@ -275,19 +295,27 @@ public class dep_LeaveCard extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<minuteCount/>",HtmlUtil.getSpinnerDiv("minuteCount",lcVo.getMinuteCount(),keyConts.spinnerMinuteMax,keyConts.spinnerMinuteMin,keyConts.spinnerMinuteStep));
 			htmlPart1=htmlPart1.replace("&Note",HtmlUtil.getNoteDiv("note", lcVo.getNote()));
 			htmlPart1=htmlPart1.replace("<rowID/>",lcVo.getRowID()) ;
-			htmlPart1=htmlPart1.replace("<dutiesDiv/>",lro.get(0).getDUTIES()) ;
-			htmlPart1=htmlPart1.replace("<entrydateDiv/>",String.valueOf(lro.get(0).getENTRYDATE())) ;
+	
+			if(!lcVo.getSearchEmployeeNo().equals("0")){
+				htmlPart1=htmlPart1.replace("<dutiesDiv/>",DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(lcVo.getSearchEmployeeNo(),"  V.DUTIES "),"DUTIES"));
+				htmlPart1=htmlPart1.replace("<entrydateDiv/>",DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(lcVo.getSearchEmployeeNo(),"  V.ENTRYDATE "),"ENTRYDATE"));
+			}else{
+				htmlPart1=htmlPart1.replace("<dutiesDiv/>","");
+				htmlPart1=htmlPart1.replace("<entrydateDiv/>","");
+			}
+			
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
-		//	logger.info("getLeaveCard"+SqlUtil.getLeaveCard(lcVo));
+			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", UnitSql, lcVo.getSearchUnit(),false,null));
+			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + 	lcVo.getSearchDepartmen()+ "'", lcVo.getSearchEmployeeNo(),false,null));
+			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
+			logger.info("saveButText : " +lcVo.getSaveButText());
+			htmlPart1=htmlPart1.replace("<saveButText/>",lcVo.getSaveButText());	
+		 
 			if(lcVo.isShowDataTable()){
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
 						SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageEmpUnitList));
 			}
-			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", UnitSql, lcVo.getSearchUnit(),false,null));
-			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + 	lcVo.getSearchDepartmen()+ "'", lcVo.getSearchEmployeeNo(),false,null));
-			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
-			
-		    out.println(htmlPart1);
+			   out.println(htmlPart1);
 	}
 	/**
 	 * 共用查询區塊

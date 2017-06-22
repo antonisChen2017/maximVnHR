@@ -105,7 +105,45 @@ public class sqlConsts
 	public static final String sql_getEmpDUdata="/cn/com/maxim/portal/sql/getEmpDUdata.sql";
 	/** 新增請假加班流程**/
 	public static final String sql_InsterDeptLerveRole="/cn/com/maxim/portal/sql/InsterDeptLerveRole.sql";
-	
-	
+	/** 查詢部門流程資料筆數**/
+	public static final String sql_queryDeptLeaveCount="/cn/com/maxim/portal/sql/queryDeptLeaveCount.sql";
+	/** 查詢部門流程資料**/
+	public static final String sql_queryDeptLeaveData="/cn/com/maxim/portal/sql/queryDeptLeaveData.sql";
+	/** 更新部門流程資料**/
+	public static final String sql_updateDeptLerveRole="/cn/com/maxim/portal/sql/updateDeptLerveRole.sql";
+	/** 查詢單位流程資料筆數**/
+	public static final String sql_queryUnitLeaveCount="/cn/com/maxim/portal/sql/queryUnitLeaveCount.sql";
+	/** 查詢已設定流程資料**/
+	public static final String sql_getDeptLeaveSetData="/cn/com/maxim/portal/sql/getDeptLeaveSetData.sql";
+	/** 查詢請假卡單位部門是否已設定流程資料**/
+	public static final String sql_queryDeptLeaveCardCount="/cn/com/maxim/portal/sql/queryDeptLeaveCardCount.sql";
+	/** 查詢個人請假工號代表部門單位角色**/
+	public static final String sql_queryUserData="/cn/com/maxim/portal/sql/queryUserData.sql";
+	/** 查詢主管 部門/單位/名稱**/
+	public static final String sql_queryChargeName="/cn/com/maxim/portal/sql/queryChargeName.sql";
+	/** 新增請假卡**/
+	public static final String sql_insterLeaveCard="/cn/com/maxim/portal/sql/insterLeaveCard.sql";
+	/**查詢權限控制主管可搜尋部門˙**/
+	public static final String sql_querySelectDept="/cn/com/maxim/portal/sql/querySelectDept.sql";
+	/**查詢請假天數在三天以上或以下 三天以上1 以下0˙**/
+	public static final String sql_queryLeaveCardProcess="/cn/com/maxim/portal/sql/queryLeaveCardProcess.sql";
+	/**查詢請假卡個人資料使用行ID˙**/
+	public static final String sql_queryLeaveCardUserData="/cn/com/maxim/portal/sql/queryLeaveCardUserData.sql";
+	/**查詢部門主管或經理請假流程是否設定˙**/
+	public static final String sql_queryLeavePreossCount="/cn/com/maxim/portal/sql/queryLeavePreossCount.sql";
+	/**查詢加班是否有設定部門˙**/
+	public static final String sql_queryDeptOverCount="/cn/com/maxim/portal/sql/queryDeptOverCount.sql";
+	/**查詢加班部門流程˙**/
+	public static final String sql_queryDeptOverData="/cn/com/maxim/portal/sql/queryDeptOverData.sql";
+	/**更新加班部門流程˙**/
+	public static final String sql_updateDeptOverRole="/cn/com/maxim/portal/sql/updateDeptOverRole.sql";
+	/** 新增部門加班流程**/
+	public static final String sql_InsterDeptOverRole="/cn/com/maxim/portal/sql/InsterDeptOverRole.sql";
+	/** 查詢單位流程資料筆數**/
+	public static final String sql_queryUnitOverCount="/cn/com/maxim/portal/sql/queryUnitOverCount.sql";
+	/** 查詢加班流程資料**/
+	public static final String sql_getDeptOverSetData="/cn/com/maxim/portal/sql/getDeptOverSetData.sql";
+	/** 查詢加班部門流程資料筆數**/
+	public static final String sql_queryOverPreossCount="/cn/com/maxim/portal/sql/queryOverPreossCount.sql";
 	
 }

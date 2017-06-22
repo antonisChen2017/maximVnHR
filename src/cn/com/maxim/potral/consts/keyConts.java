@@ -55,6 +55,7 @@ public class keyConts
 	  public static final String   stopReasons="待工原因";
 	  public static final String   masterCheck="经理审核通过";
 	  public static final String   bossCheck="副总审核通过";
+	  public static final String   noProcessMsg="此部門或單位尚未設定請假流程,請洽人事";
 	  /**一般員工**/
 	  public static final String   EmpRoleE="E";
 	  /**单位主管**/
@@ -115,5 +116,28 @@ public class keyConts
 	  public static final String monthReportW="W";
 	  /**工作流程未選擇**/
 	  public static final String msgZ= "無";
-	 
+	  /**流程三天以下**/
+	  public static final String processStatus0= "0";
+	  /**流程三天以上**/
+	  public static final String processStatus1= "1";
+	  /**有此流程**/
+	  public static final String processLv1= "1";
+	  /**無此流程**/
+	  public static final String processLv0= "0";
+	  /**部门尚未设定审核流程**/
+	  public static final String processNoData= "部门尚未设定审核流程";
+	  /**取得部门设定审核流程**/
+	  public static final String processData= "取得部门设定审核流程";
+	  /**單位尚未设定审核流程**/
+	  public static final String processUnitNoData= "单位尚未设定审核流程";
+	  /**取得單位设定审核流程**/
+	  public static final String processUnitData= "取得单位设定审核流程";
+	  /**下拉未選擇**/
+	  public static final String msgS= "未選擇";
+	  /**副總請假頁面**/
+	  public static final String pageB= "B";
+	  /**請假頁面按紐狀態**/
+	  public static final String butSave= "保存";
+	  /**請假頁面按紐狀態**/
+	  public static final String butUpdate= "更新";
 }

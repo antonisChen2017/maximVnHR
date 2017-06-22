@@ -1,6 +1,6 @@
 package cn.com.maxim.portal.attendan.ro;
 
-import java.io.Serializable;
+
 import java.util.Date;
 /**
  * 員工個人資料  資料表RO

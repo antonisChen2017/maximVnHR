@@ -17,6 +17,7 @@ import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -64,6 +65,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 				{
 					logger.info("請假卡 部门主管審核/R : " + lcVo.toString());
 					lcVo.setStatus("DR");
+					lcVo.setLeaveApply("2");
 					if (DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con))
 					{
 						lcVo.setMsg(keyConts.returnMsg);
@@ -91,16 +93,13 @@ public class dem_LeaveCard extends TemplatePortalPen
 				// 提交狀態主管通過
 				if (actText.equals("U"))
 				{
-
+					String rowID = request.getParameter("rowID");
 					logger.info("請假卡 部门主管審核/D : " + lcVo.toString());
 					lcVo.setShowDataTable(true);
 					lcVo.setStatus("D");
-					// 儲存db
-					logger.info("updateLcStatus/D : " + SqlUtil.updateLcStatus(lcVo) );
-					if (DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con))
-					{
-						lcVo.setMsg(keyConts.okMsg);
-					}
+					lcVo.setRowID(rowID);
+					//檢查是否已經權限走到底
+					lcVo.setMsg(leaveCardDAO.deptProcess(con, lcVo));
 
 					showHtml(con, out, lcVo, UserInformation,request);
 				}
@@ -209,16 +208,18 @@ public class dem_LeaveCard extends TemplatePortalPen
 	 	}
 	}
 
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo, UserDescriptor UserInformation,HttpServletRequest request) throws SQLException
+	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo, UserDescriptor UserInformation,HttpServletRequest request) throws Exception
 	{
 		HtmlUtil hu = new HtmlUtil();
 		
 		List<employeeUserRO> lro=getUser(con,UserInformation,request);
 
 		String htmlPart1 = hu.gethtml(htmlConsts.html_dem_LeaveCard);
-		htmlPart1=htmlPart1.replace("<hiddenDepartmen/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
-		htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	HtmlUtil.getLabelHtml(lro.get(0).getDEPARTMENT()));
+		//htmlPart1=htmlPart1.replace("<hiddenDepartmen/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
+		//htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	HtmlUtil.getLabelHtml(lro.get(0).getDEPARTMENT()));
+		
 	
+		htmlPart1=htmlPart1.replace("<UserDepartmen/>",ControlUtil.drawChosenSql(con,  "searchDepartmen",SqlUtil.querySelectDept(lro.get(0).getEMPLOYEENO()), lcVo.getSearchDepartmen(),keyConts.msgS));	
 		htmlPart1 = htmlPart1.replace("<ActionURI/>", lcVo.getActionURI());
 		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + lro.get(0).getDID()+ "'    ", lcVo.getSearchUnit(),false,null));
 	//	htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,lcVo.getSearchDepartmen( ),false,null));
@@ -226,13 +227,13 @@ public class dem_LeaveCard extends TemplatePortalPen
 		htmlPart1 = htmlPart1.replace("<SearchEmployeeNo/>", ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployeeNo(),false,null));
 		htmlPart1 = htmlPart1.replace("<SearchEmployee/>", ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" +  lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
 		htmlPart1 = htmlPart1.replace("<msg/>", HtmlUtil.getMsgDiv(lcVo.getMsg()));
-
+		htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
 	
 		if (lcVo.isShowDataTable())
 		{
-			logger.info("Dep sql : "+SqlUtil.getDepartmenLeaveCard(lcVo));
+			logger.info("Dep sql : "+SqlUtil.getDepartmenLeaveCard(lcVo,lro.get(0).getEMPLOYEENO()));
 			htmlPart1 = htmlPart1.replace("<drawTableM/>", HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getDepartmenLeaveCard(lcVo), HtmlUtil.drawTableMcheckButton(), con, out, keyConts.pageDtmList));
+					SqlUtil.getDepartmenLeaveCard(lcVo,lro.get(0).getEMPLOYEENO()), HtmlUtil.drawTableMcheckButton(), con, out, keyConts.pageDtmList));
 		}
 
 		out.println(htmlPart1);

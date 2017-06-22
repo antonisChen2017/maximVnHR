@@ -48,4 +48,12 @@ public class htmlConsts
 	  public static final String html_editSupervisor="/cn/com/maxim/portal/html/rev_editSupervisor.html";
 	  /**測試用 帳號切換人員**/
 	  public static final String html_changeEmp="/cn/com/maxim/portal/html/ts_changeEmp.html";
+	  /**副總加班審核頁面**/
+	  public static final String html_bos_OverTime="/cn/com/maxim/portal/html/bos_OverTime.html";
+	  /**副總請假審核頁面**/
+	  public static final String html_bos_LeaveCard="/cn/com/maxim/portal/html/bos_LeaveCard.html";
+	  /**加班流程頁面**/
+	  public static final String html_ad_editOProcess="/cn/com/maxim/portal/html/ad_editOProcess.html";
+	  
+	  
 }

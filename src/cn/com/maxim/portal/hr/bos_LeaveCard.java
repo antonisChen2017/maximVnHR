@@ -3,6 +3,7 @@ package cn.com.maxim.portal.hr;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,8 +13,10 @@ import org.apache.log4j.Logger;
 
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
+import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -46,37 +49,26 @@ public class bos_LeaveCard extends TemplatePortalPen
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
 						lcVo.setStatus("L");
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					//已審核
 					if (actText.equals("NUE")) {
 						lcVo.setShowDataTable(true);
 						lcVo.setStatus("D");
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
-					//經理退回
+					//副理退回
 					if (actText.equals("LR")) {
 						logger.info("請假卡 三天以上/LR: " +lcVo.toString());
 						lcVo.setStatus("BR");
+						lcVo.setLeaveApply("2");//退回
 						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
 							lcVo.setMsg(keyConts.returnMsg);
 						}
 						lcVo.setStatus("D");
 						lcVo.setShowDataTable(true);
-						showHtml(con, out, lcVo,UserInformation);
-					}
-					//副理通過
-					if (actText.equals("M")) {
-						logger.info("請假卡 三天以上/L: " +lcVo.toString());
-
-						lcVo.setShowDataTable(true);
-						lcVo.setStatus("B");
-						// 儲存db
-						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
-							lcVo.setMsg(keyConts.okMsg);
-						}
-				
-						showHtml(con, out, lcVo,UserInformation);
+					
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					if (actText.equals("U")) {
 						logger.info("請假卡 三天以上/L: " +lcVo.toString());
@@ -84,12 +76,10 @@ public class bos_LeaveCard extends TemplatePortalPen
 						lcVo.setShowDataTable(true);
 						lcVo.setStatus("B");
 						// 儲存db
-						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
-							lcVo.setMsg(keyConts.okMsg);
-						}
-						//顯示未審核
-						lcVo.setStatus("L");
-						showHtml(con, out, lcVo,UserInformation);
+						//檢查是否已經權限走到底
+						lcVo.setMsg(leaveCardDAO.deptProcess(con, lcVo));
+						lcVo.setStatus("D");
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 				}else{
 					//預設
@@ -107,7 +97,7 @@ public class bos_LeaveCard extends TemplatePortalPen
 					lcVo.setNote("");
 					lcVo.setShowDataTable(true);
 					lcVo.setStatus("D");
-					showHtml(con, out, lcVo,UserInformation);
+					showHtml(con, out, lcVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -231,29 +221,50 @@ public class bos_LeaveCard extends TemplatePortalPen
 		
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation) throws SQLException {
+	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
 	
 		
-	//	List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNameDate(UserInformation.getUserName()) ,eo);	
-	//	lcVo.setSearchDepartmen(lro.get(0).getDID());
-	//	System.out.println("DEPARTMENT : "+lro.get(0).getDID());
+		List<employeeUserRO> lro=getUser(con,UserInformation,request);
 		HtmlUtil hu=new HtmlUtil();
-		String htmlPart1=hu.gethtml(htmlConsts.html_mgr_LeaveCard);
+		String htmlPart1=hu.gethtml(htmlConsts.html_bos_LeaveCard);
 		htmlPart1=htmlPart1.replace("<ActionURI/>", 	lcVo.getActionURI());
-		htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,lcVo.getSearchDepartmen( ),false,null));
+		//htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,lcVo.getSearchDepartmen( ),false,null));
+		htmlPart1=htmlPart1.replace("<UserDepartmen/>",ControlUtil.drawChosenSql(con,  "searchDepartmen",SqlUtil.querySelectDept(lro.get(0).getEMPLOYEENO()), lcVo.getSearchDepartmen(),keyConts.msgS));	
 		htmlPart1=htmlPart1.replace("<applicationDate/>",HtmlUtil.getDateDivSw("startLeaveDate","endLeaveDate", lcVo.getStartLeaveDate(),lcVo.getEndLeaveDate()));
 		htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + 	lcVo.getSearchDepartmen()+ "'", lcVo.getSearchEmployeeNo(),false,null));
 		htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
 		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen()+ "'  AND UNIT not like '%部%'  ", lcVo.getSearchUnit(),false,null));
-		logger.info(" sql BLeaveCard="+SqlUtil.getBLeaveCard(lcVo));
+		 htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
+		logger.info(" sql BLeaveCard="+SqlUtil.getBLeaveCard(lcVo,lro.get(0).getEMPLOYEENO()));
 			
 		if(lcVo.isShowDataTable()){
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getBLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageLList));
+					SqlUtil.getBLeaveCard(lcVo,lro.get(0).getEMPLOYEENO()),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageB));
 		}
 		
 	    out.println(htmlPart1);
 	    }
+	
+	/**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+					UserName=UserInformation.getUserName();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
+	 }
 }
 

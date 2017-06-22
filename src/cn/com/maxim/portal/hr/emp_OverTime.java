@@ -64,11 +64,13 @@ public class emp_OverTime extends TemplatePortalPen
 					
 					if (actText.equals("Save")) {
 						logger.info("個人申請加班/Save : " +otVo.toString());
+						String msg=DBUtil.getPersonalProcess(con,otVo);
+						
 						otVo.setShowDataTable(true);
 						//不能超過系統規定加班時數
 						otVo.setOverTimeSave(false);
 						// 儲存db
-						String msg="";
+						
 						String eotEdit=( String)request.getSession().getAttribute("eotEdit");
 						
 						if(eotEdit.equals("Update")){
@@ -240,7 +242,7 @@ public class emp_OverTime extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<hiddenEmployeeNo/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'  AND UNIT not like '%部%'  ", otVo.getSearchUnit(),false,null));
 			htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	UserInformation.getUserEmployeeNo());
-			htmlPart1=htmlPart1.replace("&SearchEmployee",ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", otVo.getSearchEmployee()));
+			htmlPart1=htmlPart1.replace("&SearchEmployee",ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" +lro.get(0).getDEPARTMENT() + "'", otVo.getSearchEmployee()));
 			htmlPart1=htmlPart1.replace("&SearchReasons",ControlUtil.drawChosenSelect(con, "searchReasons", "VN_LREASONS", "ID", "REASONS", null, otVo.getSearchReasons(),false,null));
 			htmlPart1=htmlPart1.replace("&OverTimeClass",ControlUtil.drawChosenSelect(con,  "overTimeClass", "VN_TURN", "Code", "CBName", " 1=1  ", otVo.getOverTimeClass(),false,null));
 		

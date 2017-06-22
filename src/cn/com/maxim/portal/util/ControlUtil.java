@@ -163,7 +163,8 @@ public class ControlUtil
 	public static String drawChosenSelect(Connection con,  String name, String tableName, String valueField,
 			String DisplayField, String whereSql, String SelectedOption,boolean isDistinct,String GroupField) throws SQLException
 	{
-
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ControlUtil.class);
 		
 		String sql = "SELECT " + (isDistinct ? "DISTINCT " : " ") + valueField + 
 			      " , " + DisplayField + " FROM " + tableName;
@@ -174,7 +175,7 @@ public class ControlUtil
 			    {
 			    	 sql = sql + " ORDER BY " + GroupField;
 			    }
-			   // System.out.println("drawChosenSelect sql : "+sql);
+			    
 			    Statement st = con.createStatement();
 			    ResultSet rs = st.executeQuery(sql);
 			    StringBuilder Sb = new StringBuilder("");
@@ -186,6 +187,7 @@ public class ControlUtil
 			    	//	Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\""+rs.getString(2)+"\"  tabindex=\"2\"> \r\n");
 			    		//  Sb.append("<option value='0'>未選擇</option> \r\n");
 			    	}
+			
 			    	  if(rs.getString(1).equals(SelectedOption)){
 			    		    Sb.append("<option value='"+rs.getString(1)+"'  selected>"+rs.getString(2)+"</option> \r\n");
 			    	  }else{
@@ -224,9 +226,10 @@ public class ControlUtil
 	public static String drawChosenSql(Connection con,  String name, String sql, String SelectedOption,String valueZ) throws SQLException
 	{
 
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ControlUtil.class);
 		
-		
-			   // System.out.println("drawChosenSelect sql : "+sql);
+	
 			    Statement st = con.createStatement();
 			    ResultSet rs = st.executeQuery(sql);
 			    StringBuilder Sb = new StringBuilder("");
@@ -245,14 +248,14 @@ public class ControlUtil
 		    	  }
 			    	  count=count+1;
 			      }
-			  
+			
 			    Sb.append("</select> \r\n");
 				Sb.append("<script>  \r\n");
 				Sb.append("	jQuery(document).ready(function() {    \r\n");
 				Sb.append(" $('#"+name+"').select2(); \r\n");
 				Sb.append("     }); \r\n");
 				Sb.append("</script>  \r\n");
-			   
+		
 
 		return Sb.toString();
 	}

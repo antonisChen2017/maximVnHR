@@ -58,47 +58,64 @@ public class emp_LeaveCard extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
+						lcVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					
-					if (actText.equals("SwTime")) {
-						showHtml(con, out, lcVo,UserInformation,request);
-					}
+					
 					
 					if (actText.equals("Save")) {
-						if(lcVo.getRowID().equals("0")){
-							lcVo.setApplicationDate(	DateUtil.NowDateTime());
-							lcVo.setShowDataTable(true);
-							lcVo.setStatus("S");
-							logger.info("請假卡  部门人員申請/Save : " +lcVo.toString());
-							// 儲存db
-							String msg=DBUtil.saveLeaveCard(lcVo , con);
-							if(msg.equals("x")){
-								lcVo.setMsg("儲存失敗!");
-								logger.info("請假卡 部门人員申請/Save :保存失敗!");
-							}else if(msg.equals("v")){
-								lcVo.setMsg("請假天數為0!無法保存!");
-								logger.info("請假卡 部门人員申請/請假 :請假天數為0!無法儲存!");
-							}else if(msg.equals("o")){
-								lcVo.setMsg("已有打卡纪录!無法保存");
-								logger.info("請假卡 部门人員申請/已有打卡纪录!無法保存!");
-							}else if(msg.equals("w")){
-								lcVo.setMsg("已請假!無法保存");
-								logger.info("請假卡 部门人員申請/已請假!無法保存!");
+						
+						String msg=DBUtil.getPersonalProcess(con,lcVo);
+						if(msg.equals("o")){
+								String empLeaveEdit=( String)request.getSession().getAttribute("empLeaveEdit");
+							if(empLeaveEdit.equals("Update")){
+								logger.info("updateEmpOverTime : " +SqlUtil.updateEmpLeavecard(lcVo));
+								boolean flag =DBUtil.updateSql(SqlUtil.updateEmpLeavecard(lcVo), con);
+								if(flag){
+									lcVo.setMsg(keyConts.editOK);
+								}else{
+									lcVo.setMsg(keyConts.editNO);
+								}
+							
+								
 							}else{
-								lcVo.setMsg("儲存成功!");
-								logger.info("請假卡 部门人員申請/Save :儲存成功!");
+								
+								lcVo.setApplicationDate(DateUtil.NowDateTime());
+							
+								lcVo.setStatus("S");
+								logger.info("請假卡  部门人員申請/Save : " +lcVo.toString());
+								// 儲存db
+							
+								msg=DBUtil.saveLeaveCard(lcVo , con);
+								if(msg.equals("x")){
+									lcVo.setMsg("儲存失敗!");
+									logger.info("請假卡 部门人員申請/Save :保存失敗!");
+								}else if(msg.equals("v")){
+									lcVo.setMsg("請假天數為0!無法保存!");
+									logger.info("請假卡 部门人員申請/請假 :請假天數為0!無法儲存!");
+								}else if(msg.equals("o")){
+									lcVo.setMsg("已有打卡纪录!無法保存");
+									logger.info("請假卡 部门人員申請/已有打卡纪录!無法保存!");
+								}else if(msg.equals("w")){
+									lcVo.setMsg("已請假!無法保存");
+									logger.info("請假卡 部门人員申請/已請假!無法保存!");
+								}else if(msg.equals("d")){
+									lcVo.setMsg("請假天數不正確!無法保存");
+									logger.info("請假卡 請假天數不正確!無法保存!");
+								}else{
+									lcVo.setMsg("儲存成功!");
+									logger.info("請假卡 部门人員申請/Save :儲存成功!");
+								}
+								
 							}
 						}else{
-							logger.info("updateEmpOverTime : " +SqlUtil.updateEmpLeavecard(lcVo));
-							boolean flag =DBUtil.updateSql(SqlUtil.updateEmpLeavecard(lcVo), con);
-							if(flag){
-								lcVo.setMsg(keyConts.editOK);
-							}else{
-								lcVo.setMsg(keyConts.editNO);
-							}
-							lcVo.setShowDataTable(true);
+							lcVo.setMsg(keyConts.noProcessMsg);
+							logger.info(keyConts.noProcessMsg);
 						}
+						lcVo.setSaveButText(keyConts.butSave);
+						lcVo.setShowDataTable(true);
+						request.getSession().setAttribute("empLeaveEdit","Save");
 						showHtml(con, out,  lcVo,UserInformation,request);
 						
 					}
@@ -115,14 +132,16 @@ public class emp_LeaveCard extends TemplatePortalPen
 							lcVo.setMsg("刪除失敗!");
 							logger.info("請假卡 部门人員申請/Delete  刪除失敗!");
 						}
-					
+						lcVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 部门人員申請/Refer  " +lcVo.toString());
-						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID")), con);
+						
+						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
 						lcVo.setShowDataTable(true);
+						lcVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, lcVo,UserInformation,request);
 						
 					}
@@ -135,6 +154,8 @@ public class emp_LeaveCard extends TemplatePortalPen
 						lcVo.setShowDataTable(true);
 						lcVo.setRowID(rowID);
 						lcVo=SharedCode(con,lcVo);
+						request.getSession().setAttribute("empLeaveEdit","Update");
+						lcVo.setSaveButText(keyConts.butUpdate);
 						showHtml(con, out,  lcVo,UserInformation,request);
 					}
 					
@@ -158,6 +179,8 @@ public class emp_LeaveCard extends TemplatePortalPen
 					lcVo.setEndLeaveDate(DateUtil.NowDate());
 					lcVo.setNote("");
 					lcVo.setRowID("0");
+					lcVo.setSaveButText(keyConts.butSave);
+					request.getSession().setAttribute("empLeaveEdit","query");
 					showHtml(con, out, lcVo,UserInformation,request);
 				
 				}
@@ -235,12 +258,12 @@ public class emp_LeaveCard extends TemplatePortalPen
 			lcVo.setSearchRole(lro.get(0).getROLE());
 			
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	lcVo.getActionURI());
-			htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	UserInformation.getUserEmployeeNo());
+			htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	lro.get(0).getDEPARTMENT());
 			htmlPart1=htmlPart1.replace("<hiddenEmployeeNo/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
 			htmlPart1=htmlPart1.replace("<SearchAgent/>",ControlUtil.drawChosenSelect(con, "searchAgent", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lro.get(0).getDID()+ "'", lcVo.getSearchAgent(),false,null));
 			htmlPart1=htmlPart1.replace("<searchHoliday/>",ControlUtil.drawChosenSelect(con, "searchHoliday", "VN_LHOLIDAY", "ID", "HOLIDAYNAME", null, lcVo.getSearchHoliday(),false,null));
 			htmlPart1=htmlPart1.replace("<applicationDate/>",lcVo.getApplicationDate());
-			htmlPart1=htmlPart1.replace("<startLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("startLeaveTime",lcVo.getStartLeaveDate()));
+			htmlPart1=htmlPart1.replace("<startLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("startLeaveTime",lcVo.getStartLeaveTime()));
 			htmlPart1=htmlPart1.replace("<endLeaveTime/>",HtmlUtil.getLeaveCardTimeDiv("endLeaveTime",lcVo.getEndLeaveTime()));
 			htmlPart1=htmlPart1.replace("<startLeaveMinute/>",HtmlUtil.getLeaveCardMinuteDiv("startLeaveMinute",lcVo.getStartLeaveMinute()));
 			htmlPart1=htmlPart1.replace("<endLeaveMinute/>",HtmlUtil.getLeaveCardMinuteDiv("endLeaveMinute",lcVo.getEndLeaveMinute()));
@@ -260,6 +283,8 @@ public class emp_LeaveCard extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<hiddenUserNo/>",ControlUtil.drawHidden(lro.get(0).getID(), "searchEmployee"));	
 			htmlPart1=htmlPart1.replace("<hiddenUnit/>",ControlUtil.drawHidden(lro.get(0).getUID(), "searchUnit"));	
 			htmlPart1=htmlPart1.replace("<hiddenUser/>",ControlUtil.drawHidden(lro.get(0).getID(), "searchEmployeeNo"));	
+			logger.info("saveButText : " +lcVo.getSaveButText());
+			htmlPart1=htmlPart1.replace("<saveButText/>",lcVo.getSaveButText());	
 			if(lcVo.isShowDataTable()){
 				logger.info(" sql getLeaveCard="+SqlUtil.getLeaveCard(lcVo));
 					htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(

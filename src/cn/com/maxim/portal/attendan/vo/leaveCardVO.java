@@ -63,7 +63,49 @@ public class leaveCardVO implements Serializable
 	private String endLeaveMinute;
 	/**員工角色 */
 	private String searchRole;
+	/**流程狀態 */
+	private String leaveStatus;
+	/**申請角色 */
+	private String leaveRole;
+	/**請假成功記號 */
+	private String leaveApply;
+	/**按鈕記號 */
+	private String saveButText;
 	
+	
+	
+	public String getSaveButText()
+	{
+		return saveButText;
+	}
+	public void setSaveButText(String saveButText)
+	{
+		this.saveButText = saveButText;
+	}
+	public String getLeaveApply()
+	{
+		return leaveApply;
+	}
+	public void setLeaveApply(String leaveApply)
+	{
+		this.leaveApply = leaveApply;
+	}
+	public String getLeaveStatus()
+	{
+		return leaveStatus;
+	}
+	public void setLeaveStatus(String leaveStatus)
+	{
+		this.leaveStatus = leaveStatus;
+	}
+	public String getLeaveRole()
+	{
+		return leaveRole;
+	}
+	public void setLeaveRole(String leaveRole)
+	{
+		this.leaveRole = leaveRole;
+	}
 	public String getSearchHoliday()
 	{
 		return searchHoliday;

@@ -54,13 +54,30 @@
  <input type='hidden' name='rowID' id='rowID' >
   <input type='hidden' name='returnMsg' id='returnMsg' >
 <div class="form-body">
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">單位主管:</SPAN>
+
+<div class="col-md-9">
+	<Userdata/>
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+</div>
+</div>
+</div>
+
 <div class="row">
 <div class="col-md-6">
 <div class="form-group">
 <SPAN class="control-label col-md-3">部门:</SPAN>
 
 <div class="col-md-9">
-	<UserDepartmen/>	<hiddenDepartmen/>
+	<UserDepartmen/>	
 </div>
  </div>
 </div>
@@ -68,7 +85,7 @@
 <div class="form-group">
 <SPAN class="control-label col-md-3">单位:</SPAN>
 <div  id='UnitDiv'     class="col-md-9">
-<UserUnit/><hiddenUnit/>
+<SearchUnit/>
  </div>
 </div>
 </div>
@@ -180,14 +197,59 @@ jQuery(document).ready(function() {
    FormComponents.init();
    
 	
-   $('#searchEmployee').change(function(){  
-	     var p1=$(this).children('option:selected').val();  //selected  
-	 	$('#searchEmployeeNo').select2('val',p1);              
-	   })  
- 	$('#searchEmployeeNo').change(function(){  
-		  var p1=$(this).children('option:selected').val();  //selected  
-	      $('#searchEmployee').select2('val',p1);        
-	 }) 
+   $('#searchDepartmen').change(function(){  
+		
+		 var p1= $('#searchDepartmen').val();
+	  
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmpNo',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeNoDiv').html(data);    
+				 $('#searchEmployeeNo').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 $('#searchEmployee').select2('val',p1);     
+				   }) 
+			}
+		});
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmp',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeDiv').html(data);    
+				 $('#searchEmployee').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+				 	$('#searchEmployeeNo').select2('val',p1);     
+				   })  
+			}
+		});
+	   
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwUnit',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				var datas=data.split("%");
+				  $('#UnitDiv').html(datas[0]); 
+				  updateUnit();
+		 		  $('#EmployeeNoDiv').html(datas[1]);  
+				  $('#EmployeeDiv').html(datas[2]);  
+
+				  $('#searchEmployee').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 	$('#searchEmployeeNo').select2('val',p1);      
+					   })  
+				   $('#searchEmployeeNo').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#searchEmployee').select2('val',p1);     
+				   }) 
+				}
+			});
+	   
+	   
+		});
  
   
 });
@@ -213,11 +275,11 @@ function    updateUnit(){
 			//      layer.msg(' data :'+ data);  
 				  $('#searchEmployee').change(function(){  
 					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					 	$('#searchEmployeeNo').select2('val',p1);       
+					 	$('#searchEmployeeNo').select2('val',p1);  
 					   })  
 				   $('#searchEmployeeNo').change(function(){  
 						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					      $('#searchEmployee').select2('val',p1);       
+					      $('#searchEmployee').select2('val',p1);  
 				   }) 
 				}
 			});

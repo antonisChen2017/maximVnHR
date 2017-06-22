@@ -28,7 +28,27 @@ public class editProcessRO
 	private String SingRoleL3EP;
 	/**A4 T**/
 	private String SingRoleL4EP;
+	/**省核者職稱**/
+	private String oneTitle;
+	/**代理审核人职称**/
+	private String twoTitle;
 	
+	public String getOneTitle()
+	{
+		return oneTitle;
+	}
+	public void setOneTitle(String oneTitle)
+	{
+		this.oneTitle = oneTitle;
+	}
+	public String getTwoTitle()
+	{
+		return twoTitle;
+	}
+	public void setTwoTitle(String twoTitle)
+	{
+		this.twoTitle = twoTitle;
+	}
 	public String getID()
 	{
 		return ID;

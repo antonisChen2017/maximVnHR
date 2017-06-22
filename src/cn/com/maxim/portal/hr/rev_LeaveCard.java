@@ -250,9 +250,9 @@ public class rev_LeaveCard extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", null, lcVo.getSearchUnit(),false,null));
 
 		if(lcVo.isShowDataTable()){
-			logger.info(" sql BLeaveCard="+SqlUtil.getBLeaveCard(lcVo));
+			logger.info(" sql BLeaveCard="+SqlUtil.getRevLeaveCard(lcVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getBLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
+					SqlUtil.getRevLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 		}
 	
 		

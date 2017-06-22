@@ -1,0 +1,10 @@
+SELECT 
+		DEPARTMENT_ID as DEPARTMENT,
+		UNIT_ID as UNIT
+      , ROLE
+      ,' ' as STATUS
+       ,L.DAYCOUNT
+  FROM HR_EMPLOYEE E 
+   JOIN VN_LEAVECARD L
+ON E.ID=L.EP_ID
+where L.ID='<rowID/>'

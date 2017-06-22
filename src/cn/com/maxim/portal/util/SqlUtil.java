@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import cn.com.maxim.portal.attendan.ro.dayReportRO;
 import cn.com.maxim.portal.attendan.ro.editProcessRO;
+import cn.com.maxim.portal.attendan.ro.processUserRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.editDeptUnit;
 import cn.com.maxim.portal.attendan.vo.editLholidayVO;
@@ -845,11 +846,69 @@ public class SqlUtil
 	public static final String saveLeaveCard()
 	{
 
-		StringBuilder Sb = new StringBuilder(" INSERT INTO VN_LEAVECARD	 ").append(" (EP_ID, HD_ID, ").append("  APPLICATIONDATE,STARTLEAVEDATE, ").append(" ENDLEAVEDATE,AGENT, ").append(" NOTE,STATUS,").append(" DAYCOUNT,HOURCOUNT,MINUTECOUNT,SAVETIME) ").append("  VALUES(?,?,?,?,?,?,?,?,?,?,?,getdate()) ");
-
+		StringBuilder Sb = new StringBuilder(" INSERT INTO VN_LEAVECARD	 ")
+				.append(" (EP_ID, HD_ID, ")
+				.append("  APPLICATIONDATE,STARTLEAVEDATE, ")
+				.append(" ENDLEAVEDATE,AGENT, ")
+				.append(" NOTE,STATUS,")
+				.append(" DAYCOUNT,HOURCOUNT,MINUTECOUNT,SAVETIME ")
+				.append(" ,PROCESS  ")
+				.append(" ,SINGROLEL1")
+				.append(" ,SINGROLEL2 ")
+				.append(" ,SINGROLEL3 ")
+				.append(" ,SINGROLEL4 ")
+				.append(" ,SINGROLEL1EP ")
+				.append(" ,SINGROLEL2EP ")
+				.append(" ,SINGROLEL3EP ")
+				.append(" ,SINGROLEL4EP ) ")
+				.append("  VALUES(?,?,?,?,?,?,?,?,?,?,?,getdate() ")
+				.append("  ,? ")
+				.append("  ,? ")
+				.append("  ,? ")
+				.append("  ,? ")
+				.append("  ,? ")
+				.append("  ,? ")
+				.append("  ,? ")
+				.append("  ,? ")
+				.append("  ,? ) ");
 		return Sb.toString();
 	}
 
+	
+	/**
+	 * 請假卡-新增
+	 * 
+	 * @param unitID
+	 * @return
+	 */
+	public static final String newSaveLeaveCard(leaveCardVO lcVo,editProcessRO ePro)
+	{
+
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_insterLeaveCard);
+		sql = sql.replace("<EP_ID/>",lcVo.getSearchEmployeeNo());
+		sql = sql.replace("<HD_ID/>",lcVo.getSearchHoliday());
+		sql = sql.replace("<APPLICATIONDATE/>",lcVo.getApplicationDate());
+		sql = sql.replace("<STARTLEAVEDATE/>", lcVo.getStartLeaveDate() + " " + lcVo.getStartLeaveTime() + ":" + lcVo.getStartLeaveMinute());
+		sql = sql.replace("<ENDLEAVEDATE/>",lcVo.getEndLeaveDate() + " " + lcVo.getEndLeaveTime() + ":" + lcVo.getEndLeaveMinute());
+		sql = sql.replace("<AGENT/>",lcVo.getSearchAgent());
+		sql = sql.replace("<DAYCOUNT/>",lcVo.getDayCount());
+		sql = sql.replace("<HOURCOUNT/>",lcVo.getHourCount());
+		sql = sql.replace("<MINUTECOUNT/>",lcVo.getMinuteCount());
+		sql = sql.replace("<NOTE/>", lcVo.getNote());
+		sql = sql.replace("<STATUS/>",lcVo.getStatus());
+		sql = sql.replace("<PROCESS/>",ePro.getStatus());
+		sql = sql.replace("<SINGROLEL1/>",ePro.getSingRoleL1());
+		sql = sql.replace("<SINGROLEL2/>",ePro.getSingRoleL2());
+		sql = sql.replace("<SINGROLEL3/>",ePro.getSingRoleL3());
+		sql = sql.replace("<SINGROLEL4/>",ePro.getSingRoleL4());
+		sql = sql.replace("<SINGROLEL1EP/>",ePro.getSingRoleL1EP());
+		sql = sql.replace("<SINGROLEL2EP/>",ePro.getSingRoleL2EP());
+		sql = sql.replace("<SINGROLEL3EP/>",ePro.getSingRoleL3EP());
+		sql = sql.replace("<SINGROLEL4EP/>",ePro.getSingRoleL4EP());
+		return sql;
+	}
+	
 	/**
 	 * 銷假卡-新增
 	 * 
@@ -893,8 +952,39 @@ public class SqlUtil
 	public static final String getLeaveCard(leaveCardVO lcVo)
 	{
 
-		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n").append(" D.DEPARTMENT as '部门',     \n").append(" U.UNIT   as '单位',   \n").append("   EP.ROLE,     \n").append("  EP.EMPLOYEE  as '姓名',   \n").append("  EP.EMPLOYEENO  as '工號',   \n").append("  C.APPLICATIONDATE  as '申請日期',  \n").append("  HD.HOLIDAYNAME  as '假別',  \n").append("  DAYCOUNT as  天数,  \n").append("  HOURCOUNT as  小时,  \n").append("  MINUTECOUNT as  分,  \n").append("  DAYCOUNT ,  \n").append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间', \n").append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间', \n").append("  EP2.EMPLOYEE  as '代理人', \n").append("  C.NOTE as '備註', \n").append("  C.STATUS   as 'action' ,  \n").append("  C.RETURNMSG  as 'returnMSG' \n")
-				.append("  FROM VN_LEAVECARD  AS C  \n").append("  INNER JOIN      \n").append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n").append("  INNER JOIN   \n").append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID  \n").append("   INNER JOIN     \n").append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n").append("  INNER JOIN     \n").append("    VN_UNIT AS U      \n").append("    ON U.ID =EP.UNIT_ID     \n").append("     INNER JOIN     \n").append("     VN_DEPARTMENT AS D      \n").append(" 	  ON  D.ID =EP.DEPARTMENT_ID   \n").append("   where 1=1 \n");
+		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n")
+				.append(" D.DEPARTMENT as '部门',     \n")
+				.append(" U.UNIT   as '单位',   \n")
+				.append("   EP.ROLE,     \n")
+				.append("  EP.EMPLOYEE  as '姓名',   \n")
+				.append("  EP.EMPLOYEENO  as '工號',   \n")
+				.append("  C.APPLICATIONDATE  as '申請日期',  \n")
+				.append("  HD.HOLIDAYNAME  as '假別',  \n")
+				.append("  DAYCOUNT as  天数,  \n")
+				.append("  HOURCOUNT as  小时,  \n")
+				.append("  MINUTECOUNT as  分,  \n")
+				.append("  DAYCOUNT ,  \n")
+				.append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间', \n")
+				.append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间', \n")
+				.append("  EP2.EMPLOYEE  as '代理人', \n")
+				.append("  C.NOTE as '備註', \n")
+				.append("  C.STATUS   as 'action' ,  \n")
+				.append("  C.LEAVEAPPLY,     \n")
+				.append("  C.RETURNMSG  as 'returnMSG' \n")
+				.append("  FROM VN_LEAVECARD  AS C  \n")
+				.append("  INNER JOIN      \n")
+				.append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n")
+				.append("  INNER JOIN   \n")
+				.append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID  \n")
+				.append("   INNER JOIN     \n")
+				.append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n")
+				.append("  INNER JOIN     \n")
+				.append("    VN_UNIT AS U      \n")
+				.append("    ON U.ID =EP.UNIT_ID     \n")
+				.append("     INNER JOIN     \n")
+				.append("     VN_DEPARTMENT AS D      \n")
+				.append(" 	  ON  D.ID =EP.DEPARTMENT_ID   \n")
+				.append("   where 1=1  \n");
 		if (!lcVo.getSearchEmployeeNo().equals("0"))
 		{
 			Sb.append(" and C.EP_ID ='" + lcVo.getSearchEmployeeNo() + "' \n");
@@ -938,7 +1028,7 @@ public class SqlUtil
 	 * @param unitID
 	 * @return
 	 */
-	public static final String upLCStatus(String Status, String ID)
+	public static final String upLCStatus(String Status, String ID,String LeaveApply)
 	{
 		StringBuilder Sb = new StringBuilder(" update VN_LEAVECARD	 ").append(" set Status='" + Status + "' , ");
 		if (Status.equals("T"))
@@ -977,6 +1067,18 @@ public class SqlUtil
 		if (Status.equals("M"))
 		{ // 管理部審核ok
 			Sb.append(" B_REVIEWTIME=getdate()  ");
+		}
+		if (LeaveApply.equals("1"))
+		{
+			Sb.append(" , LEAVEAPPLY='1'  ");
+		}
+		if (LeaveApply.equals("0"))
+		{
+			Sb.append(" , LEAVEAPPLY='0'  ");
+		}
+		if (LeaveApply.equals("2"))
+		{
+			Sb.append(" , LEAVEAPPLY='2'  ");
 		}
 		Sb.append("  where ID='" + ID + "' ");
 
@@ -1023,11 +1125,42 @@ public class SqlUtil
 	 * @param lcVo
 	 * @return
 	 */
-	public static final String getUnitLeaveCard(leaveCardVO lcVo)
+	public static final String getUnitLeaveCard(leaveCardVO lcVo,String DeptEmpNo)
 	{
 
-		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n").append("  D.DEPARTMENT as '部门',   \n").append("  U.UNIT   as '单位', \n").append("  EP.ROLE,   \n").append("  EP.EMPLOYEE  as '姓名',   \n").append("  EP.EMPLOYEENO  as '工號',   \n").append("  C.APPLICATIONDATE  as '申請日期',  \n").append("  HD.HOLIDAYNAME  as '假別',  \n").append("  DAYCOUNT as  天數,  \n").append("  HOURCOUNT as  小时,  \n").append("  MINUTECOUNT as  分,  \n").append("  DAYCOUNT ,  \n").append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间', \n").append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间', \n").append("  EP2.EMPLOYEE  as '代理人', \n").append("  C.NOTE as '備註', \n").append("  C.STATUS   as 'action' , \n").append("  C.RETURNMSG  as 'returnMSG' \n").append("  FROM VN_LEAVECARD  AS C  \n")
-				.append("  INNER JOIN      \n").append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n").append("  INNER JOIN   \n").append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID \n").append("   INNER JOIN     \n").append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n").append("   INNER JOIN   \n").append("   VN_UNIT AS U    \n").append("   ON U.ID =EP.UNIT_ID   \n").append("    INNER JOIN   \n").append("    VN_DEPARTMENT AS D    \n").append("	  ON  D.ID =EP.DEPARTMENT_ID \n").append("   where 1=1 \n");
+		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n")
+				.append("  D.DEPARTMENT as '部门',   \n")
+				.append("  U.UNIT   as '单位', \n")
+				.append("  EP.ROLE,   \n")
+				.append("  EP.EMPLOYEE  as '姓名',   \n")
+				.append("  EP.EMPLOYEENO  as '工號',   \n")
+				.append("  C.APPLICATIONDATE  as '申請日期',  \n")
+				.append("  HD.HOLIDAYNAME  as '假別',  \n")
+				.append("  DAYCOUNT as  天數,  \n")
+				.append("  HOURCOUNT as  小时,  \n")
+				.append("  MINUTECOUNT as  分,  \n")
+				.append("  DAYCOUNT ,  \n")
+				.append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间', \n")
+				.append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间', \n")
+				.append("  EP2.EMPLOYEE  as '代理人', \n")
+				.append("  C.NOTE as '備註', \n")
+				.append("  C.STATUS   as 'action' , \n")
+				.append("  C.RETURNMSG  as 'returnMSG', \n")
+				.append("  C.LEAVEAPPLY  \n")
+				.append("  FROM VN_LEAVECARD  AS C  \n")
+				.append("  INNER JOIN      \n")
+				.append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n")
+				.append("  INNER JOIN   \n")
+				.append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID \n")
+				.append("   INNER JOIN     \n")
+				.append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n")
+				.append("   INNER JOIN   \n")
+				.append("   VN_UNIT AS U    \n")
+				.append("   ON U.ID =EP.UNIT_ID   \n")
+				.append("    INNER JOIN   \n")
+				.append("    VN_DEPARTMENT AS D    \n")
+				.append("	  ON  D.ID =EP.DEPARTMENT_ID \n")
+				.append("   where 1=1 \n");
 
 		if (!lcVo.getSearchEmployeeNo().equals("0"))
 		{
@@ -1042,8 +1175,8 @@ public class SqlUtil
 			Sb.append(" and EP.UNIT_ID ='" + lcVo.getSearchUnit() + "' \n");
 		}
 		Sb.append(" AND C.STATUS <>'S' \n");
-		Sb.append(" AND EP.ROLE ='E' \n");// 只能查到普通員工 三天以下
-		Sb.append(" AND cast(C.DAYCOUNT as float)  <='3' \n");
+		Sb.append("  AND (((C.SINGROLEL1EP='"+DeptEmpNo+"' or C.SINGROLEL2EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)<3  )     \n");
+		Sb.append("	 or ((C.SINGROLEL1='1' and C.SINGROLEL1EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)>=3  ))   \n");
 		Sb.append(" AND C.STATUS <>'UR' \n");
 		// Sb.append(" AND C.STATUS <>'DR' ");
 		// Sb.append(" AND C.STATUS <>'LR' ");
@@ -1060,11 +1193,42 @@ public class SqlUtil
 	 * @param lcVo
 	 * @return
 	 */
-	public static final String getDepartmenLeaveCard(leaveCardVO lcVo)
+	public static final String getDepartmenLeaveCard(leaveCardVO lcVo,String DeptEmpNo)
 	{
 
-		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,   \n").append("   D.DEPARTMENT as '部门',    \n").append("  U.UNIT   as '单位',  \n").append("  EP.ROLE,    \n").append("  EP.EMPLOYEE  as '姓名',    \n").append("  EP.EMPLOYEENO  as '工號',    \n").append("  C.APPLICATIONDATE  as '申請日期',   \n").append("  HD.HOLIDAYNAME  as '假別',   \n").append("  DAYCOUNT as  天數,   \n").append("  HOURCOUNT as  小时,  \n").append("  MINUTECOUNT as  分,  \n").append("  DAYCOUNT ,   \n").append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间',  \n").append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间',  \n").append("  EP2.EMPLOYEE  as '代理人',  \n").append("  C.NOTE as '備註',  \n").append("  C.STATUS   as 'action' , \n").append("  C.RETURNMSG  as 'returnMSG'  \n")
-				.append("  FROM VN_LEAVECARD  AS C   \n").append("  INNER JOIN       \n").append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID   \n").append("  INNER JOIN    \n").append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID  \n").append("   INNER JOIN      \n").append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID  \n").append("   INNER JOIN    \n").append("   VN_UNIT AS U     \n").append("   ON U.ID =EP.UNIT_ID    \n").append("    INNER JOIN    \n").append("    VN_DEPARTMENT AS D    \n").append("	  ON  D.ID =EP.DEPARTMENT_ID  \n").append("   where 1=1  \n");
+		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,   \n")
+				.append("   D.DEPARTMENT as '部门',    \n")
+				.append("  U.UNIT   as '单位',  \n")
+				.append("  EP.ROLE,    \n")
+				.append("  EP.EMPLOYEE  as '姓名',    \n")
+				.append("  EP.EMPLOYEENO  as '工號',    \n")
+				.append("  C.APPLICATIONDATE  as '申請日期',   \n")
+				.append("  HD.HOLIDAYNAME  as '假別',   \n")
+				.append("  DAYCOUNT as  天數,   \n")
+				.append("  HOURCOUNT as  小时,  \n")
+				.append("  MINUTECOUNT as  分,  \n")
+				.append("  DAYCOUNT ,   \n")
+				.append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间',  \n")
+				.append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间',  \n")
+				.append("  EP2.EMPLOYEE  as '代理人',  \n")
+				.append("  C.NOTE as '備註',  \n")
+				.append("  C.STATUS   as 'action' , \n")
+				.append("  C.RETURNMSG  as 'returnMSG',  \n")
+				.append("  C.LEAVEAPPLY  \n")
+				.append("  FROM VN_LEAVECARD  AS C   \n")
+				.append("  INNER JOIN       \n")
+				.append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID   \n")
+				.append("  INNER JOIN    \n")
+				.append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID  \n")
+				.append("   INNER JOIN      \n")
+				.append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID  \n")
+				.append("   INNER JOIN    \n")
+				.append("   VN_UNIT AS U     \n")
+				.append("   ON U.ID =EP.UNIT_ID    \n")
+				.append("    INNER JOIN    \n")
+				.append("    VN_DEPARTMENT AS D    \n")
+				.append("	  ON  D.ID =EP.DEPARTMENT_ID  \n")
+				.append("   where 1=1  \n");
 		if (!lcVo.getSearchEmployeeNo().equals("0"))
 		{
 			Sb.append(" and C.EP_ID ='" + lcVo.getSearchEmployeeNo() + "'  \n");
@@ -1082,8 +1246,10 @@ public class SqlUtil
 		Sb.append(" AND C.STATUS <>'S'  \n");
 		Sb.append(" AND C.STATUS <>'UR'  \n");
 		Sb.append(" AND not (C.STATUS ='T' AND EP.ROLE ='D')  \n");
-		Sb.append(" AND not(C.STATUS ='T' AND EP.ROLE ='U' and cast(DAYCOUNT as float)>=3  )  \n");
+		//Sb.append(" AND not(C.STATUS ='T' AND EP.ROLE ='U' and cast(DAYCOUNT as float)>=3  )  \n");
 		Sb.append("  AND not (C.STATUS ='B' AND EP.ROLE ='M')   \n");
+		Sb.append("  AND (((C.SINGROLEL1EP='"+DeptEmpNo+"' or C.SINGROLEL2EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)<3  )     \n");
+		Sb.append("	 or ((C.SINGROLEL2='1' and C.SINGROLEL2EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)>=3  ))   \n");
 		Sb.append(" ORDER BY C.ID DESC  \n");
 
 		return Sb.toString();
@@ -1132,11 +1298,42 @@ public class SqlUtil
 	 * @param lcVo
 	 * @return
 	 */
-	public static final String getLLeaveCard(leaveCardVO lcVo)
+	public static final String getLLeaveCard(leaveCardVO lcVo,String DeptEmpNo)
 	{
 
-		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n").append(" D.DEPARTMENT as '部门',    \n").append(" U.UNIT   as '单位',  \n").append("  EP.ROLE,    \n").append("  EP.EMPLOYEE  as '姓名',   \n").append("  EP.EMPLOYEENO  as '工號',   \n").append("  C.APPLICATIONDATE  as '申請日期',  \n").append("  HD.HOLIDAYNAME  as '假別',  \n").append("  DAYCOUNT as  '天數',  ").append("  HOURCOUNT as  '小时',  \n").append("  MINUTECOUNT as  '分',  \n").append("  DAYCOUNT ,  ").append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间', \n").append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间', \n").append("  EP2.EMPLOYEE  as '代理人', ").append("  C.NOTE as '備註', \n").append("  C.STATUS   as 'action' , \n").append("  C.RETURNMSG  as 'returnMSG' \n")
-				.append("  FROM VN_LEAVECARD  AS C  \n").append("  INNER JOIN      \n").append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n").append("  INNER JOIN   \n").append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID \n").append("   INNER JOIN     \n").append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n").append("   INNER JOIN     \n").append("   VN_UNIT AS U      \n").append("   ON U.ID =EP.UNIT_ID     \n").append("    INNER JOIN     \n").append("	  VN_DEPARTMENT AS D     \n").append("    ON  D.ID =EP.DEPARTMENT_ID  \n").append("   where 1=1  \n");
+		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n")
+				.append(" D.DEPARTMENT as '部门',    \n")
+				.append(" U.UNIT   as '单位',  \n")
+				.append("  EP.ROLE,    \n")
+				.append("  EP.EMPLOYEE  as '姓名',   \n")
+				.append("  EP.EMPLOYEENO  as '工號',   \n")
+				.append("  C.APPLICATIONDATE  as '申請日期',  \n")
+				.append("  HD.HOLIDAYNAME  as '假別',  \n")
+				.append("  DAYCOUNT as  '天數',  ")
+				.append("  HOURCOUNT as  '小时',  \n")
+				.append("  MINUTECOUNT as  '分',  \n")
+				.append("  DAYCOUNT ,  ")
+				.append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '請假開始时间', \n")
+				.append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '請假結束时间', \n")
+				.append("  EP2.EMPLOYEE  as '代理人', ")
+				.append("  C.NOTE as '備註', \n")
+				.append("  C.STATUS   as 'action' , \n")
+				.append("  C.RETURNMSG  as 'returnMSG', \n")
+				.append("  C.LEAVEAPPLY  \n")
+				.append("  FROM VN_LEAVECARD  AS C  \n")
+				.append("  INNER JOIN      \n")
+				.append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n")
+				.append("  INNER JOIN   \n")
+				.append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID \n")
+				.append("   INNER JOIN     \n")
+				.append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n")
+				.append("   INNER JOIN     \n")
+				.append("   VN_UNIT AS U      \n")
+				.append("   ON U.ID =EP.UNIT_ID     \n")
+				.append("    INNER JOIN     \n")
+				.append("	  VN_DEPARTMENT AS D     \n")
+				.append("    ON  D.ID =EP.DEPARTMENT_ID  \n")
+				.append("   where 1=1  \n");
 		if (!lcVo.getSearchEmployeeNo().equals("0"))
 		{
 			Sb.append(" and C.EP_ID ='" + lcVo.getSearchEmployeeNo() + "' \n");
@@ -1155,28 +1352,21 @@ public class SqlUtil
 		{
 			Sb.append(" and EP.DEPARTMENT_ID ='" + lcVo.getSearchDepartmen() + "' \n");
 		}
-		// Sb.append(" and cast(C.DAYCOUNT as float) >= 3 \n");
-		// Sb.append(" AND C.STATUS <>'T' \n");
-		// Sb.append(" AND C.STATUS <>'S' \n");
-		// Sb.append(" AND C.STATUS <>'M' \n");
-		// Sb.append(" AND C.STATUS <>'U' \n");
-		// Sb.append(" AND C.STATUS <>'UR' \n");
-		// Sb.append(" AND C.STATUS <>'DR' \n");
-		// Sb.append(" AND C.STATUS <>'LR' \n");
-		// Sb.append(" AND C.STATUS <>'MR' \n");
+		
 		/** 未審核 **/
 		if (lcVo.getStatus().equals("D"))
 		{
-			Sb.append(" AND  ((C.STATUS ='T' AND EP.ROLE ='D' AND cast(DAYCOUNT as float) <=3) \n");
-			Sb.append(" OR (C.STATUS ='T' AND EP.ROLE ='U' AND cast(DAYCOUNT as float) >3)   \n");
-			Sb.append(" OR (C.STATUS ='T' AND EP.ROLE ='D' AND cast(DAYCOUNT as float) >3)) \n");
+			Sb.append(" AND NOT ( C.STATUS IN ('L'))     \n");
+			Sb.append(" AND (((C.SINGROLEL1EP='"+DeptEmpNo+"' or C.SINGROLEL2EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)<3  )     \n");
+			Sb.append("	or ((C.SINGROLEL3='1' and C.SINGROLEL3EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)>=3  ))   \n");
+			Sb.append("	and   C.LEAVEAPPLY ='0'    \n");
 		}
 		/** 已審核或退回 **/
 		if (lcVo.getStatus().equals("L"))
 		{
 			Sb.append(" AND C.STATUS  IN ('U','D','L','UR','DR','LR')  \n");
 			Sb.append(" AND EP.ROLE IN ('E','U','D','M')  \n");
-			// Sb.append(" AND EP.ROLE ='E' \n");
+			Sb.append("	and   ( C.LEAVEAPPLY ='1' OR  C.LEAVEAPPLY ='2'   )  \n");
 		}
 
 		Sb.append(" ORDER BY C.ID DESC  \n");
@@ -1191,11 +1381,42 @@ public class SqlUtil
 	 * @param lcVo
 	 * @return
 	 */
-	public static final String getBLeaveCard(leaveCardVO lcVo)
+	public static final String getBLeaveCard(leaveCardVO lcVo,String DeptEmpNo)
 	{
 
-		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n").append(" D.DEPARTMENT as '部门',    \n").append(" U.UNIT   as '单位',  \n").append("  EP.ROLE,    \n").append("  EP.EMPLOYEE  as '姓名',   \n").append("  EP.EMPLOYEENO  as '工号',   \n").append("  C.APPLICATIONDATE  as '申请日期',  \n").append("  HD.HOLIDAYNAME  as '假別',  \n").append("  DAYCOUNT as  天数,  ").append("  HOURCOUNT as  小时,  \n").append("  MINUTECOUNT as  分,  \n").append("  DAYCOUNT ,  ").append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '请假开始时间', \n").append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '请假结束时间', \n").append("  EP2.EMPLOYEE  as '代理人', ").append("  C.NOTE as '备注', \n").append("  C.STATUS   as 'action' , \n").append("  C.RETURNMSG  as 'returnMSG' \n").append("  FROM VN_LEAVECARD  AS C  \n")
-				.append("  INNER JOIN      \n").append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n").append("  INNER JOIN   \n").append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID \n").append("   INNER JOIN     \n").append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n").append("   INNER JOIN     \n").append("   VN_UNIT AS U      \n").append("   ON U.ID =EP.UNIT_ID     \n").append("    INNER JOIN     \n").append("	  VN_DEPARTMENT AS D     \n").append("    ON  D.ID =EP.DEPARTMENT_ID  \n").append("   where 1=1  \n");
+		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n")
+				.append(" D.DEPARTMENT as '部门',    \n")
+				.append(" U.UNIT   as '单位',  \n")
+				.append("  EP.ROLE,    \n")
+				.append("  EP.EMPLOYEE  as '姓名',   \n")
+				.append("  EP.EMPLOYEENO  as '工号',   \n")
+				.append("  C.APPLICATIONDATE  as '申请日期',  \n")
+				.append("  HD.HOLIDAYNAME  as '假別',  \n")
+				.append("  DAYCOUNT as  天数,  ")
+				.append("  HOURCOUNT as  小时,  \n")
+				.append("  MINUTECOUNT as  分,  \n")
+				.append("  DAYCOUNT ,  ")
+				.append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '请假开始时间', \n")
+				.append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '请假结束时间', \n")
+				.append("  EP2.EMPLOYEE  as '代理人', ")
+				.append("  C.NOTE as '备注', \n")
+				.append("  C.STATUS   as 'action' , \n")
+				.append("  C.RETURNMSG  as 'returnMSG', \n")
+				.append(" C.LEAVEAPPLY  \n")
+				.append("  FROM VN_LEAVECARD  AS C  \n")
+				.append("  INNER JOIN      \n")
+				.append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n")
+				.append("  INNER JOIN   \n")
+				.append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID \n")
+				.append("   INNER JOIN     \n")
+				.append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n")
+				.append("   INNER JOIN     \n")
+				.append("   VN_UNIT AS U      \n")
+				.append("   ON U.ID =EP.UNIT_ID     \n")
+				.append("    INNER JOIN     \n")
+				.append("	  VN_DEPARTMENT AS D     \n")
+				.append("    ON  D.ID =EP.DEPARTMENT_ID  \n")
+				.append("   where 1=1  \n");
 		if (!lcVo.getSearchEmployeeNo().equals("0"))
 		{
 			Sb.append(" and C.EP_ID ='" + lcVo.getSearchEmployeeNo() + "' \n");
@@ -1214,20 +1435,98 @@ public class SqlUtil
 		{
 			Sb.append(" and EP.DEPARTMENT_ID ='" + lcVo.getSearchDepartmen() + "' \n");
 		}
-		// Sb.append(" and cast(C.DAYCOUNT as float) >= 3 \n");
-		// Sb.append(" AND C.STATUS <>'T' \n");
-		// Sb.append(" AND C.STATUS <>'S' \n");
-		// Sb.append(" AND C.STATUS <>'M' \n");
-		// Sb.append(" AND C.STATUS <>'U' \n");
-		// Sb.append(" AND C.STATUS <>'UR' \n");
-		// Sb.append(" AND C.STATUS <>'DR' \n");
-		// Sb.append(" AND C.STATUS <>'LR' \n");
-		// Sb.append(" AND C.STATUS <>'MR' \n");
+
 		/** 未審核 **/
 		if (lcVo.getStatus().equals("D"))
 		{
 			// Sb.append(" AND EP.ROLE NOT IN ('E','U','D','M') \n");
-			Sb.append(" AND (EP.ROLE='M' AND C.STATUS='T')  \n");
+			//Sb.append(" AND (EP.ROLE='M' AND C.STATUS='T')  \n");
+			Sb.append(" AND (((C.SINGROLEL1EP='"+DeptEmpNo+"' or C.SINGROLEL2EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)<3  )     \n");
+			Sb.append("	or ((C.SINGROLEL4='1' and C.SINGROLEL4EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)>=3  ))   \n");
+			Sb.append("	and   C.LEAVEAPPLY ='0'   \n");
+		}
+		/** 已審核或退回 **/
+		if (lcVo.getStatus().equals("L"))
+		{
+			Sb.append(" AND C.STATUS  IN ('U','D','L','B','UR','DR','LR','BR')  \n");
+			Sb.append(" AND EP.ROLE IN ('E','U','D','M','B')  \n");
+			Sb.append("	AND  (C.LEAVEAPPLY='1' or C.LEAVEAPPLY='2') \n");
+		}
+
+		Sb.append(" ORDER BY C.ID DESC  \n");
+
+		return Sb.toString();
+
+	}
+
+	/**
+	 * 人事查询請假卡
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final String getRevLeaveCard(leaveCardVO lcVo)
+	{
+
+		StringBuilder Sb = new StringBuilder(" SELECT  C.ID,  \n")
+				.append(" D.DEPARTMENT as '部门',    \n")
+				.append(" U.UNIT   as '单位',  \n")
+				.append("  EP.ROLE,    \n")
+				.append("  EP.EMPLOYEE  as '姓名',   \n")
+				.append("  EP.EMPLOYEENO  as '工号',   \n")
+				.append("  C.APPLICATIONDATE  as '申请日期',  \n")
+				.append("  HD.HOLIDAYNAME  as '假別',  \n")
+				.append("  DAYCOUNT as  天数,  ")
+				.append("  HOURCOUNT as  小时,  \n")
+				.append("  MINUTECOUNT as  分,  \n")
+				.append("  DAYCOUNT ,  ")
+				.append("  CONVERT(varchar(100), C.STARTLEAVEDATE, 120)  as '请假开始时间', \n")
+				.append("  CONVERT(varchar(100), C.ENDLEAVEDATE, 120)   as '请假结束时间', \n")
+				.append("  EP2.EMPLOYEE  as '代理人', ")
+				.append("  C.NOTE as '备注', \n")
+				.append("  C.STATUS   as 'action' , \n")
+				.append("  C.RETURNMSG  as 'returnMSG', \n")
+				.append(" C.LEAVEAPPLY  \n")
+				.append("  FROM VN_LEAVECARD  AS C  \n")
+				.append("  INNER JOIN      \n")
+				.append("  HR_EMPLOYEE AS EP      ON C.EP_ID =EP.ID  \n")
+				.append("  INNER JOIN   \n")
+				.append("  VN_LHOLIDAY AS HD      ON C.HD_ID =HD.ID \n")
+				.append("   INNER JOIN     \n")
+				.append("   HR_EMPLOYEE AS EP2      ON C.AGENT =EP2.ID \n")
+				.append("   INNER JOIN     \n")
+				.append("   VN_UNIT AS U      \n")
+				.append("   ON U.ID =EP.UNIT_ID     \n")
+				.append("    INNER JOIN     \n")
+				.append("	  VN_DEPARTMENT AS D     \n")
+				.append("    ON  D.ID =EP.DEPARTMENT_ID  \n")
+				.append("   where 1=1  \n");
+		if (!lcVo.getSearchEmployeeNo().equals("0"))
+		{
+			Sb.append(" and C.EP_ID ='" + lcVo.getSearchEmployeeNo() + "' \n");
+		}
+		if (!lcVo.getStartLeaveDate().trim().equals(lcVo.getEndLeaveDate().trim()))
+		{
+
+			Sb.append(" AND   C.APPLICATIONDATE  BETWEEN '" + lcVo.getStartLeaveDate() + " 00:00:00" + "'  AND '" + lcVo.getEndLeaveDate() + " 23:59:59'  \n");
+		}
+		if (lcVo.getStartLeaveDate().trim().equals(lcVo.getEndLeaveDate().trim()))
+		{
+
+			Sb.append(" AND     CONVERT(varchar(100),  C.APPLICATIONDATE, 111) = '" + lcVo.getStartLeaveDate() + "' \n");
+		}
+		if (!lcVo.getSearchDepartmen().equals("0"))
+		{
+			Sb.append(" and EP.DEPARTMENT_ID ='" + lcVo.getSearchDepartmen() + "' \n");
+		}
+
+		/** 未審核 **/
+		if (lcVo.getStatus().equals("D"))
+		{
+			// Sb.append(" AND EP.ROLE NOT IN ('E','U','D','M') \n");
+			//Sb.append(" AND (EP.ROLE='M' AND C.STATUS='T')  \n");
+			//Sb.append(" AND (((C.SINGROLEL1EP='"+DeptEmpNo+"' or C.SINGROLEL2EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)<3  )     \n");
+			//Sb.append("	or ((C.SINGROLEL2='1' and C.SINGROLEL2EP='"+DeptEmpNo+"') and cast(DAYCOUNT as float)>=3  ))   \n");
 		}
 		/** 已審核或退回 **/
 		if (lcVo.getStatus().equals("L"))
@@ -1242,7 +1541,7 @@ public class SqlUtil
 		return Sb.toString();
 
 	}
-
+	
 	/**
 	 * 請假卡-改變狀態與修改退回訊息
 	 * 
@@ -1251,15 +1550,28 @@ public class SqlUtil
 	 */
 	public static final String updateLcStatus(leaveCardVO lcVo)
 	{
-		StringBuilder Sb = new StringBuilder(" update VN_LEAVECARD	 ").append(" set  Status='" + lcVo.getStatus() + "'  ");
+		StringBuilder Sb = new StringBuilder(" update VN_LEAVECARD	 ")
+				.append(" set  Status='" + lcVo.getStatus() + "'  ");
 
 		Sb.append(" , SAVETIME=getdate()  ");
-
+		
+		if (lcVo.getLeaveApply().equals("1"))
+		{
+			Sb.append(" , LEAVEAPPLY='1'  ");
+		}
+		if (lcVo.getLeaveApply().equals("0"))
+		{
+			Sb.append(" , LEAVEAPPLY='0'  ");
+		}
+		if (lcVo.getLeaveApply().equals("2"))
+		{
+			Sb.append(" , LEAVEAPPLY='2'  ");
+		}
 		if (!lcVo.getReturnMsg().equals(""))
 		{
 			Sb.append(" , RETURNMSG=N'" + lcVo.getReturnMsg() + "' ");
 		}
-
+		
 		Sb.append("  where ID='" + lcVo.getRowID() + "' ");
 
 		return Sb.toString();
@@ -3519,7 +3831,7 @@ public class SqlUtil
 	}
 	
 	/**
-	 * 刪除不需打卡主管資料 關連表
+	 * 新增部門審核流程
 	 */
 	public static final String insterDeptLerveRole(editProcessRO ep) throws Exception
 	{
@@ -3529,17 +3841,335 @@ public class SqlUtil
 		sql = sql.replace("<DEPT/>", ep.getDept());
 		sql = sql.replace("<UNIT>",  ep.getUnit());
 		sql = sql.replace("<ROLE/>", ep.getRole());
-		sql = sql.replace("<STATUS>", ep.getStatus());
-		sql = sql.replace("<SINGROLEL1>", ep.getSingRoleL1());
-		sql = sql.replace("<SINGROLEL2>", ep.getSingRoleL2());
-		sql = sql.replace("<SINGROLEL3>", ep.getSingRoleL3());
-		sql = sql.replace("<SINGROLEL4>", ep.getSingRoleL4());
-		sql = sql.replace("<SINGROLEL1EP>", ep.getSingRoleL1EP());
-		sql = sql.replace("<SINGROLEL2EP>", ep.getSingRoleL2EP());
-		sql = sql.replace("<SINGROLEL3EP>", ep.getSingRoleL3EP());
-		sql = sql.replace("<SINGROLEL4EP>", ep.getSingRoleL4EP());
+		sql = sql.replace("<STATUS/>", ep.getStatus());
+		sql = sql.replace("<SINGROLEL1/>", ep.getSingRoleL1());
+		sql = sql.replace("<SINGROLEL2/>", ep.getSingRoleL2());
+		sql = sql.replace("<SINGROLEL3/>", ep.getSingRoleL3());
+		sql = sql.replace("<SINGROLEL4/>", ep.getSingRoleL4());
+		sql = sql.replace("<SINGROLEL1EP/>", ep.getSingRoleL1EP());
+		sql = sql.replace("<SINGROLEL2EP/>", ep.getSingRoleL2EP());
+		sql = sql.replace("<SINGROLEL3EP/>", ep.getSingRoleL3EP());
+		sql = sql.replace("<SINGROLEL4EP/>", ep.getSingRoleL4EP());
+		sql = sql.replace("<oneTitle/>", ep.getOneTitle());
+		sql = sql.replace("<twoTitle/>", ep.getTwoTitle());
+		return sql;
+	}
+	
+
+	/**
+	 * 查詢請假權限流程部門有無資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryDeptLeaveCount(editProcessVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryDeptLeaveCount);
+		sql = sql.replace("<DEPT/>", edVo.getDept());
+		return sql;
+	}
+	/**
+	 * 查詢請假權限流程部門資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryDeptLeaveData(editProcessVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryDeptLeaveData);
+		sql = sql.replace("<DEPT/>", edVo.getDept());
+		sql = sql.replace("<UNIT/>", edVo.getUnit());
+		sql = sql.replace("<STATUS/>", edVo.getStatus());
+		sql = sql.replace("<ROLE/>", edVo.getRole());
+		return sql;
+	}
+	
+	/**
+	 *更新請假權限流程部門資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String updateDeptLerveRole(editProcessRO edRo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_updateDeptLerveRole);
+		sql = sql.replace("<SINGROLEL1/>", edRo.getSingRoleL1());
+		sql = sql.replace("<SINGROLEL2/>", edRo.getSingRoleL2());
+		sql = sql.replace("<SINGROLEL3/>", edRo.getSingRoleL3());
+		sql = sql.replace("<SINGROLEL4/>", edRo.getSingRoleL4());
+		sql = sql.replace("<SINGROLEL1EP/>", edRo.getSingRoleL1EP());
+		sql = sql.replace("<SINGROLEL2EP/>", edRo.getSingRoleL2EP());
+		sql = sql.replace("<SINGROLEL3EP/>", edRo.getSingRoleL3EP());
+		sql = sql.replace("<SINGROLEL4EP/>", edRo.getSingRoleL4EP());
+		sql = sql.replace("<oneTitle/>", edRo.getOneTitle());
+		sql = sql.replace("<twoTitle/>", edRo.getTwoTitle());
+		sql = sql.replace("<ID/>", edRo.getID());
+		return sql;
+	}
+	
+	/**
+	 *查詢請假權限流程單位筆數 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryUnitLeaveCount(editProcessVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryUnitLeaveCount);
+		sql = sql.replace("<UNIT/>", edVo.getUnit());
 		return sql;
 	}
 	
 	
+	/**
+	 *查詢已設定部門資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String getDeptLeaveSetData(editProcessVO edRo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getDeptLeaveSetData);
+		return sql;
+	}
+	/**
+	 *查詢已設定部門單位資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryDeptLeaveCardCount(processUserRO pr) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryDeptLeaveCardCount);
+		sql = sql.replace("<DEPT/>", pr.getDEPARTMENT());
+		sql = sql.replace("<UNIT/>", pr.getUNIT());
+		sql = sql.replace("<STATUS/>", pr.getSTATUS());
+		sql = sql.replace("<ROLE/>", pr.getROLE());
+
+		return sql;
+	}
+	/**
+	 *查詢已設定部門資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryLeavePreossCount(processUserRO pr) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryLeavePreossCount);
+		sql = sql.replace("<DEPT/>", pr.getDEPARTMENT());
+		
+		sql = sql.replace("<STATUS/>", pr.getSTATUS());
+		sql = sql.replace("<ROLE/>", pr.getROLE());
+
+		return sql;
+	}
+	/**
+	 *查詢已設定部門資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryUserData(leaveCardVO lcVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryUserData);
+		sql = sql.replace("<EMPLOYEENO/>", lcVo.getSearchEmployeeNo());
+		return sql;
+	}
+	/**
+	 *查詢主管 部門/單位/名稱
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryChargeName(String EMPLOYEENO) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryChargeName);
+		sql = sql.replace("<EMPLOYEENO/>",EMPLOYEENO);
+		return sql;
+	}
+	
+	/**
+	 *查詢權限控制主管可搜尋部門
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String querySelectDept(String EMPLOYEENO) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_querySelectDept);
+		sql = sql.replace("<EMPLOYEENO/>",EMPLOYEENO);
+		return sql;
+	}
+	
+	/**
+	 * 查詢請假三天以下或以上 以下0以上1
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryLeaveCardProcess(leaveCardVO lcVo ) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryLeaveCardProcess);
+		sql = sql.replace("<rowID/>", lcVo.getRowID());
+	
+		return sql;
+	}
+	
+	/**
+	 * 查詢請假卡個人資料使用行ID
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryLeaveCardUserData(leaveCardVO lcVo ) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryLeaveCardUserData);
+		sql = sql.replace("<rowID/>", lcVo.getRowID());
+	
+		return sql;
+	}
+	
+	
+	public static final String queryDeptOverCount(editProcessVO edVo ) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryDeptOverCount);
+		sql = sql.replace("<DEPT/>", edVo.getDept());
+	
+		return sql;
+	}
+	public static final String queryDeptOverData(editProcessVO edVo ) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryDeptOverData);
+		sql = sql.replace("<DEPT/>", edVo.getDept());
+		sql = sql.replace("<UNIT/>", edVo.getUnit());
+		sql = sql.replace("<STATUS/>", edVo.getStatus());
+		sql = sql.replace("<ROLE/>", edVo.getRole());
+	
+		return sql;
+	}
+	
+	/**
+	 *更新加班權限流程部門資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String updateDeptOverRole(editProcessRO edRo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_updateDeptOverRole);
+		sql = sql.replace("<SINGROLEL1/>", edRo.getSingRoleL1());
+		sql = sql.replace("<SINGROLEL2/>", edRo.getSingRoleL2());
+		sql = sql.replace("<SINGROLEL3/>", edRo.getSingRoleL3());
+		sql = sql.replace("<SINGROLEL4/>", edRo.getSingRoleL4());
+		sql = sql.replace("<SINGROLEL1EP/>", edRo.getSingRoleL1EP());
+		sql = sql.replace("<SINGROLEL2EP/>", edRo.getSingRoleL2EP());
+		sql = sql.replace("<SINGROLEL3EP/>", edRo.getSingRoleL3EP());
+		sql = sql.replace("<SINGROLEL4EP/>", edRo.getSingRoleL4EP());
+		sql = sql.replace("<oneTitle/>", edRo.getOneTitle());
+		sql = sql.replace("<twoTitle/>", edRo.getTwoTitle());
+		sql = sql.replace("<ID/>", edRo.getID());
+		return sql;
+	}
+
+	/**
+	 * 新增部門加班審核流程
+	 */
+	public static final String insterDeptOverRole(editProcessRO ep) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_InsterDeptOverRole);
+		sql = sql.replace("<ID/>", UUIDUtil.generateShortUuid());
+		sql = sql.replace("<DEPT/>", ep.getDept());
+		sql = sql.replace("<UNIT>",  ep.getUnit());
+		sql = sql.replace("<ROLE/>", ep.getRole());
+		sql = sql.replace("<STATUS/>", ep.getStatus());
+		sql = sql.replace("<SINGROLEL1/>", ep.getSingRoleL1());
+		sql = sql.replace("<SINGROLEL2/>", ep.getSingRoleL2());
+		sql = sql.replace("<SINGROLEL3/>", ep.getSingRoleL3());
+		sql = sql.replace("<SINGROLEL4/>", ep.getSingRoleL4());
+		sql = sql.replace("<SINGROLEL1EP/>", ep.getSingRoleL1EP());
+		sql = sql.replace("<SINGROLEL2EP/>", ep.getSingRoleL2EP());
+		sql = sql.replace("<SINGROLEL3EP/>", ep.getSingRoleL3EP());
+		sql = sql.replace("<SINGROLEL4EP/>", ep.getSingRoleL4EP());
+		sql = sql.replace("<oneTitle/>", ep.getOneTitle());
+		sql = sql.replace("<twoTitle/>", ep.getTwoTitle());
+		return sql;
+	}
+	/**
+	 *查詢請假權限流程單位筆數 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryUnitOverCount(editProcessVO edVo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryUnitOverCount);
+		sql = sql.replace("<UNIT/>", edVo.getUnit());
+		return sql;
+	}
+	
+	
+	/**
+	 *查詢已設定加班流程資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String getDeptOverSetData(editProcessVO edRo) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getDeptOverSetData);
+		return sql;
+	}
+	/**
+	 *加班查詢已設定部門資料 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryOverPreossCount(processUserRO pr) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryOverPreossCount);
+		sql = sql.replace("<DEPT/>", pr.getDEPARTMENT());
+		sql = sql.replace("<STATUS/>", pr.getSTATUS());
+		sql = sql.replace("<ROLE/>", pr.getROLE());
+
+		return sql;
+	}
+	
+	/**
+	 *查詢已設定加班部門單位流程資料筆數 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryDeptUnitOverCount(processUserRO pr) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryDeptLeaveCardCount);
+		sql = sql.replace("<DEPT/>", pr.getDEPARTMENT());
+		sql = sql.replace("<UNIT/>", pr.getUNIT());
+		sql = sql.replace("<STATUS/>", pr.getSTATUS());
+		sql = sql.replace("<ROLE/>", pr.getROLE());
+
+		return sql;
+	}
 }

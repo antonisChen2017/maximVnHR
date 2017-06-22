@@ -43,6 +43,7 @@ public class editProcessVO implements Serializable
 	private String  ActionURI;
 	/**是否顯示查询結果*/
 	private boolean  showDataTable;
+
 	/**三天以下部門主管審核者職級*/
 	private String  oneDAuditorTitle;
 	/**三天以下部門主管審核者*/
@@ -96,6 +97,89 @@ public class editProcessVO implements Serializable
 	/**三天以上單位主管審核-副總*/
 	private String  threeULever4;
 	
+	/**三天以下部門主管ID*/
+	private String  oneDID;
+	/**三天以下經理ID*/
+	private String  oneMID;
+	/**三天以上部門主管ID*/
+	private String  threeDID;
+	/**三天以上經理ID*/
+	private String  threeMID;
+	
+	/**三天以上員工ID*/
+	private String  oneEID;
+	/**三天以上單位員工ID*/
+	private String  oneUID;
+	/**三天以下員工ID*/
+	private String  threeEID;
+	/**三天以下經理ID*/
+	private String  threeUID;
+	
+
+	public String getOneEID()
+	{
+		return oneEID;
+	}
+	public void setOneEID(String oneEID)
+	{
+		this.oneEID = oneEID;
+	}
+	public String getOneUID()
+	{
+		return oneUID;
+	}
+	public void setOneUID(String oneUID)
+	{
+		this.oneUID = oneUID;
+	}
+	public String getThreeEID()
+	{
+		return threeEID;
+	}
+	public void setThreeEID(String threeEID)
+	{
+		this.threeEID = threeEID;
+	}
+	public String getThreeUID()
+	{
+		return threeUID;
+	}
+	public void setThreeUID(String threeUID)
+	{
+		this.threeUID = threeUID;
+	}
+	public String getOneDID()
+	{
+		return oneDID;
+	}
+	public void setOneDID(String oneDID)
+	{
+		this.oneDID = oneDID;
+	}
+	public String getOneMID()
+	{
+		return oneMID;
+	}
+	public void setOneMID(String oneMID)
+	{
+		this.oneMID = oneMID;
+	}
+	public String getThreeDID()
+	{
+		return threeDID;
+	}
+	public void setThreeDID(String threeDID)
+	{
+		this.threeDID = threeDID;
+	}
+	public String getThreeMID()
+	{
+		return threeMID;
+	}
+	public void setThreeMID(String threeMID)
+	{
+		this.threeMID = threeMID;
+	}
 	public String getOneDAuditorTitle()
 	{
 		return oneDAuditorTitle;
@@ -431,6 +515,12 @@ public class editProcessVO implements Serializable
 	public void setThreeDLever4(String threeDLever4)
 	{
 		this.threeDLever4 = threeDLever4;
+	}
+	@Override
+	public String toString()
+	{
+		return "editProcessVO [ID=" + ID + ", Dept=" + Dept + ", Unit=" + Unit + ", Role=" + Role + ", Status=" + Status + ", SingRoleL1=" + SingRoleL1 + ", SingRoleL2=" + SingRoleL2 + ", SingRoleL3=" + SingRoleL3 + ", SingRoleL4=" + SingRoleL4 + ", SingRoleL1EP=" + SingRoleL1EP + ", SingRoleL2EP=" + SingRoleL2EP + ", SingRoleL3EP=" + SingRoleL3EP + ", SingRoleL4EP=" + SingRoleL4EP + ", msg=" + msg + ", ActionURI=" + ActionURI + ", showDataTable=" + showDataTable + ", oneDAuditorTitle=" + oneDAuditorTitle + ", oneDAuditor=" + oneDAuditor + ", oneDAgentTitle=" + oneDAgentTitle + ", oneDAgent=" + oneDAgent + ", oneMAuditorTitle=" + oneMAuditorTitle + ", oneMAuditor=" + oneMAuditor + ", oneMAgentTitle=" + oneMAgentTitle + ", oneMAgent=" + oneMAgent + ", threeDLever3=" + threeDLever3
+				+ ", threeDLever4=" + threeDLever4 + ", threeMLever4=" + threeMLever4 + ", oneEAuditorTitle=" + oneEAuditorTitle + ", oneEAuditor=" + oneEAuditor + ", oneEAgentTitle=" + oneEAgentTitle + ", oneEAgent=" + oneEAgent + ", oneUAuditorTitle=" + oneUAuditorTitle + ", oneUAuditor=" + oneUAuditor + ", oneUAgentTitle=" + oneUAgentTitle + ", oneUAgent=" + oneUAgent + ", threeELever1=" + threeELever1 + ", threeELever2=" + threeELever2 + ", threeELever3=" + threeELever3 + ", threeELever4=" + threeELever4 + ", threeULever2=" + threeULever2 + ", threeULever3=" + threeULever3 + ", threeULever4=" + threeULever4 + "]";
 	}
 	
 	

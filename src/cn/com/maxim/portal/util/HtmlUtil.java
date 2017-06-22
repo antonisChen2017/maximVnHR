@@ -1034,6 +1034,10 @@ public class HtmlUtil
 		{
 			bStatus = "DT";
 		}
+		if (page.equals(keyConts.pageB))
+		{
+			bStatus = "B";
+		}
 		WebDBTableEx table = new WebDBTableEx(con, sql);
 
 		return table.getHTMLTableLC(out, "無資料", css, htmlButton, msg, bStatus);

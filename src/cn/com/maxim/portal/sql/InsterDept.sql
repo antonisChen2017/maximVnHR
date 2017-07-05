@@ -5,4 +5,4 @@ INSERT INTO [hr].[dbo].[VN_DEPARTMENT]
      VALUES
            ('<ID/>'
            ,'<DEPARTMENT/>'
-           ,'<ENAME/>')
+           ,N'<ENAME/>')

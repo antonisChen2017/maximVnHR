@@ -4,6 +4,8 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,11 +20,14 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 
 import cn.com.maxim.portal.attendan.ro.empnumRO;
+import cn.com.maxim.portal.hr.rev_LeaveCard;
 
 public class ExcelUtil<T>
 {
+    	Log4jUtil lu=new Log4jUtil();
+	org.apache.log4j.Logger logger  =lu.initLog4j(ExcelUtil.class);
 	public HSSFWorkbook exportExcel(String title, String[] headers, List<T> dataset,String title1,String title2) {
-
+	  	
         // 声明一个工作薄  
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格  
@@ -150,8 +155,10 @@ public class ExcelUtil<T>
     }
 	
 	
-	public HSSFWorkbook exportTwoExcel(String title, String[] headers,String[] empnumheaders, List<T> dataset,List<empnumRO> eRolist ,String title1,String title2) {
-
+	public HSSFWorkbook exportTwoExcel(String title, String[] headers,String[] empnumheaders, List<T> dataset,
+		List<empnumRO> eRolist ,String title1,String title2
+		, Hashtable  blueRow) {
+		
         // 声明一个工作薄  
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格  
@@ -189,10 +196,13 @@ public class ExcelUtil<T>
         style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
         // 生成另一个字体  
-        HSSFFont font2 = workbook.createFont();
-        font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
+     //   HSSFFont font2 = workbook.createFont();
+     //   font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
         // 把字体应用到当前的样式  
-        style2.setFont(font2);
+     //   style2.setFont(font2);
+        HSSFFont font22 = workbook.createFont();
+        font22.setColor(HSSFColor.BLUE.index);
+        style2.setFont(font22);
 
         HSSFCellStyle style3 = workbook.createCellStyle();
         HSSFFont headfont = workbook.createFont();   
@@ -211,7 +221,9 @@ public class ExcelUtil<T>
         style4.setBorderTop(HSSFCellStyle.BORDER_THIN);
         style4.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         style4.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-        
+        HSSFFont font4 = workbook.createFont();
+        font4.setColor(HSSFColor.BLUE.index);
+        style4.setFont(font4);
         
         
         
@@ -243,23 +255,30 @@ public class ExcelUtil<T>
         int index = 2;
 
         try {
-            int count=0;
+            int count=1;
+          //  logger.info("blueRow "+blueRow);
             while (it.hasNext()) {
                 index++;
                 row = sheet.createRow(index);
                 T t = (T) it.next();
-
+              
+              //  logger.info("count "+count);
                 // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值  
                 Field[] fields = t.getClass().getDeclaredFields();
                 for (short i = 0; i < fields.length; i++) {
                     HSSFCell cell = row.createCell(i);
-                    if(count==9 || count==13 || count==17 || count==21 || count==27 ||  count==33 || count==37 || count==41 || count==45 || count==46){ //統計行
-                    	 cell.setCellStyle(style4);
-                    }else{
-                         cell.setCellStyle(style2);
-                    }
+                    cell.setCellStyle(style2);
+              
+                   if(blueRow.containsKey(String.valueOf(count))){
+         
+                       cell.setCellStyle(style4);
+                   }
+             
+                   
+                
                     Field field = fields[i];
                     String fieldName = field.getName();
+                    
                     String getMethodName = "get"
                             + fieldName.substring(0, 1).toUpperCase()
                             + fieldName.substring(1);
@@ -276,8 +295,8 @@ public class ExcelUtil<T>
                     if (textValue != null) {
                         HSSFRichTextString richString = new HSSFRichTextString(textValue);
                         HSSFFont font3 = workbook.createFont();
-                        font3.setColor(HSSFColor.BLUE.index);
-                        richString.applyFont(font3);
+                        //font3.setColor(HSSFColor.BLUE.index);
+                       // richString.applyFont(font3);
                         cell.setCellValue(richString);
                     }
                 }
@@ -323,9 +342,9 @@ public class ExcelUtil<T>
                
                         if (textValue != null) {
                             HSSFRichTextString richString = new HSSFRichTextString(textValue);
-                            HSSFFont font3 = workbook.createFont();
-                            font3.setColor(HSSFColor.BLUE.index);
-                            richString.applyFont(font3);
+                           // HSSFFont font3 = workbook.createFont();
+                           // font3.setColor(HSSFColor.BLUE.index);
+                           // richString.applyFont(font3);
                             cell.setCellValue(richString);
                         }
                     }

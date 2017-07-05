@@ -5,13 +5,13 @@ SELECT D.DEPARTMENT as '部門'
         then '无'
         else 
         U.UNIT end) AS '單位'
-      ,R.TITLE
+      ,R.TITLE as '员工身份'
       ,(case 
         when 
         STATUS ='1' 
-        then '三天以上'
+        then '正常加班'
         else 
-        '三天以下' end) AS '請假流程'
+        '不正常加班' end) AS '请假流程'
 	   ,(case 
         when 
         SINGROLEL1 ='1' OR  SINGROLEL2 ='1' OR  SINGROLEL3 ='1' OR  SINGROLEL4 ='1'

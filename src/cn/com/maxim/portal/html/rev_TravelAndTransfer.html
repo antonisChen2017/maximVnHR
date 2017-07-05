@@ -1,0 +1,497 @@
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets/fonts/font-awesome/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap/css/bootstrap.min.css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-datepicker/css/datepicker.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
+<!-- END PAGE LEVEL STYLES -->
+<!-- BEGIN THEME STYLES -->
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-bootstrap-custom.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/style-upgrade.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/theme-default.css"/>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/plugins.css"/>
+
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
+<![endif]-->
+<!-- END THEME STYLES -->
+<!-- BEGIN PAGE CONTAINER --> 
+<div id="content" class="page-container"  style="height: 100%">  
+<!-- BEGIN PAGE CONTENT -->  
+<div class="page-content-wrapper">   
+<!-- END TICKER-->  
+<div class="page-content fullwidth">   
+  <!-- BEGIN PAGE HEADER-->  
+ <div class="row">   
+   <!-- BEGIN PAGE TITLE-->  
+   <h3 class="page-title">出差/調動<small>設定</small> </h3>
+   <!-- END PAGE TITLE-->   
+ </div>  
+<div class="clearfix"> </div>
+<!-- END PAGE ROW--> 
+<!-- BEGIN PAGE ROW--> 
+<div class="row "> 
+<div class="col-md-12 col-sm-12"> 
+<div class="portlet no-border"> 
+<div class="tab-pane" id="tab_form_1"> 
+<div class="portlet"> 
+ <div class="portlet-title"> 
+  <div class="caption"> <i class="fa fa-reorder"></i></div>
+  <div class="active"> <a href="javascript:;" class="collapse"></a>  </div> 
+</div> 
+<div class="portlet-body form">  
+   <!-- BEGIN FORM--> 
+<form class="form-horizontal"  name="ActionForm"  method="post"  action="<ActionURI/>"> 
+ <input type='hidden' name='act'>
+ <input type='hidden' name='rowID' id='rowID' >
+  <input type='hidden' name='Romance'  id='Romance'  value='n'>
+ <input type='hidden' name='returnMsg'  id='returnMsg' >
+<div class="form-body">
+
+
+<ul class="nav nav-tabs">
+  <li id='tab1'  class="active"> <a href="#tab_1_1" data-toggle="tab"   onclick="SaveRomance('n')"  >新增出差资料</a> </li>
+  <li  id='tab2' > <a href="#tab_1_2"  data-toggle="tab"  onclick="SaveRomance('o')">新增调动资料 </a> </li>
+</ul>
+
+<div class="tab-content">
+
+  <div class="tab-pane fade active in "  id="tab_1_1">
+   <div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">部门:</SPAN>
+
+<div class="col-md-9">
+<DeptL/>
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">单位:</SPAN>
+<div  id='UnitDivL'     class="col-md-9">
+<UnitL/>
+ </div>
+</div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">工号:</SPAN>
+<div id='EmployeeNoDivL'   class="col-md-9">
+<EmployeeNoL/>
+</div> 
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">姓名:</SPAN>
+<div  id='EmployeeDivL'  class="col-md-9">
+<EmployeeL/>
+ </div>
+ </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">出差日期:</SPAN>
+<div class="col-md-9">
+<TravelDate/>
+</div> 
+ </div>
+</div>
+
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">备注:</SPAN>
+<div class="col-md-9">
+<NoteL/>
+</div>
+ </div>
+</div>
+</div>
+
+  </div>
+  
+    <div class="tab-pane fade " id="tab_1_2">
+  
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">部门:</SPAN>
+
+<div class="col-md-9">
+<DeptR/>
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">单位:</SPAN>
+<div  id='UnitDivR'     class="col-md-9">
+<UnitR/>
+ </div>
+</div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">工号:</SPAN>
+<div id='EmployeeNoDivR'   class="col-md-9">
+<EmployeeNoR/>
+</div> 
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">姓名:</SPAN>
+<div  id='EmployeeDivR'  class="col-md-9">
+<EmployeeR/>
+ </div>
+ </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">调动日期:</SPAN>
+<div class="col-md-9">
+<StartDayR/>
+</div> 
+ </div>
+</div>
+
+<div class="col-md-6">
+<div class="form-group">
+<SPAN class="control-label col-md-3">备注:</SPAN>
+<div class="col-md-9">
+<NoteR/>
+</div>
+ </div>
+</div>
+</div>
+
+
+
+
+  </div>
+  
+</div>
+
+
+</div>
+</div>
+<div class="form-actions right">  
+<button class="btn btn-success " onclick="queryData()" type="button">查询</button> 
+<button id='updateBut' class="btn btn-primary " onclick="SaveData()" type="button"   >保存</button> 
+</div></FORM> 
+</div> 
+<msg/>
+<drawTableM/>
+</div> 
+</div>
+  <!-- END PAGE CONTENT --> 
+</div>
+<!-- END PAGE CONTAINER -->  <!-- BEGIN FOOTER --> 
+<div id="footer" class="footer"> 
+<div class="footer-inner"> </div> 
+<div class="footer-tools"></div> 
+<!-- END FOOTER -->  
+</div> 
+<!-- END WRAPPER -->  
+
+<!--[if lt IE 9]>
+<link rel="stylesheet" type="text/css" href="javascript/assets/css/ie8.css"/>
+<![endif]-->
+<!-- END THEME STYLES -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="javascript/assets//plugins/respond.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/excanvas.min.js"></script> 
+
+<script type="text/javascript" src="javascript/assets//plugins/jquery-1.11.1.min.js"></script> 
+<![endif]--> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-migrate-1.1.0.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/bootstrap/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/jquery-cookie-master/src/jquery.cookie.js"></script> 
+<!-- END CORE PLUGINS --> 
+<!-- BEGIN PAGE LEVEL PLUGINS --> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui/jquery-ui-custom.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-ui-multiselect/jquery.multiselect.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="javascript/assets/plugins/select2/select2.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/spinner/jquery.mousewheel.js"></script> 
+<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="javascript/assets//plugins/data-tables-bs3/DT_bootstrap.js"></script> 
+<!-- END PAGE LEVEL PLUGINS --> 
+<!-- BEGIN PAGE LEVEL SCRIPTS --> 
+<script type="text/javascript" src="javascript/assets//scripts/app.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/form-components.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-sliders.js"></script> 
+<script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script> 
+<script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script> 
+<script type="text/javascript" src="javascript/assets/layer/layer.js"></script> 
+<!-- END PAGE LEVEL SCRIPTS --> 
+<script>
+jQuery(document).ready(function() {    
+  //var fnSetData=null;
+   App.init(); // init layout and core plugins
+   TableAdvanced.init();
+   FormComponents.init();
+
+	var tab='<tab/>';
+    if(tab=='o'){
+    	$('#tab2').addClass("active"); 
+    	$('#tab1').removeClass("active"); 
+    	$('#tab_1_1').removeClass("tab-pane fade active in"); 
+    	$('#tab_1_1').addClass("tab-pane fade"); 
+   		$('#tab_1_2').removeClass("tab-pane fade "); 
+    	$('#tab_1_2').addClass("tab-pane fade active in"); 
+    	$('#Romance').val('o');
+    }else{
+    	$('#Romance').val('n');
+    }
+    
+   
+    $('#DeptL').change(function(){  
+		
+		 var p1= $('#DeptL').val();
+	  
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmpNoL',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeNoDivL').html(data);    
+				 $('#EmployeeNoL').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 $('#EmployeeL').select2('val',p1);     
+				   }) 
+			}
+		});
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmpL',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeDivL').html(data);    
+				 $('#EmployeeL').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+				 	$('#EmployeeNoL').select2('val',p1);     
+				   })  
+			}
+		});
+	   
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwUnitL',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				var datas=data.split("%");
+				  $('#UnitDivL').html(datas[0]); 
+				  updateUnitL();
+		 		  $('#EmployeeNoDivL').html(datas[1]);  
+				  $('#EmployeeDivL').html(datas[2]);  
+
+				  $('#EmployeeL').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 	$('#EmployeeNoL').select2('val',p1);      
+					   })  
+				   $('#EmployeeNoL').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#EmployeeL').select2('val',p1);     
+				   }) 
+				}
+			});
+	   
+	   
+		});
+  
+    $('#DeptR').change(function(){  
+		
+		 var p1= $('#DeptR').val();
+	  
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmpNoR',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeNoDivR').html(data);    
+				 $('#EmployeeNoR').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 $('#EmployeeR').select2('val',p1);     
+				   }) 
+			}
+		});
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwEmpR',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				 $('#EmployeeDivR').html(data);    
+				 $('#EmployeeR').change(function(){  
+				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+				 	$('#EmployeeNoR').select2('val',p1);     
+				   })  
+			}
+		});
+	   
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwUnitR',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				var datas=data.split("%");
+				  $('#UnitDivR').html(datas[0]); 
+				  updateUnitR();
+		 		  $('#EmployeeNoDivR').html(datas[1]);  
+				  $('#EmployeeDivR').html(datas[2]);  
+
+				  $('#EmployeeR').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 	$('#EmployeeNoR').select2('val',p1);      
+					   })  
+				   $('#EmployeeNoL').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#EmployeeL').select2('val',p1);     
+				   }) 
+				}
+			});
+	   
+	   
+		});
+   
+});
+
+
+
+function    updateUnitL(){  
+	 // layer.msg(' 0 ');  
+	 $('#UnitL').change(function(){  
+	//	   layer.msg(' 1 ');  
+		var p1=$(this).children('option:selected').val();  //这就是selected的值  
+	//   layer.msg(' searchUnit :'+ p1);  
+
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwDUnitL',
+			type:'POST',
+			data:{searchUnit:p1,searchDepartmen:$('#DeptL').val()},
+			success:function(data){
+				var datas=data.split("%");
+		 		  $('#EmployeeNoDivL').html(datas[0]);  
+				  $('#EmployeeDivL').html(datas[1]);  
+			//      layer.msg(' data :'+ data);  
+				  $('#EmployeeL').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 	$('#EmployeeNoL').select2('val',p1);       
+					   })  
+				   $('#EmployeeNoL').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#EmployeeL').select2('val',p1);       
+				   }) 
+				}
+			});
+	 });
+	 
+} 
+
+function    updateUnitR(){  
+	 // layer.msg(' 0 ');  
+	 $('#UnitR').change(function(){  
+	//	   layer.msg(' 1 ');  
+		var p1=$(this).children('option:selected').val();  //这就是selected的值  
+	//   layer.msg(' searchUnit :'+ p1);  
+
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwDUnitR',
+			type:'POST',
+			data:{searchUnit:p1,searchDepartmen:$('#DeptR').val()},
+			success:function(data){
+				var datas=data.split("%");
+		 		  $('#EmployeeNoDivR').html(datas[0]);  
+				  $('#EmployeeDivR').html(datas[1]);  
+			//      layer.msg(' data :'+ data);  
+				  $('#EmployeeR').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 	$('#EmployeeNoR').select2('val',p1);       
+					   })  
+				   $('#EmployeeNoR').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#EmployeeR').select2('val',p1);       
+				   }) 
+				}
+			});
+	 });
+	 
+} 
+
+
+ function  SaveData(){  
+	 
+	  if($('#Romance').val()=='o'){
+		
+		  if($('#EmployeeNoR').val()=='0'){
+			  layer.msg('请选择工号L');  
+			  return;
+		  }
+		  
+		ActionForm.act.value='SaveO'; 
+		ActionForm.submit();   
+	}
+	 if($('#Romance').val()=='n'){
+		//  layer.msg('n');  
+		
+		  if($('#EmployeeNoL').val()=='0'){
+			  layer.msg('请选择工号L');  
+			  return;
+		  }
+
+		ActionForm.act.value='SaveN'; 
+		ActionForm.submit();   
+	}
+ }
+ 
+ function  queryData(){  
+	 
+	  if($('#Romance').val()=='o'){
+		ActionForm.act.value='QueryO'; 
+		ActionForm.submit();   
+	}
+	 if($('#Romance').val()=='n'){
+		ActionForm.act.value='QueryN'; 
+		ActionForm.submit();   
+	}
+}
+ 
+ 
+ function   SaveRomance(n){  
+	 
+		$('#Romance').val(n);
+	}  
+ 
+</script> 
+<!-- END JAVASCRIPTS -->
+</div>

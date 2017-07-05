@@ -1,4 +1,4 @@
 UPDATE [hr].[dbo].[VN_DEPARTMENT]
    SET [DEPARTMENT] = '<DEPARTMENT/>'
-      ,[ENAME] = '<ENAME/>'
+      ,[ENAME] = N'<ENAME/>'
  WHERE ID='<rowID/>'

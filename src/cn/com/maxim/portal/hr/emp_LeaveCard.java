@@ -155,6 +155,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 						lcVo.setRowID(rowID);
 						lcVo=SharedCode(con,lcVo);
 						request.getSession().setAttribute("empLeaveEdit","Update");
+						lcVo.setMsg(keyConts.editLeaveTip);
 						lcVo.setSaveButText(keyConts.butUpdate);
 						showHtml(con, out,  lcVo,UserInformation,request);
 					}

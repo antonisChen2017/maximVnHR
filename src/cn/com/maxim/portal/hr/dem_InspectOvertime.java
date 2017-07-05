@@ -16,6 +16,7 @@ import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.overTimeDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -62,21 +63,26 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 					if (actText.equals("D")) {
 			
 						logger.info("加班申請單 部门主管審核/D : " + otVo.toString());
-						DBUtil.updateTimeOverSStatus("UD", request.getParameter("rowID"), con);
+						otVo.setLeaveApply("2");
+						otVo.setStatus("UD");
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						otVo.setShowDataTable(true);
 						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("U")) {
 						
 						logger.info("加班申請單 部门主管審核/U : " + otVo.toString());
-						DBUtil.updateTimeOverSStatus("D", request.getParameter("rowID"), con);
+						otVo.setStatus("D");
+						otVo.setMsg(overTimeDAO.deptProcess(con, otVo));
 						otVo.setShowDataTable(true);
 						// 輸出查询UI
 						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("R")) {
 						logger.info("加班申請單 審核/R: " +otVo.toString());		
-						DBUtil.updateTimeOverSStatus("DR", request.getParameter("rowID"), con);
+						otVo.setLeaveApply("2");
+						otVo.setStatus("DR");
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						DBUtil.updateSql(SqlUtil.setStatusReturnMsg(otVo.getReturnMsg(), request.getParameter("rowID")), con);
 						//setHtmlPart1(con, out, otVo,UserInformation);
 				
@@ -204,22 +210,21 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 
 			List<employeeUserRO> lro=getUser(con,UserInformation,request);
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
-			htmlPart1=htmlPart1.replace("<hiddenDepartmen/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
-			htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	HtmlUtil.getLabelHtml(lro.get(0).getDEPARTMENT()));
+		//	htmlPart1=htmlPart1.replace("<hiddenDepartmen/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
+			htmlPart1=htmlPart1.replace("<UserDepartmen/>", 	ControlUtil.drawChosenSql(con,  "searchDepartmen",SqlUtil.querySelectOverDept(lro.get(0).getEMPLOYEENO()), otVo.getSearchDepartmen(),keyConts.msgS));	
 			htmlPart1=htmlPart1.replace("<applicationDate/>",HtmlUtil.getDateDivSw("startSubmitDate","endSubmitDate", otVo.getStartSubmitDate(),otVo.getEndSubmitDate()));
 		    htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
 		//	logger.info("  lro.get(0).getDID() : "+ lro.get(0).getDID());
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + lro.get(0).getDID()+ "'    ", otVo.getSearchUnit(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" +lro.get(0).getUID()+ "'", otVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" +lro.get(0).getUID()+ "'", otVo.getSearchEmployee(),false,null));
-			htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
+			htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabel6Html(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
 			
 			if(otVo.isShowDataTable()){
-				logger.info(" otVo.getStartSubmitDate() : "+otVo.getStartSubmitDate());
-				logger.info(" otVo.getEndSubmitDate() : "+otVo.getEndSubmitDate());
-				logger.info(" getOvertimeNoSave : "+SqlUtil.getOvertimeDept(otVo));
+
+				logger.info(" getOvertimeNoSave : "+SqlUtil.getOvertimeDept(otVo,lro.get(0).getEMPLOYEENO()));
 				htmlPart1 = htmlPart1.replace("<drawTableM/>", HtmlUtil.drawOvertimeTable(
-						SqlUtil.getOvertimeDept(otVo),HtmlUtil.drawTableMcheckButton(),  con, out, keyConts.pageDtmList));
+						SqlUtil.getOvertimeDept(otVo,lro.get(0).getEMPLOYEENO()),HtmlUtil.drawTableMcheckButton(),  con, out, keyConts.pageDtmList));
 			}
 			out.println(htmlPart1);
 	}

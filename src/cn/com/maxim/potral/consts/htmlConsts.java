@@ -54,6 +54,11 @@ public class htmlConsts
 	  public static final String html_bos_LeaveCard="/cn/com/maxim/portal/html/bos_LeaveCard.html";
 	  /**加班流程頁面**/
 	  public static final String html_ad_editOProcess="/cn/com/maxim/portal/html/ad_editOProcess.html";
-	  
+	  /**編輯出差調動資料**/
+	  public static final String html_rev_TravelAndTransfer="/cn/com/maxim/portal/html/rev_TravelAndTransfer.html";
+	  /**編輯部門帳號移動頁面**/
+	  public static final String html_UnitSector="/cn/com/maxim/portal/html/ts_UnitSector.html";
+	  /**建立新帳號**/
+	  public static final String html_newAccount="/cn/com/maxim/portal/html/ts_newAccount.html";
 	  
 }

@@ -57,6 +57,7 @@ public class emp_OverTime extends TemplatePortalPen
 					if (actText.equals("QUE")) {
 						otVo.setShowDataTable(true);
 						request.getSession().setAttribute("eotEdit","QUE");
+						otVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, otVo,UserInformation,request);
 					}
 					
@@ -64,29 +65,33 @@ public class emp_OverTime extends TemplatePortalPen
 					
 					if (actText.equals("Save")) {
 						logger.info("個人申請加班/Save : " +otVo.toString());
-						String msg=DBUtil.getPersonalProcess(con,otVo);
-						
 						otVo.setShowDataTable(true);
 						//不能超過系統規定加班時數
 						otVo.setOverTimeSave(false);
-						// 儲存db
-						
-						String eotEdit=( String)request.getSession().getAttribute("eotEdit");
-						
-						if(eotEdit.equals("Update")){
-							logger.info("updateEmpOverTime : " +SqlUtil.updateEmpOverTime(otVo));
-							boolean flag =DBUtil.updateSql(SqlUtil.updateEmpOverTime(otVo), con);
-							if(flag){
-								otVo.setMsg(keyConts.editOK);
+						// 查詢有無設定流程
+						String msg=DBUtil.getOverProcess(con,otVo);
+						if(msg.equals("o")){
+							
+							String eotEdit=( String)request.getSession().getAttribute("eotEdit");
+							
+							if(eotEdit.equals("Update")){
+								logger.info("updateEmpOverTime : " +SqlUtil.updateEmpOverTime(otVo));
+								boolean flag =DBUtil.updateSql(SqlUtil.updateEmpOverTime(otVo), con);
+								if(flag){
+									otVo.setMsg(keyConts.editOK);
+								}else{
+									otVo.setMsg(keyConts.editNO);
+								}
 							}else{
-								otVo.setMsg(keyConts.editNO);
+								msg=DBUtil.saveOvertime(otVo , con);
+								otVo.setMsg(msg);
 							}
 						}else{
-							msg=DBUtil.saveOvertime(otVo , con);
-							otVo.setMsg(msg);
+							otVo.setMsg(keyConts.noProcessOverMsg);
+							logger.info(keyConts.noProcessOverMsg);
 						}
-						
 						request.getSession().setAttribute("eotEdit","Save");
+						otVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out,  otVo,UserInformation,request);
 						
 					}
@@ -99,16 +104,20 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已刪除");
 						request.getSession().setAttribute("eotEdit","Delete");
+						otVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("Refer"))//送交
 					{
 						otVo.setSubmitDate(DateUtil.NowDateTime());
 						logger.info("個人申請加班/Refer : " +otVo.toString());
-						DBUtil.updateTimeOverSStatus(keyConts.dbTableCRStatuS_T, request.getParameter("rowID"), con);
+						otVo.setLeaveApply("0");
+						otVo.setStatus(keyConts.dbTableCRStatuS_T);
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已送交");
 						request.getSession().setAttribute("eotEdit","Refer");
+						otVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, otVo,UserInformation,request);
 						
 					}
@@ -122,6 +131,8 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setRowID(rowID);
 						otVo=SharedCode(con,otVo);
 						request.getSession().setAttribute("eotEdit","Update");
+						otVo.setMsg(keyConts.editOverTip);
+						otVo.setSaveButText(keyConts.butUpdate);
 						showHtml(con, out,  otVo,UserInformation,request);
 					}
 					
@@ -144,6 +155,7 @@ public class emp_OverTime extends TemplatePortalPen
 					otVo.setQueryDate(DateUtil.NowDate());
 					otVo.setUserReason("");
 					otVo.setRowID("0");
+					otVo.setSaveButText(keyConts.butSave);
 					request.getSession().setAttribute("eotEdit","");
 					showHtml(con, out, otVo,UserInformation,request);
 				
@@ -255,6 +267,7 @@ public class emp_OverTime extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("&queryDate",HtmlUtil.getDateDiv("queryDate", otVo.getQueryDate()));
 			htmlPart1=htmlPart1.replace("&userReason",HtmlUtil.getTextDiv("userReason",otVo.getUserReason(),"可輸入自訂加班事由" ));
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(otVo.getMsg()));
+			htmlPart1=htmlPart1.replace("<saveButText/>",otVo.getSaveButText());	
 			logger.info("getOvertime  :   "+SqlUtil.getOvertime(otVo));
 			if(otVo.isShowDataTable()){
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawOvertimeTable(

@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.calendarVO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
@@ -985,10 +987,15 @@ public class HtmlUtil
 		if (page.equals(keyConts.pageDtmList))
 		{
 			bStatus = "DT";
+		    
 		}
 		if (page.equals(keyConts.personnelList))
 		{
 			bStatus = "PL";
+		}
+		if (page.equals(keyConts.pageB))
+		{
+			bStatus = "B";
 		}
 		WebDBTableEx table = new WebDBTableEx(con, sql);
 
@@ -1338,7 +1345,10 @@ public class HtmlUtil
 	{
 		return "<SPAN class=\"control-label col-md-3\">" + value + "</SPAN>";
 	}
-
+	public static final String getLabel6Html(String value)
+	{
+		return "<SPAN class=\"control-label col-md-6\">" + value + "</SPAN>";
+	}
 	public static final String getDaterangeHtml(String startStopWorkDate, String endStopWorkDate, String startStopWorkTime, String endStopWorkTime)
 	{
 
@@ -1963,5 +1973,103 @@ public class HtmlUtil
 
 		return table.getHTMLTableCondition(out, "無資料", css, htmlButton, msg, bStatus);
 		// System.out.println("table :"+table.toString());
+	}
+	
+	/**
+	 * 建立全廠日報資料
+	 * @param sql
+	 * @param htmlButton
+	 * @param con
+	 * @param out
+	 * @param page
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawTbody(List<dayAttendanceRO> daRolist ) throws SQLException
+	{
+	    	StringBuilder Sb = new StringBuilder("");
+	    	dayAttendanceRO rowR = new dayAttendanceRO();
+		
+	    	for(int i =0;i<daRolist.size();i++){
+	    	    rowR=daRolist.get(i);
+	    	    if(Integer.valueOf(rowR.getROW())>1 && !rowR.getDEPARTMENT().equals("X")){
+	    		Sb.append("<tr>");
+	    		Sb.append("<td  class=\"blue\"  rowspan='"+Integer.valueOf(rowR.getROW())+"'    valign=\"middle\" style=\"text-align: center;\" >"+rowR.getDEPARTMENT()+"</td>");
+	    		Sb.append(" <td  class=\"blue\">"+rowR.getUNIT()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC1()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC2()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC3()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC4()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC5()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC6()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC7()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC8()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC9()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC10()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC11()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC12()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC13()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC14()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC15()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC16()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC17()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC18()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC19()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC20()+"</td>");
+	    		Sb.append("</tr>");
+	    	    }
+	    	  if(Integer.valueOf(rowR.getROW())==1){
+	    		Sb.append("<tr>");
+	    	
+	    		Sb.append(" <td  class=\"blue\">"+rowR.getUNIT()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC1()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC2()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC3()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC4()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC5()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC6()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC7()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC8()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC9()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC10()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC11()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC12()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC13()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC14()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC15()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC16()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC17()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC18()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC19()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC20()+"</td>");
+	    		Sb.append("</tr>");
+	    	    }
+	    	    if(rowR.getUNIT().equals("合计") && rowR.getDEPARTMENT().equals("X")){
+	    		Sb.append("<tr>");
+	    		Sb.append("<td  class=\"blue\"    colspan=\"2\" valign=\"middle\" style=\"text-align: center;\" >合計</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC1()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC2()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC3()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC4()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC5()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC6()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC7()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC8()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC9()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC10()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC11()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC12()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC13()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC14()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC15()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC16()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC17()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC18()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC19()+"</td>");
+	    		Sb.append("<td  class=\"text-center blue \" >"+rowR.getC20()+"</td>");	    	          
+	    		Sb.append("</tr>");
+	    	    }
+	    	}
+		return Sb.toString();
 	}
 }

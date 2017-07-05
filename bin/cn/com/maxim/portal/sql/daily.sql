@@ -57,7 +57,7 @@ SELECT
 	(
 	select top 1 APPLICATION_HOURS from VN_OVERTIME_S
 	where EP_ID=VE.ID
-	AND STATUS IN ('U','M','B','D','L','RD')
+	AND LEAVEAPPLY IN ('1')--審核通過
 	AND NOT (('<FDate/> 23:59:59' < OVERTIME_START) OR ('<FDate/> 00:00:00'> OVERTIME_END))
 	)
 	 AS OVERTIME,
@@ -222,7 +222,7 @@ SELECT
 	select convert(nvarchar(max),isnull((
 	select top 1 NOTE from VN_OVERTIME_S
 	where EP_ID=VE.ID
-	AND STATUS IN ('U','M','B','D','L','RD')
+	AND LEAVEAPPLY IN ('1')--審核通過
 	AND NOT (('<FDate/> 23:59:59' < OVERTIME_START) OR ('<FDate/> 00:00:00'> OVERTIME_END))
 	) ,''))+'  '+convert(nvarchar(max),isnull((
 	select NOTE from VN_LEAVECARD

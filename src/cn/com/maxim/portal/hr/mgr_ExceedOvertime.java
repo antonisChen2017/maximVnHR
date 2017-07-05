@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.overTimeDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -80,7 +81,9 @@ public class mgr_ExceedOvertime extends TemplatePortalPen
 					if (actText.equals("Refer"))//送交
 					{
 						logger.info("加班申請單 員工/Refer : " +otVo.toString());
-						DBUtil.updateTimeOverSStatus(keyConts.dbTableUT, request.getParameter("rowID"), con);
+						otVo.setStatus(keyConts.dbTableUT);
+						otVo.setLeaveApply("2");
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已送交");
 						showHtml(con, out, otVo,UserInformation);

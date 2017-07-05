@@ -20,6 +20,7 @@ import cn.com.maxim.htmlDBcontrol.WebDBSelect;
 import cn.com.maxim.htmlcontrol.WebHidden;
 import cn.com.maxim.htmlcontrol.WebLabel;
 import cn.com.maxim.htmlcontrol.WebSelect;
+import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
 import cn.com.maxim.portal.attendan.ro.empLateEarlyRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceDayRO;
 import cn.com.maxim.portal.attendan.vo.calendarVO;
@@ -27,6 +28,7 @@ import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.bean.dayTableMoble;
 import cn.com.maxim.portal.bean.dayTableRowMoble;
+import cn.com.maxim.portal.hr.ad_editLholiday;
 import cn.com.maxim.portal.key.attendanceDayKeyConsts;
 import cn.com.maxim.potral.consts.sqlConsts;
 
@@ -533,6 +535,8 @@ public class ControlUtil
 	 */
 	public static String drawAttendanceDayTable(Connection con,leaveCardVO lcVo) throws Exception
 	{
+	    	Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ControlUtil.class);
 		String Control="";
 		HtmlUtil hu=new HtmlUtil();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyyMMdd" );
@@ -542,53 +546,73 @@ public class ControlUtil
 		date=DateUtil.addDays(date, -1);
 		Control=Control.replace("<yesterDay/>",sdf.format(date));
 		dayTableMoble dt=new dayTableMoble();
-		dayTableRowMoble dr=new dayTableRowMoble();
-		
-		
-		
-		/**外籍幹部人數Data**/
-		repAttendanceDayRO ra=new repAttendanceDayRO();
-		dt.setCo3(DBUtil.queryForeignCadres(con, SqlUtil.getNoVnMaxPeople(lcVo), ra));
-		/**昨天越籍應出勤人數Data**/
-		dt.setCo4(DBUtil.queryForeignCadres(con, SqlUtil.getYestoDayVnMaxPeople(lcVo), ra));
-		/**今天越籍應出勤人數Data**/
-		dt.setCo5(DBUtil.queryForeignCadres(con, SqlUtil.getVnMaxPeople(lcVo), ra));
-		/**今天越籍實際出勤人數Data**/
-		dt.setCo6(DBUtil.queryForeignCadres(con, SqlUtil.getActualMaxPeople(lcVo), ra));
-		/**今天行政班次人數Data**/
-		dt.setCo7(DBUtil.queryForeignCadres(con, SqlUtil.getTurnA1People(lcVo), ra));
-		/**今天早班次人數Data**/
-		dt.setCo8(DBUtil.queryForeignCadres(con, SqlUtil.getTurnC1People(lcVo), ra));
-		/**今天中班次人數Data**/
-		dt.setCo9(DBUtil.queryForeignCadres(con, SqlUtil.getTurnC2People(lcVo), ra));
-		/**今天夜班次人數Data**/
-		dt.setCo10(DBUtil.queryForeignCadres(con, SqlUtil.getTurnC3People(lcVo), ra));
-		/**今天加班次人數Data**/
-		dt.setCo11(DBUtil.queryForeignCadres(con, SqlUtil.getOverTimePeople(lcVo), ra));
-		/**今天產假人數Data**/
-		dt.setCo12(DBUtil.queryForeignCadres(con, SqlUtil.getVnHolidayPeople(lcVo,attendanceDayKeyConsts.holiayType5), ra));
-		/**今天請假人數Data**/
-		dt.setCo13(DBUtil.queryForeignCadres(con, SqlUtil.getVnHolidayPeople(lcVo,attendanceDayKeyConsts.holiayTypeAll), ra));
-		/**今天年假人數Data**/
-		dt.setCo14(DBUtil.queryForeignCadres(con, SqlUtil.getVnHolidayPeople(lcVo,attendanceDayKeyConsts.holiayType8), ra));
-		/**今天出差人數Data**/
-		dt.setCo15(DBUtil.queryForeignCadres(con, SqlUtil.getVnHolidayPeople(lcVo,attendanceDayKeyConsts.holiayType8), ra));
-		/**今天公傷人數Data**/
-		dt.setCo16(DBUtil.queryForeignCadres(con, SqlUtil.getVnHolidayPeople(lcVo,attendanceDayKeyConsts.holiayType3), ra));
-		/**今天曠工或未請假人數Data**/
-		dt.setCo17(DBUtil.queryForeignCadres(con, SqlUtil.getVnAbsenteeismPeople(lcVo), ra));
-		/**今天周六排休人數Data**/
-		dt.setCo18(DBUtil.queryForeignCadres(con, SqlUtil.getVnHolidayPeople(lcVo,attendanceDayKeyConsts.holiayType7), ra));
-		/**新人報道人數Data**/
-		dt.setCo19(DBUtil.queryForeignCadres(con, SqlUtil.getVnInDatePeople(lcVo), ra));
-		/**調動人數Data**/
-		dt.setCo20(DBUtil.queryForeignCadres(con, SqlUtil.getDayTransfer(lcVo), ra));
-		/**離職人數Data**/
-		dt.setCo21(DBUtil.queryForeignCadres(con, SqlUtil.getvnNoLeavePeople(lcVo), ra));
-		/**離職率Data**/
-		dt=DataStringUtil.turnoverRate(dt,dr);
-	
-		
+		//logger.info("queryPlantData "+SqlUtil.queryPlantData(lcVo.getApplicationDate()));
+		//跑出當天資料
+		DBUtil.updateSql(SqlUtil.queryPlantData(lcVo.getApplicationDate()),con);
+		//查出整體資料
+		dayAttendanceRO daRo = new dayAttendanceRO();
+		//logger.info("getAttendance "+SqlUtil.getAttendance(lcVo.getApplicationDate()));
+		List<dayAttendanceRO> daRolist = (List<dayAttendanceRO>) DBUtil.
+			queryExcelAttendanceDay(con, SqlUtil.getAttendance(lcVo.getApplicationDate()), daRo);
+		String tempROW="",tempDept="",tempID="";
+		int tempRow=0;
+		dayAttendanceRO rowR = new dayAttendanceRO();
+		dayAttendanceRO tmpR = new dayAttendanceRO();
+		dayAttendanceRO maxR = new dayAttendanceRO();
+		tmpR=setAttendanceRO(tmpR);
+		maxR=setAttendanceRO(maxR);
+		 logger.info("==================================================");
+		for(int i =0;i<daRolist.size();i++){
+		    	rowR=daRolist.get(i);
+			/**一般行**/
+		    	 // logger.info("UNIT   "+rowR.getUNIT());
+		    	 // logger.info("DEPARTMENT   "+rowR.getDEPARTMENT() );
+		    	  
+		    	if(! rowR.getUNIT().equals("合计") && !rowR.getDEPARTMENT().equals("合计")){
+		    	 
+		    	    tmpR=tmpAttendanceRO(tmpR,rowR);
+		    	    maxR=maxAttendanceRO(maxR,rowR);
+		    	    if(tempRow==0){
+		    		tempID=rowR.getID();
+		    	    }
+		    	// logger.info("一般行  rowR.getUNIT() "+rowR.getUNIT()+" tempRow "+tempRow+" tempID "+tempID);
+		    	tempRow=tempRow+1;
+		    	}
+		    	/**部門合計行**/
+		    	if(rowR.getUNIT().equals("合计") && !rowR.getDEPARTMENT().equals("合计")){
+		    	    tmpR.setID(rowR.getID());
+		    	 //   logger.info("部門合計行 updateAttendanceCmax "+SqlUtil.updateAttendanceCmax(tmpR));
+		    	    DBUtil.updateSql(SqlUtil.updateAttendanceCmax(tmpR), con);
+		    	    tmpR=setAttendanceRO(tmpR);
+		    	    tmpR.setID(tempID);
+		    	    tmpR.setROW(String.valueOf(Integer.valueOf(rowR.getROW())+1));
+		    	    DBUtil.updateSql(SqlUtil.updateAttendanceRow(tmpR), con);
+		    	    tmpR.setID(rowR.getID());
+		    	    tmpR.setROW("1");
+		    	    DBUtil.updateSql(SqlUtil.updateAttendanceRow(tmpR), con);
+		    	    tempRow=0;
+		   	   // logger.info("部門合計行  rowR.getUNIT() "+rowR.getUNIT()+" tempRow "+tempRow+" tempID "+tempID);
+		    	}
+		    	/**最後合計行**/
+		    	if(rowR.getUNIT().equals("合计") && rowR.getDEPARTMENT().equals("合计")){
+		    	    maxR.setID(rowR.getID());
+		   	//    logger.info("合計 合計行 updateAttendanceCmax "+SqlUtil.updateAttendanceCmax(maxR));
+		    	    DBUtil.updateSql(SqlUtil.updateAttendanceCmax(maxR), con);
+		    	    tempRow=0;
+		    	    maxR=setAttendanceRO(maxR);
+		    	}
+		    	/**每行更新離職率**/
+		    	rowR.setC20(NumberUtil.getPercentFormat(Integer.valueOf(rowR.getC3()) ,Integer.valueOf(rowR.getC19())));
+		    	DBUtil.updateSql(SqlUtil.updateAttendanceC20(rowR), con);
+		}
+		 logger.info("==================================================");
+		//使用資料跑出頁面
+		 daRolist = (List<dayAttendanceRO>) DBUtil.
+				queryExcelAttendanceDay(con, SqlUtil.getAttendanceTable(lcVo.getApplicationDate()), daRo);
+		 Control=Control.replace("<tbody/>", HtmlUtil.drawTbody(daRolist));
+		 
+		 
+		//年資分布
 		/**1年以下Data**/
 		dt.setYco1(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_vnLessThanOneYear), "yco")));
 		/**1年~2年Data**/
@@ -596,34 +620,8 @@ public class ControlUtil
 		/**2年~3年Data**/
 		dt.setYco3(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_vnTwoToThreeYears), "yco")));
 		/**3年以上Data**/
-		dt.setYco4(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_vnLessThanOneYear), "yco")));
+		dt.setYco4(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_getThreeYearsOver), "yco")));
 		
-		
-	
-		Hashtable ht=new Hashtable();
-		dr.setHt(ht);
-		
-		/**數據行**/
-		String[] updateDayRows=attendanceDayKeyConsts.rowS.split(",");
-		for(int i=0;i<updateDayRows.length;i++){
-			 Control=DataStringUtil.updateDayTableRow(Control,updateDayRows[i],attendanceDayKeyConsts.colStart,attendanceDayKeyConsts.colEnd,dt, dr);
-		}
-		/**統計行**/
-		String[] replaceAddRows=attendanceDayKeyConsts.maxRowS.split(",");
-		for(int i=0;i<replaceAddRows.length;i++){
-			String[] values=replaceAddRows[i].split("#");
-			 Control=DataStringUtil.replaceAddUpDayTableRow(Control,values[0],attendanceDayKeyConsts.colStart,
-					 attendanceDayKeyConsts.colEnd, values,dr);
-		}
-
-		/** 合計**/
-		 String[] addRow=attendanceDayKeyConsts.rep_AttendanceDayAddRow.split(",");
-		 Control=DataStringUtil.updateMaxAddUpTableRow(Control,"47",attendanceDayKeyConsts.colStart,attendanceDayKeyConsts.colEnd,addRow,dr);
-		 
-		/**存入db**/
-		String[] allRowS =attendanceDayKeyConsts.allRowS.split(",");
-		DBUtil.saveRepAttendanceDay(con,dr,lcVo,allRowS);
-		 
 		/** 越籍年資分布**/
 		 Control= Control.replace("<yco1/>",String.valueOf( dt.getYco1()));
 		 Control= Control.replace("<yco2/>",String.valueOf( dt.getYco2()));
@@ -634,9 +632,7 @@ public class ControlUtil
 		 Control= Control.replace("<yco7/>",NumberUtil.getPercentFormat(dt.getYco3(),dt.getYmax()));
 		 Control= Control.replace("<yco8/>",NumberUtil.getPercentFormat(dt.getYco4(),dt.getYmax()));
 		 Control= Control.replace("<yco9/>",String.valueOf( dt.getYmax()));
-		 /** 越籍年資分布 存入db**/
 		 DBUtil.saveEmpnum(con,dt,lcVo);
-			
 			
 		return Control;
 	}
@@ -670,6 +666,101 @@ public class ControlUtil
 		html=html.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
 		return html;
 	}
+	/**
+	 * 預先設定資料
+	 * @param con
+	 * @param html
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static dayAttendanceRO setAttendanceRO(dayAttendanceRO rowR) throws SQLException
+	{
+	    	rowR.setC1("0");
+	    	rowR.setC2("0");
+	    	rowR.setC3("0");
+	    	rowR.setC4("0");
+	    	rowR.setC5("0");
+	    	rowR.setC6("0");
+	    	rowR.setC7("0");
+	    	rowR.setC8("0");
+	    	rowR.setC9("0");
+	    	rowR.setC10("0");
+	    	rowR.setC11("0");
+	    	rowR.setC12("0");
+	    	rowR.setC13("0");
+	    	rowR.setC14("0");
+	    	rowR.setC15("0");
+	    	rowR.setC16("0");
+	    	rowR.setC17("0");
+	    	rowR.setC18("0");
+	    	rowR.setC19("0");
+	    	//rowR.setC20("0");
+		return rowR;
+	}
+	/**
+	 * 非合計行資料計算
+	 * @param con
+	 * @param html
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static dayAttendanceRO tmpAttendanceRO(dayAttendanceRO tmpR,dayAttendanceRO rowR) throws SQLException
+	{
+	    	tmpR.setC1(String.valueOf(Integer.valueOf(tmpR.getC1())+Integer.valueOf(rowR.getC1())));
+		tmpR.setC2(String.valueOf(Integer.valueOf(tmpR.getC2())+Integer.valueOf(rowR.getC2())));
+		tmpR.setC3(String.valueOf(Integer.valueOf(tmpR.getC3())+Integer.valueOf(rowR.getC3())));
+		tmpR.setC4(String.valueOf(Integer.valueOf(tmpR.getC4())+Integer.valueOf(rowR.getC4())));
+		tmpR.setC5(String.valueOf(Integer.valueOf(tmpR.getC5())+Integer.valueOf(rowR.getC5())));
+		tmpR.setC6(String.valueOf(Integer.valueOf(tmpR.getC6())+Integer.valueOf(rowR.getC6())));
+		tmpR.setC7(String.valueOf(Integer.valueOf(tmpR.getC7())+Integer.valueOf(rowR.getC7())));
+		tmpR.setC8(String.valueOf(Integer.valueOf(tmpR.getC8())+Integer.valueOf(rowR.getC8())));
+		tmpR.setC9(String.valueOf(Integer.valueOf(tmpR.getC9())+Integer.valueOf(rowR.getC9())));
+		tmpR.setC10(String.valueOf(Integer.valueOf(tmpR.getC10())+Integer.valueOf(rowR.getC10())));
+		tmpR.setC11(String.valueOf(Integer.valueOf(tmpR.getC11())+Integer.valueOf(rowR.getC11())));
+		tmpR.setC12(String.valueOf(Integer.valueOf(tmpR.getC12())+Integer.valueOf(rowR.getC12())));
+		tmpR.setC13(String.valueOf(Integer.valueOf(tmpR.getC13())+Integer.valueOf(rowR.getC13())));
+		tmpR.setC14(String.valueOf(Integer.valueOf(tmpR.getC14())+Integer.valueOf(rowR.getC14())));
+		tmpR.setC15(String.valueOf(Integer.valueOf(tmpR.getC15())+Integer.valueOf(rowR.getC15())));
+		tmpR.setC16(String.valueOf(Integer.valueOf(tmpR.getC16())+Integer.valueOf(rowR.getC16())));
+		tmpR.setC17(String.valueOf(Integer.valueOf(tmpR.getC17())+Integer.valueOf(rowR.getC17())));
+		tmpR.setC18(String.valueOf(Integer.valueOf(tmpR.getC18())+Integer.valueOf(rowR.getC18())));
+		tmpR.setC19(String.valueOf(Integer.valueOf(tmpR.getC19())+Integer.valueOf(rowR.getC19())));
+
 	
+		return tmpR;
+	}
 	
+	/**
+	 * 非合計行資料計算-總合計
+	 * @param con
+	 * @param html
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static dayAttendanceRO maxAttendanceRO(dayAttendanceRO maxR,dayAttendanceRO rowR) throws SQLException
+	{
+	   
+
+		maxR.setC1(String.valueOf(Integer.valueOf(maxR.getC1())+Integer.valueOf(rowR.getC1())));
+		maxR.setC2(String.valueOf(Integer.valueOf(maxR.getC2())+Integer.valueOf(rowR.getC2())));
+		maxR.setC3(String.valueOf(Integer.valueOf(maxR.getC3())+Integer.valueOf(rowR.getC3())));
+		maxR.setC4(String.valueOf(Integer.valueOf(maxR.getC4())+Integer.valueOf(rowR.getC4())));
+		maxR.setC5(String.valueOf(Integer.valueOf(maxR.getC5())+Integer.valueOf(rowR.getC5())));
+		maxR.setC6(String.valueOf(Integer.valueOf(maxR.getC6())+Integer.valueOf(rowR.getC6())));
+		maxR.setC7(String.valueOf(Integer.valueOf(maxR.getC7())+Integer.valueOf(rowR.getC7())));
+		maxR.setC8(String.valueOf(Integer.valueOf(maxR.getC8())+Integer.valueOf(rowR.getC8())));
+		maxR.setC9(String.valueOf(Integer.valueOf(maxR.getC9())+Integer.valueOf(rowR.getC9())));
+		maxR.setC10(String.valueOf(Integer.valueOf(maxR.getC10())+Integer.valueOf(rowR.getC10())));
+		maxR.setC11(String.valueOf(Integer.valueOf(maxR.getC11())+Integer.valueOf(rowR.getC11())));
+		maxR.setC12(String.valueOf(Integer.valueOf(maxR.getC12())+Integer.valueOf(rowR.getC12())));
+		maxR.setC13(String.valueOf(Integer.valueOf(maxR.getC13())+Integer.valueOf(rowR.getC13())));
+		maxR.setC14(String.valueOf(Integer.valueOf(maxR.getC14())+Integer.valueOf(rowR.getC14())));
+		maxR.setC15(String.valueOf(Integer.valueOf(maxR.getC15())+Integer.valueOf(rowR.getC15())));
+		maxR.setC16(String.valueOf(Integer.valueOf(maxR.getC16())+Integer.valueOf(rowR.getC16())));
+		maxR.setC17(String.valueOf(Integer.valueOf(maxR.getC17())+Integer.valueOf(rowR.getC17())));
+		maxR.setC18(String.valueOf(Integer.valueOf(maxR.getC18())+Integer.valueOf(rowR.getC18())));
+		maxR.setC19(String.valueOf(Integer.valueOf(maxR.getC19())+Integer.valueOf(rowR.getC19())));
+		
+		return maxR;
+	}
 }

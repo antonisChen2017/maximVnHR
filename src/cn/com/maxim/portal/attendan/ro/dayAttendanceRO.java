@@ -2,8 +2,10 @@ package cn.com.maxim.portal.attendan.ro;
 
 public class dayAttendanceRO
 {
+    	private String ID;
 	private String DEPARTMENT;
 	private String UNIT;
+	private String ROW;
 	private String C1;
 	private String C2;
 	private String C3;
@@ -25,6 +27,20 @@ public class dayAttendanceRO
 	private String C19;
 	private String C20;
 	
+	
+	
+	public String getID() {
+	    return ID;
+	}
+	public void setID(String iD) {
+	    ID = iD;
+	}
+	public String getROW() {
+	    return ROW;
+	}
+	public void setROW(String rOW) {
+	    ROW = rOW;
+	}
 	public String getDEPARTMENT()
 	{
 		return DEPARTMENT;

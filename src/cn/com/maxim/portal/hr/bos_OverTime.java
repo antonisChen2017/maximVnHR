@@ -15,6 +15,7 @@ import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.overTimeDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -60,8 +61,9 @@ public class bos_OverTime  extends TemplatePortalPen
 						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("U")) {
-			    		logger.info("加班時數/I : " +otVo.toString());						
-						DBUtil.updateTimeOverSStatus("B", request.getParameter("rowID"), con);
+			    		logger.info("加班時數/B : " +otVo.toString());		
+			    		otVo.setStatus("B");
+						otVo.setMsg(overTimeDAO.deptProcess(con, otVo));		
 						otVo.setShowDataTable(true);
 						otVo.setStatus("U");
 						setHtmlPart1(con, out, otVo,UserInformation,request);
@@ -69,7 +71,9 @@ public class bos_OverTime  extends TemplatePortalPen
 					if (actText.equals("R")) {
 						
 				    	logger.info("加班時數/R: " +otVo.toString());		
-						DBUtil.updateTimeOverSStatus("LR", request.getParameter("rowID"), con);
+				    	otVo.setLeaveApply("2");
+				    	otVo.setStatus("BR");
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						DBUtil.updateSql(SqlUtil.setStatusReturnMsg(otVo.getReturnMsg(), request.getParameter("rowID")), con);
 						
 						otVo.setShowDataTable(true);
@@ -78,14 +82,16 @@ public class bos_OverTime  extends TemplatePortalPen
 					
 					}
 					if (actText.equals("UB")) {
-			    		logger.info("超時加班時數/UB : " +otVo.toString());						
-						DBUtil.updateTimeOverSStatus("UB", request.getParameter("rowID"), con);
+			    		logger.info("超時加班時數/UB : " +otVo.toString());					
+			    		otVo.setLeaveApply("2");
+			    		otVo.setStatus("UB");
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						otVo.setShowDataTable(true);
 						otVo.setStatus("U");
 						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
 				}else{
-				//	System.out.println("sql : "+SqlUtil.getDeptID(UserInformation.getUserEmployeeNo()));
+		
 					otVo.setSearchDepartmen("0");
 					otVo.setSearchEmployeeNo("0");
 					otVo.setSearchEmployee("0");
@@ -148,16 +154,16 @@ public class bos_OverTime  extends TemplatePortalPen
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_bos_OverTime);
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
-			htmlPart1=htmlPart1.replace("&SearchDepartmen", ControlUtil.drawChosenSelect(con, "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", " 1=1 ",otVo.getSearchDepartmen( ),false,null));
+			htmlPart1=htmlPart1.replace("&SearchDepartmen", ControlUtil.drawChosenSql(con,  "searchDepartmen",SqlUtil.querySelectOverDept(lro.get(0).getEMPLOYEENO()), otVo.getSearchDepartmen(),keyConts.msgS));	
 			htmlPart1=htmlPart1.replace("&submitDate",HtmlUtil.getDateDivSw("startSubmitDate","endSubmitDate", otVo.getStartSubmitDate(),otVo.getEndSubmitDate()));
 			htmlPart1=htmlPart1.replace("	<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + otVo.getSearchDepartmen( ) + "'", otVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("&SearchEmployee",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + otVo.getSearchDepartmen( ) + "'", otVo.getSearchEmployee(),false,null));
-			 htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
+			 htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabel6Html(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(otVo.getMsg()));
 			if(otVo.isShowDataTable()){
-			logger.info("getBOvertime  :  "+SqlUtil.getBOvertime(otVo));
+			logger.info("getBOvertime  :  "+SqlUtil.getBOvertime(otVo,lro.get(0).getEMPLOYEENO()));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawOvertimeTable(
-						SqlUtil.getBOvertime(otVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageLList));
+						SqlUtil.getBOvertime(otVo,lro.get(0).getEMPLOYEENO()),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageB));
 			}
 			out.println(htmlPart1);
 	}

@@ -107,7 +107,8 @@ public class ad_editDeptUnit extends TemplatePortalPen
 					edVo.setUEName(UEName);
 					String UName = request.getParameter("UName");
 					edVo.setUName(UName);
-			
+					String Sing = request.getParameter("Sing");
+					edVo.setSing(Sing);
 					logger.info("SQL "+SqlUtil.updateUnitData(edVo));	
 					DBUtil.updateSql(SqlUtil.updateUnitData(edVo), con);
 					edVo.setMsg(keyConts.editOK);
@@ -143,7 +144,8 @@ public class ad_editDeptUnit extends TemplatePortalPen
 					String UEName = request.getParameter("UEName");
 					edVo.setUEName(UEName);
 					String UName = request.getParameter("UName");
-					edVo.setUName(UName);
+					String Sing = request.getParameter("Sing");
+					edVo.setSing(Sing);
 					edVo.setDrowID("0");
 					
 					logger.info("SQL "+SqlUtil.InsterUnitData(edVo));	
@@ -187,6 +189,7 @@ public class ad_editDeptUnit extends TemplatePortalPen
 				edVo.setUEName("");
 				edVo.setDrowID("0");
 				edVo.setUrowID("0");
+				edVo.setSing("");
 				edVo.setShowDataTable(true);
 				showHtml(con, out, edVo, UserInformation);
 
@@ -212,7 +215,7 @@ public class ad_editDeptUnit extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<DID/>",HtmlUtil.getTextDiv("DID",edVo.getDID(),"必要输入" ));
 		htmlPart1=htmlPart1.replace("<DName/>",HtmlUtil.getTextDiv("DName",edVo.getDName(),"必要输入" ));
 		htmlPart1=htmlPart1.replace("<DEName/>",HtmlUtil.getTextDiv("DEName",edVo.getDEName(),"非必要输入" ));
-		
+		htmlPart1=htmlPart1.replace("<Sing/>",HtmlUtil.getTextDiv("Sing",edVo.getSing(),"非必要输入" ));
 		htmlPart1=htmlPart1.replace("<Dept/>",ControlUtil.drawChosenSelect(con, "Dept", "VN_DEPARTMENT", "ID", "DEPARTMENT", null ,edVo.getDept(),false,null));
 		htmlPart1=htmlPart1.replace("<UName/>",HtmlUtil.getTextDiv("UName",edVo.getUName(),"必要输入" ));
 		htmlPart1=htmlPart1.replace("<UEName/>",HtmlUtil.getTextDiv("UEName",edVo.getUEName(),"非必要输入" ));

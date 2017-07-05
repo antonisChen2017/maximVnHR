@@ -110,12 +110,12 @@ public class rep_Attendance extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<queryYearMonth/>",HtmlUtil.getYearMonthDiv("queryYearMonth",raVo.getQueryYearMonth()));
 		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null ,raVo.getSearchDepartmen( ),false,null));
 		if(raVo.isShowDataTable()){
-		
+		    logger.info("getMonthReport : "+SqlUtil.getMonthReport(con,raVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawRepAttendanceTable(
 					SqlUtil.getMonthReport(con,raVo),HtmlUtil.drawTableMExcelButton(),  con, out,raVo));
 
 			 repAttendanceRO raRo=new repAttendanceRO();
-		
+			 logger.info("getvnMonthAttendanceExcel : "+SqlUtil.getvnMonthAttendanceExcel(raVo));
 			 List<repAttendanceRO> raRolist=( List<repAttendanceRO>)DBUtil.queryMonthAttendanceExcel(con,SqlUtil.getvnMonthAttendanceExcel(raVo),raRo);
 			 request.getSession().setAttribute("Departmen", DBUtil.queryDBField(con,SqlUtil.getDeptName(raVo.getSearchDepartmen()),"DEPARTMENT"));
 			 request.getSession().setAttribute("raRolist", raRolist);

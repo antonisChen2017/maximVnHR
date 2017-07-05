@@ -361,7 +361,10 @@ public class WebDBTableLO  extends WebDBTableCL
 				String TDStyle = col.getColumnStyle();
 				if ((Data == null) || (Data.equals("")))
 				{
+				 
 					Data = "&nbsp;";
+				    
+					
 				}
 				if (TDStyle.length() > 0)
 				{

@@ -2,6 +2,8 @@ package cn.com.maxim.portal.util;
 
 import java.text.NumberFormat;
 
+import org.apache.log4j.Logger;
+
 /**
  * 數字轉換
  * @author Antonis.chen
@@ -32,14 +34,18 @@ public class NumberUtil
 	 * @return
 	 */
 	public static final String getPercentFormat(int value1,int value2)
-	{
+	{	
+	    	Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(NumberUtil.class);
 		  NumberFormat numberFormat = NumberFormat.getInstance();  
 	        // 设置精确到小数点后2位  
 	        numberFormat.setMaximumFractionDigits(2);  
 	        String result = numberFormat.format((float) value1 / (float) value2 * 100);  
-	     
-		return result+ "%";//自动转换成百分比显示.. 
-
+	
+	        if(value2==0){
+	            result="0.0";
+	        }
+		return result+ "%";//自动转换成百分比显示..
 	}
 	/**
 	 * 兩個數字區間變成百分比

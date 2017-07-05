@@ -23,7 +23,8 @@ public class editDeptUnit  implements Serializable
 	private String DEName;
 	/**單位英文**/
 	private String UEName;
-	
+	/**排序**/
+	private String Sing;
 	/**是否顯示查询結果*/
 	private boolean  showDataTable;
 	/**資料庫訊息*/
@@ -32,6 +33,14 @@ public class editDeptUnit  implements Serializable
 	private String  ActionURI;
 	
 	
+	
+	
+	public String getSing() {
+	    return Sing;
+	}
+	public void setSing(String sing) {
+	    Sing = sing;
+	}
 	public String getDEName()
 	{
 		return DEName;

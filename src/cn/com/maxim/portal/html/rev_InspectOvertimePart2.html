@@ -56,38 +56,68 @@ jQuery(document).ready(function() {
    FormComponents.init();
   
    
-   $('#searchDepartmen').change(function(){
-	   
+   $('#searchDepartmen').change(function(){  
 		
-		   var p1= $('#searchDepartmen').val();  //这就是selected的值  
-		   jQuery.ajax({
-				url:'<ActionURI/>&doajax=SwEmpNo',
-				type:'POST',
-				data:{searchDepartmen:p1},
-				success:function(data){
-					 $('#EmployeeNoDiv').html(data);    
-					 $('#searchEmployeeNo').change(function(){  
+		 var p1= $('#searchDepartmen').val();
+
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwUnit',
+			type:'POST',
+			data:{searchDepartmen:p1},
+			success:function(data){
+				var datas=data.split("%");
+				  $('#UnitDiv').html(datas[0]); 
+				  updateUnit();
+		 		  $('#EmployeeNoDiv').html(datas[1]);  
+				  $('#EmployeeDiv').html(datas[2]);  
+
+				  $('#searchEmployee').change(function(){  
 					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					 
-						 $('#searchEmployee').select2('val',p1);           
-					   }) 
-				}
-			});
-		   
-		   jQuery.ajax({
-				url:'<ActionURI/>&doajax=SwEmp',
-				type:'POST',
-				data:{searchDepartmen:p1},
-				success:function(data){
-					 $('#EmployeeDiv').html(data);    
-					 $('#searchEmployee').change(function(){  
-					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					 	$('#searchEmployeeNo').select2('val',p1);         
+					 	$('#searchEmployeeNo').val(p1);       
 					   })  
+				   $('#searchEmployeeNo').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#searchEmployee').val(p1);       
+				   }) 
 				}
 			});
+	   
+	   
 		});
+ 
+ 
 });
+
+
+function    updateUnit(){  
+	 // layer.msg(' 0 ');  
+	 $('#searchUnit').change(function(){  
+	//	   layer.msg(' 1 ');  
+		var p1=$(this).children('option:selected').val();  //这就是selected的值  
+	//   layer.msg(' searchUnit :'+ p1);  
+
+	   jQuery.ajax({
+			url:'<ActionURI/>&doajax=SwDUnit',
+			type:'POST',
+			data:{searchUnit:p1,searchDepartmen:$('#searchDepartmen').val()},
+			success:function(data){
+				var datas=data.split("%");
+		 		  $('#EmployeeNoDiv').html(datas[0]);  
+				  $('#EmployeeDiv').html(datas[1]);  
+			//      layer.msg(' data :'+ data);  
+				  $('#searchEmployee').change(function(){  
+					     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					 	$('#searchEmployeeNo').select2('val',p1);       
+					   })  
+				   $('#searchEmployeeNo').change(function(){  
+						  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+					      $('#searchEmployee').select2('val',p1);       
+				   }) 
+				}
+			});
+	 });
+	 
+} 
 
 function    upReturn(rowID){  
 

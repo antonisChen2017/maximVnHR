@@ -1,0 +1,10 @@
+SELECT 
+		DEPARTMENT_ID as DEPARTMENT,
+		UNIT_ID as UNIT
+      , ROLE
+      ,' ' as STATUS
+ ,'0' as DAYCOUNT
+  FROM HR_EMPLOYEE E 
+   JOIN VN_OVERTIME_S L
+ON E.ID=L.EP_ID
+where L.ID='<rowID/>'

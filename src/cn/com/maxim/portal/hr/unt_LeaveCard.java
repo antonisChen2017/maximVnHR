@@ -59,7 +59,7 @@ public class unt_LeaveCard extends TemplatePortalPen
 						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					//請假退回
-					if (actText.equals("R")) {
+					if (actText.equals("UR")) {
 						
 						logger.info("单位主管審核/請假退回 : " +lcVo.toString());
 						lcVo.setStatus(actText);
@@ -242,7 +242,7 @@ public class unt_LeaveCard extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" +lro.get(0).getUID()+ "'", lcVo.getSearchEmployee(),false,null));
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
 		
-		htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
+		htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabel6Html(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
 	
 		if(lcVo.isShowDataTable()){
 			logger.info("getUnitLeaveCard sql :"+SqlUtil.getUnitLeaveCard(lcVo,lro.get(0).getEMPLOYEENO()));

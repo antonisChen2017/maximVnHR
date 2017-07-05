@@ -1,0 +1,3 @@
+UPDATE [hr].[dbo].[VN_YEAR_MONTH_PLANT_ATTENDANCE]
+   SET [C20] = '<C20/>'
+ WHERE ID='<ID/>'

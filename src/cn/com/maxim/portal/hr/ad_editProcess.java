@@ -226,10 +226,6 @@ public class ad_editProcess extends TemplatePortalPen
 		htmlPart1 = htmlPart1.replace("<ActionURI/>", edVo.getActionURI());
 		htmlPart1=htmlPart1.replace("<Dept/>", 	ControlUtil.drawChosenSelect(con, "Dept", "VN_DEPARTMENT", "ID", "DEPARTMENT", null ,edVo.getDept(),false,null));
 		htmlPart1=htmlPart1.replace("<Unit/>",ControlUtil.drawChosenSelect(con,  "Unit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + edVo.getDept() +"'  ", edVo.getUnit(),false,null));
-		htmlPart1=htmlPart1.replace("<oneEAuditorTitle/>",ControlUtil.drawChosenSelect(con,  "oneEAuditorTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('E')  ", edVo.getOneEAuditorTitle(),false,null));
-		htmlPart1=htmlPart1.replace("<oneEAgentTitle/>",ControlUtil.drawChosenSelect(con,  "oneEAgentTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('E')  ", edVo.getOneEAgentTitle(),false,null));
-		htmlPart1=htmlPart1.replace("<oneUAuditorTitle/>",ControlUtil.drawChosenSelect(con,  "oneUAuditorTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('U','E')  ", edVo.getOneUAuditorTitle(),false,null));
-		htmlPart1=htmlPart1.replace("<oneUAgentTitle/>",ControlUtil.drawChosenSelect(con,  "oneUAgentTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('U','E')  ", edVo.getOneUAgentTitle(),false,null));	
 		htmlPart1=htmlPart1.replace("<oneDID/>",ControlUtil.drawHidden(edVo.getOneDID(), "oneDID"));
 		htmlPart1=htmlPart1.replace("<oneMID/>",ControlUtil.drawHidden(edVo.getOneMID(), "oneMID"));
 		htmlPart1=htmlPart1.replace("<threeDID/>",ControlUtil.drawHidden(edVo.getThreeDID(), "threeDID"));
@@ -238,89 +234,32 @@ public class ad_editProcess extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<oneUID/>",ControlUtil.drawHidden(edVo.getOneUID(), "oneUID"));
 		htmlPart1=htmlPart1.replace("<threeEID/>",ControlUtil.drawHidden(edVo.getThreeEID(), "threeEID"));
 		htmlPart1=htmlPart1.replace("<threeUID/>",ControlUtil.drawHidden(edVo.getThreeUID(), "threeUID"));
-		  /**員工**/
-		logger.info("getOneEAgent  "+edVo.getOneEAgent());
-		logger.info("getOneEAuditorTitle  "+edVo.getOneEAuditorTitle());
-		if( edVo.getOneEAuditor().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneEAuditor/>",ControlUtil.drawChosenSelect(con,  "oneEAuditor", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneEAuditor(),false,null));	
-		}else{
-			edVo.setRole(edVo.getOneEAuditorTitle());
-			htmlPart1=htmlPart1.replace("<oneEAuditor/>",ControlUtil.drawChosenSql(con,  "oneEAuditor",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneEAuditor(),keyConts.msgZ));	
-		}
-		logger.info("getOneEAgent   "+edVo.getOneEAgent());
-		logger.info("getOneEAgentTitle  "+edVo.getOneEAgentTitle());
-		if( edVo.getOneEAgent().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneEAgent/>",ControlUtil.drawChosenSelect(con,  "oneEAgent", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneEAgent(),false,null));			
-		}else{
-			edVo.setRole(edVo.getOneEAgentTitle());
-			htmlPart1=htmlPart1.replace("<oneEAgent/>",ControlUtil.drawChosenSql(con,  "oneEAgent",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneEAgent(),keyConts.msgZ));	
-		}
 		
-		  /**單位主管**/
-		if( edVo.getOneUAuditor().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneUAuditor/>",ControlUtil.drawChosenSelect(con,  "oneUAuditor", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneUAuditor(),false,null));	
-		}else{
-			edVo.setRole(edVo.getOneUAuditorTitle());
-			htmlPart1=htmlPart1.replace("<oneUAuditor/>",ControlUtil.drawChosenSql(con,  "oneUAuditor",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneUAuditor(),keyConts.msgZ));	
-			}
-		
-		if( edVo.getOneUAgent().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneUAgent/>",ControlUtil.drawChosenSelect(con,  "oneUAgent", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneUAgent(),false,null));	
-		}else{
-			edVo.setRole(edVo.getOneUAgentTitle());
-			htmlPart1=htmlPart1.replace("<oneUAgent/>",ControlUtil.drawChosenSql(con,  "oneUAgent",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneUAgent(),keyConts.msgZ));	
-		}
-
-	
-	   /**部門主管**/
-		htmlPart1=htmlPart1.replace("<oneDAuditorTitle/>",ControlUtil.drawChosenSelect(con,  "oneDAuditorTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('U','E','D')  ", edVo.getOneDAuditorTitle(),false,null));
-		htmlPart1=htmlPart1.replace("<oneDAgentTitle/>",ControlUtil.drawChosenSelect(con,  "oneDAgentTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('U','E','D')  ", edVo.getOneDAgentTitle(),false,null));
-		
-		if( edVo.getOneDAuditor().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneDAuditor/>",ControlUtil.drawChosenSelect(con,  "oneDAuditor", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneDAuditor(),false,null));	
-		}else{
-			edVo.setRole(edVo.getOneDAuditorTitle());
-			htmlPart1=htmlPart1.replace("<oneDAuditor/>",ControlUtil.drawChosenSql(con,  "oneDAuditor",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneDAuditor(),keyConts.msgZ));	
-		}
-		if( edVo.getOneDAgent().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneDAgent/>",ControlUtil.drawChosenSelect(con,  "oneDAgent", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneDAgent(),false,null));	
-		}else{
-			edVo.setRole(edVo.getOneDAgentTitle());
-			htmlPart1=htmlPart1.replace("<oneDAgent/>",ControlUtil.drawChosenSql(con,  "oneDAgent",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneDAgent(),keyConts.msgZ));	
-		}
-		/**经理**/
-		htmlPart1=htmlPart1.replace("<oneMAuditorTitle/>",ControlUtil.drawChosenSelect(con,  "oneMAuditorTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('U','E','D','M')  ", edVo.getOneMAuditorTitle(),false,null));
-		htmlPart1=htmlPart1.replace("<oneMAgentTitle/>",ControlUtil.drawChosenSelect(con,  "oneMAgentTitle", "VN_ROLE", "ID", "TITLE", " ID NOT IN('U','E','D','M')  ", edVo.getOneMAgentTitle(),false,null));	
-	
-		if( edVo.getOneMAuditor().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneMAuditor/>",ControlUtil.drawChosenSelect(con,  "oneMAuditor", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneMAuditor(),false,null));	
-		}else{
-			
-			edVo.setRole(edVo.getOneMAuditorTitle());
-			htmlPart1=htmlPart1.replace("<oneMAuditor/>",ControlUtil.drawChosenSql(con,  "oneMAuditor",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneMAuditor(),keyConts.msgZ));	
-		}
-		if( edVo.getOneMAgent().equals("0")){
-			htmlPart1=htmlPart1.replace("<oneMAgent/>",ControlUtil.drawChosenSelect(con,  "oneMAgent", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEE", " ROLE='0'  ", edVo.getOneMAgent(),false,null));	
-		}else{	
-			edVo.setRole(edVo.getOneMAgentTitle());
-			htmlPart1=htmlPart1.replace("<oneMAgent/>",ControlUtil.drawChosenSql(con,  "oneMAgent",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneMAgent(),keyConts.msgZ));	
-		}
 	
 		edVo.setRole("U");
-		htmlPart1=htmlPart1.replace("<threeELever1/>",ControlUtil.drawChosenSql(con,  "threeELever1",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever1(),keyConts.msgZ));	
+		htmlPart1=htmlPart1.replace("<threeELever1/>",ControlUtil.drawChosenSql(con,  "threeELever1",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever1(),keyConts.msgZ));
+		htmlPart1=htmlPart1.replace("<oneELever1/>",ControlUtil.drawChosenSql(con,  "oneELever1",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneELever1(),keyConts.msgZ));	
 		edVo.setRole("D");
 		htmlPart1=htmlPart1.replace("<threeELever2/>",ControlUtil.drawChosenSql(con,  "threeELever2",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever2(),keyConts.msgZ));		
 		htmlPart1=htmlPart1.replace("<threeULever2/>",ControlUtil.drawChosenSql(con,  "threeULever2",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeULever2(),keyConts.msgZ));	
+		htmlPart1=htmlPart1.replace("<oneELever2/>",ControlUtil.drawChosenSql(con,  "oneELever2",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneELever2(),keyConts.msgZ));		
+		htmlPart1=htmlPart1.replace("<oneULever2/>",ControlUtil.drawChosenSql(con,  "oneULever2",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneULever2(),keyConts.msgZ));	
 		edVo.setRole("M");
 		htmlPart1=htmlPart1.replace("<threeELever3/>",ControlUtil.drawChosenSql(con,  "threeELever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever3(),keyConts.msgZ));	
 		htmlPart1=htmlPart1.replace("<threeULever3/>",ControlUtil.drawChosenSql(con,  "threeULever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeULever3(),keyConts.msgZ));
 		htmlPart1=htmlPart1.replace("<threeDLever3/>",ControlUtil.drawChosenSql(con,  "threeDLever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeDLever3(),keyConts.msgZ));
+		htmlPart1=htmlPart1.replace("<oneELever3/>",ControlUtil.drawChosenSql(con,  "oneELever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneELever3(),keyConts.msgZ));	
+		htmlPart1=htmlPart1.replace("<oneULever3/>",ControlUtil.drawChosenSql(con,  "oneULever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneULever3(),keyConts.msgZ));
+		htmlPart1=htmlPart1.replace("<oneDLever3/>",ControlUtil.drawChosenSql(con,  "oneDLever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneDLever3(),keyConts.msgZ));
 		edVo.setRole("B");
 		htmlPart1=htmlPart1.replace("<threeELever4/>",ControlUtil.drawChosenSql(con,  "threeELever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever4(),keyConts.msgZ));	
 		htmlPart1=htmlPart1.replace("<threeULever4/>",ControlUtil.drawChosenSql(con,  "threeULever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeULever4(),keyConts.msgZ));
 		htmlPart1=htmlPart1.replace("<threeDLever4/>",ControlUtil.drawChosenSql(con,  "threeDLever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeDLever4(),keyConts.msgZ));
 		htmlPart1=htmlPart1.replace("<threeMLever4/>",ControlUtil.drawChosenSql(con,  "threeMLever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeMLever4(),keyConts.msgZ));
-
+		htmlPart1=htmlPart1.replace("<oneELever4/>",ControlUtil.drawChosenSql(con,  "oneELever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneELever4(),keyConts.msgZ));	
+		htmlPart1=htmlPart1.replace("<oneULever4/>",ControlUtil.drawChosenSql(con,  "oneULever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneULever4(),keyConts.msgZ));
+		htmlPart1=htmlPart1.replace("<oneDLever4/>",ControlUtil.drawChosenSql(con,  "oneDLever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneDLever4(),keyConts.msgZ));
+		htmlPart1=htmlPart1.replace("<oneMLever4/>",ControlUtil.drawChosenSql(con,  "oneMLever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getOneMLever4(),keyConts.msgZ));
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(edVo.getMsg()));
 		if (edVo.isShowDataTable())
 		{
@@ -336,14 +275,7 @@ public class ad_editProcess extends TemplatePortalPen
 	private editProcessVO setData(editProcessVO edVo){
 		edVo.setID("0");
 		edVo.setDept("0");
-		edVo.setOneDAuditor("0");
-		edVo.setOneDAgent("0");
-		edVo.setOneMAgent("0");
-		edVo.setOneMAuditor("0");
-		edVo.setOneEAuditor("0");
-		edVo.setOneEAgent("0");
-		edVo.setOneUAgent("0");
-		edVo.setOneUAuditor("0");
+	
 		edVo.setOneDID("0");
 		edVo.setOneMID("0");
 		edVo.setThreeDID("0");
@@ -357,42 +289,30 @@ public class ad_editProcess extends TemplatePortalPen
 	/**查詢部門無資料**/
 	private editProcessVO setDeptNoData(editProcessVO edVo){
 	
-		edVo.setOneDAuditor("0");
-		edVo.setOneDAgent("0");
-		edVo.setOneMAgent("0");
-		edVo.setOneMAuditor("0");
-		edVo.setOneEAuditor("0");
-		edVo.setOneEAgent("0");
-		edVo.setOneUAgent("0");
-		edVo.setOneUAuditor("0");
+	
 		edVo.setOneDID("0");
 		edVo.setOneMID("0");
 		edVo.setThreeDID("0");
 		edVo.setThreeMID("0");
-		edVo.setOneDAgentTitle("0");
-		edVo.setOneDAuditorTitle("0");
-		edVo.setOneMAgentTitle("0");
-		edVo.setOneMAuditorTitle("0");
+	
 		edVo.setThreeDLever3("0");
 		edVo.setThreeDLever4("0");
 		edVo.setThreeMLever4("0");
+		
+		edVo.setOneDLever3("0");
+		edVo.setOneDLever4("0");
+		edVo.setOneMLever4("0");
 		return edVo;
 	}
 	/**查詢單位無資料**/
 	private editProcessVO setUnitNoData(editProcessVO edVo){
 	
-		edVo.setOneEAuditor("0");
-		edVo.setOneEAgent("0");
-		edVo.setOneUAgent("0");
-		edVo.setOneUAuditor("0");
+	
 		edVo.setOneEID("0");
 		edVo.setOneUID("0");
 		edVo.setThreeEID("0");
 		edVo.setThreeUID("0");
-		edVo.setOneEAgentTitle("0");
-		edVo.setOneEAuditorTitle("0");
-		edVo.setOneUAgentTitle("0");
-		edVo.setOneUAuditorTitle("0");
+	
 		edVo.setThreeELever1("0");
 		edVo.setThreeELever2("0");
 		edVo.setThreeELever3("0");
@@ -400,6 +320,14 @@ public class ad_editProcess extends TemplatePortalPen
 		edVo.setThreeULever2("0");
 		edVo.setThreeULever3("0");
 		edVo.setThreeULever4("0");
+		
+		edVo.setOneELever1("0");
+		edVo.setOneELever2("0");
+		edVo.setOneELever3("0");
+		edVo.setOneELever4("0");
+		edVo.setOneULever2("0");
+		edVo.setOneULever3("0");
+		edVo.setOneULever4("0");
 		return edVo;
 	}
 }

@@ -82,7 +82,9 @@ public class unt_ExceedOvertime extends TemplatePortalPen
 					if (actText.equals("Refer"))//送交
 					{
 						logger.info("加班申請單 員工/Refer : " +otVo.toString());
-						DBUtil.updateTimeOverSStatus(keyConts.dbTableUT, request.getParameter("rowID"), con);
+						otVo.setStatus(keyConts.dbTableUT);
+						otVo.setStatus("0");
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已送交");
 						showHtml(con, out, otVo,UserInformation);

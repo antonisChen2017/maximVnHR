@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +16,13 @@ import org.apache.log4j.Logger;
 
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
+import cn.com.maxim.portal.attendan.ro.dayAttendanceExcelRO;
 import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
 import cn.com.maxim.portal.attendan.ro.empnumRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
+import cn.com.maxim.portal.dao.rep_AttendanceDayDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -31,7 +35,7 @@ import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.TranslateConsts;
 
 /**
- * 日報表
+ * 全廠日報表
  * 
  * @author Antonis.chen
  *
@@ -96,16 +100,20 @@ public class rep_AttendanceDay extends TemplatePortalPen
 		if (lcVo.isShowDataTable())
 		{
 			htmlPart1 = htmlPart1.replace("<drawTableM/>", ControlUtil.drawAttendanceDayTable(con, lcVo));
-			dayAttendanceRO daRo = new dayAttendanceRO();
-			List<dayAttendanceRO> daRolist = (List<dayAttendanceRO>) DBUtil.
-					queryExcelAttendanceDay(con, SqlUtil.getExcelAttendanceDay(lcVo.getApplicationDate().replaceAll("/", "")), daRo);
+			dayAttendanceExcelRO daRo = new dayAttendanceExcelRO();
+			List<dayAttendanceExcelRO> daRolist = (List<dayAttendanceExcelRO>) DBUtil.
+				queryExcelDay(con, SqlUtil.getAttDayExcel(lcVo.getApplicationDate()), daRo);
 			//System.out.println("daRolist : "+daRolist);
 			request.getSession().setAttribute("daRolist", daRolist);
 			empnumRO eRo = new empnumRO();
 			List<empnumRO> eRolist = (List<empnumRO>) DBUtil.
-					queryExcelEmpnum(con, SqlUtil.getExcelEmpnum(lcVo.getApplicationDate().replaceAll("/", "")), eRo);
+					queryExcelEmpnum(con, SqlUtil.getExcelEmpnum(lcVo.getApplicationDate()), eRo);
 		//	System.out.println("ExcelEmpnum : "+SqlUtil.getExcelEmpnum(lcVo.getApplicationDate().replaceAll("/", "")));
 			request.getSession().setAttribute("eRolist", eRolist);
+			Hashtable  blueRow=rep_AttendanceDayDAO.UnitCount(con, lcVo);
+			
+			request.getSession().setAttribute("blueRow", blueRow);
+			
 		}
 		 out.println(TranslateConsts.tw2cn(htmlPart1));
 	}

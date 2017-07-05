@@ -5,7 +5,7 @@ SELECT D.DEPARTMENT as '部門'
         then '无'
         else 
         U.UNIT end) AS '單位'
-      ,R.TITLE
+      ,R.TITLE AS '员工身份'
       ,(case 
         when 
         STATUS ='1' 

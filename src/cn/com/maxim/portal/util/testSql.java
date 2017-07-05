@@ -9,62 +9,82 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
 import java.util.UUID;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 
+//portal@maxim-group.com.vn     -- 邮件帐户名称（SQL Server 使用）
+//portal@maxim-group.com.vn -- 发件人邮件地址
+//smtp.maxim-group.com.vn           -- 邮件服务器地址
+//portal@maxim-group.com.vn -- 用户名
+//ptvn123      -- 密码
 
 public class testSql {
 
-	/*public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		// try
-		//    {
-		String sql = " SELECT  *  FROM VN_CONFIG";
-		    
-	
-		/*  Class.forName("net.sourceforge.jtds.jdbc.Driver");
-	      Connection con = DriverManager.getConnection(
-	        "jdbc:jtds:sqlserver://192.168.4.199:1434/hr;charset=gb2312", "sa", "!Q@W3e4r");
-	      Statement stmt = con.createStatement();
-	   //   String sql = "SELECT bh, xm FROM employee";
-	      
-	      ResultSet rs = stmt.executeQuery(sql);
-	      if (rs.next()) 
-	      {
-	        String id = rs.getString("VALUE");
-	        System.out.println("VALUE :"+id);
-	       
-	      }
-	      rs.close();
-	      stmt.close();
-	      con.close();
-	      
-	    //  process(args[1], args[2]);
-	    }
-	    catch (Exception err)
-	    {
-	      err.printStackTrace();
-	    }*/
-		//System.out.println(generateShortUuid());
-	//}
-	
-	/*public static void main(String[] args) {
-		
-		 String s = "<table><tbody><tr><td>斕疑</td><td>bb</td></tr><tr><td>cc</td><td>dd</td></tr></tbody></table>";
-		    ExcelClientService ecs = new ExcelClientService();
-		    Vector datas = ecs.process(s);
-		    for (int i = 0; i < datas.size(); i++)
-		    {
-		      Vector data = (Vector)datas.get(i);
-		      for (int j = 0; j < data.size(); j++) {
-		        System.out.println(data.get(j));
-		      }
-		    }
-	
-	}
-	*/
+    static String SSL_EMAIL = "javax.net.ssl.SSLSocketFactory";
 
+
+     public static void main(String[] args) {
+	 
+	 String html="<H1>Jobs Report</H1><table border=\"1\"><tr><th>作业名</th><th>最近执行时间</th><th>最近执行状态</th><th>运行持续时间</th><th>最近运行状态信息</th><th>下次运行时间</th></tr>";
+	 
+          String s = sendmail("portal@maxim-group.com.vn", "ptvn123", "portal@maxim-group.com.vn", "15618790307@163.com", "TESTportal", html);
+          System.out.println(s);
+     }
+     /**
+      * 
+      * @param username 发件人邮件的用户名
+      * @param pass 发件人邮件的密码（此密码一定要是授权码   授权码：在发件人邮箱内开启smtp/pop3协议所获得的授权码）
+      * @param from 发件人邮箱
+      * @param to   收件人邮箱
+      * @param subject 邮件标题
+      * @param content 邮件内容
+      * @return
+      */
+     public static String sendmail(final String username, final String pass,
+             String from, String to, String subject, String content) {
+         //Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+         //设置系统参数
+         Properties props = System.getProperties();
+         props.setProperty("mail.smtp.socketFactory.class", SSL_EMAIL);
+         props.setProperty("mail.smtp.socketFactory.fallback", "true");
+         props.setProperty("mail.store.protocol", "smtp");
+         props.setProperty("mail.smtp.host", "smtp.maxim-group.com.vn");
+         props.setProperty("mail.smtp.port", "25");
+        // props.setProperty("mail.smtp.socketFactory.port", "25");
+          props.put("mail.smtp.auth", "true");
+         //创建邮件会话
+         Session session = Session.getInstance(props, new Authenticator() {
+             protected PasswordAuthentication getPasswordAuthentication() {
+                 return new PasswordAuthentication(username, pass);
+             }
+         });
+         //创建邮件信息
+         
+         Message msg = new MimeMessage(session);
+         try {
+             msg.setFrom(new InternetAddress(username));
+             msg.setRecipients(Message.RecipientType.TO,
+                     InternetAddress.parse(to, false));
+             msg.setSubject(subject);
+            // msg.setText(content);
+             msg.setContent(content, "text/html;charset = utf-8");  
+             msg.setSentDate(new Date());
+             Transport.send(msg);
+             return "1";
+         } catch (MessagingException e) {
+             return e.getMessage();
+         }
+     }
 	
 	public static String[] chars = new String[] { "a", "b", "c", "d", "e", "f",
             "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
@@ -163,9 +183,5 @@ public static int getSun(String year, String month) {
 	}
 	return sun*8;
 }
-public static void main(String[] args) {
-	//getDates("2017", "05");
-	
-	System.out.println(getSun("2017", "05"));
-}
+
 }

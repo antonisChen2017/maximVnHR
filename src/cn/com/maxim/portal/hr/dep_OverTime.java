@@ -57,43 +57,49 @@ public class dep_OverTime extends TemplatePortalPen
 						otVo.setShowDataTable(true);
 						otVo.setRowID("0");
 						request.getSession().setAttribute("dotEdit","QUE");
+						otVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, otVo,UserInformation);
 					}
 
 					if (actText.equals("Save")) {
 						logger.info("加班申請單 員工/Save : " +otVo.toString());
-						otVo.setShowDataTable(true);
-						//不能超過系統規定加班時數 先檢查
+						String msg=DBUtil.getOverProcess(con,otVo);
+						if(msg.equals("o")){
 						
-						
-						otVo.setOverTimeSave(false);
-						otVo.setStatus("S");
-						
-						// 儲存db
-						String dotEdit=( String)request.getSession().getAttribute("dotEdit");
-						if(dotEdit.equals("Update")){
-							
-							logger.info("updateDepOverTimeM : " +SqlUtil.updateDepOverTimeM(otVo));
-							boolean flag =DBUtil.updateSql(SqlUtil.updateDepOverTimeM(otVo), con);
-							
-							if(flag){
-								logger.info("updateDepOverTime : " +SqlUtil.updateDepOverTime(otVo));
-								boolean oflag =DBUtil.updateSql(SqlUtil.updateDepOverTime(otVo), con);
-								if(oflag){
-									otVo.setMsg(keyConts.editOK);
+								otVo.setShowDataTable(true);
+								//不能超過系統規定加班時數 先檢查
+								otVo.setOverTimeSave(false);
+								otVo.setStatus("S");
+								
+								// 儲存db
+								String dotEdit=( String)request.getSession().getAttribute("dotEdit");
+								if(dotEdit.equals("Update")){
+									
+									logger.info("updateDepOverTimeM : " +SqlUtil.updateDepOverTimeM(otVo));
+									boolean flag =DBUtil.updateSql(SqlUtil.updateDepOverTimeM(otVo), con);
+									
+									if(flag){
+										logger.info("updateDepOverTime : " +SqlUtil.updateDepOverTime(otVo));
+										boolean oflag =DBUtil.updateSql(SqlUtil.updateDepOverTime(otVo), con);
+										if(oflag){
+											otVo.setMsg(keyConts.editOK);
+										}else{
+											otVo.setMsg(keyConts.editNO);
+										}
+									}else{
+										otVo.setMsg(keyConts.editNO);
+									}
+									//將rowid歸零
 								}else{
-									otVo.setMsg(keyConts.editNO);
+								
+									 msg=DBUtil.saveOvertime(otVo , con);
+									otVo.setMsg(msg);
 								}
-							}else{
-								otVo.setMsg(keyConts.editNO);
-							}
-							//將rowid歸零
 						}else{
-						
-							String msg=DBUtil.saveOvertime(otVo , con);
-							otVo.setMsg(msg);
-						}
-						
+									otVo.setMsg(keyConts.noProcessOverMsg);
+									logger.info(keyConts.noProcessOverMsg);
+							}
+						otVo.setSaveButText(keyConts.butSave);
 						request.getSession().setAttribute("dotEdit","Save");
 						showHtml(con, out,  otVo,UserInformation);
 						
@@ -108,17 +114,20 @@ public class dep_OverTime extends TemplatePortalPen
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已刪除");
 						request.getSession().setAttribute("dotEdit","Delete");
+						otVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, otVo,UserInformation);
 					}
 					if (actText.equals("Refer"))//送交
 					{
 						logger.info("加班申請單 員工/Refer : " +otVo.toString());
-						DBUtil.updateTimeOverSStatus(keyConts.dbTableCRStatuS_T, request.getParameter("rowID"), con);
+						otVo.setStatus(keyConts.dbTableCRStatuS_T);
+						otVo.setLeaveApply("0");
+						DBUtil.updateTimeOverSStatus(otVo, con);
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已送交");
 						request.getSession().setAttribute("dotEdit","Refer");
-						showHtml(con, out, otVo,UserInformation);
-						
+						otVo.setSaveButText(keyConts.butSave);
+						showHtml(con, out, otVo,UserInformation);	
 					}
 					if (actText.equals("Update"))//送交
 					{
@@ -130,6 +139,8 @@ public class dep_OverTime extends TemplatePortalPen
 						otVo.setRowID(rowID);
 						otVo=SharedCode(con,otVo);
 						request.getSession().setAttribute("dotEdit","Update");
+						otVo.setMsg(keyConts.editOverTip);
+						otVo.setSaveButText(keyConts.butUpdate);
 						showHtml(con, out,  otVo,UserInformation);	
 					}
 					
@@ -152,6 +163,7 @@ public class dep_OverTime extends TemplatePortalPen
 					otVo.setmID("0");
 					otVo.setUserReason("");
 					otVo.setEP_ID("0");
+					otVo.setSaveButText(keyConts.butSave);
 					request.getSession().setAttribute("dotEdit","QUE");
 					showHtml(con, out, otVo,UserInformation);
 				
@@ -299,7 +311,7 @@ public class dep_OverTime extends TemplatePortalPen
 			}
 			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO",EmployeeSql , otVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", EmployeeSql, otVo.getSearchEmployee(),false,null));
-		
+			htmlPart1=htmlPart1.replace("<saveButText/>",otVo.getSaveButText());	
 			
 			System.out.println("getOvertime  :   "+SqlUtil.getOvertime(otVo));
 			if(otVo.isShowDataTable()){

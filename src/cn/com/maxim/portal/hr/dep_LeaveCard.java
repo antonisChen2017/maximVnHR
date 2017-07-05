@@ -17,6 +17,7 @@ import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.ro.exLeaveCardRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -131,6 +132,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 					{
 						logger.info("請假卡 員工/Save : Refer: " +lcVo.toString());
 						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
+						leaveCardDAO.deptProcessEmail(con,lcVo);
 						lcVo.setShowDataTable(true);
 						lcVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, lcVo,UserInformation);
@@ -146,6 +148,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 						lcVo.setRowID(rowID);
 						lcVo=SharedCode(con,lcVo);
 						lcVo.setSaveButText(keyConts.butUpdate);
+						lcVo.setMsg(keyConts.editLeaveTip);
 						request.getSession().setAttribute("depLeaveEdit","Update");
 						showHtml(con, out,  lcVo,UserInformation);	
 					}
@@ -308,7 +311,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", UnitSql, lcVo.getSearchUnit(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + 	lcVo.getSearchDepartmen()+ "'", lcVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con,  "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
-			logger.info("saveButText : " +lcVo.getSaveButText());
+		
 			htmlPart1=htmlPart1.replace("<saveButText/>",lcVo.getSaveButText());	
 		 
 			if(lcVo.isShowDataTable()){

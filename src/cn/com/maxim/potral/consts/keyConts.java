@@ -12,7 +12,7 @@ public class keyConts
 	  public static final String pageEmpUnitList= "empUnitList";
 	  /**人事系統介面**/
 	  public static final String personnelList= "personnel";
-	  public static final String pageDtmList= "dtmsList";
+	  public static final String pageDtmList= "DeptView";
 	  public static final String pageUsList= "usList";
 	  public static final String pageMsList= "msList";
 	  public static final String pageLList= "LList";
@@ -37,6 +37,9 @@ public class keyConts
 	  public static final String  empnumheaders="越籍年资分布,年度,人数,";
 	  public static final String  LRessons="加班原因";
 	  public static final String  saveOK="新增成功";
+	  public static final String  saveNO="新增失败";
+	  public static final String  editOverTip="修改加班单";
+	  public static final String  editLeaveTip="修改请假单";
 	  public static final String  editOK="修改成功";
 	  public static final String  editDeptNoUnit="请先将相关单位删除";
 	  public static final String  editDeptIDRepeat="部门ID不可重复";
@@ -55,7 +58,8 @@ public class keyConts
 	  public static final String   stopReasons="待工原因";
 	  public static final String   masterCheck="经理审核通过";
 	  public static final String   bossCheck="副总审核通过";
-	  public static final String   noProcessMsg="此部門或單位尚未設定請假流程,請洽人事";
+	  public static final String   noProcessMsg="此部门或单位尚未设定请假流程,请洽人事";
+	  public static final String   noProcessOverMsg="此部门或单位尚未设定加班流程,请洽人事";
 	  /**一般員工**/
 	  public static final String   EmpRoleE="E";
 	  /**单位主管**/
@@ -139,5 +143,7 @@ public class keyConts
 	  /**請假頁面按紐狀態**/
 	  public static final String butSave= "保存";
 	  /**請假頁面按紐狀態**/
-	  public static final String butUpdate= "更新";
+	  public static final String butUpdate= "更新";	  
+	  /**請假信件標題**/
+	  public static final String EmailLeaveSubject= "请假单审核通知";
 }

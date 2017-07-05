@@ -46,7 +46,7 @@ INSERT INTO [hr].[dbo].[VN_YEAR_MONTH_ATTENDANCE]
            ('<YEAR/>'
            ,'<MONTH/>'
            ,'<EMPLOYEENO/>'
-           ,'<EMPLOYEE/>'
+           ,N'<EMPLOYEE/>'
            ,'<DEPARTMENT/>'
            ,'<UNIT/>'
            ,'<DAY1/>'

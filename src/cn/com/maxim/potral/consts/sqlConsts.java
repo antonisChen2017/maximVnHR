@@ -145,5 +145,45 @@ public class sqlConsts
 	public static final String sql_getDeptOverSetData="/cn/com/maxim/portal/sql/getDeptOverSetData.sql";
 	/** 查詢加班部門流程資料筆數**/
 	public static final String sql_queryOverPreossCount="/cn/com/maxim/portal/sql/queryOverPreossCount.sql";
+	/** 查詢加班部門單位流程資料筆數**/
+	public static final String sql_queryDeptUnitOverCount="/cn/com/maxim/portal/sql/queryDeptUnitOverCount.sql";
+	/** 新增加班子表並取出最新id**/
+	public static final String sql_InsterOvertimes="/cn/com/maxim/portal/sql/InsterOvertimes.sql";
+	/**查詢加班權限控制主管可搜尋部門˙**/
+	public static final String sql_querySelectOverDept="/cn/com/maxim/portal/sql/querySelectOverDept.sql";
+	/**查詢加班單人員資料˙**/
+	public static final String sql_queryOverTimeUserData="/cn/com/maxim/portal/sql/queryOverTimeUserData.sql";
+	/**請假流程變更更新請假單流程資料˙**/
+	public static final String sql_updateLeaveCardProcess="/cn/com/maxim/portal/sql/updateLeaveCardProcess.sql";
+	/**請假流程變更更新加班單流程資料˙**/
+	public static final String sql_updateOversProcess="/cn/com/maxim/portal/sql/updateOversProcess.sql";
+	/**新增人員變動 出差/調單位時間資料˙**/
+	public static final String sql_InsterSupplementData="/cn/com/maxim/portal/sql/InsterSupplementData.sql";
+	/**查詢出差時間˙**/
+	public static final String sql_getSupplementL="/cn/com/maxim/portal/sql/getSupplementL.sql";
+	/**查詢調職時間˙**/
+	public static final String sql_getSupplementR="/cn/com/maxim/portal/sql/getSupplementR.sql";
+	/**刪除調職或出差時間資料˙**/
+	public static final String sql_deleteSupplement="/cn/com/maxim/portal/sql/deleteSupplement.sql";
+	/**查詢全廠報表資料˙**/
+	public static final String sql_getAttendance="/cn/com/maxim/portal/sql/getAttendance.sql";
+	/**更新合計及row資料˙**/
+	public static final String sql_updateAttendanceCmax="/cn/com/maxim/portal/sql/updateAttendanceCmax.sql";
+	/**建立全廠報表處理前資料**/
+	public static final String sql_queryPlantData="/cn/com/maxim/portal/sql/queryPlantData.sql";
+	/**更新報表百分比**/
+	public static final String sql_updateAttendanceC20="/cn/com/maxim/portal/sql/updateAttendanceC20.sql";
+	/**更新報表ROW數字**/
+	public static final String sql_updateAttendanceRow="/cn/com/maxim/portal/sql/updateAttendanceRow.sql";
+	/**查詢全廠報表組出頁面資料**/
+	public static final String sql_getAttendanceTable="/cn/com/maxim/portal/sql/getAttendanceTable.sql";
+	/**查詢全廠報表組出頁面資料**/
+	public static final String sql_getThreeYearsOver="/cn/com/maxim/portal/sql/getThreeYearsOver.sql";
+	/**查詢全廠報表組出excel資料**/
+	public static final String sql_getAttDayExcel="/cn/com/maxim/portal/sql/getAttDayExcel.sql";
+	/**查詢全廠報表合計行(報表藍色行)**/
+	public static final String sql_queryPlantBlueRow="/cn/com/maxim/portal/sql/queryPlantBlueRow.sql";
+	/**查詢主管EMAIL**/
+	public static final String sql_queryEmail="/cn/com/maxim/portal/sql/queryEmail.sql";
 	
 }

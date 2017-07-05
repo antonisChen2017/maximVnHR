@@ -20,7 +20,10 @@ INSERT INTO [hr].[dbo].[VN_LEAVECARD]
            ,[SINGROLEL2EP]
            ,[SINGROLEL3EP]
            ,[SINGROLEL4EP]
-           ,[LEAVEAPPLY])
+           ,[LEAVEAPPLY]
+           ,[P_DEPT]
+           ,[P_UNIT]
+            ,[P_ROLE])
      VALUES
            ('<EP_ID/>'
            ,'<HD_ID/>'
@@ -43,4 +46,7 @@ INSERT INTO [hr].[dbo].[VN_LEAVECARD]
            ,'<SINGROLEL2EP/>'
            ,'<SINGROLEL3EP/>'
            ,'<SINGROLEL4EP/>'
-           ,'0')
+           ,'0',
+           '<P_DEPT/>',
+           '<P_UNIT/>',
+           '<P_ROLE/>')

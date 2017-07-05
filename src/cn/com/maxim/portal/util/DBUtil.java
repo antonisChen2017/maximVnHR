@@ -13,7 +13,9 @@ import org.apache.log4j.Logger;
 
 import com.alibaba.druid.util.StringUtils;
 
+import cn.com.maxim.portal.attendan.ro.dayAttendanceExcelRO;
 import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
+import cn.com.maxim.portal.attendan.ro.dayPlantRO;
 import cn.com.maxim.portal.attendan.ro.dayReportRO;
 import cn.com.maxim.portal.attendan.ro.editProcessRO;
 import cn.com.maxim.portal.attendan.ro.empLateEarlyRO;
@@ -167,7 +169,7 @@ public class DBUtil
 	 * @return
 	 * @throws SQLException
 	 */
-	public static String addOverS(String MID, overTimeVO otVo, Connection con)
+	public static String addOverS(String MID, overTimeVO otVo, Connection con,editProcessRO ePro)
 	{
 		String result = "x";
 		if ((MID == null) || (otVo.getSearchEmployeeNo() == null))
@@ -390,6 +392,7 @@ public class DBUtil
 		Logger logger = lu.initLog4j(DBUtil.class);
 		String msg = "";
 		String SID = "x";
+		editProcessRO ePro=null;
 		/**
 		 * stop1 查询是否有主表
 		 */
@@ -416,6 +419,9 @@ public class DBUtil
 		}else{
 				String resultID = "";
 				resultID = DBUtil.queryDBID(con, SqlUtil.getOvertimeID(otVo.getSearchDepartmen(), otVo.getQueryDate()));
+				/** 部門單位角色查詢設定並寫入請假單 **/
+				ePro=DBUtil.getOverProcessData(otVo , con);
+				
 				if (resultID.equals(""))
 				{
 					/**
@@ -428,7 +434,7 @@ public class DBUtil
 					{
 		
 						otVo.setStatus("S");
-						SID = DBUtil.addOverS(resultID, otVo, con);
+						SID = SqlUtil.insterOvertimeS(resultID, otVo, con,ePro);
 						/**
 						 * stop3.2 查此人是否本月超過規定时间,有則寫入超時
 						 */
@@ -469,7 +475,7 @@ public class DBUtil
 					 * stop3.1 有主表寫入子表
 					 */
 					otVo.setStatus("S");
-					SID = DBUtil.addOverS(resultID, otVo, con);
+					SID = SqlUtil.insterOvertimeS(resultID, otVo, con,ePro);
 					/**
 					 * stop3.2 查此人是否本月超過規定时间,有則寫入超時
 					 */
@@ -677,25 +683,29 @@ public class DBUtil
 		return flag;
 	}
 
-	public static boolean updateTimeOverSStatus(String Status, String ID, Connection con)
+	public static boolean updateTimeOverSStatus(overTimeVO otVo, Connection con)
 	{
+	    
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
 		boolean flag = false;
-		if ((Status == null) || (ID == null))
+		if ((otVo.getStatus() == null) || (otVo.getRowID() == null))
 		{
 			return false;
 		}
 		try
 		{
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate(SqlUtil.setStatusS(Status, ID));
+			logger.info("SqlUtil.setStatusS : "+SqlUtil.setStatusS(otVo));
+			stmt.executeUpdate(SqlUtil.setStatusS(otVo));
 			stmt.close();
 
 			flag = true;
 		}
 		catch (Exception Exception)
 		{
-			Log4jUtil lu = new Log4jUtil();
-			Logger logger = lu.initLog4j(DBUtil.class);
+		
 			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			flag = false;
 		}
@@ -723,15 +733,13 @@ public class DBUtil
 		else
 		{
 
-			String startTime = lcVo.getStartLeaveDate() + " " + lcVo.getStartLeaveTime() + ":" + lcVo.getStartLeaveMinute() + ":00";
-			String endTime = lcVo.getEndLeaveDate() + " " + lcVo.getEndLeaveTime() + ":" + lcVo.getEndLeaveMinute() + ":00";
-			DateUtil dateUtil = new DateUtil();
+			
 	
-			if (lcVo.getDayCount().equals("0.0"))
+			if (lcVo.getDayCount().equals("0.0") && lcVo.getHourCount().equals("0"))
 			{
 				return "v";
 			}
-			if (lcVo.getDayCount().equals("0"))
+			if (lcVo.getDayCount().equals("0") && lcVo.getHourCount().equals("0"))
 			{
 				return "v";
 			}
@@ -1271,8 +1279,6 @@ public class DBUtil
 	{
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(DBUtil.class);
-		//logger.info("queryExcelAttendanceDay sql :" + sql);
-		String result = "";
 		PreparedStatement STMT = null;
 		ReflectHelper rh = new ReflectHelper();
 		List<dayAttendanceRO> leo = null;
@@ -1289,7 +1295,34 @@ public class DBUtil
 		}
 		return leo;
 	}
+	/**
+	 * 產生全廠日出勤狀況報表EXCEL報表
+	 * 
+	 * @param con
+	 * @param sql
+	 * @param ra
+	 * @return
+	 */
+	public static List<dayAttendanceExcelRO> queryExcelDay(Connection con, String sql, dayAttendanceExcelRO ra)
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<dayAttendanceExcelRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<dayAttendanceExcelRO>) rh.getBean(rs, ra);
 
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		return leo;
+	}
 	
 	/**
 	 * 產生越籍年資分布EXCEL報表
@@ -1434,20 +1467,20 @@ public class DBUtil
 	{
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(DBUtil.class);
-		String count = queryDBField(con, SqlUtil.getEmpnum(lcVo.getApplicationDate().replaceAll("/", "")), "count");
+		String count = queryDBField(con, SqlUtil.getEmpnum(lcVo.getApplicationDate()), "count");
 		if (Integer.valueOf(count) == 0)
 		{
 			//第一行
 			dayAttendanceWO dw1 = new dayAttendanceWO();// 
-			dw1.setYMDKEY(lcVo.getApplicationDate().replaceAll("/", ""));
-			dw1.setYMD(lcVo.getApplicationDate().replaceAll("/", ""));
+			dw1.setYMDKEY(lcVo.getApplicationDate());
+			dw1.setYMD(lcVo.getApplicationDate());
 			dw1.setYEAR(keyConts.empnumOneYear);
 			dw1.setEMPNUM(String.valueOf(dt.getYco1()));
 			dw1.setPERCENTAGE(NumberUtil.getPercentFormat(dt.getYco1(),dt.getYmax()));
 			saveEmpnumRow(con,dw1);
 			//第2行
 			dayAttendanceWO dw2 = new dayAttendanceWO();// 
-			dw2.setYMDKEY(lcVo.getApplicationDate().replaceAll("/", ""));
+			dw2.setYMDKEY(lcVo.getApplicationDate());
 			dw2.setYMD("");
 			dw2.setYEAR(keyConts.empnumTwoYear);
 			dw2.setEMPNUM(String.valueOf(dt.getYco2()));
@@ -1456,7 +1489,7 @@ public class DBUtil
 			
 			//第3行
 			dayAttendanceWO dw3 = new dayAttendanceWO();// 
-			dw3.setYMDKEY(lcVo.getApplicationDate().replaceAll("/", ""));
+			dw3.setYMDKEY(lcVo.getApplicationDate());
 			dw3.setYMD("");
 			dw3.setYEAR(keyConts.empnumThreeYear);
 			dw3.setEMPNUM(String.valueOf(dt.getYco3()));
@@ -1465,7 +1498,7 @@ public class DBUtil
 			
 			//第4行
 			dayAttendanceWO dw4 = new dayAttendanceWO();// 
-			dw4.setYMDKEY(lcVo.getApplicationDate().replaceAll("/", ""));
+			dw4.setYMDKEY(lcVo.getApplicationDate());
 			dw4.setYMD("");
 			dw4.setYEAR(keyConts.empnumFourYear);
 			dw4.setEMPNUM(String.valueOf(dt.getYco4()));
@@ -1474,7 +1507,7 @@ public class DBUtil
 			
 			//第5行
 			dayAttendanceWO dw5 = new dayAttendanceWO();// 
-			dw5.setYMDKEY(lcVo.getApplicationDate().replaceAll("/", ""));
+			dw5.setYMDKEY(lcVo.getApplicationDate());
 			dw5.setYMD("");
 			dw5.setYEAR(keyConts.empnumMsg);
 			dw5.setEMPNUM(String.valueOf(dt.getYmax()));
@@ -2211,7 +2244,7 @@ public static List<dayReportRO> getDayReportMonth(Connection con, leaveCardVO lc
 	 * @return
 	 * @throws Exception 
 	 */
-	public static final 	String  getPersonalProcess(Connection con, overTimeVO otVo) throws Exception
+	public static final 	String  getOverProcess(Connection con, overTimeVO otVo) throws Exception
 	{
 		//用工號查出部門單位角色
 		Log4jUtil lu = new Log4jUtil();
@@ -2246,10 +2279,10 @@ public static List<dayReportRO> getDayReportMonth(Connection con, leaveCardVO lc
 		
 		String COUNT ="";
 		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			logger.info("檢查此部門或單位:"+SqlUtil.queryDeptLeaveCardCount(ru));
-			COUNT = DBUtil.queryDBField(con,SqlUtil.queryDeptLeaveCardCount(ru), "COUNT");
+			logger.info("檢查此部門或單位:"+SqlUtil.queryDeptUnitOverCount(ru));
+			COUNT = DBUtil.queryDBField(con,SqlUtil.queryDeptUnitOverCount(ru), "COUNT");
 		}else{
-			logger.info("檢查此部門:"+SqlUtil.queryLeavePreossCount(ru));
+			logger.info("檢查此部門:"+SqlUtil.queryOverPreossCount(ru));
 			COUNT = DBUtil.queryDBField(con,SqlUtil.queryOverPreossCount(ru), "COUNT");
 		}
 		if(COUNT!=null || !COUNT.equals("") ){
@@ -2263,4 +2296,146 @@ public static List<dayReportRO> getDayReportMonth(Connection con, leaveCardVO lc
 		return msg;
 	}
 	
+	
+	/**
+	 * 加班記錄取出後台設定寫入請假卡
+	 * @param con
+	 * @param lcVo
+	 * @param Day
+	 * @return
+	 * @throws Exception 
+	 */
+	public static final 	editProcessRO  getOverProcessData( overTimeVO otVo,Connection con) throws Exception
+	{
+		//用工號查出部門單位角色
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		processUserRO ra=new processUserRO();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_queryUserData);
+		sql = sql.replace("<EMPLOYEENO/>", otVo.getSearchEmployeeNo());
+		logger.info("用工號查出部門單位角色:"+sql);
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<processUserRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<processUserRO>) rh.getBean(rs, ra);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		processUserRO ru=(processUserRO)leo.get(0);
+		//logger.info("部門:"+ru.getDEPARTMENT());
+		//logger.info("單位:"+ru.getUNIT());
+		logger.info("角色:"+ru.getROLE());
+	
+		String	 STATUS="1";//正常流程
+		
+		editProcessRO epDD=new editProcessRO();
+		editProcessVO edVo =new editProcessVO();
+		edVo.setDept(ru.getDEPARTMENT());
+		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
+			edVo.setUnit(ru.getUNIT());
+		}else{
+			edVo.setUnit("0");
+		}
+		edVo.setStatus(STATUS);
+		edVo.setRole(ru.getROLE());
+		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
+		
+		return ep.get(0);
+	}
+	
+	/**
+	 * 用行ID查出加班流程
+	 * @param con
+	 * @param lcVo
+	 * @param Day
+	 * @return
+	 * @throws Exception 
+	 */
+	public static final 	editProcessRO  getProcessOverIDData(overTimeVO otVo,Connection con) throws Exception
+	{
+		//用工號查出部門單位角色
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		processIDUserRO ra=new processIDUserRO();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_queryOverTimeUserData);
+		sql = sql.replace("<rowID/>", otVo.getRowID());
+		logger.info("sql_queryLeaveCardUserData sql : "+sql );
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<processIDUserRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<processIDUserRO>) rh.getBean(rs, ra);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		processIDUserRO ru=(processIDUserRO)leo.get(0);
+		//logger.info("部門:"+ru.getDEPARTMENT());
+		///logger.info("單位:"+ru.getUNIT());
+		//logger.info("角色:"+ru.getROLE());
+		//logger.info("DAYCOUNT:"+ru.getDAYCOUNT());
+	
+		String STATUS="1";//正常加班
+		
+		editProcessRO epDD=new editProcessRO();
+		editProcessVO edVo =new editProcessVO();
+		edVo.setDept(ru.getDEPARTMENT());
+		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
+			edVo.setUnit(ru.getUNIT());
+		}else{
+			edVo.setUnit("0");
+		}
+		edVo.setStatus(STATUS);
+		edVo.setRole(ru.getROLE());
+		logger.info("SqlUtil.queryDeptOverData(edVo) :"+SqlUtil.queryDeptOverData(edVo)); 
+		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
+		
+		return ep.get(0);
+	}
+	/**
+	 * 查詢全廠報表合計行號
+	 * 
+	 * @param con
+	 * @param sql
+	 * @param ra
+	 * @return
+	 */
+	public static List<dayPlantRO> queryPlantBlueRow(Connection con, String sql, dayPlantRO ra)
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<dayPlantRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<dayPlantRO>) rh.getBean(rs, ra);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		return leo;
+	}
 }

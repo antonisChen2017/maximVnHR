@@ -80,8 +80,28 @@ public class overTimeVO implements Serializable
 	private String DID;
 	/**单位ID**/
 	private String UID;
+	/**按鈕記號 */
+	private String saveButText;
+	/**請假成功記號 */
+	private String leaveApply;
 	
 	
+	public String getLeaveApply()
+	{
+		return leaveApply;
+	}
+	public void setLeaveApply(String leaveApply)
+	{
+		this.leaveApply = leaveApply;
+	}
+	public String getSaveButText()
+	{
+		return saveButText;
+	}
+	public void setSaveButText(String saveButText)
+	{
+		this.saveButText = saveButText;
+	}
 	public String getUID()
 	{
 		return UID;

@@ -7,7 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -74,9 +76,10 @@ public class ExcelOutService  extends HttpServlet{
 		            HSSFWorkbook workbook = eu.exportExcel(IsLate,headers,eaRolist,title2,"");
 		            
 		           // String filename = System.currentTimeMillis() + "yearMonthLate.xls";
-		            String filename =title2+".xls";
+		       
 		        //    filename=filename.replace("+", "");
-			        response.setHeader("Content-Disposition", "attachment;filename="  + java.net.URLEncoder.encode(filename, "UTF-8")); 
+		            String filename =title2+".xls";
+				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
 		            out = response.getOutputStream();  
 		            workbook.write(out);  
 		        } finally {
@@ -113,7 +116,7 @@ public class ExcelOutService  extends HttpServlet{
 	            
 	           // String filename = System.currentTimeMillis() + "daily.xls";
 	            String filename =title1+".xls";
-		        response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(filename, "UTF-8")); 
+			 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
 	            out = response.getOutputStream();  
 	            workbook.write(out);  
 	        } finally {
@@ -143,7 +146,7 @@ public class ExcelOutService  extends HttpServlet{
 			         HSSFWorkbook workbook = eu.exportExcel(title1,headers,eaRolist,title1,"");
 			         
 			         String filename =title1+".xls";
-				     response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(filename, "UTF-8")); 
+				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
 					 
 					  
 			         out = response.getOutputStream();  
@@ -179,11 +182,13 @@ public class ExcelOutService  extends HttpServlet{
 				     List<dayAttendanceRO> daRolist =(List<dayAttendanceRO>)request.getSession().getAttribute("daRolist");
 				    // System.out.println("daRolist : "+daRolist);
 				     List<empnumRO> eRolist =(List<empnumRO>)request.getSession().getAttribute("eRolist");
+				     Hashtable  blueRow=(Hashtable)request.getSession().getAttribute("blueRow");
+				 
 				     empnumheaders = keyConts.empnumheaders.split(",");    
 			         ExcelUtil<dayAttendanceRO> eu = new ExcelUtil<dayAttendanceRO>();
-			         HSSFWorkbook workbook = eu.exportTwoExcel(title1,headers,empnumheaders,daRolist,eRolist,title1,"");
+			         HSSFWorkbook workbook = eu.exportTwoExcel(title1,headers,empnumheaders,daRolist,eRolist,title1,"",blueRow);
 			         String filename =title1+".xls";
-				     response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(filename, "UTF-8")); 
+				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
 			         out = response.getOutputStream();  
 			         workbook.write(out);  
 		        } finally {
@@ -198,13 +203,12 @@ public class ExcelOutService  extends HttpServlet{
     
     public String encodeFileName(HttpServletRequest request, String fileName) throws UnsupportedEncodingException {
         String agent = request.getHeader("USER-AGENT");
-
         if (null != agent && -1 != agent.indexOf("MSIE")) {
             return URLEncoder.encode(fileName, "UTF-8");
         } else if (null != agent && -1 != agent.indexOf("Mozilla")) {
             return "=?UTF-8?B?"+ (new String(Base64.encodeBase64(fileName.getBytes("UTF-8")))) + "?=";
         } else {
-            return fileName;
+            return  java.net.URLEncoder.encode(fileName, "UTF-8");
         }
     }
 

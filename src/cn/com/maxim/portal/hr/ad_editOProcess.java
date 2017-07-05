@@ -263,14 +263,7 @@ public class ad_editOProcess extends TemplatePortalPen
 	private editProcessVO setData(editProcessVO edVo){
 		edVo.setID("0");
 		edVo.setDept("0");
-		edVo.setOneDAuditor("0");
-		edVo.setOneDAgent("0");
-		edVo.setOneMAgent("0");
-		edVo.setOneMAuditor("0");
-		edVo.setOneEAuditor("0");
-		edVo.setOneEAgent("0");
-		edVo.setOneUAgent("0");
-		edVo.setOneUAuditor("0");
+	
 		edVo.setOneDID("0");
 		edVo.setOneMID("0");
 		edVo.setThreeDID("0");
@@ -284,22 +277,12 @@ public class ad_editOProcess extends TemplatePortalPen
 	/**查詢部門無資料**/
 	private editProcessVO setDeptNoData(editProcessVO edVo){
 	
-		edVo.setOneDAuditor("0");
-		edVo.setOneDAgent("0");
-		edVo.setOneMAgent("0");
-		edVo.setOneMAuditor("0");
-		edVo.setOneEAuditor("0");
-		edVo.setOneEAgent("0");
-		edVo.setOneUAgent("0");
-		edVo.setOneUAuditor("0");
+		
 		edVo.setOneDID("0");
 		edVo.setOneMID("0");
 		edVo.setThreeDID("0");
 		edVo.setThreeMID("0");
-		edVo.setOneDAgentTitle("0");
-		edVo.setOneDAuditorTitle("0");
-		edVo.setOneMAgentTitle("0");
-		edVo.setOneMAuditorTitle("0");
+		
 		edVo.setThreeDLever3("0");
 		edVo.setThreeDLever4("0");
 		edVo.setThreeMLever4("0");
@@ -308,18 +291,12 @@ public class ad_editOProcess extends TemplatePortalPen
 	/**查詢單位無資料**/
 	private editProcessVO setUnitNoData(editProcessVO edVo){
 	
-		edVo.setOneEAuditor("0");
-		edVo.setOneEAgent("0");
-		edVo.setOneUAgent("0");
-		edVo.setOneUAuditor("0");
+	
 		edVo.setOneEID("0");
 		edVo.setOneUID("0");
 		edVo.setThreeEID("0");
 		edVo.setThreeUID("0");
-		edVo.setOneEAgentTitle("0");
-		edVo.setOneEAuditorTitle("0");
-		edVo.setOneUAgentTitle("0");
-		edVo.setOneUAuditorTitle("0");
+	
 		edVo.setThreeELever1("0");
 		edVo.setThreeELever2("0");
 		edVo.setThreeELever3("0");

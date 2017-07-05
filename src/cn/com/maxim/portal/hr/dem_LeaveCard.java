@@ -227,7 +227,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 		htmlPart1 = htmlPart1.replace("<SearchEmployeeNo/>", ControlUtil.drawChosenSelect(con,  "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "DEPARTMENT_ID='" + lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployeeNo(),false,null));
 		htmlPart1 = htmlPart1.replace("<SearchEmployee/>", ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "DEPARTMENT_ID='" +  lcVo.getSearchDepartmen() + "'", lcVo.getSearchEmployee(),false,null));
 		htmlPart1 = htmlPart1.replace("<msg/>", HtmlUtil.getMsgDiv(lcVo.getMsg()));
-		htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabelHtml(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
+		htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabel6Html(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
 	
 		if (lcVo.isShowDataTable())
 		{

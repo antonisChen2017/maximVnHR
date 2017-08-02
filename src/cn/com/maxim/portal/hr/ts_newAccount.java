@@ -123,7 +123,7 @@ public class ts_newAccount extends TemplatePortalPen
 			if(employeeNoSys!=null && !employeeNoSys.equals("")){
 					UserName=employeeNoSys;				
 			}else{
-					UserName=UserInformation.getUserName();
+				UserName=UserInformation.getUserTelephone();
 			}
 		
 			return UserName;

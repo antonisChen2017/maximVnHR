@@ -138,22 +138,23 @@ public class ad_editProcess extends TemplatePortalPen
 				}
 				// 單位流程記錄
 				if (actText.equals("saveUnit")){
-					logger.info("saveUnit");
+					
 					
 					edVo.setDept( request.getParameter("Dept"));
 					edVo.setUnit( request.getParameter("Unit"));
-					logger.info("Unit"+edVo.getUnit());
+				
 					int COUNT=0;
 					String Ucount=DBUtil.queryDBField(con,SqlUtil.queryUnitLeaveCount(edVo), "COUNT");
 					if(Ucount!=null && !Ucount.equals("")){
 						 COUNT=Integer.valueOf(Ucount);
 					}
 					if(COUNT>0){
-						
+						logger.info("updateUnitProcess");
 						ad_editProcessDAO.updateUnitProcess(con,edVo);	
 						edVo=ad_editProcessDAO.getUnitProcess(con,edVo);	
 						edVo.setMsg(keyConts.editOK);
 					}else{
+						logger.info("insterUnitProcess");
 						ad_editProcessDAO.insterUnitProcess(con,edVo);	
 						edVo=ad_editProcessDAO.getUnitProcess(con,edVo);	
 						edVo.setMsg(keyConts.saveOK);

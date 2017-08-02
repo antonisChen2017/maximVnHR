@@ -171,7 +171,7 @@
 
 <div class="row">
 <div class="col-md-6"> 
-&queryDate
+<queryDateTwo/>
   </div> 
   <!--  ROW-->
 <div class="col-md-2"> 
@@ -230,8 +230,8 @@
 </div>
 </div>
 <div class="form-actions right">  
-<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">超時人員查詢</button> 
-<button id='updateBut' class="btn btn-primary " onclick="SaveData()" type="button"   disabled="disabled">新增超时加班</button> 
+<button class="btn btn-success "   onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">超時人員查詢</button> 
+<button id='updateBut' class="btn btn-primary " onclick="SaveData()" type="button"   disabled="disabled"><saveButText/>CS加班</button> 
 </div></FORM> 
 <msg/>
 </div> 
@@ -455,6 +455,8 @@ function    checkNO(){
 	 });
 	 
 } 
+ 
+
 </script> 
 <!-- END JAVASCRIPTS -->
 </div>

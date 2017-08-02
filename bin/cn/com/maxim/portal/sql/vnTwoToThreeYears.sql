@@ -1,10 +1,9 @@
-SELECT Count(distinct A.EmpCode) as yco
-FROM PWERP_MS.dbo.RsKQResult A  
+select COUNT(distinct HE.EMPLOYEENO) AS  yco
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
-WHERE  A.FDate='<toDay>'
-AND B.Nation='0002' 
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<toDay>'))
-and datediff(yy,InDate,GETDATE())=3
+WHERE B.Nation='0002'
+and HE.ENTRYDATE <'<TWOYEAR/>'
+AND HE.ENTRYDATE>='<THREEYEAR/>'

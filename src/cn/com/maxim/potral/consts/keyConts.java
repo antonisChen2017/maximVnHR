@@ -12,6 +12,9 @@ public class keyConts
 	  public static final String pageEmpUnitList= "empUnitList";
 	  /**人事系統介面**/
 	  public static final String personnelList= "personnel";
+	  /**人事系統介面**/
+	  public static final String personCSList= "CSRp";
+	  
 	  public static final String pageDtmList= "DeptView";
 	  public static final String pageUsList= "usList";
 	  public static final String pageMsList= "msList";
@@ -24,10 +27,10 @@ public class keyConts
 	  public static final String dbTableCRStatuS_B="B";
 	  public static final String dbTableCRStatuS_R="R";
 	  public static final String dbTableCRStatuS_T="T";
-	  public static final String  lateExcelheaders="序号,工号,姓名,部门,单位,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ,21,22,23,24,25,26,27,28,29,30,31,分,小时,迟到次数";
-	  public static final String  earlyExcelheaders="序号,工号,姓名,部门,单位,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ,21,22,23,24,25,26,27,28,29,30,31,分,小时,早退次数";
-	  public static final String  dailyExcelheaders="序号,工号,姓名,部门,单位,正班出勤,加班,年假,公假,产假,婚假,丧假,病假,事假,旷工,迟到,待工,补贴餐费,备注";
-	  public static final String  repAttendanceExcelheaders="序号,工号,姓名,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 ,23,24,25,26,27,28,29,30,31,总共";
+	  public static final String  lateExcelheaders="STT\n序\n次,MST\n工号,TÊN\n姓名,BỘ PHẬN\n部门,ĐƠN VỊ\n单位,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ,21,22,23,24,25,26,27,28,29,30,31,分,小时,迟到次数";
+	  public static final String  earlyExcelheaders="STT\n序\n次,MST\n工号,TÊN\n姓名,BỘ PHẬN\n部门,ĐƠN VỊ\n单位,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ,21,22,23,24,25,26,27,28,29,30,31,分,小时,早退次数";
+	  public static final String  dailyExcelheaders="STT\n序\n次,MST\n工号,HỌ TÊN\n姓名,BỘ PHẬN\n部门,ĐƠN VỊ\n单位,正班出勤\nGiờ công,加班,年假 \n Phép năm,公假 \n Phép công,产假 \n Thai sản,婚假 \n Kết hôn ,丧假  \n  Phép tang,病假 \n Phép bệnh ,事假 \n Việc riêng,旷工 \n Lãng công ,迟到  \n Đi trễ  ,    ,待工\n Nghỉ    chờ  \n  việ  ,簽名 \n Ký tê,GHI CHÚ  \n 备注";
+	  public static final String  repAttendanceExcelheaders="序号,工号,姓名,部门,单位,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 ,23,24,25,26,27,28,29,30,31,总共";
 	  public static final String  repAttendanceDayExcelheaders="部,单位,外籍干部实际人数,&越籍初期应出勤人数,&越籍当日应出勤人数,&越籍当日实际出勤人数,行政班次07:30~16:30,早班次06:00~14 :00,中班次14:00~22:00,夜班次22:00~06:00,申请特加班次18:00~06:00,产假,请假,年假,出差,工伤,旷工(或未提出请假),周六排休,新人报道,调动,离职,离职率";
 	  public static final String empnumOneYear="1年以下";
 	  public static final String empnumTwoYear="1年~2年";
@@ -60,6 +63,8 @@ public class keyConts
 	  public static final String   bossCheck="副总审核通过";
 	  public static final String   noProcessMsg="此部门或单位尚未设定请假流程,请洽人事";
 	  public static final String   noProcessOverMsg="此部门或单位尚未设定加班流程,请洽人事";
+	  public static final String   noTimeCSMsg="當天申請CS加班不能超過12:30";
+	  public static final String   deletOK="删除成功";
 	  /**一般員工**/
 	  public static final String   EmpRoleE="E";
 	  /**单位主管**/
@@ -74,8 +79,14 @@ public class keyConts
 	  public static final String dbTableUR="UR";
 	  /**单位提交員工超時加班狀態**/
 	  public static final String dbTableUT="UT";
-	  /**人事提交員工超時加班狀態**/
-	  public static final String dbTableRD="RD";
+	  /**員工超時加班狀態-紀錄**/
+	  public static final String dbTableRS="RS";
+	  /**員工超時加班狀態-提交**/
+	  public static final String dbTableRT="RT";
+	  /**員工超時加班狀態-副總通過**/
+	  public static final String dbTableRB="RB";
+	  /***員工超時加班狀態-副總退回**/
+	  public static final String dbTableRR="RR";
 	  /**日期調整參數Max**/
 	  public static final String spinnerDayMax="30";
 	  /**日期調整參數Min**/
@@ -146,4 +157,43 @@ public class keyConts
 	  public static final String butUpdate= "更新";	  
 	  /**請假信件標題**/
 	  public static final String EmailLeaveSubject= "请假单审核通知";
+	  /**加班信件標題**/
+	  public static final String EmailOverSubject= "加班单审核通知";
+	  /**加班信件標題**/
+	  public static final String EmailCSSubject= "緊急加班单审核通知";
+	  /**CS加班信件標題**/
+	  public static final String EmailUrgentOverSubject= "紧急加班单审核通知";
+	  
+	  public static final String processCSTable= "VN_DEPT_CS_ROLE";
+	  
+	  public static final String processOVTable= "VN_DEPT_OVER_ROLE";
+	  
+	  public static final String processLETable= " VN_DEPT_LEAVE_ROLE";
+	  /**SMTP**/
+	  public static final String EmailSmtp="EMAIL_SMTP";
+	  /**PORT**/
+	  public static final String EmailPort="EMAIL_PORT";
+	  /**USER**/
+	  public static final String EmailUser="EMAIL_USER";
+	  /**PW**/
+	  public static final String EmailPw="EMAIL_PW";
+	  /**FROM**/
+	  public static final String EmailProw="EMAIL_FROM";
+	  /**SingRoleL1EP**/
+	  public static final String SingRoleL1EP="SINGROLEL1EP";
+	  /**SingRoleL2EP**/
+	  public static final String SingRoleL2EP="SINGROLEL2EP";
+	  /**SingRoleL3EP**/
+	  public static final String SingRoleL3EP="SINGROLEL3EP";
+	  /**SingRoleL4EP**/
+	  public static final String SingRoleL4EP="SINGROLEL4EP";
+	  /**建立新帳號**/
+	  public static final String buildMsg= "建立新帐号成功!";
+	  /**建立新帳號**/
+	  public static final String buildNoMsg= "建立新帐号失败";
+	  
+	  /**刪除登入帳號**/
+	  public static final String delbuildMsg= "删除登入帐号成功!";
+	  /***刪除登入帳號**/
+	  public static final String delbuildNoMsg= "删除登入帐号失败";
 }

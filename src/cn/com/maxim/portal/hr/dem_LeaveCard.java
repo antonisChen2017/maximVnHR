@@ -24,8 +24,8 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 
@@ -86,9 +86,21 @@ public class dem_LeaveCard extends TemplatePortalPen
 					if (DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con))
 					{
 						lcVo.setMsg(keyConts.okMsg);
+					
 					}
 
 					showHtml(con, out, lcVo, UserInformation,request);
+				}
+				
+				if (actText.equals("ALL")) {
+					logger.info("請假全部通過");
+
+					lcVo.setShowDataTable(true);
+					lcVo.setStatus("D");
+					// 儲存db
+					//檢查是否已經權限走到底
+					lcVo.setMsg(leaveCardDAO.deptAllProcess(con, lcVo,request.getParameter("rowID")));
+					showHtml(con, out, lcVo,UserInformation,request);
 				}
 				// 提交狀態主管通過
 				if (actText.equals("U"))
@@ -253,7 +265,7 @@ public class dem_LeaveCard extends TemplatePortalPen
 			if(employeeNoSys!=null && !employeeNoSys.equals("")){
 					UserName=employeeNoSys;				
 			}else{
-					UserName=UserInformation.getUserName();
+				UserName=UserInformation.getUserTelephone();
 			}
 			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
 			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	

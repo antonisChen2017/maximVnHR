@@ -32,8 +32,10 @@ import cn.com.maxim.portal.util.Log4jUtil;
         	/**加班定時寄信**/
         	overTimeDAO.deptProcessTimeEmail();
             } catch (Exception e) {
-        	logger.info("-------------解析信息发生异常--------------");
-        	logger.info(e.getLocalizedMessage());
+        	logger.info("-------------解析信息发生异常START--------------");
+        	logger.info(e.getMessage());
+        	logger.info(e.getStackTrace());
+        	logger.info("-------------解析信息发生异常END--------------");
             }
         }
          

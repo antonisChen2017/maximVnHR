@@ -22,8 +22,8 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 
@@ -209,7 +209,7 @@ public class emp_StopWorking extends TemplatePortalPen
 			if(employeeNoSys!=null && !employeeNoSys.equals("")){
 					UserName=employeeNoSys;				
 			}else{
-					UserName=UserInformation.getUserName();
+				UserName=UserInformation.getUserTelephone();
 			}
 			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
 			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	

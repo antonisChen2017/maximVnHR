@@ -28,11 +28,11 @@ import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.TranslateUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 import cn.com.maxim.potral.consts.TranslateConsts;
+import cn.com.maxim.potral.consts.UrlUtil;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;

@@ -11,7 +11,11 @@ import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.potral.consts.keyConts;
-
+/**
+ * 請假流程邏輯判斷
+ * @author Antonis.chen
+ *
+ */
 public class ad_editOProcessDAO
 {
 	/**
@@ -214,22 +218,38 @@ public class ad_editOProcessDAO
 		/**員工加班流程**/
 		edVo.setStatus(keyConts.processStatus1);
 		List<editProcessRO> threeE=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epEU);
-		edVo.setThreeEID(threeE.get(0).getID());
-		edVo.setThreeELever1(threeE.get(0).getSingRoleL1EP());
-		edVo.setThreeELever2(threeE.get(0).getSingRoleL2EP());
-		edVo.setThreeELever3(threeE.get(0).getSingRoleL3EP());
-		edVo.setThreeELever4(threeE.get(0).getSingRoleL4EP());
-		
+		if(threeE.size()>0){
+        		edVo.setThreeEID(threeE.get(0).getID());
+        		edVo.setThreeELever1(threeE.get(0).getSingRoleL1EP());
+        		edVo.setThreeELever2(threeE.get(0).getSingRoleL2EP());
+        		edVo.setThreeELever3(threeE.get(0).getSingRoleL3EP());
+        		edVo.setThreeELever4(threeE.get(0).getSingRoleL4EP());
+		}else{
+		    	edVo.setThreeEID("");
+			edVo.setThreeELever1("");
+			edVo.setThreeELever2("");
+			edVo.setThreeELever3("");
+			edVo.setThreeELever4("");
+		}
 	
 		/**單位主管加班流程**/
 		edVo.setRole(keyConts.EmpRoleU);
 		edVo.setStatus(keyConts.processStatus1);
 		List<editProcessRO> threeU=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epEU);
-		edVo.setThreeUID(threeU.get(0).getID());
-		edVo.setThreeULever2(threeU.get(0).getSingRoleL2EP());
-		edVo.setThreeULever3(threeU.get(0).getSingRoleL3EP());
-		edVo.setThreeULever4(threeU.get(0).getSingRoleL4EP());
-		
+		if(threeU.size()>0){
+			edVo.setThreeUID(threeU.get(0).getID());
+			edVo.setThreeULever2(threeU.get(0).getSingRoleL2EP());
+			edVo.setThreeULever3(threeU.get(0).getSingRoleL3EP());
+			edVo.setThreeULever4(threeU.get(0).getSingRoleL4EP());
+			
+		}else{
+			edVo.setThreeUID("");
+			edVo.setThreeULever2("");
+			edVo.setThreeULever3("");
+			edVo.setThreeULever4("");
+			
+		}
+	
 	
 		/**部門主管流程**/
 		edVo.setUnit("0");
@@ -237,17 +257,33 @@ public class ad_editOProcessDAO
 		edVo.setStatus(keyConts.processStatus1);
 		logger.info("queryDeptOverData "+SqlUtil.queryDeptOverData(edVo));
 		List<editProcessRO> threeD=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
-		logger.info("threeD "+threeD);
-		edVo.setThreeDID(threeD.get(0).getID());
-		edVo.setThreeDLever3(threeD.get(0).getSingRoleL3EP());
-		edVo.setThreeDLever4(threeD.get(0).getSingRoleL4EP());
+		logger.info("threeD.size() "+threeD.size());
+		if(threeD.size()>0){
+			edVo.setThreeDID(threeD.get(0).getID());
+			edVo.setThreeDLever3(threeD.get(0).getSingRoleL3EP());
+			edVo.setThreeDLever4(threeD.get(0).getSingRoleL4EP());
+		}else{
+			edVo.setThreeDID("");
+			edVo.setThreeDLever3("");
+			edVo.setThreeDLever4("");
+		}
+	
 	
 		/**经理流程**/
 		edVo.setRole(keyConts.EmpRoleM);
 		edVo.setStatus(keyConts.processStatus1);
 		List<editProcessRO> threeM=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
-		edVo.setThreeMID(threeM.get(0).getID());
-		edVo.setThreeMLever4(threeM.get(0).getSingRoleL4EP());
+		if(threeM.size()>0){
+		    	edVo.setThreeMID(threeM.get(0).getID());
+			edVo.setThreeMLever4(threeM.get(0).getSingRoleL4EP());
+			
+		}else{
+		    	edVo.setThreeMID("");
+			edVo.setThreeMLever4("");
+			
+		}
+		
+		
 		
 	
 		return edVo;
@@ -366,6 +402,8 @@ public class ad_editOProcessDAO
 		epEU.setRole(keyConts.EmpRoleE);
 		epEU.setUnit(edVo.getUnit());
 		epEU.setStatus(keyConts.processStatus1);
+		logger.info("insterUnitProcess edVo : "+ edVo.toString());
+		
 		if(edVo.getThreeELever1().equals("0")){
 			epEU.setSingRoleL1("0");
 			epEU.setSingRoleL1EP("");
@@ -397,6 +435,9 @@ public class ad_editOProcessDAO
 		}
 		epEU.setOneTitle("");
 		epEU.setTwoTitle("");
+		
+		logger.info("insterUnitProcess epEU : "+ epEU.toString());
+		
 		logger.info("insterDeptLerveRole  "+SqlUtil.insterDeptOverRole(epEU));
 		DBUtil.updateSql(SqlUtil.insterDeptOverRole(epEU), con);
 		
@@ -407,8 +448,8 @@ public class ad_editOProcessDAO
 		epDU.setUnit(edVo.getUnit());
 		epDU.setStatus(keyConts.processStatus1);
 	
-			epDU.setSingRoleL1("0");
-			epDU.setSingRoleL1EP("");
+		epDU.setSingRoleL1("0");
+		epDU.setSingRoleL1EP("");
 	
 		if(edVo.getThreeULever2().equals("0")){
 			epDU.setSingRoleL2("0");
@@ -434,6 +475,7 @@ public class ad_editOProcessDAO
 		}
 		epDU.setOneTitle("");
 		epDU.setTwoTitle("");
+		logger.info("insterUnitProcess epDU : "+ epEU.toString());
 		logger.info("insterDeptOverRole  "+SqlUtil.insterDeptOverRole(epDU));
 		DBUtil.updateSql(SqlUtil.insterDeptOverRole(epDU), con);
 				

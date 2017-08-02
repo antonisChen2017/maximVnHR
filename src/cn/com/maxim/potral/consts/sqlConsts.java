@@ -5,9 +5,11 @@ public class sqlConsts
 	/**
 	 * sql
 	 */
-
+    	/** 部门員工名單**/
 	public static final String sql_dept = "/cn/com/maxim/portal/sql/dept.sql";
+	/** 更新單位**/
 	public static final String sql_updateUnit = "/cn/com/maxim/portal/sql/updateUnit.sql";
+	/** 年月遲到**/
 	public static final String sql_yearMonthLate = "/cn/com/maxim/portal/sql/yearMonthLate.sql";
 	public static final String sql_yesrMonthEarly = "/cn/com/maxim/portal/sql/yesrMonthEarly.sql";
 	public static final String sql_lateIsQuery = "/cn/com/maxim/portal/sql/lateIsQuery.sql";
@@ -79,15 +81,22 @@ public class sqlConsts
 	public static final String sql_checkMonthMark="/cn/com/maxim/portal/sql/checkMonthMark.sql";
 	/** 刪除單位**/
 	public static final String sql_deleteUnit="/cn/com/maxim/portal/sql/deleteUnit.sql";
+	
 	public static final String sql_updateUnitData="/cn/com/maxim/portal/sql/updateUnitData.sql";
 	/** 建立單位**/
 	public static final String sql_InsterUnit="/cn/com/maxim/portal/sql/InsterUnit.sql";	
+	/**  查詢部門有無相關單位**/
 	public static final String sql_getUnitDeptCount="/cn/com/maxim/portal/sql/getUnitDeptCount.sql";
+	/** 建立部門**/
 	public static final String sql_InsterDept="/cn/com/maxim/portal/sql/InsterDept.sql";
+	/** 刪除部門**/
 	public static final String sql_deleteDept="/cn/com/maxim/portal/sql/deleteDept.sql";
+	/** 更新部門**/
 	public static final String sql_updateDept="/cn/com/maxim/portal/sql/updateDept.sql";
 	public static final String sql_getDeptIDCount="/cn/com/maxim/portal/sql/getDeptIDCount.sql";
+	/** 新增email**/
 	public static final String sql_updateHROEmail="/cn/com/maxim/portal/sql/updateHROEmail.sql";
+	
 	public static final String sql_queryEmpLeverTrue="/cn/com/maxim/portal/sql/queryEmpLeverTrue.sql";
 	/** 查詢加班有無相同時段**/
 	public static final String sql_getOvertimeSCount="/cn/com/maxim/portal/sql/getOvertimeSCount.sql";
@@ -133,6 +142,10 @@ public class sqlConsts
 	public static final String sql_queryLeavePreossCount="/cn/com/maxim/portal/sql/queryLeavePreossCount.sql";
 	/**查詢加班是否有設定部門˙**/
 	public static final String sql_queryDeptOverCount="/cn/com/maxim/portal/sql/queryDeptOverCount.sql";
+	/**查詢CS加班是否有設定部門˙**/
+	public static final String sql_queryDeptCSCount="/cn/com/maxim/portal/sql/queryDeptCSCount.sql";
+	/**查詢CS加班是否有設定單位˙**/
+	public static final String sql_queryUnitCSCount="/cn/com/maxim/portal/sql/queryUnitCSCount.sql";
 	/**查詢加班部門流程˙**/
 	public static final String sql_queryDeptOverData="/cn/com/maxim/portal/sql/queryDeptOverData.sql";
 	/**更新加班部門流程˙**/
@@ -185,5 +198,118 @@ public class sqlConsts
 	public static final String sql_queryPlantBlueRow="/cn/com/maxim/portal/sql/queryPlantBlueRow.sql";
 	/**查詢主管EMAIL**/
 	public static final String sql_queryEmail="/cn/com/maxim/portal/sql/queryEmail.sql";
-	
+	/**查詢當月超時加班時數(測試用)**/
+	public static final String sql_queryMaxah="/cn/com/maxim/portal/sql/queryMaxah.sql";
+	/**取得Email寄信設定**/
+	public static final String sql_getEmailConfig="/cn/com/maxim/portal/sql/getEmailConfig.sql";
+	/**查詢主管名稱**/
+	public static final String sql_queryEmpName="/cn/com/maxim/portal/sql/queryEmpName.sql";
+	/**新增email寄送資料**/
+	public static final String sql_insterVnEmail="/cn/com/maxim/portal/sql/insterVnEmail.sql";
+	/**用行ID查出工號**/
+	public static final String sql_queryEmpID="/cn/com/maxim/portal/sql/queryEmpID.sql";
+	/**用工號年月日查出此人當天應上班時數**/
+	public static final String sql_queryEmpTurnTime="/cn/com/maxim/portal/sql/queryEmpTurnTime.sql";
+	/**用工號年月日查出此人當天遲到時間**/
+	public static final String sql_queryLateMinute="/cn/com/maxim/portal/sql/queryLateMinute.sql";
+	/**用工號年月日查出此人當天早退時間**/
+	public static final String sql_queryEarlyMinute="/cn/com/maxim/portal/sql/queryEarlyMinute.sql";
+	/**用請假單ID查出員工資料行ID**/
+	public static final String sql_queryEPID="/cn/com/maxim/portal/sql/queryEPID.sql";
+	/**查詢請假單需要定時寄信主管群組工號**/
+	public static final String sql_queryEmailSingep="/cn/com/maxim/portal/sql/queryEmailSingep.sql";
+	/**查詢請假單主管工號列出相關須寄信名單**/
+	public static final String sql_querySendEmailLeaveList="/cn/com/maxim/portal/sql/querySendEmailLeaveList.sql";
+	/**查詢設定好的員工資料**/
+	public static final String sql_getRoleUser="/cn/com/maxim/portal/sql/getRoleUser.sql";
+	/**查詢加班單的待審主管名單**/
+	public static final String sql_queryEmailOverSingep="/cn/com/maxim/portal/sql/queryEmailOverSingep.sql";
+	/**查詢加班單的待審員工名單**/
+	public static final String sql_querySendEmailOverList="/cn/com/maxim/portal/sql/querySendEmailOverList.sql";
+	/**查詢請假寄信主管工號(經理)**/
+	public static final String sql_queryLeaveEmailMLeave="/cn/com/maxim/portal/sql/queryLeaveEmailMLeave.sql";
+	/**使用日期與工號查詢請假成功紀錄**/
+	public static final String sql_queryLeaveToDate="/cn/com/maxim/portal/sql/queryLeaveToDate.sql";
+	/**查詢已成功建立帳號**/
+	public static final String sql_queryLoginList="/cn/com/maxim/portal/sql/queryLoginList.sql";
+	/**建立系統登入帳號**/
+	public static final String sql_buildSysLoginUser="/cn/com/maxim/portal/sql/buildSysLoginUser.sql";
+	/**刪除系統登入帳號**/
+	public static final String sql_deleteBuildSysUser="/cn/com/maxim/portal/sql/deleteBuildSysUser.sql";
+	/**新增超時加班資料**/
+	public static final String sql_insterSecret="/cn/com/maxim/portal/sql/insterSecret.sql";
+	/**查詢超時加班資料**/
+	public static final String sql_querySecretOverTime="/cn/com/maxim/portal/sql/querySecretOverTime.sql";
+	/**查詢副總待審核資料筆數**/
+	public static final String sql_queryBleaveCount="/cn/com/maxim/portal/sql/queryBleaveCount.sql";
+	/**待工審核流程資料筆數**/
+	public static final String sql_queryDeptStopCount="/cn/com/maxim/portal/sql/queryDeptStopCount.sql";
+	/**查詢待工審核流程資料**/
+	public static final String sql_queryDeptStopData="/cn/com/maxim/portal/sql/queryDeptStopData.sql";
+	/**更新待工審核流程資料**/
+	public static final String sql_updateDeptStopRole="/cn/com/maxim/portal/sql/updateDeptStopRole.sql";
+	/**更新待工資料表資料**/
+	public static final String sql_updateStopsProcess="/cn/com/maxim/portal/sql/updateStopsProcess.sql";
+	/**新增待工審核流程資料**/
+	public static final String sql_InsterDeptStopRole="/cn/com/maxim/portal/sql/InsterDeptStopRole.sql";
+	/**查詢待工審核單位流程資料筆數**/
+	public static final String sql_queryUnitStopCount="/cn/com/maxim/portal/sql/queryUnitStopCount.sql";
+	/**查詢待工審核單位流程列表資料**/
+	public static final String sql_queryDeptStopRole="/cn/com/maxim/portal/sql/queryDeptStopRole.sql";
+	/**查詢加班單工號**/
+	public static final String sql_queryOverEPID="/cn/com/maxim/portal/sql/queryOverEPID.sql";
+	/**刪除cs加班單**/
+	public static final String sql_deleteSecret="/cn/com/maxim/portal/sql/deleteSecret.sql";
+	/**cs加班單修改狀態**/
+	public static final String sql_updateSecretStatus="/cn/com/maxim/portal/sql/updateSecretStatus.sql";
+	/**查詢CS加班流程**/
+	public static final String sql_queryDeptCSData="/cn/com/maxim/portal/sql/queryDeptCSData.sql";
+	/**新增CS加班流程**/
+	public static final String sql_InsterDeptCSRole="/cn/com/maxim/portal/sql/InsterDeptCSRole.sql";
+	/**查詢CS加班流程**/
+	public static final String sql_queryDeptCSRole="/cn/com/maxim/portal/sql/queryDeptCSRole.sql";
+	/**查詢CS加班流程有無設定部門單位**/
+	public static final String sql_queryDeptUnitCSCount="/cn/com/maxim/portal/sql/queryDeptUnitCSCount.sql";
+	/**查詢CS加班流程有無設定**/
+	public static final String sql_queryCSPreossCount="/cn/com/maxim/portal/sql/queryCSPreossCount.sql";
+	/**更新CS加班流程有無設定**/
+	public static final String sql_updateDeptCSRole="/cn/com/maxim/portal/sql/updateDeptCSRole.sql";
+	/**更新CS加班單設定流程**/
+	public static final String sql_updateCSsProcess="/cn/com/maxim/portal/sql/updateCSsProcess.sql";
+	/**查詢CS加班單設定流程**/
+	public static final String sql_queryCSUserData="/cn/com/maxim/portal/sql/queryCSUserData.sql";
+	/**查詢CS加班單資料**/
+	public static final String sql_querySecretData="/cn/com/maxim/portal/sql/querySecretData.sql";
+	/**編輯CS加班單讀取資料**/
+	public static final String sql_queryCSRowEditData="/cn/com/maxim/portal/sql/queryCSRowEditData.sql";
+	/**更新CS加班單資料**/
+	public static final String sql_updateCSOverTime="/cn/com/maxim/portal/sql/updateCSOverTime.sql";
+	/**查詢CS流程資料**/
+	public static final String sql_queryEmailCSSingep="/cn/com/maxim/portal/sql/queryEmailCSSingep.sql";
+	/**查詢CS EMAIL LIST**/
+	public static final String sql_querySendEmailCSList="/cn/com/maxim/portal/sql/querySendEmailCSList.sql";
+	/**查詢流程設定是否為空**/
+	public static final String sql_queryProcessCheck="/cn/com/maxim/portal/sql/queryProcessCheck.sql";
+	/**查詢CS是否已有相同時間請假**/
+	public static final String sql_getCSSavecount="/cn/com/maxim/portal/sql/getCSSavecount.sql";
+	/**查詢CS申請完成頁面**/
+	public static final String sql_querySecretProcess="/cn/com/maxim/portal/sql/querySecretProcess.sql";
+	/**查詢CS申請完成報表**/
+	public static final String sql_queryCSReportList="/cn/com/maxim/portal/sql/queryCSReportList.sql";
+	/**查詢刪除請假資料**/
+	public static final String sql_queryLeaveDelData="/cn/com/maxim/portal/sql/queryLeaveDelData.sql";
+	/**查詢刪除加班資料**/
+	public static final String sql_queryOverDelData="/cn/com/maxim/portal/sql/queryOverDelData.sql";
+	/**刪除請假資料**/
+	public static final String sql_deleteLeave="/cn/com/maxim/portal/sql/deleteLeave.sql";
+	/**刪除加班資料**/
+	public static final String sql_deleteOver="/cn/com/maxim/portal/sql/deleteOver.sql";
+	/**紀錄刪除加班單**/
+	public static final String sql_InsterOVDelSave="/cn/com/maxim/portal/sql/InsterOVDelSave.sql";
+	/**更新刪除加班單**/
+	public static final String sql_updateOVDelSave="/cn/com/maxim/portal/sql/updateOVDelSave.sql";
+	/**紀錄刪除請假單**/
+	public static final String sql_insterLEDELSave="/cn/com/maxim/portal/sql/insterLEDELSave.sql";
+	/**更新刪除請假單**/
+	public static final String sql_updateLEDELSave="/cn/com/maxim/portal/sql/updateLEDELSave.sql";
 }

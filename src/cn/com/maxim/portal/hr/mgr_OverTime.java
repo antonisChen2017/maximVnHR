@@ -17,6 +17,7 @@ import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
+import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.dao.overTimeDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
@@ -25,9 +26,9 @@ import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
-import cn.com.maxim.portal.util.UrlUtil;
 /**
  * 經理 加班查询
  * @author Antonis.chen
@@ -69,12 +70,25 @@ public class mgr_OverTime extends TemplatePortalPen
 						}
 						if (actText.equals("U")) {
 				    		logger.info("超時加班時數/I : " +otVo.toString());				
-				    			otVo.setStatus("L");
+				    			otVo.setStatus("L");//審核通過
 							otVo.setMsg(overTimeDAO.deptProcess(con, otVo));		
 							otVo.setShowDataTable(true);
+							otVo.setStatus("U");//查詢用
 							setHtmlPart1(con, out, otVo,UserInformation,request);
 						
 						}
+						if (actText.equals("ALL")) {
+							logger.info("加班全部通過");
+
+							otVo.setShowDataTable(true);
+							otVo.setStatus("L");//審核通過
+							// 儲存db
+							//檢查是否已經權限走到底
+							otVo.setMsg(overTimeDAO.deptAllProcess(con, otVo,request.getParameter("rowID")));
+							otVo.setStatus("D");
+							setHtmlPart1(con, out, otVo,UserInformation,request);
+						}
+						
 						if (actText.equals("R")) {
 							
 					    	logger.info("超時加班時數/R: " +otVo.toString());		
@@ -180,7 +194,7 @@ public class mgr_OverTime extends TemplatePortalPen
 				if(employeeNoSys!=null && !employeeNoSys.equals("")){
 						UserName=employeeNoSys;				
 				}else{
-						UserName=UserInformation.getUserName();
+					UserName=UserInformation.getUserTelephone();
 				}
 				logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
 				List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	

@@ -1,17 +1,22 @@
 SELECT
 EMPLOYEENO
-,sum( CONVERT(float,[ATTENDANCE]) ) AS monthReportX 
-,sum( CONVERT(float,[HOLIDAYI] ) ) AS monthReportL
-,sum( CONVERT(float,[NOTWORK] ) ) AS monthReportO 
-, sum( CONVERT(float,[HOLIDAYB] ) ) AS monthReportB
-, sum( CONVERT(float,[HOLIDAYA] ) ) AS monthReportR
-, sum( CONVERT(float,[HOLIDAYC] ) ) AS monthReportN
-, sum( CONVERT(float,[HOLIDAYD] ) ) AS monthReportH 
-, sum( CONVERT(float,[HOLIDAYF] ) ) AS monthReportT 
-, sum( CONVERT(float,[HOLIDAYE] ) ) AS monthReportTS
+,sum( CONVERT(float,[ATTENDANCE]) ) AS monthReportX --上班
+,sum( CONVERT(float,[HOLIDAYI] ) ) AS monthReportL --工傷
+,sum( CONVERT(float,[NOTWORK] ) ) AS monthReportO  --曠工
+, sum( CONVERT(float,[HOLIDAYB] ) ) AS monthReportB --病假
+, sum( CONVERT(float,[HOLIDAYA] ) ) AS monthReportR --事假
+, sum( CONVERT(float,[HOLIDAYG] ) ) AS monthReportN --調休
+, sum( CONVERT(float,[HOLIDAYD] ) ) AS monthReportH --	婚假
+, sum( CONVERT(float,[HOLIDAYF] ) ) AS monthReportT --喪假
+, sum( CONVERT(float,[HOLIDAYE] ) ) AS monthReportTS --產假
 ,'' AS monthReportF
-,sum( CONVERT(float,[STOPWORK] ) ) AS monthReportW 
-, sum( CONVERT(float,[HOLIDAYH] ) ) AS monthReportP 
+, sum( CONVERT(float,[HOLIDAYO] ) ) AS monthReportOT  --公假
+, sum( CONVERT(float,[HOLIDAYS] ) ) AS monthReportS  --停工待料
+,sum( CONVERT(float,[STOPWORK] ) ) AS monthReportW  --待工
+, sum( CONVERT(float,[HOLIDAYH] ) ) AS monthReportP  --年假
+, sum( CONVERT(float,[BELATE] ) ) AS monthReportSL  --遲到
+, sum( CONVERT(float,[EARLY] ) ) AS monthReportER  --早退
+, sum( CONVERT(float,[OVERTIME] ) ) AS monthReportOV  --加班
    FROM 
    VN_DAY_REPORT AS R
    JOIN VN_UNIT AS U On R.UNIT=U.UNIT

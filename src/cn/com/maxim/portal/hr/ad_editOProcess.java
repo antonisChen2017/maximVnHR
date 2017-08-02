@@ -23,7 +23,11 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
-
+/**
+ * 加班審核
+ * @author Antonis.chen
+ *
+ */
 public class ad_editOProcess extends TemplatePortalPen
 {
 	Log4jUtil lu = new Log4jUtil();
@@ -143,9 +147,11 @@ public class ad_editOProcess extends TemplatePortalPen
 					
 					edVo.setDept( request.getParameter("Dept"));
 					edVo.setUnit( request.getParameter("Unit"));
-					logger.info("Unit"+edVo.getUnit());
+					
 					int COUNT=0;
+					logger.info(" SqlUtil.queryUnitOverCount(edVo)"+SqlUtil.queryUnitOverCount(edVo));
 					String Ucount=DBUtil.queryDBField(con,SqlUtil.queryUnitOverCount(edVo), "COUNT");
+					
 					if(Ucount!=null && !Ucount.equals("")){
 						 COUNT=Integer.valueOf(Ucount);
 					}

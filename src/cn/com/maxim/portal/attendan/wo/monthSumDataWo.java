@@ -2,19 +2,79 @@ package cn.com.maxim.portal.attendan.wo;
 
 public class monthSumDataWo
 {
+    	
 	private String EMPLOYEENO;
+	/**上班**/
 	private String monthReportX;
-	private String monthReportP;
-	private String monthReportN;
-	private String monthReportTS;
-	private String monthReportH;
-	private String monthReportT;
-	private String monthReportB;
-	private String monthReportR;
+	/** 工傷**/
 	private String monthReportL;
+	/**曠工**/
 	private String monthReportO;
+	/**病假**/
+	private String monthReportB;
+	/**事假**/
+	private String monthReportR;
+	/**-調休**/
+	private String monthReportN;
+	/**婚假**/
+	private String monthReportH;
+	/**喪假**/
+	private String monthReportT;
+	/**--產假**/
+	private String monthReportTS;
+	/**沒用到**/
+	private String monthReportF;
+	/**公假**/
+	private String monthReportOT;
+	/**停工待料**/
+	private String monthReportS;
+	/**-待工**/
 	private String monthReportW;
-	
+	/**-年假**/
+	private String monthReportP;
+	/**-遲到**/
+	private String monthReportSL;
+	/**-早退**/
+	private String monthReportER;
+	/**-加班**/
+	private String monthReportOV;
+
+	public String getMonthReportF() {
+	    return monthReportF;
+	}
+	public void setMonthReportF(String monthReportF) {
+	    this.monthReportF = monthReportF;
+	}
+	public String getMonthReportS() {
+	    return monthReportS;
+	}
+	public void setMonthReportS(String monthReportS) {
+	    this.monthReportS = monthReportS;
+	}
+	public String getMonthReportOV() {
+	    return monthReportOV;
+	}
+	public void setMonthReportOV(String monthReportOV) {
+	    this.monthReportOV = monthReportOV;
+	}
+	public String getMonthReportER() {
+	    return monthReportER;
+	}
+	public void setMonthReportER(String monthReportER) {
+	    this.monthReportER = monthReportER;
+	}
+	public String getMonthReportOT() {
+	    return monthReportOT;
+	}
+	public void setMonthReportOT(String monthReportOT) {
+	    this.monthReportOT = monthReportOT;
+	}
+	public String getMonthReportSL() {
+	    return monthReportSL;
+	}
+	public void setMonthReportSL(String monthReportSL) {
+	    this.monthReportSL = monthReportSL;
+	}
 	public String getEMPLOYEENO()
 	{
 		return EMPLOYEENO;

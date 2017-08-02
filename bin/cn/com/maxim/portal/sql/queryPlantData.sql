@@ -32,173 +32,181 @@ case when(grouping([DEPARTMENT_ID])=1) then '合计' else [DEPARTMENT_ID] end as
 case when(grouping([UNIT])=1) then '合计' else [UNIT] end  as [UNIT]
 ,COUNT (*) as [ROW]
 ,(
-	SELECT Count(distinct A.EmpCode) As EmpInCount  
-FROM PWERP_MS.dbo.RsKQResult A  
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE  A.FDate='<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>='<YMD/>'))
 AND B.Nation<>'0002' 
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-	) AS [C1]
+	) AS [C1] --外籍幹部實際人數
 	,(
-SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
-WHERE  A.FDate='2017/02/09'
+WHERE  A.FDate='<YESTERDAY/>'
 AND B.Nation='0002' 
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>='<YESTERDAY/>'))
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-	) AS [C2]
+	) AS [C2]--越籍初期應出勤人數
 		,(
-SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE  A.FDate='<YMD/>'
 AND B.Nation='0002' 
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
-AND V.UNIT=VU.UNIT) 
-AS [C3]
-	,(SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+and B.LeaveFlag='0' 
+AND D.ID=VU.DEPARTMENT_ID
+AND V.UNIT=VU.UNIT
+) 
+AS [C3]--"越籍當日應出勤人數"
+	,(
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE A.FDate='<YMD/>'
 AND B.Nation='0002' 
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
-AND (A.WorkFTime<>'00:00' OR A.WorkETime<>'<YMD/>')
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and B.LeaveFlag='0' 
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C4]
-,(SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C4]--越籍當日實際出勤人數
+,(
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE A.FDate='<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
-and A.Turn='A1'
-AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and B.LeaveFlag='0'
+and A.Turn IN ('A1','A2','A3','A4','TX1','TX2')
+--AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C5]
-,(SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C5] --行政班
+,(
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE A.FDate='<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
+and B.LeaveFlag='0'
 and A.Turn='C1'
-AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+--AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C6]
-,(SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C6] --早班
+,(
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE A.FDate='<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
+and B.LeaveFlag='0'
 and A.Turn='C2'
-AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+--AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-)  AS [C7]
+)  AS [C7]--中班
 ,(
-SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE A.FDate='<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
+and B.LeaveFlag='0'
 and A.Turn='C3'
-AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+--AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C8]
+) AS [C8]--夜班
 ,(
-SELECT Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
 WHERE A.FDate='<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>='<YMD/>'))
-and A.Turn IN ('CD','CD1','CN')
-AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>='<YMD/>'))
+and A.Turn IN ('CD','CD1','CN','TS1','TS2','CNN')
+--AND (A.WorkFTime<>'00:00' and A.WorkETime<>'00:00')
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C9]
-,(SELECT   Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C9]--特加班次
+,(
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
- LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
+ LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=HE.ID
+   LEFT JOIN hr.dbo.VN_LHOLIDAY Y On  L.HD_ID=Y.ID
 WHERE A.FDate=  '<YMD/>' 
 and L.LEAVEAPPLY IN ('1')
-and L.HD_ID IN ('5')
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
-AND L.STARTLEAVEDATE>=  '<YMD/>  00:00:00'
-AND L.ENDLEAVEDATE<='<YMD/> 23:59:59'
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and Y.HOLIDAYCLAS IN ('E')
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
+AND NOT (('<YMD/> 23:59:59' < L.STARTLEAVEDATE) OR ('<YMD/> 00:00:00'> L.ENDLEAVEDATE))
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C10]
-,(SELECT   Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C10] --產假
+,(
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
- LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
+ LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=HE.ID
+  LEFT JOIN hr.dbo.VN_LHOLIDAY Y On  L.HD_ID=Y.ID
 WHERE A.FDate=  '<YMD/>' 
 and L.LEAVEAPPLY IN ('1')
-and L.HD_ID IN ('1','2','4','6','10')
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
-AND L.STARTLEAVEDATE>=  '<YMD/>  00:00:00'
-AND L.ENDLEAVEDATE<='<YMD/> 23:59:59'
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and Y.HOLIDAYCLAS IN ('A','B','D','F','S','O')
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
+AND NOT (('<YMD/> 23:59:59' < L.STARTLEAVEDATE) OR ('<YMD/> 00:00:00'> L.ENDLEAVEDATE))
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C11]
-,(SELECT   Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C11] --請假
+,(
+	select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
- LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
+ LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=HE.ID
+ LEFT JOIN hr.dbo.VN_LHOLIDAY Y On  L.HD_ID=Y.ID
 WHERE A.FDate=  '<YMD/>' 
 and L.LEAVEAPPLY IN ('1')
-and L.HD_ID IN ('8')
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
-AND L.STARTLEAVEDATE>=  '<YMD/>  00:00:00'
-AND L.ENDLEAVEDATE<='<YMD/> 23:59:59'
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and Y.HOLIDAYCLAS IN ('H')
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
+AND NOT (('<YMD/> 23:59:59' < L.STARTLEAVEDATE) OR ('<YMD/> 00:00:00'> L.ENDLEAVEDATE))
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-)  AS [C12]
-,(SELECT  Count(distinct S.EMPLOYEENO) As EmpInCount 
+)  AS [C12] --年假
+,(
+SELECT  Count(distinct S.EMPLOYEENO) As EmpInCount 
 FROM VN_EMPLOYEE_SUPPLEMENT S  
  JOIN hr.dbo.HR_EMPLOYEE E On S.EMPLOYEENO =E.ID
  JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
@@ -206,55 +214,78 @@ FROM VN_EMPLOYEE_SUPPLEMENT S
  JOIN PWERP_MS.dbo.RsEmployee B On E.EmpCode=B.EmpCode 
 WHERE S.STARTDAY='<YMD/>' 
 AND S.STATUS='L'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
 AND E.DEPARTMENT_ID=D.ID
 AND V.UNIT=VU.UNIT
-) AS [C13]
-,(SELECT   Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C13]--出差
+,(
+select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
- LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
+ LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=HE.ID
+  LEFT JOIN hr.dbo.VN_LHOLIDAY Y On  L.HD_ID=Y.ID
 WHERE A.FDate=  '<YMD/>' 
 and L.LEAVEAPPLY IN ('1')
-and L.HD_ID IN ('3')
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
-AND L.STARTLEAVEDATE>=  '<YMD/>  00:00:00'
-AND L.ENDLEAVEDATE<='<YMD/> 23:59:59'
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and Y.HOLIDAYCLAS IN ('I')
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
+AND NOT (('<YMD/> 23:59:59' < L.STARTLEAVEDATE) OR ('<YMD/> 00:00:00'> L.ENDLEAVEDATE))
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C14]
-,(SELECT   Count(distinct A.EmpCode) As EmpInCount 
-FROM PWERP_MS.dbo.RsKQResult A  
+) AS [C14]--工傷
+,(
+select A.EmpInCount-B.EmpInCount AS EmpInCount  from
+(
+select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
- LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
+ LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=HE.ID
 WHERE A.FDate= '<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>'))
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>'))
 AND (A.WorkFDate='  ' AND A.WorkEDate='  ')
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C15]
-,(SELECT   Count(distinct A.EmpCode) As EmpInCount
-FROM PWERP_MS.dbo.RsKQResult A  
+)A,
+(
+select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
- JOIN hr.dbo.HR_EMPLOYEE E On  E.EMPLOYEENO=B.EmpID
- JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
- JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
- LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
+ LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=HE.ID
+  LEFT JOIN hr.dbo.VN_LHOLIDAY Y On  L.HD_ID=Y.ID
 WHERE A.FDate=  '<YMD/>' 
 and L.LEAVEAPPLY IN ('1')
-and L.HD_ID IN ('7')
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
-AND L.STARTLEAVEDATE>=  '<YMD/>  00:00:00'
-AND L.ENDLEAVEDATE<='<YMD/> 23:59:59'
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+and Y.HOLIDAYCLAS IN ('I','A','B','D','F','S','O','H','E','G')
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
+AND NOT (('<YMD/> 23:59:59' < L.STARTLEAVEDATE) OR ('<YMD/> 00:00:00'> L.ENDLEAVEDATE))
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
-) AS [C16]
+)B
+) AS [C15] --曠工
+,(
+select COUNT(*) AS  EmpInCount
+from HR_EMPLOYEE as HE
+LEFT OUTER JOIN VN_DEPARTMENT as d ON HE.DEPARTMENT_ID = d.ID
+LEFT OUTER JOIN VN_UNIT as V ON HE.UNIT_ID = V.ID
+JOIN PWERP_MS.dbo.RsKQResult A  On A.EmpCode=HE.EmpCode
+ JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
+ LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=HE.ID
+   LEFT JOIN hr.dbo.VN_LHOLIDAY Y On  L.HD_ID=Y.ID
+WHERE A.FDate=  '<YMD/>' 
+and L.LEAVEAPPLY IN ('1')
+and Y.HOLIDAYCLAS IN ('G')
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
+AND NOT (('<YMD/> 23:59:59' < L.STARTLEAVEDATE) OR ('<YMD/> 00:00:00'> L.ENDLEAVEDATE))
+AND D.ID=VU.DEPARTMENT_ID
+AND V.UNIT=VU.UNIT
+) AS [C16] --排休
 ,(SELECT   Count(distinct A.EmpCode) As EmpInCount 
 FROM PWERP_MS.dbo.RsKQResult A  
  JOIN PWERP_MS.dbo.RsEmployee B On A.EmpCode=B.EmpCode 
@@ -263,9 +294,9 @@ FROM PWERP_MS.dbo.RsKQResult A
  JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
  LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
 WHERE A.FDate='<YMD/>'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
 and InDate=  '<YMD/>'
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
 ) AS [C17]
 ,(SELECT  Count(distinct S.EMPLOYEENO) As EmpInCount 
@@ -276,8 +307,8 @@ FROM VN_EMPLOYEE_SUPPLEMENT S
  JOIN PWERP_MS.dbo.RsEmployee B On E.EmpCode=B.EmpCode 
 WHERE S.STARTDAY='<YMD/>' 
 AND S.STATUS='R'
-and (LeaveFlag='0' Or (LeaveFlag='1' And LeaveDate>=  '<YMD/>' ))
-AND E.DEPARTMENT_ID=D.ID
+and (B.LeaveFlag='0' Or (B.LeaveFlag='1' And B.LeaveDate>=  '<YMD/>' ))
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
 ) AS [C18]
 ,(SELECT Count(distinct A.EmpCode) As EmpInCount 
@@ -287,15 +318,15 @@ FROM PWERP_MS.dbo.RsKQResult A
  JOIN hr.dbo.VN_UNIT V On  E.UNIT_ID=V.ID
  JOIN hr.dbo.VN_DEPARTMENT D On  E.DEPARTMENT_ID=D.ID
  LEFT JOIN hr.dbo.VN_LEAVECARD L On  L.EP_ID=E.ID
-WHERE  LeaveFlag='1' 
-and LeaveDate=   '<YMD/>' 
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+WHERE  B.LeaveFlag='1' 
+and B.LeaveDate=   '<YMD/>' 
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
 ) AS [C19]
 ,(SELECT isnull(V.SING,0)
 FROM [hr].[dbo].[VN_UNIT] V
  JOIN hr.dbo.VN_DEPARTMENT D On  V.DEPARTMENT_ID=D.ID
-AND V.DEPARTMENT_ID=VU.DEPARTMENT_ID
+AND D.ID=VU.DEPARTMENT_ID
 AND V.UNIT=VU.UNIT
 )  AS [SORT]
 FROM [hr].[dbo].[VN_UNIT] VU

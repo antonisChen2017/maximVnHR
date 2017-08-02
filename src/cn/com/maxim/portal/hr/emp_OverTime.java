@@ -16,14 +16,15 @@ import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.ro.exOvertimeRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.overTimeDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 
@@ -70,6 +71,8 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setOverTimeSave(false);
 						// 查詢有無設定流程
 						String msg=DBUtil.getOverProcess(con,otVo);
+						List<employeeUserRO> lro=getUser(con,UserInformation,request);
+						otVo.setLogin(lro.get(0).getID());
 						if(msg.equals("o")){
 							
 							String eotEdit=( String)request.getSession().getAttribute("eotEdit");
@@ -83,7 +86,7 @@ public class emp_OverTime extends TemplatePortalPen
 									otVo.setMsg(keyConts.editNO);
 								}
 							}else{
-								msg=DBUtil.saveOvertime(otVo , con);
+								msg=DBUtil.saveMaxOvertime(otVo , con);
 								otVo.setMsg(msg);
 							}
 						}else{
@@ -114,6 +117,9 @@ public class emp_OverTime extends TemplatePortalPen
 						otVo.setLeaveApply("0");
 						otVo.setStatus(keyConts.dbTableCRStatuS_T);
 						DBUtil.updateTimeOverSStatus(otVo, con);
+						/**2017/08/02 暫時不寄信**/
+						//overTimeDAO.deptProcessEmail(con,otVo);
+						/**2017/08/02 暫時不寄信**/
 						otVo.setShowDataTable(true);
 						otVo.setMsg("已送交");
 						request.getSession().setAttribute("eotEdit","Refer");
@@ -153,6 +159,7 @@ public class emp_OverTime extends TemplatePortalPen
 					otVo.setStartQueryDate("0");
 					otVo.setNote("");
 					otVo.setQueryDate(DateUtil.NowDate());
+					otVo.setQueryDateTwo(DateUtil.NowDate());
 					otVo.setUserReason("");
 					otVo.setRowID("0");
 					otVo.setSaveButText(keyConts.butSave);
@@ -214,9 +221,9 @@ public class emp_OverTime extends TemplatePortalPen
 			 otVo.setSearchEmployeeNo("0");
 		
 			 if(searchUnit.equals("0")){
-				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "' and role='E'  ";
+				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "'   ";
 			 }else{
-				 subSql=" UNIT_ID ='" + searchUnit + "' and role='E'  ";
+				 subSql=" UNIT_ID ='" + searchUnit + "'  ";
 			 }
 			// System.out.println("subSql : "+subSql);
 			try
@@ -264,7 +271,7 @@ public class emp_OverTime extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<SPAN  id='dutiesDiv' ></SPAN>",lro.get(0).getDUTIES()) ;
 			htmlPart1=htmlPart1.replace("<SPAN  id='entrydateDiv' ></SPAN>",String.valueOf(lro.get(0).getENTRYDATE())) ;
 			htmlPart1=htmlPart1.replace("&submitDate", otVo.getSubmitDate());
-			htmlPart1=htmlPart1.replace("&queryDate",HtmlUtil.getDateDiv("queryDate", otVo.getQueryDate()));
+			htmlPart1=htmlPart1.replace("<queryDateTwo/>",HtmlUtil.getDateDivSw("queryDate","queryDateTwo", otVo.getQueryDate(),otVo.getQueryDateTwo()));
 			htmlPart1=htmlPart1.replace("&userReason",HtmlUtil.getTextDiv("userReason",otVo.getUserReason(),"可輸入自訂加班事由" ));
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(otVo.getMsg()));
 			htmlPart1=htmlPart1.replace("<saveButText/>",otVo.getSaveButText());	
@@ -320,7 +327,7 @@ public class emp_OverTime extends TemplatePortalPen
 			if(employeeNoSys!=null && !employeeNoSys.equals("")){
 					UserName=employeeNoSys;				
 			}else{
-					UserName=UserInformation.getUserName();
+				UserName=UserInformation.getUserTelephone();
 			}
 			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
 			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	

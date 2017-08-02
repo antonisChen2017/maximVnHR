@@ -78,6 +78,7 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 						// 輸出查询UI
 						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
+					
 					if (actText.equals("R")) {
 						logger.info("加班申請單 審核/R: " +otVo.toString());		
 						otVo.setLeaveApply("2");
@@ -92,6 +93,27 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 						otVo.setShowDataTable(true);
 						setHtmlPart(con, out, otVo,UserInformation,request);
 					}
+					if (actText.equals("U")) {
+						
+						logger.info("加班申請單 部门主管審核/U : " + otVo.toString());
+						otVo.setStatus("D");
+						otVo.setMsg(overTimeDAO.deptProcess(con, otVo));
+						otVo.setShowDataTable(true);
+						// 輸出查询UI
+						setHtmlPart(con, out, otVo,UserInformation,request);
+					}
+					if (actText.equals("ALL")) {
+						logger.info("加班全部通過");
+
+						otVo.setShowDataTable(true);
+						otVo.setStatus("D");//審核通過
+						// 儲存db
+						//檢查是否已經權限走到底
+						otVo.setMsg(overTimeDAO.deptAllProcess(con, otVo,request.getParameter("rowID")));
+						setHtmlPart(con, out, otVo,UserInformation,request);
+					}
+
+					
 				}else{
 					otVo.setSearchDepartmen("0");
 					otVo.setSearchEmployeeNo("0");
@@ -244,7 +266,7 @@ public class dem_InspectOvertime extends TemplatePortalPen {
 			if(employeeNoSys!=null && !employeeNoSys.equals("")){
 					UserName=employeeNoSys;				
 			}else{
-					UserName=UserInformation.getUserName();
+				UserName=UserInformation.getUserTelephone();
 			}
 			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
 			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	

@@ -21,8 +21,8 @@ import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.TranslateUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 import cn.com.maxim.potral.consts.sqlConsts;
@@ -43,6 +43,7 @@ public class rev_empSettUnit  extends TemplatePortalPen
 		leaveCardVO lcVo = new leaveCardVO(); 
 		HtmlUtil hu=new HtmlUtil();
 		lcVo.setActionURI(ActionURI);
+		boolean showSetData=false;
 		try
 		{
 				if (actText != null)
@@ -52,14 +53,15 @@ public class rev_empSettUnit  extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,showSetData);
 					}
 					if (actText.equals("update")) {
 						logger.info("審核 設定員工與单位關係 and 角色/update: " +lcVo.toString());	
 						lcVo.setShowDataTable(true);
 						lcVo=DBUtil.updateUnit(con,lcVo);
 						lcVo=DBUtil.updateRole(con,lcVo);
-						showHtml(con, out, lcVo,UserInformation);
+						 showSetData=true;
+						showHtml(con, out, lcVo,UserInformation,showSetData);
 					}
 					
 				}else{
@@ -76,9 +78,7 @@ public class rev_empSettUnit  extends TemplatePortalPen
 					lcVo.setStartLeaveDate(DateUtil.NowDate());
 					lcVo.setEndLeaveDate(DateUtil.NowDate());
 					lcVo.setNote("");
-					/**預設copy新的人員**/
-					DBUtil.changeHrEmployee(con);
-					showHtml(con, out, lcVo,UserInformation);
+					showHtml(con, out, lcVo,UserInformation,showSetData);
 				
 				}
 		}catch (Exception err)
@@ -173,7 +173,7 @@ public class rev_empSettUnit  extends TemplatePortalPen
 		
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation) throws Exception {
+	private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation,boolean showSetData) throws Exception {
 		
 		
 			HtmlUtil hu=new HtmlUtil();
@@ -199,9 +199,16 @@ public class rev_empSettUnit  extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "EMPLOYEENO", "EMPLOYEENO", emp_subSql, lcVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(lcVo.getMsg()));
 			if(lcVo.isShowDataTable()){
-				logger.info("getRole : "+SqlUtil.getRole(lcVo));
+			
+				if(showSetData){
+				    logger.info("SqlUtil.getRoleUser(lcVo): " +SqlUtil.getRoleUser(lcVo));	
+				    htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawTable(
+						SqlUtil.getRoleUser(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
+				}else{
+				    logger.info("SqlUtil.getRoleUser(lcVo): " +SqlUtil.getRole(lcVo));	
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawTable(
 						SqlUtil.getRole(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
+				}
 			}			
 
 		    out.println(htmlPart1);

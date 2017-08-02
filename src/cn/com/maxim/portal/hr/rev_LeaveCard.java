@@ -22,8 +22,8 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 
@@ -250,7 +250,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", null, lcVo.getSearchUnit(),false,null));
 
 		if(lcVo.isShowDataTable()){
-			logger.info(" sql BLeaveCard="+SqlUtil.getRevLeaveCard(lcVo));
+			logger.info(" sql 管理部 LeaveCard="+SqlUtil.getRevLeaveCard(lcVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
 					SqlUtil.getRevLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 		}

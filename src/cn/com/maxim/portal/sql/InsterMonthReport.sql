@@ -41,6 +41,21 @@ INSERT INTO [hr].[dbo].[VN_YEAR_MONTH_ATTENDANCE]
            ,[DAY29]
            ,[DAY30]
            ,[DAY31]
+           ,[CODEA]
+           ,[CODEB]
+           ,[CODEC]
+           ,[CODED]
+           ,[CODEE]
+           ,[CODEF]
+           ,[CODEH]
+           ,[CODEI]
+            ,[CODEG]
+           ,[CODEK]
+           ,[CODEX]
+           ,[CODEW]
+           ,[CODEL]
+            ,[CODEJ]
+            ,[EARLY]
            ,[NOTE])
      VALUES
            ('<YEAR/>'
@@ -80,4 +95,19 @@ INSERT INTO [hr].[dbo].[VN_YEAR_MONTH_ATTENDANCE]
            ,'<DAY29/>'
            ,'<DAY30/>'
            ,'<DAY31/>'
+           ,'<CODEA/>'
+           ,'<CODEB/>'
+           ,'<CODEC/>'
+           ,'<CODED/>'
+           ,'<CODEE/>'
+           ,'<CODEF/>'
+           ,'<CODEH/>'
+           ,'<CODEI/>'
+           ,'<CODEG/>'
+           ,'<CODEK/>'
+           ,'<CODEX/>'
+           ,'<CODEW/>'
+           ,'<CODEL/>'
+          ,'<CODEJ/>'
+          , '<EARLY/>'
            ,'<NOTE/>')

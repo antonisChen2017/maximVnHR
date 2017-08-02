@@ -1,5 +1,9 @@
 package cn.com.maxim.portal.bean;
-
+/**
+ * 全廠日報表物件
+ * @author Antonis.chen
+ *
+ */
 public class repAttendanceDayBean
 {
 	  /**部**/

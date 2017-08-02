@@ -16,6 +16,7 @@ private String DEPARTMENT;
 	
 	private String DAYCOUNT;
 		
+
 	public String getDAYCOUNT()
 	{
 		return DAYCOUNT;

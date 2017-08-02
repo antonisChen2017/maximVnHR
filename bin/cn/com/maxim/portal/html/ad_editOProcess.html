@@ -83,7 +83,7 @@
 <div class="col-md-10">
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">正常加班流程</h3>
+    <h3 class="panel-title">加班流程</h3>
   </div>
   <table class="table">
     <thead>
@@ -168,7 +168,7 @@
 <div class="col-md-10">
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">正常加班流程</h3>
+    <h3 class="panel-title">加班流程</h3>
   </div>
   <table class="table">
     <thead>
@@ -424,11 +424,11 @@ function    saveDeptData(){
 				return;  
 		}  
 	if($('#threeDLever3').val()=='0' & $('#threeDLever4').val()=='0' ){   
-		 layer.msg('请选择三天以上部门主管审核流程');  
+		 layer.msg('请选择部门主管加班审核流程');  
 			return;  
 	}  
 	if( $('#threeMLever4').val()=='0' ){   
-		 layer.msg('请选择三天以上经理审核流程');  
+		 layer.msg('请选择经理加班审核流程');  
 			return;  
 	} 
 	ActionForm.act.value='saveDept';
@@ -455,11 +455,11 @@ function    saveUnitData(){
 				return;  
 		}  
 	if($('#threeELever1').val()=='0' & $('#threeELever2').val()=='0' & $('#threeELever2').val()=='0'  & $('#threeELever4').val()=='0' ){   
-		 layer.msg('请选择三天以上一般员工审核流程');  
+		 layer.msg('请选择一般员工加班审核流程');  
 			return;  
 	}  
 	if( $('#threeULever2').val()=='0' & $('#threeULever3').val()=='0' & $('#threeULever4').val()=='0'){   
-		 layer.msg('请选择三天以上单位主管审核流程');  
+		 layer.msg('请选择单位主管加班审核流程');  
 			return;  
 	} 
 	ActionForm.act.value='saveUnit';

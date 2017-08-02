@@ -71,9 +71,16 @@ public class leaveCardVO implements Serializable
 	private String leaveApply;
 	/**按鈕記號 */
 	private String saveButText;
+	/**紀錄請假操作員帳號 */
+	private String Login;
+
 	
-	
-	
+	public String getLogin() {
+	    return Login;
+	}
+	public void setLogin(String login) {
+	    Login = login;
+	}
 	public String getSaveButText()
 	{
 		return saveButText;

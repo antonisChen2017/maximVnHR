@@ -9,16 +9,19 @@ INSERT INTO  [dbo].[VN_DAY_REPORT](
 	[UNIT] ,
 	[ATTENDANCE] ,
 	[OVERTIME] ,
-	[HOLIDAYH] ,
-	[HOLIDAYC] ,
+    [HOLIDAYH] ,
+	[HOLIDAYI] ,
 	[HOLIDAYE] ,
-	[HOLIDAYD] ,
+	[HOLIDAYD] ,	
 	[HOLIDAYF] ,
 	[HOLIDAYB] ,
-	[HOLIDAYA] ,
-	[HOLIDAYI] ,
+	[HOLIDAYA] ,	
+	[HOLIDAYG] ,
+	[HOLIDAYO] ,
+	[HOLIDAYS] ,
 	[NOTWORK] ,
 	[BELATE] ,
+	[EARLY] ,
 	[STOPWORK] ,
 	[MEALS] ,
 	[NOTE] 
@@ -31,7 +34,7 @@ SELECT
 	VU.UNIT ,
 	(
 	  Select 
-	  	case when (WorkFDate='' or WorkEDate='' ) 
+	  	case when (WorkFDate='' AND WorkEDate='' ) 
 		then 
 			'0'
 		else  
@@ -42,7 +45,14 @@ SELECT
 				else
 					(DATEDIFF (HOUR,WorkFDate,WorkEDate))
 				end
-			 else '0'
+			 else (
+			 select CAST((T.AllMin-T.DinnTime)/60 as decimal(2, 1)) AS TIME from PWERP_MS.dbo.RsKQResult R
+JOIN PWERP_MS.dbo.RsBasTurn T
+ON R.Turn=T.Code
+JOIN HR_EMPLOYEE E
+ON E.EmpCode=R.EmpCode
+where E.EMPLOYEENO=VE.EMPLOYEENO
+AND FDate='<FDate/>')
 			end
 	  end 
 	    FROM  
@@ -84,8 +94,8 @@ SELECT
 	AND H.ID=L.HD_ID
 	AND LEAVEAPPLY IN ('1')--審核通過
 	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
-	AND  H.HOLIDAYCLAS='C'
-	) AS HOLIDAYC,--公傷假
+	AND  H.HOLIDAYCLAS='I'
+	) AS HOLIDAYI,--工傷假
 	(
     select  case 
 	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
@@ -159,12 +169,45 @@ SELECT
 	AND H.ID=L.HD_ID
 	AND LEAVEAPPLY IN ('1')--審核通過
 	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
-	AND  H.HOLIDAYCLAS='I'
-	) AS HOLIDAYI,--輪休
+	AND  H.HOLIDAYCLAS IN ('G')
+	) AS HOLIDAYG,--周六調休
+			(
+	select 
+	case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND LEAVEAPPLY IN ('1')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS IN ('O')
+	) AS HOLIDAYO,--公假
+		(
+	select 
+	case 
+	when datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE)>='8' 
+	then '8'
+	else datediff(hh,L.STARTLEAVEDATE,L.ENDLEAVEDATE) end 
+	from VN_LEAVECARD L,VN_LHOLIDAY H
+	where EP_ID=VE.ID
+	AND H.ID=L.HD_ID
+	AND LEAVEAPPLY IN ('1')--審核通過
+	AND NOT (('<FDate/> 23:59:59' < L.STARTLEAVEDATE) OR ('<FDate/> 00:00:00'> L.ENDLEAVEDATE))
+	AND  H.HOLIDAYCLAS IN ('S')
+	) AS HOLIDAYS,--其他
 	(
     select 
-	case when (SK.WorkFDate='' or SK.WorkEDate='' ) 
-	then '8' 
+	case when (SK.WorkFDate='' AND  SK.WorkEDate='' ) 
+	then (
+			 select CAST((T.AllMin-T.DinnTime)/60 as decimal(2, 1)) AS TIME from PWERP_MS.dbo.RsKQResult R
+JOIN PWERP_MS.dbo.RsBasTurn T
+ON R.Turn=T.Code
+JOIN HR_EMPLOYEE E
+ON E.EmpCode=R.EmpCode
+where E.EMPLOYEENO=VE.EMPLOYEENO
+AND FDate='<FDate/>')
 	else  '0'
 	end 
 	from   PWERP_MS.dbo.RsKQResult SK,
@@ -206,6 +249,28 @@ SELECT
 	AND SVE.EMPLOYEENO=VE.EMPLOYEENO
 	)
 	AS BELATE,
+	(
+	select 
+	convert(numeric(8,0),round(( SK.LeaveTime),2))
+	from   PWERP_MS.dbo.RsKQResult SK,
+	PWERP_MS.dbo.RsEmployee SE ,
+    PWERP_MS.dbo.RsBasTurn SB,
+    HR_EMPLOYEE SVE,
+    VN_UNIT SVU,
+    VN_DEPARTMENT SVD
+	Where 1=1
+	AND SK.EmpCode=SE.EmpCode
+	AND SK.Turn= SB.Code
+	AND SVE.EMPLOYEENO= SE.RsEmpCode
+	AND SVU.ID= SVE.UNIT_ID
+	AND SVD.ID= SVE.DEPARTMENT_ID
+	AND FDate='<FDate/>'
+	AND <SVEDEPARTMENT/>
+	AND <SVEUNIT/>
+	AND  1=1
+	AND SVE.EMPLOYEENO=VE.EMPLOYEENO
+	)
+	AS EARLY,
 	(
 	select 
 	case 

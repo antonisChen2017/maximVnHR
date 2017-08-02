@@ -33,7 +33,8 @@ public class ad_editDeptUnit extends TemplatePortalPen
 	Logger logger = lu.initLog4j(ad_editLholiday.class);
 
 	@Override
-	public void drawPanel(HttpServletRequest request, HttpServletResponse response, UserDescriptor UserInformation, PrintWriter out, String ActionURI, Connection con)
+	public void drawPanel(HttpServletRequest request, HttpServletResponse response,
+		UserDescriptor UserInformation, PrintWriter out, String ActionURI, Connection con)
 	{
 		String actText = request.getParameter("act");
 		String UrowID = request.getParameter("UrowID");
@@ -204,10 +205,7 @@ public class ad_editDeptUnit extends TemplatePortalPen
 	private void showHtml(Connection con, PrintWriter out, editDeptUnit edVo, UserDescriptor UserInformation) throws Exception
 	{
 		HtmlUtil hu = new HtmlUtil();
-		//employeeUserRO eo = new employeeUserRO();
-
-		//List<employeeUserRO> lro = DBUtil.queryUserList(con, SqlUtil.getEmployeeNameDate(UserInformation.getUserName()), eo);
-	//	lcVo.setSearchDepartmen(lro.get(0).getDID());
+	
 
 		String htmlPart1 = hu.gethtml(htmlConsts.html_ad_editDeptUnit);
 	//	htmlPart1 = htmlPart1.replace("<Translate/>", ControlUtil.drawTranslateSelectShared());

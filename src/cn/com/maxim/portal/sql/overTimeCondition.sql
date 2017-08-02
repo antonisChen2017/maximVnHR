@@ -25,4 +25,5 @@ where 1=1
 	and DATEPART(yyyy,OVERTIME_START) ='<YEAR/>' 
     and DATEPART ( mm ,OVERTIME_START )='<MONTH/>' 
 group by EP.EMPLOYEENO,EP.EMPLOYEE,DT.DEPARTMENT,UT.UNIT,RE.TITLE
-HAVING sum(convert(float,APPLICATION_HOURS))>= (select VALUE from VN_CONFIG where [key]='CTIME')
+HAVING (sum(convert(float,APPLICATION_HOURS))+0.5)
+>=(select VALUE from VN_CONFIG where [key]='CTIME')

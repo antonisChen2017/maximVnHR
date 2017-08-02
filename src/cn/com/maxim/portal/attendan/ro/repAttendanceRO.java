@@ -2,12 +2,16 @@ package cn.com.maxim.portal.attendan.ro;
 
 public class repAttendanceRO
 {
-	/** 序號 **/
+	/** 序次 **/
 	private String ID;
 	/** 工號 **/
 	private String EMPLOYEENO;
 	/** 名稱 **/
 	private String EMPLOYEE;
+	/** 部門 **/
+	private String DEPARTMENT;
+	/** 單位 **/
+	private String UNIT;
 	/** 1日 */
 	private String DAY1;
 	/** 2日 */
@@ -70,8 +74,173 @@ public class repAttendanceRO
 	private String DAY30;
 	/** 31日 */
 	private String DAY31;
+	/** 正班出勤 */
+	private String CODEX;
+	/** 年假 */
+	private String CODEH;
+	/** 工傷假 */
+	private String CODEI;
+	/** 產假 */
+	private String CODEE;
+	/** 婚假 */
+	private String CODED;
+	/** 喪假 */
+	private String CODEF;
+	/** 病假 */
+	private String CODEB;
+	/** 事假 */
+	private String CODEA;
+	/** 調休 */
+	private String CODEG;
+	/**其他 */
+	private String CODEJ;
+	/** 曠工 */
+	private String CODEK;
+	/**遲到 */
+	private String CODEL;	
+	/**早退 */
+	private String EARLY;	
+	/** 待工 */
+	private String CODEW;
+	/**簽名 */
+	private String SING;	
 	/** 註解 */
 	private String NOTE;
+
+
+	
+	
+	public String getEARLY() {
+	    return EARLY;
+	}
+
+	public void setEARLY(String eARLY) {
+	    EARLY = eARLY;
+	}
+
+	public String getCODEG() {
+	    return CODEG;
+	}
+
+	public void setCODEG(String cODEG) {
+	    CODEG = cODEG;
+	}
+
+	public String getCODEJ() {
+	    return CODEJ;
+	}
+
+	public void setCODEJ(String cODEJ) {
+	    CODEJ = cODEJ;
+	}
+
+	public String getSING() {
+	    return SING;
+	}
+
+	public void setSING(String sING) {
+	    SING = sING;
+	}
+
+	public String getCODEA() {
+	    return CODEA;
+	}
+
+	public void setCODEA(String cODEA) {
+	    CODEA = cODEA;
+	}
+
+	public String getCODEB() {
+	    return CODEB;
+	}
+
+	public void setCODEB(String cODEB) {
+	    CODEB = cODEB;
+	}
+
+
+
+	public String getCODEI() {
+	    return CODEI;
+	}
+
+	public void setCODEI(String cODEI) {
+	    CODEI = cODEI;
+	}
+
+	public String getCODED() {
+	    return CODED;
+	}
+
+	public void setCODED(String cODED) {
+	    CODED = cODED;
+	}
+
+	public String getCODEE() {
+	    return CODEE;
+	}
+
+	public void setCODEE(String cODEE) {
+	    CODEE = cODEE;
+	}
+
+	public String getCODEF() {
+	    return CODEF;
+	}
+
+	public void setCODEF(String cODEF) {
+	    CODEF = cODEF;
+	}
+
+	public String getCODEH() {
+	    return CODEH;
+	}
+
+	public void setCODEH(String cODEH) {
+	    CODEH = cODEH;
+	}
+
+
+
+	public String getCODEK() {
+	    return CODEK;
+	}
+
+	public void setCODEK(String cODEK) {
+	    CODEK = cODEK;
+	}
+
+	public String getCODEX() {
+	    return CODEX;
+	}
+
+	public void setCODEX(String cODEX) {
+	    CODEX = cODEX;
+	}
+
+	public String getCODEL() {
+	    return CODEL;
+	}
+
+	public void setCODEL(String cODEL) {
+	    CODEL = cODEL;
+	}
+
+	public String getDEPARTMENT() {
+	    return DEPARTMENT;
+	}
+
+	public void setDEPARTMENT(String dEPARTMENT) {
+	    DEPARTMENT = dEPARTMENT;
+	}
+
+	public String getUNIT() {
+	    return UNIT;
+	}
+
+	public void setUNIT(String uNIT) {
+	    UNIT = uNIT;
+	}
 
 	public String getID()
 	{
@@ -422,5 +591,33 @@ public class repAttendanceRO
 	{
 		NOTE = nOTE;
 	}
+
+	
+	
+	public String getCODEW() {
+	    return CODEW;
+	}
+
+	public void setCODEW(String cODEW) {
+	    CODEW = cODEW;
+	}
+
+	@Override
+	public String toString() {
+	    return "repAttendanceRO [ID=" + ID + ", EMPLOYEENO=" + EMPLOYEENO + ", EMPLOYEE=" + EMPLOYEE
+		    + ", DEPARTMENT=" + DEPARTMENT + ", UNIT=" + UNIT + ", DAY1=" + DAY1 + ", DAY2=" + DAY2 + ", DAY3="
+		    + DAY3 + ", DAY4=" + DAY4 + ", DAY5=" + DAY5 + ", DAY6=" + DAY6 + ", DAY7=" + DAY7 + ", DAY8="
+		    + DAY8 + ", DAY9=" + DAY9 + ", DAY10=" + DAY10 + ", DAY11=" + DAY11 + ", DAY12=" + DAY12
+		    + ", DAY13=" + DAY13 + ", DAY14=" + DAY14 + ", DAY15=" + DAY15 + ", DAY16=" + DAY16 + ", DAY17="
+		    + DAY17 + ", DAY18=" + DAY18 + ", DAY19=" + DAY19 + ", DAY20=" + DAY20 + ", DAY21=" + DAY21
+		    + ", DAY22=" + DAY22 + ", DAY23=" + DAY23 + ", DAY24=" + DAY24 + ", DAY25=" + DAY25 + ", DAY26="
+		    + DAY26 + ", DAY27=" + DAY27 + ", DAY28=" + DAY28 + ", DAY29=" + DAY29 + ", DAY30=" + DAY30
+		    + ", DAY31=" + DAY31 + ", CODEX=" + CODEX + ", CODEH=" + CODEH + ", CODEI=" + CODEI + ", CODEE="
+		    + CODEE + ", CODED=" + CODED + ", CODEF=" + CODEF + ", CODEB=" + CODEB + ", CODEA=" + CODEA
+		    + ", CODEK=" + CODEK + ", CODEL=" + CODEL + ", CODEW=" + CODEW + ", SING=" + SING + ", NOTE=" + NOTE
+		    + "]";
+	}
+
+	
 
 }

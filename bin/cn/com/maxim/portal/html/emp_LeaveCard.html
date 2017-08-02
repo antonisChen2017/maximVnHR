@@ -408,15 +408,18 @@ function    checkNO(){
 	
 		
 		
-		if($('#searchAgent').val()=='0'){  
-					layer.msg('请选择代理人');
-					return;  
-			}  
+		//if($('#searchAgent').val()=='0'){  
+		//			layer.msg('请选择代理人');
+		//			return;  
+		//	}  
 		if($('#searchAgent').val()==$('#searchEmployeeNo').val()){  
 					layer.msg('代理人不可为本人');
 					return;  
 			}  
 		ActionForm.act.value='Save'; 
+		 var index = layer.load(1, {
+		      shade: [0.1,'#fff'] //0.1透明度的白色背景
+		    });
 		ActionForm.submit();   
 		
 	}  

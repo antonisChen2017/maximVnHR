@@ -22,8 +22,8 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 /**
  * 員工查询考勤
@@ -75,10 +75,10 @@ public class emp_LateOutEarly extends TemplatePortalPen
 		
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out,lateOutEarlyVO eaVo  , UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
+	private void showHtml(Connection con, PrintWriter out,lateOutEarlyVO eaVo  , UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
 		
 			employeeUserRO eo=new employeeUserRO();
-			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserTelephone()) ,eo);	
 			eaVo.setEmpID(lro.get(0).getEMPLOYEENO());
 			HtmlUtil hu=new HtmlUtil();
 			String htmlPart1=hu.gethtml(htmlConsts.html_emp_lateOutEarly);

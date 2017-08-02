@@ -22,14 +22,16 @@ import cn.com.maxim.htmlcontrol.WebLabel;
 import cn.com.maxim.htmlcontrol.WebSelect;
 import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
 import cn.com.maxim.portal.attendan.ro.empLateEarlyRO;
+import cn.com.maxim.portal.attendan.ro.empYearChange;
 import cn.com.maxim.portal.attendan.ro.repAttendanceDayRO;
 import cn.com.maxim.portal.attendan.vo.calendarVO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.bean.dayTableMoble;
-import cn.com.maxim.portal.bean.dayTableRowMoble;
+
 import cn.com.maxim.portal.hr.ad_editLholiday;
-import cn.com.maxim.portal.key.attendanceDayKeyConsts;
+import cn.com.maxim.portal.hr.ts_delUserWriteData;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.sqlConsts;
 
 public class ControlUtil
@@ -120,20 +122,46 @@ public class ControlUtil
 		return drawCustomSelectShared("Translate",al,"0");
 	}
 	
+	
+	public static String drawOLSelect(String  SelectedOption)
+	{
+		ArrayList al =new ArrayList();
+		Hashtable htz=new Hashtable();
+		htz.put("text", "未选择");
+		htz.put("value", "0");
+		al.add(htz);
+		Hashtable ht=new Hashtable();
+		ht.put("text", "请假单");
+		ht.put("value", "1");
+		al.add(ht);
+		Hashtable ht1=new Hashtable();
+		ht1.put("text", "加班单");
+		ht1.put("value", "2");
+		al.add(ht1);
+		
+		return drawCustomSelectShared("drawOLSelect",al,SelectedOption);
+	}
+	
+	
+	
 	public static String drawCustomSelectShared( String Name,ArrayList Options, String SelectedOption)
 	{
-
+	        Log4jUtil lu=new Log4jUtil();
+		Logger logger  =lu.initLog4j(ControlUtil.class);
 		APCustomSelect = new WebSelect();
 		APCustomSelect.setClass("populate select2_category form-control");
 		APCustomSelect.setID(Name);
 		APCustomSelect.setName(Name);
 		
+		logger.info("Options : "+Options);
 		for(int i=0;i<Options.size();i++){
 			Hashtable ht=(Hashtable)Options.get(i);
+			logger.info("value : "+(String)ht.get("value"));
+			logger.info("text : "+(String)ht.get("text"));
 			APCustomSelect.addOption((String)ht.get("value"),(String) ht.get("text"));
 		}
 		
-		APCustomSelect.addOption("0", "未選擇");
+		
 		
 		//System.out.println("drawCustomSelectShared SelectedOption :"+SelectedOption);
 		APCustomSelect.setSelectedOption(SelectedOption);
@@ -268,8 +296,9 @@ public class ControlUtil
 	 * @param Options
 	 * @param SelectedOption
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String drawAccordions(Connection con,lateOutEarlyVO eaVo)
+	public static String drawAccordions(Connection con,lateOutEarlyVO eaVo) throws Exception
 	{	
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(ControlUtil.class);
@@ -283,67 +312,121 @@ public class ControlUtil
 	//	logger.info("Early  sql "+SqlUtil.getEmplateOutEarly(con, eaVo));
 		
 		/**調整早上或下午未打卡曠職**/
-		int Latetimes=Integer.valueOf(leoLate.get(0).getLATETIMES());
-		int LateHour=Integer.valueOf(leoLate.get(0).getHOUR());
-		int Earlytimes=Integer.valueOf(leoEarly.get(0).getLATETIMES());
-		int EarlyHour=Integer.valueOf(leoEarly.get(0).getHOUR());
+		int LateCount=0;
+		int LateHour=0;
+		int LateMinute=0;
+		int EarlyCount=0;
+		int EarlyHour=0;
+		int EarlyMinute=0;
 		int NotWork=0;
-		logger.info("1 Latetimes : "+Latetimes);
-		logger.info("1 LateHour : "+LateHour);
-		logger.info("1 Earlytimes : "+Earlytimes);
-		logger.info("1 EarlyHour : "+EarlyHour);
-		logger.info("1 NotWork : "+NotWork);
-	
-		for(int  i=1;i<32;i++){
+		int LeaveCount=0;
+		String YMD="";
+		int monthCount=DateUtil.getDaysOfStrMonth(eaVo.getQueryYearMonth());
+		   logger.info("計算 天數 "+monthCount);
+		for(int  i=1;i<monthCount;i++){
+		    /**跳出禮拜天START**/
+		    if(i<9){
+			    YMD=eaVo.getQueryYearMonth()+"/0"+i;
+			  //  logger.info(" drawAccordions YMD : "+YMD);
+			    //logger.info(" drawAccordions Weekday : "+DateUtil.getWeekday(YMD));
+			    if(DateUtil.getWeekday(YMD)==1){
+				continue;
+			    }
+		    }else{
+			    YMD=eaVo.getQueryYearMonth()+"/"+i;
+			 //   logger.info(" drawAccordions YMD : "+YMD);
+			  //  logger.info("drawAccordions  Weekday : "+DateUtil.getWeekday(YMD));
+			    if(DateUtil.getWeekday(YMD)==1){
+				continue;
+			    }
+		    }
+		    /**跳出禮拜天END**/  
+		
 			//遲到
 			String LateWT =leoLate.get(0).getWT(i);
 			String EarlyWT =leoEarly.get(0).getWT(i);
 		
-			if (LateWT.equals("00:00") & (! leoEarly.get(0).getWT(i).equals("00:00"))){
-				
-				Latetimes=Latetimes-1;
-				LateHour=LateHour-8;
-				NotWork=NotWork+1;
-				logger.info(" count "+i +" 遲到 LateWT : "+LateWT);
-				logger.info(" count "+i+" 遲到 EarlyWT : "+EarlyWT);
-				logger.info(" count "+i+" 遲到 Latetimes : "+Latetimes);
-				logger.info(" count "+i+" 遲到 LateHour : "+LateHour);
-				logger.info(" count "+i+" 遲到 NotWork : "+NotWork);
+			//下午為打卡 曠職一次 跳出
+			if ((LateWT.equals("00:00") & (! EarlyWT.equals("00:00"))) ){
+			    logger.info("下午沒打卡 曠職一次 檢查有無請假"+SqlUtil.queryLeaveToDate(YMD,eaVo.getEmpID()));
+			    	String ID=DBUtil.queryDBField(con, SqlUtil.queryLeaveToDate(YMD,eaVo.getEmpID()), "ID");
+			    	if(ID.equals("")){
+			    	    NotWork=NotWork+1;
+			    	}else{
+			    	    LeaveCount=LeaveCount+1;
+			    	}
+				continue;
 			}
-			if (EarlyWT.equals("00:00") &(! LateWT.equals("00:00"))){
-				
-				Earlytimes=Earlytimes-1;
-				EarlyHour=EarlyHour-8;
-				NotWork=NotWork+1;
-				logger.info(" count "+i+"早退  LateWT : "+LateWT);
-				logger.info(" count "+i+"早退  EarlyWT : "+EarlyWT);
-				logger.info(" count "+i+"早退  Earlytimes : "+Earlytimes);
-				logger.info(" count "+i+"早退 EarlyHour : "+EarlyHour);
-				logger.info(" count "+i+"早退 NotWork : "+NotWork);
+			
+			//早上沒打卡曠職一次跳出
+			if (EarlyWT.equals("00:00") &(! LateWT.equals("00:00"))  ){
+			    logger.info("早上沒打卡 曠職一次 檢查有無請假"+SqlUtil.queryLeaveToDate(YMD,eaVo.getEmpID()));
+			    	String ID=DBUtil.queryDBField(con, SqlUtil.queryLeaveToDate(YMD,eaVo.getEmpID()), "ID");
+			    	if(ID.equals("")){
+			    	    NotWork=NotWork+1;
+			    	}else{
+			    	    LeaveCount=LeaveCount+1;
+			    	}
+				continue;
 			}
-		
-		
+			//全部沒打卡曠職一次跳出
+			if ((LateWT.equals("00:00") & ( EarlyWT.equals("00:00"))) ){
+			    logger.info("全天沒打卡 曠職一次 檢查有無請假"+SqlUtil.queryLeaveToDate(YMD,eaVo.getEmpID()));
+
+			    	String ID=DBUtil.queryDBField(con, SqlUtil.queryLeaveToDate(YMD,eaVo.getEmpID()), "ID");
+			    	   logger.info("全天沒打卡  ID"+ ID);
+			    	if(ID.equals("")){
+			    	    NotWork=NotWork+1;
+			    	}else{
+			    	    LeaveCount=LeaveCount+1;
+			    	}
+				continue;
+			}
+			//其他天檢查遲到早退
+			if ((! LateWT.equals("00:00") & ( ! EarlyWT.equals("00:00"))) ){
+			    int dayLateMinute=Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.queryLateMinute(YMD,eaVo.getEmpID()), "LateMinute"));
+			  
+			    if(dayLateMinute>0){
+				  logger.info("計算 "+YMD+"遲到分 : "+dayLateMinute);
+				LateMinute=LateMinute+dayLateMinute;
+				LateCount++;
+			    }
+			    int dayEarlyMinute=Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.queryEarlyMinute(YMD,eaVo.getEmpID()), "EarlyMinute"));
+			  
+			    if(dayEarlyMinute<0){
+				  logger.info("計算 "+YMD+"早退分 : "+(dayEarlyMinute*-1));
+				EarlyMinute=EarlyMinute+(dayEarlyMinute*-1);
+				EarlyCount++;
+			    }
+			   continue;
+			}
 		}
-		
-		logger.info("2 Latetimes : "+Latetimes);
-		logger.info("2 LateHour : "+LateHour);
-		logger.info("2 Earlytimes : "+Earlytimes);
-		logger.info("2 EarlyHour : "+EarlyHour);
-		logger.info("2 NotWork : "+NotWork);
-		
-		if(Latetimes<0){
-			Latetimes=0;
+		LateHour=LateMinute/60;
+		LateMinute=LateMinute%60;
+		logger.info("計算 遲到次數 : "+LateCount);
+		logger.info("計算 遲到小時 : "+LateHour);
+		logger.info("計算 遲到分 : "+LateMinute);
+		EarlyHour=EarlyMinute/60;
+		EarlyMinute=EarlyMinute%60;
+		logger.info("計算 早退次數 : "+EarlyCount);
+		logger.info("計算 早退小時 : "+EarlyHour);
+		logger.info("計算 早退分 : "+EarlyMinute);
+		logger.info("計算 曠職: "+NotWork);
+		logger.info("計算 請假: "+LeaveCount);
+		if(LateCount<0){
+		    LateCount=0;
 		}
 		if(LateHour<0){
 			LateHour=0;
 		}
-		if(Earlytimes<0){
-			Earlytimes=0;
+		if(EarlyCount<0){
+		    EarlyCount=0;
 		}
 		if(EarlyHour<0){
 			EarlyHour=0;
 		}
 		
+	
 		
 		
 		
@@ -372,13 +455,13 @@ public class ControlUtil
 			accordions=accordions.replace(" <Calendar/>",cv.getCalendarHtml() );
 			
 			
-			
+			accordions=accordions.replace("<LeaveCount/>", String.valueOf(LeaveCount));
 			//遲到
 			if(leoLate.size()>0){
 				accordions=accordions.replace("<NotWork/>", String.valueOf(NotWork));
-				accordions=accordions.replace("<LateTimes/>", String.valueOf(Latetimes));
+				accordions=accordions.replace("<LateTimes/>", String.valueOf(LateCount));
 				accordions=accordions.replace("<LateHour/>", String.valueOf(LateHour));
-				accordions=accordions.replace("<LateMinute/>", leoLate.get(0).getMINUTE());
+				accordions=accordions.replace("<LateMinute/>", String.valueOf(LateMinute));
 				accordions=accordions.replace("<LateWT1/>", leoLate.get(0).getWT1());
 				accordions=accordions.replace("<LateWT2/>", leoLate.get(0).getWT2());
 				accordions=accordions.replace("<LateWT3/>", leoLate.get(0).getWT3());
@@ -450,9 +533,9 @@ public class ControlUtil
 			
 			//早退
 			if(leoEarly.size()>0){
-				accordions=accordions.replace("<EarlyTimes/>", String.valueOf(Earlytimes));
+				accordions=accordions.replace("<EarlyTimes/>", String.valueOf(EarlyCount));
 				accordions=accordions.replace("<EarlyHour/>",  String.valueOf(EarlyHour));
-				accordions=accordions.replace("<EarlyMinute/>", leoEarly.get(0).getMINUTE());
+				accordions=accordions.replace("<EarlyMinute/>", String.valueOf(EarlyMinute));
 				accordions=accordions.replace("<EarlyWT1/>",leoEarly.get(0).getWT1());
 				accordions=accordions.replace("<EarlyWT2/>",leoEarly.get(0).getWT2());
 				accordions=accordions.replace("<EarlyWT3/>",leoEarly.get(0).getWT3());
@@ -545,10 +628,13 @@ public class ControlUtil
 		Date date = sdf.parse( lcVo.getApplicationDate().replaceAll("/", "") );
 		date=DateUtil.addDays(date, -1);
 		Control=Control.replace("<yesterDay/>",sdf.format(date));
+		String Yday=DateUtil.addDay(lcVo.getApplicationDate(),-1);
+		
+		
 		dayTableMoble dt=new dayTableMoble();
-		//logger.info("queryPlantData "+SqlUtil.queryPlantData(lcVo.getApplicationDate()));
+		logger.info("queryPlantData  SQL"+SqlUtil.queryPlantData(lcVo.getApplicationDate(),Yday));
 		//跑出當天資料
-		DBUtil.updateSql(SqlUtil.queryPlantData(lcVo.getApplicationDate()),con);
+		DBUtil.updateSql(SqlUtil.queryPlantData(lcVo.getApplicationDate(),Yday),con);
 		//查出整體資料
 		dayAttendanceRO daRo = new dayAttendanceRO();
 		//logger.info("getAttendance "+SqlUtil.getAttendance(lcVo.getApplicationDate()));
@@ -614,13 +700,19 @@ public class ControlUtil
 		 
 		//年資分布
 		/**1年以下Data**/
-		dt.setYco1(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_vnLessThanOneYear), "yco")));
+		 
+		 empYearChange ey= DateUtil.getThreeYears(lcVo.getApplicationDate());
+		 logger.info("1年以下Data "+SqlUtil.getVnLessYear(ey,sqlConsts.sql_vnLessThanOneYear));
+		dt.setYco1(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(ey,sqlConsts.sql_vnLessThanOneYear), "yco")));
 		/**1年~2年Data**/
-		dt.setYco2(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_vnOneToTwoYears), "yco")));
+		 logger.info("1年~2年Data "+SqlUtil.getTowYear(ey,sqlConsts.sql_vnOneToTwoYears));
+		dt.setYco2(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getTowYear(ey,sqlConsts.sql_vnOneToTwoYears), "yco")));
 		/**2年~3年Data**/
-		dt.setYco3(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_vnTwoToThreeYears), "yco")));
+		 logger.info("2年~3年Data "+SqlUtil.getTwoToThree(ey,sqlConsts.sql_vnTwoToThreeYears));
+		dt.setYco3(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getTwoToThree(ey,sqlConsts.sql_vnTwoToThreeYears), "yco")));
 		/**3年以上Data**/
-		dt.setYco4(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getVnLessYear(lcVo,sqlConsts.sql_getThreeYearsOver), "yco")));
+		 logger.info("3年以上Data "+SqlUtil.getThreeYearsOver(ey,sqlConsts.sql_getThreeYearsOver));
+		dt.setYco4(Integer.valueOf(DBUtil.queryDBField(con, SqlUtil.getThreeYearsOver(ey,sqlConsts.sql_getThreeYearsOver), "yco")));
 		
 		/** 越籍年資分布**/
 		 Control= Control.replace("<yco1/>",String.valueOf( dt.getYco1()));

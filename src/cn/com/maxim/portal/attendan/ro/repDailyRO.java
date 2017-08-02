@@ -34,10 +34,18 @@ public class repDailyRO
 	private String HOLIDAYB;
 	/** 事假**/
 	private String HOLIDAYA;
+	/** 工傷**/
+	private String HOLIDAYI;
+	/** 調休**/
+	private String HOLIDAYG;
+	/** 其他**/
+	private String HOLIDAYO;
 	/** 曠工**/
-   private String NOTWORK;
+       private String NOTWORK;
 	/** 遲到**/
 	private String BELATE;
+	/** 早退**/
+	private String EARLY;
 	/** 待工**/
 	private String STOPWORK;
 	/** 補貼餐費**/
@@ -46,6 +54,32 @@ public class repDailyRO
 	private String NOTE;
 
 	
+	
+	
+	public String getEARLY() {
+	    return EARLY;
+	}
+	public void setEARLY(String eARLY) {
+	    EARLY = eARLY;
+	}
+	public String getHOLIDAYO() {
+	    return HOLIDAYO;
+	}
+	public void setHOLIDAYO(String hOLIDAYO) {
+	    HOLIDAYO = hOLIDAYO;
+	}
+	public String getHOLIDAYG() {
+	    return HOLIDAYG;
+	}
+	public void setHOLIDAYG(String hOLIDAYG) {
+	    HOLIDAYG = hOLIDAYG;
+	}
+	public String getHOLIDAYI() {
+	    return HOLIDAYI;
+	}
+	public void setHOLIDAYI(String hOLIDAYI) {
+	    HOLIDAYI = hOLIDAYI;
+	}
 	public String getEMPLOYEENO()
 	{
 		return EMPLOYEENO;

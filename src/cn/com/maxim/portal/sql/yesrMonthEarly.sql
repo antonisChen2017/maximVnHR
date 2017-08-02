@@ -44,6 +44,7 @@ While @i<=DateDiff(Day,@AFDate,@AEDate)
 	And SResult in ('0001','0003','0004','000A','000B') 
 	And Convert(DateTime,@FDate+' '+TurnFTime)<=Convert(DateTime,@FDate+' '+'08:30')
 	And datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime)) <0
+	And  CAST(ROUND( LeaveTime,0) AS int)>0
 	Union All
 	select 
 	'<year/>','<Month/>',E.EmpID,E.CBName,E.DeptCode,(@i+1),'0'
@@ -56,6 +57,7 @@ While @i<=DateDiff(Day,@AFDate,@AEDate)
 	And SResult in ('0001','0003','0004','000A','000B') 
 	And Convert(DateTime,@FDate+' '+TurnFTime)>Convert(DateTime,@FDate+' '+'11:30') And Convert(DateTime,@FDate+' '+TurnFTime)<=Convert(DateTime,@FDate+' '+'14:30')
 	And datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime)) <0
+	And  CAST(ROUND( LeaveTime,0) AS int)>0
 	Union All--把中餐的人加进来,这些人一定只排了一个班的
 	select 
 	'<year/>','<Month/>',E.EmpID,E.CBName,E.DeptCode,(@i+1),'0'
@@ -68,6 +70,8 @@ While @i<=DateDiff(Day,@AFDate,@AEDate)
 	And Convert(DateTime,@FDate+' '+TurnFTime)<=Convert(DateTime,@FDate+' '+'08:30')
 	And K.EmpCode In (Select EmpCode From  PWERP_MS.dbo.RsKQResult Where FDate=@FDate And Len(Turn)=1)
 	And datediff(n,(CONVERT(varchar(100),  @FDate, 23)+' '+K.TurnETime),(CONVERT(varchar(100),  @FDate, 23)+' '+K.WorkETime)) <0
+	And  CAST(ROUND( LeaveTime,0) AS int)>0
+	
 	Set @FFDate=Convert(Char(10),DateAdd(Day,@i+1,@AFDate),111)
 	Set @i=@i+1
 End
@@ -131,171 +135,171 @@ fetch next from Select_late into @YEAR,@MONTH,@ISLATE,@EMPLOYEENO,@EMPLOYEE,@DAY
 	   Set @lateTime=0
 	   Set @lateH=0
 	   Set @lateM=0
-	   if(@DAY1 is not null)
+	   if(@DAY1 is not null and cast(@DAY1 as float)>0)
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY1 as float)
 		END
 		
-	   if(@DAY2 is not null)
+	   if(@DAY2 is not null and cast(@DAY2 as float)>0)
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY2 as float)
 		END
-	   if(@DAY3 is not null)
+	   if(@DAY3 is not null and cast(@DAY3 as float)>0)
 	    begin 
 			Set @lateTime=@lateTime+cast(@DAY3 as float)
 			Set @lateCount=@lateCount+1
 		END
 		
-	   if(@DAY4 is not null) 
+	   if(@DAY4 is not null and cast(@DAY4 as float)>0) 
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY4 as float)
 		END
-	   if(@DAY5 is not null)
+	   if(@DAY5 is not null and cast(@DAY5 as float)>0)
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY5 as float)
 		END
-	   if(@DAY6 is not null)
+	   if(@DAY6 is not null and cast(@DAY6 as float)>0)
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY6 as float)
 		END
-	   if(@DAY7 is not null)
+	   if(@DAY7 is not null and cast(@DAY7 as float)>0)
 	    begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY7 as float)
 		END
-	   if(@DAY8 is not null)
+	   if(@DAY8 is not null and cast(@DAY8 as float)>0)
 		 begin 	
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY8 as float)
 		 END
-	   if(@DAY9 is not null)
+	   if(@DAY9 is not null and cast(@DAY9 as float)>0)
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY9 as float)
 		END
-	   if(@DAY10 is not null)
+	   if(@DAY10 is not null and cast(@DAY10 as float)>0)
 	    begin 
 			SET @lateTime=@lateTime+cast(@DAY10 as float)
 			Set @lateCount=@lateCount+1 
 		END
 
-	   if(@DAY11 is not null)
+	   if(@DAY11 is not null and cast(@DAY11 as float)>0)
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY11 as float)
 		END
-	   if(@DAY12 is not null)
+	   if(@DAY12 is not null and cast(@DAY12 as float)>0)
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY12 as float)
 		END
-	   if(@DAY13 is not null)
+	   if(@DAY13 is not null and cast(@DAY13 as float)>0)
 		begin 
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY13 as float)
 		END
-	   if(@DAY14 is not null)
+	   if(@DAY14 is not null and cast(@DAY14 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY14 as float)
 		END
-	   if(@DAY15 is not null)
+	   if(@DAY15 is not null and cast(@DAY15 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY15 as float)
 		END
-	   if(@DAY16 is not null)
+	   if(@DAY16 is not null and cast(@DAY16 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY16 as float)
 		END
-	   if(@DAY17 is not null)
+	   if(@DAY17 is not null and cast(@DAY17 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY17 as float)
 		END
-	   if(@DAY18 is not null)
+	   if(@DAY18 is not null and cast(@DAY18 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY18 as float)
 		END
-	   if(@DAY19 is not null)
+	   if(@DAY19 is not null and cast(@DAY19 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY19 as float)
 		END
 		
-	   if(@DAY20 is not null)
+	   if(@DAY20 is not null and cast(@DAY20 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY20 as float)
 		END
 		
-	   if(@DAY21 is not null)
+	   if(@DAY21 is not null and cast(@DAY21 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY21 as float)
 		END
 		
-	   if(@DAY22 is not null)
+	   if(@DAY22 is not null and cast(@DAY22 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY22 as float)
 		END
 		
-	   if(@DAY23 is not null)
+	   if(@DAY23 is not null and cast(@DAY23 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY23 as float)
 		END
 		
-	   if(@DAY24 is not null)
+	   if(@DAY24 is not null and cast(@DAY24 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY24 as float)
 		END
 		
-	   if(@DAY25 is not null)
+	   if(@DAY25 is not null and cast(@DAY25 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY25 as float)
 		END
 		
-	   if(@DAY26 is not null)
+	   if(@DAY26 is not null and cast(@DAY26 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY26 as float)
 		END
-	   if(@DAY27 is not null)
+	   if(@DAY27 is not null  and cast(@DAY27 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY27 as float)
 		END
 		
-	   if(@DAY28 is not null)
+	   if(@DAY28 is not null and cast(@DAY28 as float)>0) 
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY28 as float)
 		END
 		
-	   if(@DAY29 is not null)
+	   if(@DAY29 is not null and cast(@DAY29 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY29 as float)
 		END
 		
-	   if(@DAY30 is not null)
+	   if(@DAY30 is not null and cast(@DAY30 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY30 as float)
 		END
 		
-	   if(@DAY31 is not null)
+	   if(@DAY31 is not null and cast(@DAY31 as float)>0)
 		begin
 			Set @lateCount=@lateCount+1
 			Set @lateTime=@lateTime+cast(@DAY31 as float)
@@ -345,3 +349,4 @@ deallocate Select_late
 Drop Table #Tmp
 SELECT * FROM #SAL
 Drop Table #SAL
+

@@ -29,10 +29,10 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.TranslateConsts;
+import cn.com.maxim.potral.consts.UrlUtil;
 
 /**
  * 全廠日報表
@@ -111,10 +111,9 @@ public class rep_AttendanceDay extends TemplatePortalPen
 		//	System.out.println("ExcelEmpnum : "+SqlUtil.getExcelEmpnum(lcVo.getApplicationDate().replaceAll("/", "")));
 			request.getSession().setAttribute("eRolist", eRolist);
 			Hashtable  blueRow=rep_AttendanceDayDAO.UnitCount(con, lcVo);
-			
 			request.getSession().setAttribute("blueRow", blueRow);
 			
 		}
-		 out.println(TranslateConsts.tw2cn(htmlPart1));
+		 out.println(htmlPart1);
 	}
 }

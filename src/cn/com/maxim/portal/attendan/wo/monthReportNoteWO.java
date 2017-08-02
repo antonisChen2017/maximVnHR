@@ -74,7 +74,7 @@ public class monthReportNoteWO
 	private String NOTE;
 	/**上班**/
 	private double monthReportX;
-	/**輪休**/
+	/**工傷**/
 	private double monthReportL;
 	/**曠工**/
 	private double monthReportO;
@@ -82,22 +82,71 @@ public class monthReportNoteWO
 	private double monthReportB;
   	/**事假**/
 	private double monthReportR;
-	/**公假**/
-	private double monthReportN;
+	
 	/**婚假**/
 	private double monthReportH;
 	/**喪假**/
 	private double monthReportT;
 	/**產假**/
 	private double monthReportTS;
-	/**公傷**/
-	private double monthReportF;
 	/**待工**/
 	private double monthReportW;
-	/**特休**/
+	/**遲到**/
+	private double monthReportSL;
+	/**早退**/
+	private double monthReportER;
+	
+	/**特休(年假)**/
 	private double monthReportP;
+	/**調休**/
+	private double monthReportN;
+	/**公假**/
+	private double monthReportOT;
+	/**加班**/
+	private double monthReportOV;
 	
 	
+	
+	public double getMonthReportOV() {
+	    return monthReportOV;
+	}
+
+	public void setMonthReportOV(double monthReportOV) {
+	    this.monthReportOV = monthReportOV;
+	}
+
+	public double getMonthReportER() {
+	    return monthReportER;
+	}
+
+	public void setMonthReportER(double monthReportER) {
+	    this.monthReportER = monthReportER;
+	}
+
+	public double getMonthReportOT() {
+	    return monthReportOT;
+	}
+
+	public void setMonthReportOT(double monthReportOT) {
+	    this.monthReportOT = monthReportOT;
+	}
+
+	public double getMonthReportN() {
+	    return monthReportN;
+	}
+
+	public void setMonthReportN(double monthReportN) {
+	    this.monthReportN = monthReportN;
+	}
+
+	public double getMonthReportSL() {
+	    return monthReportSL;
+	}
+
+	public void setMonthReportSL(double monthReportSL) {
+	    this.monthReportSL = monthReportSL;
+	}
+
 	public void setDay(String colIndex,String Value)
 	{
 		switch (colIndex) {
@@ -485,6 +534,7 @@ public class monthReportNoteWO
 	{
 		this.monthReportW = monthReportW;
 	}
+	
 	public double getMonthReportL()
 	{
 		return monthReportL;
@@ -493,14 +543,7 @@ public class monthReportNoteWO
 	{
 		this.monthReportL = monthReportL;
 	}
-	public double getMonthReportF()
-	{
-		return monthReportF;
-	}
-	public void setMonthReportF(double monthReportF)
-	{
-		this.monthReportF = monthReportF;
-	}
+	
 	public double getMonthReportO()
 	{
 		return monthReportO;
@@ -525,14 +568,7 @@ public class monthReportNoteWO
 	{
 		this.monthReportR = monthReportR;
 	}
-	public double getMonthReportN()
-	{
-		return monthReportN;
-	}
-	public void setMonthReportN(double monthReportN)
-	{
-		this.monthReportN = monthReportN;
-	}
+	
 	public double getMonthReportH()
 	{
 		return monthReportH;

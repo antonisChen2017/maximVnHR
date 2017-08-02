@@ -240,17 +240,6 @@
 
 					function queryTable() {
 					
-
-					//	if ($('#searchDepartmen').val() == '0') {
-					//		layer.msg('请选择部门');
-					//		return;
-
-					//	}
-					
-					//	if ($('#searchUnit').val() == '0') {
-					//		layer.msg('請選擇单位');
-					///		return;
-					//	}
 						   //loading层
 					    var index = layer.load(1, {
 					      shade: [0.1,'#fff'] //0.1透明度的白色背景
@@ -274,19 +263,19 @@
 							    skin: 'layui-layer-lan'
 							    ,closeBtn: 0
 							    ,anim: 0 //动画类型
-							    ,title:'請假詳細訊息'
+							    ,title:'请假详细讯息'
 							  });
 					 }
 					 function  showAllData(data){
 							if(data==''){
-								 layer.msg('無請假曠工記錄');
+								 layer.msg('无请假旷工记录');
 							}else{
 								 layer.alert(data, {
 									    skin: 'layui-layer-lan'
 									    ,closeBtn: 0
 									
 									    ,anim: 0 //动画类型
-									    ,title:'當月詳細訊息'
+									    ,title:'当月详细讯息'
 									  });
 							 }
 					 }

@@ -19,8 +19,8 @@ import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.sqlConsts;
 
@@ -51,8 +51,8 @@ public class rev_empAddUnit extends TemplatePortalPen
 						logger.info("審核 設定員工與单位關係/update: " +lcVo.toString());	
 						lcVo.setShowDataTable(true);
 						String Sql=hu.gethtml(sqlConsts.sql_updateUnit);
-					    Sql=Sql.replace("<UNITID>", lcVo.getSearchUnit());
-					    Sql=Sql.replace("<EMPID>", lcVo.getSearchEmployee());
+						Sql=Sql.replace("<UNITID>", lcVo.getSearchUnit());
+						Sql=Sql.replace("<EMPID>", lcVo.getSearchEmployee());
 						boolean flag=DBUtil.updateSql(Sql, con) ;
 						if(flag){
 							lcVo.setMsg("更新单位成功!");

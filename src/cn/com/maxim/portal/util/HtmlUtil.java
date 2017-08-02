@@ -664,7 +664,14 @@ public class HtmlUtil
 
 		return Sb.toString();
 	}
-
+	
+	
+	public static final String getHidden(String ID, String value)
+	{	
+	    StringBuilder Sb = new StringBuilder("");
+            Sb.append("<input type='hidden'  name='"+ID+"' id='"+ID+"' value='" + value + "'>");
+	    return Sb.toString();
+	}
 	/**
 	 * 選擇时间
 	 * 
@@ -801,7 +808,7 @@ public class HtmlUtil
 
 	public static String drawTableMExcelButton()
 	{
-		return "<button id='excelBut' class=\"btn btn-primary \" onclick=\"outExecl()\" type=\"button\">輸出EXECL</button>";
+		return "<button id='excelBut' class=\"btn btn-primary \" onclick=\"outExecl()\" type=\"button\">输出EXCEL</button>";
 	}
 
 	public static String getOverTimeClass(overTimeVO otVo)
@@ -964,19 +971,19 @@ public class HtmlUtil
 			htmlButton = "";
 		}
 
-		if (page.equals("save"))
+		if (page.equals("save"))//部門,個人加班頁面
 		{
 			bStatus = "0";
 		}
-		if (page.equals(keyConts.pageMsList))
+		if (page.equals(keyConts.pageMsList))//部門頁面
 		{
 			bStatus = "2";
 		}
-		if (page.equals(keyConts.pageLList))
+		if (page.equals(keyConts.pageLList))//經理
 		{
 			bStatus = "1";
 		}
-		if (page.equals(keyConts.pageUsList))
+		if (page.equals(keyConts.pageUsList))//單位
 		{
 			bStatus = "U";
 		}
@@ -993,15 +1000,108 @@ public class HtmlUtil
 		{
 			bStatus = "PL";
 		}
-		if (page.equals(keyConts.pageB))
+		if (page.equals(keyConts.pageB))//副總
 		{
 			bStatus = "B";
+		}
+		if (page.equals(keyConts.personCSList))//CS報表頁面
+		{
+			bStatus = keyConts.personCSList;
 		}
 		WebDBTableEx table = new WebDBTableEx(con, sql);
 
 		return table.getOvertimeTable(out, "無資料", css, htmlButton, msg, bStatus);
 		// System.out.println("table :"+table.toString());
 	}
+	
+	
+	
+	/**
+	 * 刪除表單table
+	 * @param sql
+	 * @param htmlButton
+	 * @param con
+	 * @param out
+	 * @param page
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawDelUserDataTable(String sql, String htmlButton, Connection con, PrintWriter out, String page) throws SQLException
+	{
+		
+		String css = "table table-striped table-bordered table-hover";
+
+		WebDBTableEx table = new WebDBTableEx(con, sql);
+
+		return table.drawDelUserDataTable(out, "無資料", css, htmlButton,page);
+		// System.out.println("table :"+table.toString());
+	}
+	
+	
+	/**
+	 * 超時加班卡(加EXCEL按鈕)table
+	 * @param sql
+	 * @param htmlButton
+	 * @param con
+	 * @param out
+	 * @param page
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawCSTable(String sql, String htmlButton, Connection con, PrintWriter out, String page) throws SQLException
+	{
+	
+		String css = "table table-striped table-bordered table-hover";
+
+		String bStatus = "0";
+
+		String msg = "";
+
+		
+
+		if (page.equals("save"))//部門,個人加班頁面
+		{
+			bStatus = "0";
+		}
+		if (page.equals(keyConts.pageMsList))//部門頁面
+		{
+			bStatus = "2";
+		}
+		if (page.equals(keyConts.pageLList))//經理
+		{
+			bStatus = "1";
+		}
+		if (page.equals(keyConts.pageUsList))//單位
+		{
+			bStatus = "U";
+		}
+		if (page.equals(keyConts.pageEmpUnitList))
+		{
+			bStatus = "E";
+		}
+		if (page.equals(keyConts.pageDtmList))
+		{
+			bStatus = "DT";
+		    
+		}
+		if (page.equals(keyConts.personnelList))
+		{
+			bStatus = "PL";
+		}
+		if (page.equals(keyConts.pageB))//副總
+		{
+			bStatus = "B";
+		}
+		if (page.equals(keyConts.personCSList))//CS報表頁面
+		{
+			bStatus = keyConts.personCSList;
+		}
+		WebDBTableEx table = new WebDBTableEx(con, sql);
+
+		return table.getCSTable(out, "無資料", css, "", htmlButton, bStatus);
+		// System.out.println("table :"+table.toString());
+	}
+	
 	
 	public static String drawLeaveCardTable(String sql, String htmlButton, Connection con, PrintWriter out, String page) throws SQLException
 	{
@@ -1460,15 +1560,15 @@ public class HtmlUtil
 		}
 		if (page.equals("save"))
 		{
-			bStatus = "0";
+			bStatus = "S";
 		}
 		if (page.equals(keyConts.pageMsList))
 		{
-			bStatus = "2";
+			bStatus = "M";
 		}
 		if (page.equals(keyConts.pageList))
 		{
-			bStatus = "1";
+			bStatus = "L";
 		}
 
 		WebDBTableCL table = new WebDBTableCL(con, sql);
@@ -1626,7 +1726,7 @@ public class HtmlUtil
 		{
 			if (i == 0)
 			{
-				Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+				Sb.append(" <th width='12.5%'>打卡时段</th>\r\n");
 			}
 			else
 			{
@@ -1677,7 +1777,7 @@ public class HtmlUtil
 		{
 			if (i == 0)
 			{
-				Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+				Sb.append(" <th width='12.5%'>打卡时段</th>\r\n");
 			}
 			else
 			{
@@ -1730,7 +1830,7 @@ public class HtmlUtil
 
 				if (i == 0)
 				{
-					Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+					Sb.append(" <th width='12.5%'>打卡时段</th>\r\n");
 				}
 				else if (thcount <= dayCount)
 				{
@@ -1802,7 +1902,7 @@ public class HtmlUtil
 
 				if (i == 0)
 				{
-					Sb.append(" <th width='12.5%'>打卡時段</th>\r\n");
+					Sb.append(" <th width='12.5%'>打卡时段</th>\r\n");
 				}
 				else if (thcount <= dayCount)
 				{
@@ -1953,25 +2053,16 @@ public class HtmlUtil
 	 */
 	public static String drawTableCondition(String sql, String htmlButton, Connection con, PrintWriter out, String page) throws SQLException
 	{
-		String totalTime = "", resultS = "", Status = "";
+		
 		String css = "table table-striped table-bordered table-hover";
 
-		String bStatus = "0";
+		
 
 		String msg = "";
 
-		if (totalTime.equals(""))
-		{
-			htmlButton = "";
-		}
-		if (!page.equals("save"))
-		{
-			bStatus = "1";
-		}
-
 		WebDBTableEx table = new WebDBTableEx(con, sql);
 
-		return table.getHTMLTableCondition(out, "無資料", css, htmlButton, msg, bStatus);
+		return table.getHTMLTableCondition(out, "無資料", css, htmlButton, msg, page);
 		// System.out.println("table :"+table.toString());
 	}
 	

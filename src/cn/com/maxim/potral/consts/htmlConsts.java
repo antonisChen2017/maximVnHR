@@ -60,5 +60,19 @@ public class htmlConsts
 	  public static final String html_UnitSector="/cn/com/maxim/portal/html/ts_UnitSector.html";
 	  /**建立新帳號**/
 	  public static final String html_newAccount="/cn/com/maxim/portal/html/ts_newAccount.html";
+	  /**建立新帳號功能**/
+	  public static final String html_ad_editLoginUser="/cn/com/maxim/portal/html/ad_editLoginUser.html";
+	  /**建立待工流程**/
+	  public static final String html_ad_editSProcess="/cn/com/maxim/portal/html/ad_editSProcess.html";
+	  /**建立待工單位填寫夜**/
+	  public static final String html_unt_StopWorking="/cn/com/maxim/portal/html/unt_StopWorking.html";
+	  /**建立待工部門填寫頁面**/
+	  public static final String html_dem_StopWorking="/cn/com/maxim/portal/html/dem_StopWorking.html";
+	  /**建立CS加班流程設定頁面**/
+	  public static final String html_ad_editOUProcess="/cn/com/maxim/portal/html/ad_editOUProcess.html";
+	  /**建立CS報表**/
+	  public static final String html_rep_CSReport="/cn/com/maxim/portal/html/rep_CSReport.html";
+	  /**測試用 刪請假加班單**/
+	  public static final String html_delUserWriteData="/cn/com/maxim/portal/html/ts_delUserWriteData.html";
 	  
 }

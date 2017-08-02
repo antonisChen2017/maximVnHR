@@ -1,5 +1,6 @@
 INSERT INTO [hr].[dbo].[VN_OVERTIME_S]
-           ([M_ID]
+           ([ID]
+           ,[M_ID]
            ,[EP_ID]
            ,[APPLICATION_HOURS]
            ,[OVERTIME_START]
@@ -26,7 +27,8 @@ INSERT INTO [hr].[dbo].[VN_OVERTIME_S]
            ,[P_UNIT]
            ,[P_ROLE])
      VALUES
-           ('<M_ID/>'
+           ('<ID/>'
+           ,'<M_ID/>'
            ,'<EP_ID/>'
            ,'<APPLICATION_HOURS/>'
            ,'<OVERTIME_START/>'
@@ -52,5 +54,3 @@ INSERT INTO [hr].[dbo].[VN_OVERTIME_S]
            ,'<P_DEPT/>'
            ,'<P_UNIT/>'
             ,'<P_ROLE/>')
-           
-           select ident_current('[VN_OVERTIME_S]') as ID

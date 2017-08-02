@@ -6,56 +6,95 @@ public class dayReportRO
 {
 	/**年月日**/
 	private String DAY;
-	/**工號**/
-	private String EMPLOYEENO;
-	/**姓名**/
-	private String EMPLOYEE;
+	/**狀態**/
+	private String STATUS;
 	/**部門**/
 	private String DEPARTMENT;
 	/**單位**/
 	private String UNIT;
-	/**狀態**/
-	private String  STATUS;
-	/**正班出勤**/
+	/**工號**/
+	private String EMPLOYEENO;
+	/**姓名**/
+	private String EMPLOYEE;
+	/**粵文姓名**/
+	private String VIETNAMESE;
+	/**上班時間**/
+	private String WorkFTime;
+	/**下班時間**/
+	private String  WorkETime;
+	/**工時**/
 	private String ATTENDANCE;
-	/**加班**/
+	/**加班150**/
 	private String OVERTIME;
+	/**夜班130**/
+	private String NIGHTSHIFT;
+	/**周日200**/
+	private String SUNDAY;
+	/**假日300**/
+	private String GALA;
 	/** 年假 **/
 	private String HOLIDAYH;
-	/** 病假**/
-	private String HOLIDAYC;
+	/** 公假**/
+	private String HOLIDAYO;
 	/** 產假**/
 	private String HOLIDAYE;
-	/** 公假**/
+	/** 婚假**/
 	private String HOLIDAYD;
 	/** 喪假**/
 	private String HOLIDAYF;
-	/** 喪假**/
+	/** 病假**/
 	private String HOLIDAYB;
 	/** 事假**/
 	private String HOLIDAYA;
-	/** 輪休**/
-	private String HOLIDAYI;
 	/**曠工**/
 	private String NOTWORK;
 	/**遲到**/
 	private String BELATE;
-	/**待工**/
-	private String STOPWORK;
-	/**餐費**/
-	private String MEALS;
-	/**備註**/
-	private String NOTE;
+	
 
-	public String getSTATUS()
-	{
-		return STATUS;
+	
+	
+	public String getDEPARTMENT() {
+	    return DEPARTMENT;
 	}
 
-	public void setSTATUS(String sTATUS)
-	{
-		STATUS = sTATUS;
+	public void setDEPARTMENT(String dEPARTMENT) {
+	    DEPARTMENT = dEPARTMENT;
 	}
+
+	public String getUNIT() {
+	    return UNIT;
+	}
+
+	public void setUNIT(String uNIT) {
+	    UNIT = uNIT;
+	}
+
+	public String getSTATUS() {
+	    return STATUS;
+	}
+
+	public void setSTATUS(String sTATUS) {
+	    STATUS = sTATUS;
+	}
+
+	public String getEMPLOYEENO() {
+	    return EMPLOYEENO;
+	}
+
+	public void setEMPLOYEENO(String eMPLOYEENO) {
+	    EMPLOYEENO = eMPLOYEENO;
+	}
+
+	public String getHOLIDAYO() {
+	    return HOLIDAYO;
+	}
+
+	public void setHOLIDAYO(String hOLIDAYO) {
+	    HOLIDAYO = hOLIDAYO;
+	}
+
+	
 
 	public String getDAY()
 	{
@@ -67,15 +106,7 @@ public class dayReportRO
 		DAY = dAY;
 	}
 
-	public String getHOLIDAYI()
-	{
-		return HOLIDAYI;
-	}
-
-	public void setHOLIDAYI(String hOLIDAYI)
-	{
-		HOLIDAYI = hOLIDAYI;
-	}
+	
 
 	public String getATTENDANCE()
 	{
@@ -107,15 +138,9 @@ public class dayReportRO
 		HOLIDAYH = hOLIDAYH;
 	}
 
-	public String getHOLIDAYC()
-	{
-		return HOLIDAYC;
-	}
+	
 
-	public void setHOLIDAYC(String hOLIDAYC)
-	{
-		HOLIDAYC = hOLIDAYC;
-	}
+	
 
 	public String getHOLIDAYE()
 	{
@@ -187,35 +212,9 @@ public class dayReportRO
 		BELATE = bELATE;
 	}
 
-	public String getSTOPWORK()
-	{
-		return STOPWORK;
-	}
+	
 
-	public void setSTOPWORK(String sTOPWORK)
-	{
-		STOPWORK = sTOPWORK;
-	}
-
-	public String getMEALS()
-	{
-		return MEALS;
-	}
-
-	public void setMEALS(String mEALS)
-	{
-		MEALS = mEALS;
-	}
-
-	public String getNOTE()
-	{
-		return NOTE;
-	}
-
-	public void setNOTE(String nOTE)
-	{
-		NOTE = nOTE;
-	}
+	
 
 	public String getEMPLOYEE()
 	{
@@ -227,34 +226,56 @@ public class dayReportRO
 		EMPLOYEE = eMPLOYEE;
 	}
 
-	public String getDEPARTMENT()
-	{
-		return DEPARTMENT;
+	public String getVIETNAMESE() {
+	    return VIETNAMESE;
 	}
 
-	public void setDEPARTMENT(String dEPARTMENT)
-	{
-		DEPARTMENT = dEPARTMENT;
+	public void setVIETNAMESE(String vIETNAMESE) {
+	    VIETNAMESE = vIETNAMESE;
 	}
 
-	public String getUNIT()
-	{
-		return UNIT;
+	public String getWorkFTime() {
+	    return WorkFTime;
 	}
 
-	public void setUNIT(String uNIT)
-	{
-		UNIT = uNIT;
+	public void setWorkFTime(String workFTime) {
+	    WorkFTime = workFTime;
 	}
 
-	public String getEMPLOYEENO()
-	{
-		return EMPLOYEENO;
+	public String getWorkETime() {
+	    return WorkETime;
 	}
 
-	public void setEMPLOYEENO(String eMPLOYEENO)
-	{
-		EMPLOYEENO = eMPLOYEENO;
+	public void setWorkETime(String workETime) {
+	    WorkETime = workETime;
 	}
+
+	public String getNIGHTSHIFT() {
+	    return NIGHTSHIFT;
+	}
+
+	public void setNIGHTSHIFT(String nIGHTSHIFT) {
+	    NIGHTSHIFT = nIGHTSHIFT;
+	}
+
+	public String getSUNDAY() {
+	    return SUNDAY;
+	}
+
+	public void setSUNDAY(String sUNDAY) {
+	    SUNDAY = sUNDAY;
+	}
+
+	public String getGALA() {
+	    return GALA;
+	}
+
+	public void setGALA(String gALA) {
+	    GALA = gALA;
+	}
+
+	
+
+	
 	
 }

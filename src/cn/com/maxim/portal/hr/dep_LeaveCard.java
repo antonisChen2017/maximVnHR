@@ -24,8 +24,8 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 /**
@@ -59,13 +59,18 @@ public class dep_LeaveCard extends TemplatePortalPen
 					if (actText.equals("QUE")) {
 						lcVo.setShowDataTable(true);
 						lcVo.setSaveButText(keyConts.butSave);
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					
 				
 					
 					if (actText.equals("Save")) {
+					    
 						String msg=DBUtil.getPersonalProcess(con,lcVo);
+						logger.info("msg : " +msg);
+						List<employeeUserRO> lro=getUser(con,UserInformation,request);
+						lcVo.setLogin(lro.get(0).getID());
+						logger.info("setLogin : " +lro.get(0).getID());
 						if(msg.equals("o")){
 							String depLeaveEdit=( String)request.getSession().getAttribute("depLeaveEdit");
 							if(depLeaveEdit.equals("Update")){
@@ -110,14 +115,18 @@ public class dep_LeaveCard extends TemplatePortalPen
 						}
 						lcVo.setSaveButText(keyConts.butSave);
 						request.getSession().setAttribute("depLeaveEdit","Save");
-						showHtml(con, out,  lcVo,UserInformation);
+						showHtml(con, out,  lcVo,UserInformation,request);
 						
 					}
 					if (actText.equals("Delete")) {
 						String rowID = request.getParameter("rowID");
 						//delete 請假單
-						logger.info("請假卡 員工/Save : Delete: " +lcVo.toString());
+						logger.info("請假卡 : Delete: " +SqlUtil.delDBRow(keyConts.dbTableCR,rowID));
+						List<employeeUserRO> lro= getUser(con,UserInformation,request);
+						logger.info("請假卡 : Delete people: " +lro.get(0).getID());
+						
 						boolean flag=DBUtil.delDBTableRow(SqlUtil.delDBRow(keyConts.dbTableCR,rowID),con);
+						
 						lcVo.setShowDataTable(true);
 						lcVo.setSaveButText(keyConts.butSave);
 						if(flag){
@@ -126,16 +135,17 @@ public class dep_LeaveCard extends TemplatePortalPen
 							lcVo.setMsg("刪除失敗!");
 						}
 					
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 					}
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 員工/Save : Refer: " +lcVo.toString());
 						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
-						leaveCardDAO.deptProcessEmail(con,lcVo);
+						/**20170802暫時不寄信**/
+						//leaveCardDAO.deptProcessEmail(con,lcVo);
 						lcVo.setShowDataTable(true);
 						lcVo.setSaveButText(keyConts.butSave);
-						showHtml(con, out, lcVo,UserInformation);
+						showHtml(con, out, lcVo,UserInformation,request);
 						
 					}
 					if (actText.equals("Update"))//送交
@@ -150,7 +160,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 						lcVo.setSaveButText(keyConts.butUpdate);
 						lcVo.setMsg(keyConts.editLeaveTip);
 						request.getSession().setAttribute("depLeaveEdit","Update");
-						showHtml(con, out,  lcVo,UserInformation);	
+						showHtml(con, out,  lcVo,UserInformation,request);	
 					}
 					
 				}else{
@@ -175,7 +185,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 					lcVo.setSearchRole(keyConts.EmpRoleE);
 					lcVo.setSaveButText(keyConts.butSave);
 					request.getSession().setAttribute("depLeaveEdit","query");
-					showHtml(con, out, lcVo,UserInformation);
+					showHtml(con, out, lcVo,UserInformation,request);
 				
 				}
 		}catch (Exception err)
@@ -219,9 +229,9 @@ public class dep_LeaveCard extends TemplatePortalPen
 			 otVo.setSearchEmployeeNo("0");
 			 //只能查出員工
 			 if(searchUnit.equals("0")){
-				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "' and role='E'  ";
+				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "'   ";
 			 }else{
-				 subSql=" UNIT_ID ='" + searchUnit + "' and role='E'  ";
+				 subSql=" UNIT_ID ='" + searchUnit + "'   ";
 			 }
 			// System.out.println("subSql : "+subSql);
 			try
@@ -261,17 +271,11 @@ public class dep_LeaveCard extends TemplatePortalPen
 	 	}
 	 }
 	
-		private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation) throws Exception {
+		private void showHtml(Connection con, PrintWriter out, leaveCardVO lcVo , UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
 			employeeUserRO eo=new employeeUserRO();
-			List<employeeUserRO> lro=null;
-	
-			if( lcVo.getSearchEmployee().equals("0")){
-			     lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserInformation.getUserName()) ,eo);	
-			}else{
-				
-			     logger.info("SqlUtil getEmployeeID"+SqlUtil.getEmployeeID(lcVo.getSearchEmployee()));
-				 lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeID(lcVo.getSearchEmployee()) ,eo);	
-			}
+			//List<employeeUserRO> lro=null;
+			List<employeeUserRO> lro=getUser(con,UserInformation,request);
+		
 			String UnitSql="";
 			if(lcVo.getSearchDepartmen( ).equals("0")){
 				UnitSql=" DEPARTMENT_ID='0' ";
@@ -315,6 +319,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 			htmlPart1=htmlPart1.replace("<saveButText/>",lcVo.getSaveButText());	
 		 
 			if(lcVo.isShowDataTable()){
+			    logger.info("getLeaveCard sql : " +SqlUtil.getLeaveCard(lcVo));
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
 						SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageEmpUnitList));
 			}
@@ -350,5 +355,26 @@ public class dep_LeaveCard extends TemplatePortalPen
 			lcVo.setSearchDepartmen(ero.get(0).getDEPARTMENT());
 			lcVo.setSearchUnit(ero.get(0).getUNIT());
 		 return lcVo;
+	 }
+	 
+	 /**
+	  * 切換成員
+	  * @param con
+	  * @param UserInformation
+	  * @param request
+	  * @return
+	  */
+	 private  List<employeeUserRO> getUser(Connection con,UserDescriptor UserInformation,HttpServletRequest request){
+		 	employeeUserRO eo=new employeeUserRO();
+			String UserName="";
+			String employeeNoSys=( String)request.getSession().getAttribute("employeeNoSys");
+			if(employeeNoSys!=null && !employeeNoSys.equals("")){
+					UserName=employeeNoSys;				
+			}else{
+				UserName=UserInformation.getUserTelephone();
+			}
+			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
+			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
+			return lro;
 	 }
 }

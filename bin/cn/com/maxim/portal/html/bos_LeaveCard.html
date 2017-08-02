@@ -134,7 +134,8 @@
 </div>
 <div class="form-actions right">  
 <button class="btn btn-primary " onclick="ActionForm.act.value='NUE';ActionForm.submit();" type="button">未审核列表</button> 
-<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">已审核列表</button> 
+<button class="btn  btn-warning "   onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">已审核列表</button> 
+<button id='allButton'    class="btn btn-success "  style='display: none;'  onclick="subAll()" type="button">全部审核</button> 
 </div></FORM> 
 <msg/>
 </div> 
@@ -250,7 +251,25 @@ jQuery(document).ready(function() {
 	   
 		});
    
-  		
+ //判斷全部審核按鈕需不需要出現
+   var html="";
+   var index=0;
+	$("#data_table_1 tr").each(function(){
+		var $MerchandiseIdTd = $("td:eq(13)",$(this) );//商品ID
+		var html=$MerchandiseIdTd.html();
+	
+		 if (typeof(html) != "undefined"){
+			 var str2="button";
+			 index=  html.indexOf(str2); 
+		 }
+	});
+
+   if(index>0  ){
+  // alert('1');
+   	$("#allButton").show();
+   }else{
+   	$("#allButton").hide();
+   }
 });
 
 
@@ -291,6 +310,39 @@ function    checkNO(){
 
 	ActionForm.act.value='R';  
 	ActionForm.submit();   
+}  
+
+
+function   subAll(){  
+
+	ActionForm.act.value='ALL';
+	var id="";
+	$("#data_table_1 tr").each(function(){
+		var $MerchandiseIdTd = $("td:eq(13)",$(this) );//商品ID
+		var html=$MerchandiseIdTd.html();
+	
+		 if (typeof(html) != "undefined"){
+			 var str2="k=";
+				var index=  html.indexOf(str2); 
+		     //   alert("index="+ index);
+		        html=  html.substring(index, index+22);
+		    //	 alert("shtml="+ html);
+		        var str3=")";
+				var index2=  html.indexOf(str3); 
+		      //  alert("index2="+ index2);
+		        html=  html.substring(0, index2);
+		      //  alert("id="+ html);
+		        html=  html.replace('upReturn(', '');
+		        html=  html.replace('k="', '');
+		    //    alert("id2="+ html);
+		        id=id+html+"#";
+		 }
+		
+	});
+	   id=id.substring(0, id.length-1);
+	 //  alert("id="+ id);
+		ActionForm.rowID.value=id; 
+		ActionForm.submit();   
 }  
 
  function    saveData(){  

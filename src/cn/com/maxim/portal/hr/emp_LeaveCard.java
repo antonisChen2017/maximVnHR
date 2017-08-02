@@ -18,14 +18,15 @@ import cn.com.maxim.portal.attendan.ro.exLeaveCardRO;
 import cn.com.maxim.portal.attendan.ro.exOvertimeRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 /**
@@ -67,8 +68,11 @@ public class emp_LeaveCard extends TemplatePortalPen
 					if (actText.equals("Save")) {
 						
 						String msg=DBUtil.getPersonalProcess(con,lcVo);
+						List<employeeUserRO> lro=getUser(con,UserInformation,request);
+						lcVo.setLogin(lro.get(0).getID());
+						
 						if(msg.equals("o")){
-								String empLeaveEdit=( String)request.getSession().getAttribute("empLeaveEdit");
+							 String empLeaveEdit=( String)request.getSession().getAttribute("empLeaveEdit");
 							if(empLeaveEdit.equals("Update")){
 								logger.info("updateEmpOverTime : " +SqlUtil.updateEmpLeavecard(lcVo));
 								boolean flag =DBUtil.updateSql(SqlUtil.updateEmpLeavecard(lcVo), con);
@@ -122,7 +126,10 @@ public class emp_LeaveCard extends TemplatePortalPen
 					if (actText.equals("Delete")) {
 						String rowID = request.getParameter("rowID");
 						//delete 請假單
-						logger.info("請假卡 部门人員申請/Delete  " +lcVo.toString());
+						logger.info("請假卡 : Delete: " +SqlUtil.delDBRow(keyConts.dbTableCR,rowID));
+						List<employeeUserRO> lro= getUser(con,UserInformation,request);
+						logger.info("請假卡 : Delete people: " +lro.get(0).getID());
+						
 						boolean flag=DBUtil.delDBTableRow(SqlUtil.delDBRow(keyConts.dbTableCR,rowID),con);
 						lcVo.setShowDataTable(true);
 						if(flag){
@@ -140,6 +147,10 @@ public class emp_LeaveCard extends TemplatePortalPen
 						logger.info("請假卡 部门人員申請/Refer  " +lcVo.toString());
 						
 						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
+						lcVo.setRowID(request.getParameter("rowID"));
+						/**2017/08/02 暫時不寄信**/				
+						//leaveCardDAO.deptProcessEmail(con,lcVo);
+						/**2017/08/02 暫時不寄信**/
 						lcVo.setShowDataTable(true);
 						lcVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, lcVo,UserInformation,request);
@@ -225,9 +236,9 @@ public class emp_LeaveCard extends TemplatePortalPen
 			 otVo.setSearchEmployeeNo("0");
 		
 			 if(searchUnit.equals("0")){
-				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "' and role='E'  ";
+				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "'  ";
 			 }else{
-				 subSql=" UNIT_ID ='" + searchUnit + "' and role='E'  ";
+				 subSql=" UNIT_ID ='" + searchUnit + "'  ";
 			 }
 			// System.out.println("subSql : "+subSql);
 			try
@@ -336,7 +347,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 				if(employeeNoSys!=null && !employeeNoSys.equals("")){
 						UserName=employeeNoSys;				
 				}else{
-						UserName=UserInformation.getUserName();
+						UserName=UserInformation.getUserTelephone();
 				}
 				logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
 				List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	

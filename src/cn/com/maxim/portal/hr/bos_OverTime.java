@@ -25,7 +25,11 @@ import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
-
+/**
+ * 
+ * @author Antonis.chen
+ *
+ */
 public class bos_OverTime  extends TemplatePortalPen
 {
 	
@@ -61,18 +65,29 @@ public class bos_OverTime  extends TemplatePortalPen
 						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
 					if (actText.equals("U")) {
-			    		logger.info("加班時數/B : " +otVo.toString());		
-			    		otVo.setStatus("B");
+			    			logger.info("加班時數/B : " +otVo.toString());		
+			    			otVo.setStatus("B");
 						otVo.setMsg(overTimeDAO.deptProcess(con, otVo));		
 						otVo.setShowDataTable(true);
 						otVo.setStatus("U");
 						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
+					if (actText.equals("ALL")) {
+						logger.info("加班全部通過");
+
+						otVo.setShowDataTable(true);
+						otVo.setStatus("B");//審核通過
+						// 儲存db
+						//檢查是否已經權限走到底
+						otVo.setMsg(overTimeDAO.deptAllProcess(con, otVo,request.getParameter("rowID")));
+						otVo.setStatus("D");
+						setHtmlPart1(con, out, otVo,UserInformation,request);
+					}
 					if (actText.equals("R")) {
 						
-				    	logger.info("加班時數/R: " +otVo.toString());		
-				    	otVo.setLeaveApply("2");
-				    	otVo.setStatus("BR");
+					        logger.info("加班時數/R: " +otVo.toString());		
+				    		otVo.setLeaveApply("2");
+				    		otVo.setStatus("BR");
 						DBUtil.updateTimeOverSStatus(otVo, con);
 						DBUtil.updateSql(SqlUtil.setStatusReturnMsg(otVo.getReturnMsg(), request.getParameter("rowID")), con);
 						
@@ -90,6 +105,34 @@ public class bos_OverTime  extends TemplatePortalPen
 						otVo.setStatus("U");
 						setHtmlPart1(con, out, otVo,UserInformation,request);
 					}
+					
+					/**超時加班用-退回**/
+					if (actText.equals("RR")) {
+						
+					        logger.info("超時加班時數/RR: " +otVo.toString());		
+				    		otVo.setLeaveApply("2");
+				    		otVo.setStatus("RR");
+						DBUtil.updateCSstatus(otVo, con);
+						DBUtil.updateSql(SqlUtil.setCSReturnMsg(otVo.getReturnMsg(), request.getParameter("rowID")), con);
+						
+						otVo.setShowDataTable(true);
+						otVo.setStatus("U");
+						setHtmlPart1(con, out, otVo,UserInformation,request);
+					
+					}
+					/**超時加班用- 通過**/
+					if (actText.equals("RB")) {
+						
+					        logger.info("超時加班時數/RB : " +otVo.toString());		
+			    			otVo.setStatus("RB");
+			    			otVo.setLeaveApply("1");
+			    			DBUtil.updateCSstatus(otVo, con);
+						otVo.setMsg(keyConts.okMsg);	
+						otVo.setShowDataTable(true);
+						otVo.setStatus("U");
+						setHtmlPart1(con, out, otVo,UserInformation,request);
+					}
+					
 				}else{
 		
 					otVo.setSearchDepartmen("0");
@@ -97,7 +140,7 @@ public class bos_OverTime  extends TemplatePortalPen
 					otVo.setSearchEmployee("0");
 					otVo.setStartSubmitDate(DateUtil.NowDate());
 					otVo.setEndSubmitDate(DateUtil.NowDate());
-				    otVo.setStartQueryDate(DateUtil.NowDate());
+				        otVo.setStartQueryDate(DateUtil.NowDate());
 					otVo.setEndQueryDate(DateUtil.NowDate());
 					otVo.setQueryDate(DateUtil.NowDate());
 					otVo.setStatus("U");
@@ -182,7 +225,7 @@ public class bos_OverTime  extends TemplatePortalPen
 			if(employeeNoSys!=null && !employeeNoSys.equals("")){
 					UserName=employeeNoSys;				
 			}else{
-					UserName=UserInformation.getUserName();
+				UserName=UserInformation.getUserTelephone();
 			}
 			logger.info(" sql getEmployeeNameDate="+SqlUtil.getEmployeeNODate(UserName));
 			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	

@@ -13,6 +13,6 @@ SELECT
   where u.ID=h.UNIT_ID 
   and d.ID=h.DEPARTMENT_ID
   and r.ID=h.ROLE
-  and Romance is null
+  --and Romance is null
   and ROLE='<ROLE/>'
   ORDER BY EMAIL DESC

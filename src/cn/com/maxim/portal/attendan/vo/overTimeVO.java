@@ -14,8 +14,10 @@ public class overTimeVO implements Serializable
 	private static final long serialVersionUID = -8717143017939146669L;
 	/**部门 */
 	private String searchDepartmen;
-	/** 加班日期 */
+	/** 加班日期開始 */
 	private String queryDate;
+	/** 加班日期結束 */
+	private String queryDateTwo;
 	/**单位 */
 	private String searchUnit;
 	/**加班原因 */
@@ -84,8 +86,46 @@ public class overTimeVO implements Serializable
 	private String saveButText;
 	/**請假成功記號 */
 	private String leaveApply;
-	
-	
+	/**紀錄加班操作員帳號 */
+	private String Login;
+	/**紀錄寄信狀態 */
+	private String EMAIL_STATUS;
+	/**員工身分 */
+	private String searchRole;
+
+	public String getQueryDateTwo() {
+	    return queryDateTwo;
+	}
+	public void setQueryDateTwo(String queryDateTwo) {
+	    this.queryDateTwo = queryDateTwo;
+	}
+	public String getSearchRole() {
+	    return searchRole;
+	}
+	public void setSearchRole(String searchRole) {
+	    this.searchRole = searchRole;
+	}
+	public String getEMAIL_STATUS() {
+	    return EMAIL_STATUS;
+	}
+	public void setEMAIL_STATUS(String eMAIL_STATUS) {
+	    EMAIL_STATUS = eMAIL_STATUS;
+	}
+	public String getLogin() {
+	    return Login;
+	}
+	public void setLogin(String login) {
+	    Login = login;
+	}
+	/**是否顯示超時資料申請完成查询結果*/
+	private boolean showfulfillData;
+
+	public boolean isShowfulfillData() {
+	    return showfulfillData;
+	}
+	public void setShowfulfillData(boolean showfulfillData) {
+	    this.showfulfillData = showfulfillData;
+	}
 	public String getLeaveApply()
 	{
 		return leaveApply;

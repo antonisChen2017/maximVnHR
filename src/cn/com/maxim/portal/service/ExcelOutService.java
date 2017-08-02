@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import cn.com.maxim.portal.attendan.ro.CSRepoRO;
 import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
 import cn.com.maxim.portal.attendan.ro.empnumRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
@@ -34,6 +36,7 @@ import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.ExcelUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
+import cn.com.maxim.portal.util.SqlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.keyConts;
 
@@ -42,13 +45,17 @@ public class ExcelOutService  extends HttpServlet{
 	private static final long serialVersionUID = -2665915740474640230L;
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, IllegalAccessException, InvocationTargetException, ParseException {
-		    String _name = request.getParameter("_name");
-		    response.setHeader("Connection", "close");
+            throws ServletException, IOException, IllegalAccessException, InvocationTargetException, Exception {
+		String _name = request.getParameter("_name");
+		response.setHeader("Connection", "close");
 	        response.setHeader("Content-Type", "application/vnd.ms-excel;charset=UTF-8");
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ExcelOutService.class);
+		String rootPath= config.getServletContext().getRealPath("/");
+		
 		if (_name.equals("lateOutEarly")) {
-			 	lateOutEarlyVO eaVo = new lateOutEarlyVO(); 
-				BeanUtils.populate(eaVo,request.getParameterMap());
+			lateOutEarlyVO eaVo = new lateOutEarlyVO(); 
+			BeanUtils.populate(eaVo,request.getParameterMap());
 		     
 		    	String IsLate="",title1="",title2="";
 		        OutputStream out = null;
@@ -63,17 +70,17 @@ public class ExcelOutService  extends HttpServlet{
 			            	  IsLate=eaVo.getQueryYearMonth().split("/")[0]+"年"+eaVo.getQueryYearMonth().split("/")[1]+"月份員工遲到名單";
 			            	//  title1="Tháng "+eaVo.getQueryYearMonth().split("/")[1]+" năm "+eaVo.getQueryYearMonth().split("/")[0]+" nhân viên danh sách cuối";
 			            	  title2=yr.getDEPARTMENT().trim()+eaVo.getQueryYearMonth().split("/")[0]+"年"+eaVo.getQueryYearMonth().split("/")[1]+"月份員工遲到名單";
-						}
-						if( eaVo.getQueryIsLate().equals("2")){
-							 headers = keyConts.earlyExcelheaders.split(",");  
-							  IsLate=eaVo.getQueryYearMonth().split("/")[0]+"年"+eaVo.getQueryYearMonth().split("/")[1]+"月份員工早退名單";
+					}
+					if( eaVo.getQueryIsLate().equals("2")){
+						 headers = keyConts.earlyExcelheaders.split(",");  
+						 IsLate=eaVo.getQueryYearMonth().split("/")[0]+"年"+eaVo.getQueryYearMonth().split("/")[1]+"月份員工早退名單";
 							 // title1="Tháng "+eaVo.getQueryYearMonth().split("/")[1]+" năm "+eaVo.getQueryYearMonth().split("/")[0]+" danh sách các nhân viên về sớm";
-							  title2=yr.getDEPARTMENT().trim()+eaVo.getQueryYearMonth().split("/")[0]+"年"+eaVo.getQueryYearMonth().split("/")[1]+"月份員工早退名單";
-						}
+						 title2=yr.getDEPARTMENT().trim()+eaVo.getQueryYearMonth().split("/")[0]+"年"+eaVo.getQueryYearMonth().split("/")[1]+"月份員工早退名單";
+					}
 		            
 		           // List<yearMonthLateRO> eaRolist=(List<yearMonthLateRO>)request.getSession().getAttribute("eaRolist");
 		            ExcelUtil<yearMonthLateRO> eu = new ExcelUtil<yearMonthLateRO>();
-		            HSSFWorkbook workbook = eu.exportExcel(IsLate,headers,eaRolist,title2,"");
+		            HSSFWorkbook workbook = eu.exportLateEarlyExcel(title2,headers,eaRolist, eaVo,rootPath);
 		            
 		           // String filename = System.currentTimeMillis() + "yearMonthLate.xls";
 		       
@@ -99,20 +106,22 @@ public class ExcelOutService  extends HttpServlet{
 	        OutputStream out = null;
 	        try {
 	        	 String[] headers =null;  
+	        	 String[] twoHeaders =null;  
 	        	 String SearchDepartmen=( String)request.getSession().getAttribute("SearchDepartmen");
 	        	 List<repDailyRO> eaRolist=( List<repDailyRO>)request.getSession().getAttribute("daRolist");
 	        	 repDailyRO ro=eaRolist.get(0);
 	        	 
 			     headers = keyConts.dailyExcelheaders.split(",");  
+			//     twoHeaders = keyConts.dailyTwoExcelheaders.split(",");  
 			     if(SearchDepartmen.equals("0")){
 			    	 title1="全厂"+lcVo.getApplicationDate().split("/")[0]+"年"+lcVo.getApplicationDate().split("/")[1]+"月"+lcVo.getApplicationDate().split("/")[2]+"日考勤表";
 			     }else{
-			     title1=ro.getDEPARTMENT().trim()+lcVo.getApplicationDate().split("/")[0]+"年"+lcVo.getApplicationDate().split("/")[1]+"月"+lcVo.getApplicationDate().split("/")[2]+"日考勤表";
+				 title1=ro.getDEPARTMENT().trim()+lcVo.getApplicationDate().split("/")[0]+"年"+lcVo.getApplicationDate().split("/")[1]+"月"+lcVo.getApplicationDate().split("/")[2]+"日考勤表";
 			     }
 	            
 			   
 	            ExcelUtil<repDailyRO> eu = new ExcelUtil<repDailyRO>();
-	            HSSFWorkbook workbook = eu.exportExcel(title1,headers,eaRolist,title1,"");
+	            HSSFWorkbook workbook = eu.exportDayExcel(title1,headers,twoHeaders,eaRolist,title1,"",lcVo,rootPath);
 	            
 	           // String filename = System.currentTimeMillis() + "daily.xls";
 	            String filename =title1+".xls";
@@ -143,7 +152,7 @@ public class ExcelOutService  extends HttpServlet{
 				   
 				    
 			         ExcelUtil<repAttendanceRO> eu = new ExcelUtil<repAttendanceRO>();
-			         HSSFWorkbook workbook = eu.exportExcel(title1,headers,eaRolist,title1,"");
+			         HSSFWorkbook workbook = eu.exportMonthExcel(title1,headers,eaRolist,raVo,rootPath);
 			         
 			         String filename =title1+".xls";
 				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
@@ -186,7 +195,7 @@ public class ExcelOutService  extends HttpServlet{
 				 
 				     empnumheaders = keyConts.empnumheaders.split(",");    
 			         ExcelUtil<dayAttendanceRO> eu = new ExcelUtil<dayAttendanceRO>();
-			         HSSFWorkbook workbook = eu.exportTwoExcel(title1,headers,empnumheaders,daRolist,eRolist,title1,"",blueRow);
+			         HSSFWorkbook workbook = eu.exportTwoExcel(title1,headers,empnumheaders,daRolist,eRolist,title1,"",blueRow,lcVo,rootPath);
 			         String filename =title1+".xls";
 				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
 			         out = response.getOutputStream();  
@@ -196,6 +205,41 @@ public class ExcelOutService  extends HttpServlet{
 		                out.close();
 		            }
 		        }
+		}
+		
+		
+		/**
+		 * CS報表
+		 */
+		if (_name.equals("CSReport")) {
+		    	repAttendanceVO raVo = new repAttendanceVO(); 
+			BeanUtils.populate(raVo,request.getParameterMap());
+		
+		        String title1="";
+		        OutputStream out = null;
+		        try {
+		        	 String[] headers =null;  
+		        	  List<CSRepoRO> eaRolist=( List<CSRepoRO>)request.getSession().getAttribute("raRolist");
+		        	  String  Departmen= (String)request.getSession().getAttribute("Departmen");
+		        	  
+				      title1=Departmen.trim()+raVo.getQueryYearMonth().split("/")[0]+"年"+raVo.getQueryYearMonth().split("/")[1]+"月分考勤表";
+				
+				    
+			         ExcelUtil<CSRepoRO> eu = new ExcelUtil<CSRepoRO>();
+			         HSSFWorkbook workbook = eu.CSReportExcel(title1,eaRolist,raVo,rootPath);
+			         
+			         String filename =title1+".xls";
+				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
+					 
+					  
+			         out = response.getOutputStream();  
+			         workbook.write(out);  
+		        } finally {
+		            if(out!=null){
+		                out.close();
+		            }
+		        }
+			
 		}
 	
 		
@@ -212,7 +256,10 @@ public class ExcelOutService  extends HttpServlet{
         }
     }
 
-    
+    private ServletConfig config;
+    public void init(ServletConfig config) throws ServletException {
+        this.config = config;
+    }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

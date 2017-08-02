@@ -432,7 +432,7 @@ public class ad_editProcessDAO
 		DBUtil.updateSql(SqlUtil.updateLeaveCardProcess(epEU),con);
 		
 		/**單位主管三天以下**/
-		logger.info("updateDeptProcess OneUID : "+edVo.getOneUID());
+		logger.info("單位主管三天以下 OneUID : "+edVo.getOneUID());
 		editProcessRO epMD=new editProcessRO();
 		epMD.setDept(edVo.getDept());
 		epMD.setUnit(edVo.getUnit());
@@ -453,14 +453,16 @@ public class ad_editProcessDAO
 		    epMD.setSingRoleL3EP("");
 		}else{
 		    epMD.setSingRoleL3("1");
-			epMD.setSingRoleL3EP(edVo.getOneULever3());
+		    epMD.setSingRoleL3EP(edVo.getOneULever3());
 		}
-		if(edVo.getThreeULever4().equals("0")){
+		
+		logger.info("單位主管三天以下   NO SAVE edVo.getOneULever4() :  "+edVo.getOneULever4());
+		if(edVo.getOneULever4().equals("0")){
 		    epMD.setSingRoleL4("0");
 		    epMD.setSingRoleL4EP("");
 		}else{
 		    epMD.setSingRoleL4("1");
-		    epMD.setSingRoleL4EP(edVo.getThreeULever4());
+		    epMD.setSingRoleL4EP(edVo.getOneULever4());
 		}
 		epMD.setOneTitle("");
 		epMD.setTwoTitle("");
@@ -522,7 +524,7 @@ public class ad_editProcessDAO
 		editProcessRO epEU=new editProcessRO();
 		edVo.setStatus(keyConts.processStatus0);
 		edVo.setRole(keyConts.EmpRoleE);
-		logger.info("queryDeptLeaveData "+SqlUtil.queryDeptLeaveData(edVo));
+	
 		List<editProcessRO> oneE=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epEU);
 		edVo.setOneEID(oneE.get(0).getID());
 		edVo.setOneELever1(oneE.get(0).getSingRoleL1EP());
@@ -543,10 +545,18 @@ public class ad_editProcessDAO
 		edVo.setRole(keyConts.EmpRoleU);
 		logger.info("單位主管三天以下"+SqlUtil.queryDeptLeaveData(edVo));
 		List<editProcessRO>oneU=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epEU);
+		logger.info("oneU.size() "+oneU.size());
+		if(oneU.size()>0){
 		edVo.setOneUID(oneU.get(0).getID());
 		edVo.setOneULever2(oneU.get(0).getSingRoleL2EP());
 		edVo.setOneULever3(oneU.get(0).getSingRoleL3EP());
 		edVo.setOneULever4(oneU.get(0).getSingRoleL4EP());
+		}else{
+		    edVo.setOneUID("");
+			edVo.setOneULever2("");
+			edVo.setOneULever3("");
+			edVo.setOneULever4("");
+		}
 		/**單位主管三天以上**/
 		edVo.setStatus(keyConts.processStatus1);
 		List<editProcessRO> threeU=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epEU);
@@ -561,29 +571,54 @@ public class ad_editProcessDAO
 		edVo.setStatus(keyConts.processStatus0);
 		edVo.setRole(keyConts.EmpRoleD);
 		List<editProcessRO> oneD=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epDD);
-		edVo.setOneDID(oneD.get(0).getID());
-		edVo.setOneDLever3(oneD.get(0).getSingRoleL3EP());
-		edVo.setOneDLever4(oneD.get(0).getSingRoleL4EP());
+		logger.info("oneD.size() "+oneD.size());
+		if(oneD.size()>0){
+        		edVo.setOneDID(oneD.get(0).getID());
+        		edVo.setOneDLever3(oneD.get(0).getSingRoleL3EP());
+        		edVo.setOneDLever4(oneD.get(0).getSingRoleL4EP());
+		}else{
+			edVo.setOneDID("");
+        		edVo.setOneDLever3("");
+        		edVo.setOneDLever4("");
+		}
 		/**部門主管三天以上**/
 		edVo.setStatus(keyConts.processStatus1);
 		List<editProcessRO> threeD=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epDD);
-		edVo.setThreeDID(threeD.get(0).getID());
-		edVo.setThreeDLever3(threeD.get(0).getSingRoleL3EP());
-		edVo.setThreeDLever4(threeD.get(0).getSingRoleL4EP());
+		if(threeD.size()>0){
+			edVo.setThreeDID(threeD.get(0).getID());
+			edVo.setThreeDLever3(threeD.get(0).getSingRoleL3EP());
+			edVo.setThreeDLever4(threeD.get(0).getSingRoleL4EP());
+		}else{
+		    	edVo.setThreeDID("");
+			edVo.setThreeDLever3("");
+			edVo.setThreeDLever4("");
+		}
+	
 	
 		/**经理三天以下**/
 		edVo.setStatus(keyConts.processStatus0);
 		edVo.setRole(keyConts.EmpRoleM);
 		List<editProcessRO>oneM=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epDD);
-		edVo.setOneMID(oneM.get(0).getID());
-		edVo.setOneMLever4(oneM.get(0).getSingRoleL4EP());
+		logger.info("oneM.size() "+oneM.size());
+		if(oneM.size()>0){
+			edVo.setOneMID(oneM.get(0).getID());
+			edVo.setOneMLever4(oneM.get(0).getSingRoleL4EP());
+		}else{
+			edVo.setOneMID("");
+			edVo.setOneMLever4("");
+		}
+	
 		/**经理三天以上**/
 		edVo.setStatus(keyConts.processStatus1);
 		List<editProcessRO> threeM=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epDD);
-		edVo.setThreeMID(threeM.get(0).getID());
-		edVo.setThreeMLever4(threeM.get(0).getSingRoleL4EP());
-		
-	
+		logger.info("threeM.size() "+threeM.size());
+		if(threeM.size()>0){
+			edVo.setThreeMID(threeM.get(0).getID());
+			edVo.setThreeMLever4(threeM.get(0).getSingRoleL4EP());
+		}else{
+			edVo.setThreeMID("");
+			edVo.setThreeMLever4("");
+		}
 		return edVo;
 	}
 	
@@ -632,7 +667,7 @@ public class ad_editProcessDAO
 		}
 		epED.setOneTitle("");
 		epED.setTwoTitle("");
-		logger.info("insterDeptLerveRole  "+SqlUtil.insterDeptLerveRole(epED));
+		
 		DBUtil.updateSql(SqlUtil.insterDeptLerveRole(epED), con);
 		
 		
@@ -661,6 +696,8 @@ public class ad_editProcessDAO
         	    epUD.setSingRoleL3("1");
         	    epUD.setSingRoleL3EP(edVo.getOneULever3());
         	}
+        	
+        	logger.info("   NO SAVE edVo.getOneULever4() :  "+edVo.getOneULever4());
         	if(edVo.getOneULever4().equals("0")){
         	    epUD.setSingRoleL4("0");
         	    epUD.setSingRoleL4EP("");

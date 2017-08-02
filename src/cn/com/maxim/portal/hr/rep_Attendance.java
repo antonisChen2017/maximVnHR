@@ -26,10 +26,10 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.TranslateConsts;
+import cn.com.maxim.potral.consts.UrlUtil;
 
 /**
  * 月份考勤綜合表
@@ -110,7 +110,7 @@ public class rep_Attendance extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<queryYearMonth/>",HtmlUtil.getYearMonthDiv("queryYearMonth",raVo.getQueryYearMonth()));
 		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	ControlUtil.drawChosenSelect(con,  "searchDepartmen", "VN_DEPARTMENT", "ID", "DEPARTMENT", null ,raVo.getSearchDepartmen( ),false,null));
 		if(raVo.isShowDataTable()){
-		    logger.info("getMonthReport : "+SqlUtil.getMonthReport(con,raVo));
+		//    logger.info("getMonthReport : "+SqlUtil.getMonthReport(con,raVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawRepAttendanceTable(
 					SqlUtil.getMonthReport(con,raVo),HtmlUtil.drawTableMExcelButton(),  con, out,raVo));
 
@@ -120,7 +120,6 @@ public class rep_Attendance extends TemplatePortalPen
 			 request.getSession().setAttribute("Departmen", DBUtil.queryDBField(con,SqlUtil.getDeptName(raVo.getSearchDepartmen()),"DEPARTMENT"));
 			 request.getSession().setAttribute("raRolist", raRolist);
 		}
-		
-		 out.println(TranslateConsts.tw2cn(htmlPart1));
+		 out.println(htmlPart1);
 	    }
 }

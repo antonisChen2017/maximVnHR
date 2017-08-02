@@ -23,11 +23,11 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 import cn.com.maxim.potral.consts.TranslateConsts;
+import cn.com.maxim.potral.consts.UrlUtil;
 /**
  * 每日考勤表
  * @author Antonis.chen
@@ -227,6 +227,7 @@ public class rep_daily extends TemplatePortalPen
 				 logger.info("getDailyExcelSql : "+SqlUtil.getDailyExcelSql(lcVo));
 				 List<repDailyRO> eaRolist=( List<repDailyRO>)DBUtil.queryDailyList(con,SqlUtil.getDailyExcelSql(lcVo),rdRo);
 				 request.getSession().setAttribute("SearchDepartmen", lcVo.getSearchDepartmen( ));
+				 logger.info("eaRolist : "+eaRolist);
 				 request.getSession().setAttribute("daRolist", eaRolist);
 			}
 			 out.println(TranslateConsts.tw2cn(htmlPart1));

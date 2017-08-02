@@ -116,7 +116,7 @@ public class WebDBTableCL extends WebDBTableEx
 		while (this.DBData.next())
 		{
 
-			Sb.append(getDataRowLC(out, "blue", delbut));
+			Sb.append(getDataRowStopWork(out, "blue", delbut));
 
 			if (i == this.OutPutRowCount + 1)
 			{
@@ -155,6 +155,85 @@ public class WebDBTableCL extends WebDBTableEx
 	 * @return
 	 */
 	private String getDataRowLC(PrintWriter out, String TRStyle, String delbut)
+	{
+		StringBuilder Sb = new StringBuilder("");
+		beforeWriteRow(out);
+
+		Sb.append("  <tr > \r");
+		for (Iterator i = this.DBColumns.iterator(); i.hasNext();)
+		{
+			DBColumn col = (DBColumn) i.next();
+			if (col.getColumnVisible())
+			{
+				String Data = getValue(col.ColumnName, true);
+				String TDStyle = col.getColumnStyle();
+				if ((Data == null) || (Data.equals("")))
+				{
+					Data = "&nbsp;";
+				}
+				if (TDStyle.length() > 0)
+				{
+					TDStyle = " class=\"" + TDStyle + "\" ";
+				}
+				if (!col.ColumnName.equals("ID") && !col.ColumnName.equals("MOTime") && !col.ColumnName.equals("returnMSG"))
+				{
+
+					if (col.ColumnName.equals("action"))
+					{
+						String rowID = getValue("ID", true);
+						// String rowaction = getValue("action", true);
+						// String returnMSG = getValue("returnMSG", true);
+
+						// System.out.println("rowaction : "+rowaction);
+						// System.out.println("delbut : "+delbut);
+						// if(returnMSG==null){
+						// returnMSG="";
+						// }
+
+						if (delbut.equals("0"))
+						{
+							Sb.append("<td class=\"text-right   " + TRStyle + "\"  >" + "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='" + rowID + "';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>	 \r");
+						}
+						else
+						{
+							// Sb.append(" <td class=\"text-right "+TRStyle+"\"
+							// data-title='"+ col.ColumnHeader+"'"+ (this.nowrap
+							// ? "nowrap " : "") + TDStyle + ">已提交</td> \r");
+						}
+
+					}
+					else if (col.ColumnName.equals("待料開始时间") || col.ColumnName.equals("待料結束时间"))
+					{
+						Data = Data.substring(0, Data.length() - 3);
+						Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+					}
+					else
+					{
+						Sb.append("    <td class=\"" + TRStyle + "\" data-title='" + col.ColumnHeader + "'" + (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");
+					}
+				}
+
+			}
+		}
+
+		Sb.append("  </tr> \r");
+
+		afterWriteRow(out);
+
+		return Sb.toString();
+	}
+	
+	
+	
+	/**
+	 * 待工卡 tableRow
+	 * 
+	 * @param out
+	 * @param TRStyle
+	 * @param delbut
+	 * @return
+	 */
+	private String getDataRowStopWork(PrintWriter out, String TRStyle, String delbut)
 	{
 		StringBuilder Sb = new StringBuilder("");
 		beforeWriteRow(out);

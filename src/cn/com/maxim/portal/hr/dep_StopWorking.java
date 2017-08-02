@@ -23,12 +23,12 @@ import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
 import cn.com.maxim.portal.util.SqlUtil;
-import cn.com.maxim.portal.util.UrlUtil;
 import cn.com.maxim.portal.util.vnStringUtil;
+import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
 /**
- * 停工申請
+ * 部門員工停工申請
  * @author Antonis.chen
  *
  */
@@ -184,7 +184,7 @@ public class dep_StopWorking extends TemplatePortalPen
 	
 	private void showHtml(Connection con, PrintWriter out, stopWorkVO swVo , UserDescriptor UserInformation) throws SQLException {
 		HtmlUtil hu=new HtmlUtil();
-		String htmlPart1=hu.gethtml(htmlConsts.html_dep_StopWorking);
+		String htmlPart1=hu.gethtml(htmlConsts.html_dem_StopWorking);
 		String DepartmentID=DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo());
 		String UnitSql="";
 		if(swVo.getSearchDepartmen( ).equals("0")){

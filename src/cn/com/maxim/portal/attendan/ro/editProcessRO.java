@@ -153,6 +153,14 @@ public class editProcessRO
 	{
 		SingRoleL4EP = singRoleL4EP;
 	}
+	@Override
+	public String toString() {
+	    return "editProcessRO [ID=" + ID + ", Dept=" + Dept + ", Unit=" + Unit + ", Role=" + Role + ", Status="
+		    + Status + ", SingRoleL1=" + SingRoleL1 + ", SingRoleL2=" + SingRoleL2 + ", SingRoleL3="
+		    + SingRoleL3 + ", SingRoleL4=" + SingRoleL4 + ", SingRoleL1EP=" + SingRoleL1EP + ", SingRoleL2EP="
+		    + SingRoleL2EP + ", SingRoleL3EP=" + SingRoleL3EP + ", SingRoleL4EP=" + SingRoleL4EP + ", oneTitle="
+		    + oneTitle + ", twoTitle=" + twoTitle + "]";
+	}
 	
 	
 	

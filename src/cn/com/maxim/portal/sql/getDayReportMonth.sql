@@ -4,32 +4,36 @@ DAY,
 ,R.[EMPLOYEE]+' '+H.VIETNAMESE as EMPLOYEE
 ,D.ID AS DEPARTMENT
 ,U.ID AS UNIT
-,[ATTENDANCE] 
  ,STATUS = 
     CASE 
-       when CONVERT(float,[HOLIDAYI])>0 then '事'
+       when CONVERT(float,[HOLIDAYI])>0 then '伤'
+        when CONVERT(float,[HOLIDAYG])>0 then '调'
        when CONVERT(float,[HOLIDAYB])>0 then '病'
        when CONVERT(float,[HOLIDAYA])>0 then '事'
-       when CONVERT(float,[HOLIDAYC])>0 then '公'
        when CONVERT(float,[HOLIDAYD])>0 then '婚'
        when  CONVERT(float,[HOLIDAYF])>0 then '丧'
        when  CONVERT(float,[HOLIDAYE])>0 then '产'
-       when  CONVERT(float,[HOLIDAYH])>0 then '特'
+       when  CONVERT(float,[HOLIDAYH])>0 then '年'
        when  CONVERT(float,[STOPWORK])>0 then '待'
        when  CONVERT(float,[ATTENDANCE])>0 then '上'
+        when CONVERT(float,[HOLIDAYO])>0 then '公'
        when  CONVERT(float,[NOTWORK])>0 then '旷'
     END 
-,[OVERTIME] 
-,[HOLIDAYH] 
-,[HOLIDAYC] 
-,[HOLIDAYE] 
-,[HOLIDAYD] 
-,[HOLIDAYF] 
-,[HOLIDAYB] 
-,[HOLIDAYA] 
-,[HOLIDAYI] 
+  ,[ATTENDANCE] 
+,[OVERTIME] ,
+   [HOLIDAYH] ,
+	[HOLIDAYI] ,
+	[HOLIDAYE] ,
+	[HOLIDAYD] ,	
+	[HOLIDAYF] ,
+	[HOLIDAYB] ,
+	[HOLIDAYA] ,	
+	[HOLIDAYG] ,
+	[HOLIDAYO] ,
+	[HOLIDAYS] 
 ,[NOTWORK] 
 ,[BELATE] 
+,[EARLY] 
 ,[STOPWORK] 
 ,[MEALS] 
 ,[NOTE] 

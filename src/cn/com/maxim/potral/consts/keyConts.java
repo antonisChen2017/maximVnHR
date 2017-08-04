@@ -168,6 +168,8 @@ public class keyConts
 	  
 	  public static final String processOVTable= "VN_DEPT_OVER_ROLE";
 	  
+	  public static final String processSPTable= "VN_DEPT_STOP_ROLE";
+	  
 	  public static final String processLETable= " VN_DEPT_LEAVE_ROLE";
 	  /**SMTP**/
 	  public static final String EmailSmtp="EMAIL_SMTP";

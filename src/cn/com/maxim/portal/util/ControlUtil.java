@@ -142,6 +142,24 @@ public class ControlUtil
 		return drawCustomSelectShared("drawOLSelect",al,SelectedOption);
 	}
 	
+	public static String drawReportSelect(String  SelectedOption)
+	{
+		ArrayList al =new ArrayList();
+		Hashtable htz=new Hashtable();
+		htz.put("text", "未选择");
+		htz.put("value", "0");
+		al.add(htz);
+		Hashtable ht=new Hashtable();
+		ht.put("text", "月份考勤明細表");
+		ht.put("value", "1");
+		al.add(ht);
+		Hashtable ht1=new Hashtable();
+		ht1.put("text", "月份考勤總表");
+		ht1.put("value", "2");
+		al.add(ht1);
+		
+		return drawCustomSelectShared("drawReportSelect",al,SelectedOption);
+	}
 	
 	
 	public static String drawCustomSelectShared( String Name,ArrayList Options, String SelectedOption)
@@ -153,11 +171,11 @@ public class ControlUtil
 		APCustomSelect.setID(Name);
 		APCustomSelect.setName(Name);
 		
-		logger.info("Options : "+Options);
+		//logger.info("Options : "+Options);
 		for(int i=0;i<Options.size();i++){
 			Hashtable ht=(Hashtable)Options.get(i);
-			logger.info("value : "+(String)ht.get("value"));
-			logger.info("text : "+(String)ht.get("text"));
+		//	logger.info("value : "+(String)ht.get("value"));
+		//	logger.info("text : "+(String)ht.get("text"));
 			APCustomSelect.addOption((String)ht.get("value"),(String) ht.get("text"));
 		}
 		

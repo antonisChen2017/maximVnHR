@@ -79,6 +79,7 @@
 								</div>
 								<div class="form-actions right">
 									<button class="btn btn-success "  onclick="queryTable();" type="button">查询</button>
+									<button id='upExcelBut' class="btn btn-primary "   style='display: none;' onclick="outExecl()" type="button">输出EXCEL</button>
 								</div>
 								</form>
 								<msg />
@@ -138,6 +139,26 @@
 						App.init(); // init layout and core plugins
 						TableAdvanced.init();
 						FormComponents.init();
+						
+						//判斷全部審核按鈕需不需要出現
+						   var html="";
+						   var index=0;
+							$("#data_table_all tr").each(function(){
+								var $MerchandiseIdTd = $("td:eq(0)",$(this) );//商品ID
+								var html=$MerchandiseIdTd.html();
+							
+								 if (typeof(html) != "undefined"){
+									 index=1;
+								 }
+							});
+
+						   if(index>0  ){
+						  // alert('1');
+						   	$("#upExcelBut").show();
+						   }else{
+						   	$("#upExcelBut").hide();
+						   }
+						
 					});
 
 					function queryTable() {						

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -19,9 +20,12 @@ import com.alibaba.druid.util.StringUtils;
 
 import cn.com.maxim.DB.DBManager;
 import cn.com.maxim.portal.attendan.ro.CSRepoRO;
+import cn.com.maxim.portal.attendan.ro.checkYearDayRO;
 import cn.com.maxim.portal.attendan.ro.configRO;
 import cn.com.maxim.portal.attendan.ro.dayAttendanceExcelRO;
 import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
+import cn.com.maxim.portal.attendan.ro.dayCReportRO;
+import cn.com.maxim.portal.attendan.ro.dayMaxReportRO;
 import cn.com.maxim.portal.attendan.ro.dayPlantRO;
 import cn.com.maxim.portal.attendan.ro.dayReportRO;
 import cn.com.maxim.portal.attendan.ro.editProcessRO;
@@ -40,6 +44,9 @@ import cn.com.maxim.portal.attendan.ro.processUserRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceDayRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.ro.repDailyRO;
+import cn.com.maxim.portal.attendan.ro.repMonthDetailRO;
+import cn.com.maxim.portal.attendan.ro.repMonthExcelDetailRO;
+import cn.com.maxim.portal.attendan.ro.repMonthTotalRO;
 import cn.com.maxim.portal.attendan.ro.supervisorRO;
 import cn.com.maxim.portal.attendan.ro.workDateRO;
 import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
@@ -51,6 +58,7 @@ import cn.com.maxim.portal.attendan.wo.EmailWO;
 import cn.com.maxim.portal.attendan.wo.dayAttendanceWO;
 import cn.com.maxim.portal.attendan.wo.monthReportNoteWO;
 import cn.com.maxim.portal.attendan.wo.monthSumDataWo;
+import cn.com.maxim.portal.attendan.wo.monthSumTotalWo;
 import cn.com.maxim.portal.bean.dayTableMoble;
 import cn.com.maxim.portal.bean.repAttendanceDayBean;
 import cn.com.maxim.portal.dao.leaveCardDAO;
@@ -1485,6 +1493,71 @@ public class DBUtil
 		return leo;
 	}
 
+	/**
+	 * 查询月考勤報表excel資料
+	 * 
+	 * @param con
+	 * @param sql
+	 * @param er
+	 * @return
+	 */
+	public static List<repMonthTotalRO> queryMonthTotalExcel(Connection con, String sql, repMonthTotalRO rd)
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<repMonthTotalRO> leo = null;
+		 logger.info("queryMonthTotalExcel sql  : "+sql);
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<repMonthTotalRO>) rh.getBean(rs, rd);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		
+		
+		return leo;
+	}
+	
+	/**
+	 * 查询月考勤報表excel資料
+	 * 
+	 * @param con
+	 * @param sql
+	 * @param er
+	 * @return
+	 */
+	public static List<repMonthExcelDetailRO> queryMonthDetailExcel(Connection con, String sql,    repMonthExcelDetailRO rd)
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<repMonthExcelDetailRO> leo = null;
+		 logger.info("queryMonthTotalExcel sql  : "+sql);
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<repMonthExcelDetailRO>) rh.getBean(rs, rd);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		
+		
+		return leo;
+	}
 	
 	
 	/**
@@ -2145,12 +2218,817 @@ public class DBUtil
 	}
 	
 	/**
+	 * 查詢月份考勤總表並改寫內容
+	 * @param con
+	 * @param otVo
+	 * @throws Exception
+	 */
+	public static void dayReportTotalMax(Connection con, leaveCardVO lcVo) {
+	
+		
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		boolean flag=false;
+		HtmlUtil hu=new HtmlUtil();
+	
+		String Sql=hu.gethtml(sqlConsts.sql_getDayReptData);
+		Sql=Sql.replace("<DAY/>", lcVo.getApplicationDate());
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+		    Sql = Sql.replace("<DEPARTMENT/>", " 1=1");
+		}
+		else
+		{
+		    Sql = Sql.replace("<DEPARTMENT/>", " D.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+		    Sql = Sql.replace("<UNIT/>", " 1=1");
+		}
+		else
+		{
+		    Sql = Sql.replace("<UNIT/>", "  U.ID='" + lcVo.getSearchUnit() + "'  ");
+		}
+		logger.info("dayReportAlter Sql : "+ Sql);
+		dayMaxReportRO er=new dayMaxReportRO();
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<dayMaxReportRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(Sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<dayMaxReportRO>) rh.getBean(rs, er);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		String sNotWork="";
+		for( int i=0;i< leo.size();i++){
+		//	logger.info("  leo.get(i) "+ leo.get(i));
+			/**如果有遲到 減少上班時數 START**/
+			double  fAttendance=0;
+			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
+				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+			}
+			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")  ){
+				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
+				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fBelateCount= NumberUtil.getBelate(fBelate);
+				 fAttendance=  fAttendance-fBelateCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fBelate!=0 ){
+					 updateSql(SqlUtil.updateDayReportDetailAttendance(leo.get(i).getDAY(),fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+		
+			
+			/**如果有早退 減少上班時數 START
+			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
+				double  fEarly=Float.parseFloat(leo.get(i).getEARLY());
+				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fEarlyCount= NumberUtil.getBelate(fEarly);
+				 fAttendance=  fAttendance-fEarlyCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fEarly!=0 ){
+					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+			如果有早退 減少上班時數 END**/
+			
+			/**如果出勤 扣掉曠工 START
+			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
+				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
+				 double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fBelateCount= NumberUtil.getBelate(fBelate);
+				 fAttendance=  fAttendance-fBelateCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fBelate!=0 && fAttendance<8){
+					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+			如果出勤 扣掉曠工 START**/
+			
+			/**如果有休假就扣掉曠工 START**/
+			//logger.info(" getNOTWORK  "+ leo.get(i).getNOTWORK());
+			if(!leo.get(i).getNOTWORK().equals("") || leo.get(i).getNOTWORK()==null){
+				 double  dNotWork=Float.parseFloat(leo.get(i).getNOTWORK());
+				 /**事假**/
+				if( leo.get(i).getHOLIDAYA()!=null && !leo.get(i).getHOLIDAYA().equals("")){
+					double  dHolidayA=Float.parseFloat(leo.get(i).getHOLIDAYA());
+					dNotWork= dNotWork-dHolidayA;
+			//		logger.info("a dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+						//logger.info("a dNotWork  "+ dNotWork);
+					 if(dHolidayA!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**病假**/
+				if( leo.get(i).getHOLIDAYB()!=null && !leo.get(i).getHOLIDAYB().equals("")){
+	
+					double  dHolidayB=Float.parseFloat(leo.get(i).getHOLIDAYB());
+					dNotWork= dNotWork-dHolidayB;
+				//	logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("b dNotWork  "+ dNotWork);
+					 if(dHolidayB!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				
+				 /**公假**/
+				if( leo.get(i).getHOLIDAYO()!=null && !leo.get(i).getHOLIDAYO().equals("")){
+				    logger.info("  公假 .getHOLIDAYO()"+ leo.get(i).getHOLIDAYO());
+					double  dHolidayO=Float.parseFloat(leo.get(i).getHOLIDAYO());
+					logger.info("  dHolidayO"+dHolidayO);
+					dNotWork= dNotWork-dHolidayO;
+					logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+						logger.info("sNotWork  "+ sNotWork);
+					 if(dHolidayO!=0 & dNotWork<=8){
+						logger.info("updateDayReportdNotWork  更新 公假"+SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()));
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**工傷假
+				logger.info(" getHOLIDAYI  "+ leo.get(i).getHOLIDAYI());
+				if( leo.get(i).getHOLIDAYI()!=null && !leo.get(i).getHOLIDAYI().equals("")){
+	
+					double  dHolidayI=Float.parseFloat(leo.get(i).getHOLIDAYI());
+					dNotWork= dNotWork-dHolidayI;
+				//	logger.info(" c dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("c dNotWork  "+ dNotWork);
+					 if(dHolidayI!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				**/
+				 /**婚假**/
+				if( leo.get(i).getHOLIDAYD()!=null && !leo.get(i).getHOLIDAYD().equals("")){
+	
+					double  dHolidayD=Float.parseFloat(leo.get(i).getHOLIDAYD());
+					dNotWork= dNotWork-dHolidayD;
+					//logger.info("d dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//	 logger.info("d dNotWork  "+ dNotWork);
+					 if(dHolidayD!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**產假**/
+				if( leo.get(i).getHOLIDAYE()!=null && !leo.get(i).getHOLIDAYE().equals("")){
+	
+					double  dHolidayE=Float.parseFloat(leo.get(i).getHOLIDAYE());
+					dNotWork= dNotWork-dHolidayE;
+				//	logger.info("e dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//	 logger.info("e dNotWork  "+ dNotWork);
+					 if(dHolidayE!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**喪假**/
+				if( leo.get(i).getHOLIDAYF()!=null && !leo.get(i).getHOLIDAYF().equals("")){
+	
+					double  dHolidayF=Float.parseFloat(leo.get(i).getHOLIDAYF());
+					dNotWork= dNotWork-dHolidayF;
+				//	logger.info("f dNotWork  "+ dNotWork);
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("f dNotWork  "+ dNotWork);
+					 if(dHolidayF!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**年假**/
+				if( leo.get(i).getHOLIDAYH()!=null && !leo.get(i).getHOLIDAYH().equals("")){
+	
+					double  dHolidayH=Float.parseFloat(leo.get(i).getHOLIDAYH());
+					dNotWork= dNotWork-dHolidayH;
+				//	logger.info("h dNotWork  "+ String.valueOf(dNotWork));
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("h dNotWork  "+ dNotWork);
+					 if(dHolidayH!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+			
+				
+			}
+			/**如果有休假就扣掉曠工 END**/
+		}
+		
+	}
+	
+	
+	/**
+	 * 查詢月份考勤明細表並改寫內容
+	 * @param con
+	 * @param otVo
+	 * @throws Exception
+	 */
+	public static void dayReportMax(Connection con, leaveCardVO lcVo) {
+	
+		
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		boolean flag=false;
+		HtmlUtil hu=new HtmlUtil();
+	
+		String Sql=hu.gethtml(sqlConsts.sql_getDayReptData);
+		Sql=Sql.replace("<DAY/>", lcVo.getApplicationDate());
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+		    Sql = Sql.replace("<DEPARTMENT/>", " 1=1");
+		}
+		else
+		{
+		    Sql = Sql.replace("<DEPARTMENT/>", " D.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+		    Sql = Sql.replace("<UNIT/>", " 1=1");
+		}
+		else
+		{
+		    Sql = Sql.replace("<UNIT/>", "  U.ID='" + lcVo.getSearchUnit() + "'  ");
+		}
+		logger.info("dayReportAlter Sql : "+ Sql);
+		dayMaxReportRO er=new dayMaxReportRO();
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<dayMaxReportRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(Sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<dayMaxReportRO>) rh.getBean(rs, er);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		String sNotWork="";
+		for( int i=0;i< leo.size();i++){
+		//	logger.info("  leo.get(i) "+ leo.get(i));
+			/**如果有遲到 減少上班時數 START**/
+			double  fAttendance=0;
+			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
+				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+			}
+			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")  ){
+				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
+				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fBelateCount= NumberUtil.getBelate(fBelate);
+				 fAttendance=  fAttendance-fBelateCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fBelate!=0 ){
+					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+		
+			
+			/**如果有早退 減少上班時數 START
+			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
+				double  fEarly=Float.parseFloat(leo.get(i).getEARLY());
+				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fEarlyCount= NumberUtil.getBelate(fEarly);
+				 fAttendance=  fAttendance-fEarlyCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fEarly!=0 ){
+					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+			如果有早退 減少上班時數 END**/
+			
+			/**如果出勤 扣掉曠工 START
+			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
+				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
+				 double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fBelateCount= NumberUtil.getBelate(fBelate);
+				 fAttendance=  fAttendance-fBelateCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fBelate!=0 && fAttendance<8){
+					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+			如果出勤 扣掉曠工 START**/
+			
+			/**如果有休假就扣掉曠工 START**/
+			//logger.info(" getNOTWORK  "+ leo.get(i).getNOTWORK());
+			if(!leo.get(i).getNOTWORK().equals("") || leo.get(i).getNOTWORK()==null){
+				 double  dNotWork=Float.parseFloat(leo.get(i).getNOTWORK());
+				 /**事假**/
+				if( leo.get(i).getHOLIDAYA()!=null && !leo.get(i).getHOLIDAYA().equals("")){
+					double  dHolidayA=Float.parseFloat(leo.get(i).getHOLIDAYA());
+					dNotWork= dNotWork-dHolidayA;
+			//		logger.info("a dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+						//logger.info("a dNotWork  "+ dNotWork);
+					 if(dHolidayA!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**病假**/
+				if( leo.get(i).getHOLIDAYB()!=null && !leo.get(i).getHOLIDAYB().equals("")){
+	
+					double  dHolidayB=Float.parseFloat(leo.get(i).getHOLIDAYB());
+					dNotWork= dNotWork-dHolidayB;
+				//	logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("b dNotWork  "+ dNotWork);
+					 if(dHolidayB!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				
+				 /**公假**/
+				if( leo.get(i).getHOLIDAYO()!=null && !leo.get(i).getHOLIDAYO().equals("")){
+				    logger.info("  公假 .getHOLIDAYO()"+ leo.get(i).getHOLIDAYO());
+					double  dHolidayO=Float.parseFloat(leo.get(i).getHOLIDAYO());
+					logger.info("  dHolidayO"+dHolidayO);
+					dNotWork= dNotWork-dHolidayO;
+					logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+						logger.info("sNotWork  "+ sNotWork);
+					 if(dHolidayO!=0 & dNotWork<=8){
+						logger.info("updateDayReportdNotWork  更新 公假"+SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()));
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**工傷假
+				logger.info(" getHOLIDAYI  "+ leo.get(i).getHOLIDAYI());
+				if( leo.get(i).getHOLIDAYI()!=null && !leo.get(i).getHOLIDAYI().equals("")){
+	
+					double  dHolidayI=Float.parseFloat(leo.get(i).getHOLIDAYI());
+					dNotWork= dNotWork-dHolidayI;
+				//	logger.info(" c dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("c dNotWork  "+ dNotWork);
+					 if(dHolidayI!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				**/
+				 /**婚假**/
+				if( leo.get(i).getHOLIDAYD()!=null && !leo.get(i).getHOLIDAYD().equals("")){
+	
+					double  dHolidayD=Float.parseFloat(leo.get(i).getHOLIDAYD());
+					dNotWork= dNotWork-dHolidayD;
+					//logger.info("d dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//	 logger.info("d dNotWork  "+ dNotWork);
+					 if(dHolidayD!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**產假**/
+				if( leo.get(i).getHOLIDAYE()!=null && !leo.get(i).getHOLIDAYE().equals("")){
+	
+					double  dHolidayE=Float.parseFloat(leo.get(i).getHOLIDAYE());
+					dNotWork= dNotWork-dHolidayE;
+				//	logger.info("e dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//	 logger.info("e dNotWork  "+ dNotWork);
+					 if(dHolidayE!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**喪假**/
+				if( leo.get(i).getHOLIDAYF()!=null && !leo.get(i).getHOLIDAYF().equals("")){
+	
+					double  dHolidayF=Float.parseFloat(leo.get(i).getHOLIDAYF());
+					dNotWork= dNotWork-dHolidayF;
+				//	logger.info("f dNotWork  "+ dNotWork);
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("f dNotWork  "+ dNotWork);
+					 if(dHolidayF!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**年假**/
+				if( leo.get(i).getHOLIDAYH()!=null && !leo.get(i).getHOLIDAYH().equals("")){
+	
+					double  dHolidayH=Float.parseFloat(leo.get(i).getHOLIDAYH());
+					dNotWork= dNotWork-dHolidayH;
+				//	logger.info("h dNotWork  "+ String.valueOf(dNotWork));
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("h dNotWork  "+ dNotWork);
+					 if(dHolidayH!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+			
+				 /**公假**/
+				if( leo.get(i).getHOLIDAYO()!=null && !leo.get(i).getHOLIDAYO().equals("")){
+	
+					double  dHolidayO=Float.parseFloat(leo.get(i).getHOLIDAYO());
+					dNotWork= dNotWork-dHolidayO;
+				//	logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("b dNotWork  "+ dNotWork);
+					 if(dHolidayO!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+			}
+			/**如果有休假就扣掉曠工 END**/
+		}
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 查詢月份考勤明細表並改寫內容
+	 * @param con
+	 * @param otVo
+	 * @throws Exception
+	 */
+	public static void dayReportDetailMax(Connection con, leaveCardVO lcVo) {
+	
+		
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		boolean flag=false;
+		HtmlUtil hu=new HtmlUtil();
+	
+		String Sql=hu.gethtml(sqlConsts.sql_getDayReptData);
+		Sql=Sql.replace("<DAY/>", lcVo.getApplicationDate());
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+		    Sql = Sql.replace("<DEPARTMENT/>", " 1=1");
+		}
+		else
+		{
+		    Sql = Sql.replace("<DEPARTMENT/>", " D.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+		    Sql = Sql.replace("<UNIT/>", " 1=1");
+		}
+		else
+		{
+		    Sql = Sql.replace("<UNIT/>", "  U.ID='" + lcVo.getSearchUnit() + "'  ");
+		}
+		logger.info("dayReportAlter Sql : "+ Sql);
+		dayMaxReportRO er=new dayMaxReportRO();
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<dayMaxReportRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(Sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<dayMaxReportRO>) rh.getBean(rs, er);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		String sNotWork="";
+		for( int i=0;i< leo.size();i++){
+		//	logger.info("  leo.get(i) "+ leo.get(i));
+			/**如果有遲到 減少上班時數 START**/
+			double  fAttendance=0;
+			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
+				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+			}
+			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")  ){
+				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
+				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fBelateCount= NumberUtil.getBelate(fBelate);
+				 fAttendance=  fAttendance-fBelateCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fBelate!=0 ){
+					 updateSql(SqlUtil.updateDayReportDetailAttendance(leo.get(i).getDAY(),fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+		
+			
+			/**如果有早退 減少上班時數 START
+			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
+				double  fEarly=Float.parseFloat(leo.get(i).getEARLY());
+				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fEarlyCount= NumberUtil.getBelate(fEarly);
+				 fAttendance=  fAttendance-fEarlyCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fEarly!=0 ){
+					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+			如果有早退 減少上班時數 END**/
+			
+			/**如果出勤 扣掉曠工 START
+			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
+				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
+				 double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+					double fBelateCount= NumberUtil.getBelate(fBelate);
+				 fAttendance=  fAttendance-fBelateCount;
+				 if(fAttendance<0){
+					 fAttendance=0;
+				 }
+				 if(fBelate!=0 && fAttendance<8){
+					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
+				 }
+			}
+			如果出勤 扣掉曠工 START**/
+			
+			/**如果有休假就扣掉曠工 START**/
+			//logger.info(" getNOTWORK  "+ leo.get(i).getNOTWORK());
+			if(!leo.get(i).getNOTWORK().equals("") || leo.get(i).getNOTWORK()==null){
+				 double  dNotWork=Float.parseFloat(leo.get(i).getNOTWORK());
+				 /**事假**/
+				if( leo.get(i).getHOLIDAYA()!=null && !leo.get(i).getHOLIDAYA().equals("")){
+					double  dHolidayA=Float.parseFloat(leo.get(i).getHOLIDAYA());
+					dNotWork= dNotWork-dHolidayA;
+			//		logger.info("a dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+						//logger.info("a dNotWork  "+ dNotWork);
+					 if(dHolidayA!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**病假**/
+				if( leo.get(i).getHOLIDAYB()!=null && !leo.get(i).getHOLIDAYB().equals("")){
+	
+					double  dHolidayB=Float.parseFloat(leo.get(i).getHOLIDAYB());
+					dNotWork= dNotWork-dHolidayB;
+				//	logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+				//		logger.info("b dNotWork  "+ dNotWork);
+					 if(dHolidayB!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				
+				 /**公假**/
+				if( leo.get(i).getHOLIDAYO()!=null && !leo.get(i).getHOLIDAYO().equals("")){
+				 //   logger.info("  公假 .getHOLIDAYO()"+ leo.get(i).getHOLIDAYO());
+					double  dHolidayO=Float.parseFloat(leo.get(i).getHOLIDAYO());
+				//	logger.info("  dHolidayO"+dHolidayO);
+					dNotWork= dNotWork-dHolidayO;
+				//	logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+					logger.info("sNotWork  "+ sNotWork);
+					 if(dHolidayO!=0 & dNotWork<=8){
+						 logger.info("updateDayReportdNotWork  更新 公假"+SqlUtil.updateDayReportDetailNotWork( leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()));
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**工傷假
+				logger.info(" getHOLIDAYI  "+ leo.get(i).getHOLIDAYI());
+				if( leo.get(i).getHOLIDAYI()!=null && !leo.get(i).getHOLIDAYI().equals("")){
+	
+					double  dHolidayI=Float.parseFloat(leo.get(i).getHOLIDAYI());
+					dNotWork= dNotWork-dHolidayI;
+				//	logger.info(" c dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("c dNotWork  "+ dNotWork);
+					 if(dHolidayI!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				**/
+				 /**婚假**/
+				if( leo.get(i).getHOLIDAYD()!=null && !leo.get(i).getHOLIDAYD().equals("")){
+	
+					double  dHolidayD=Float.parseFloat(leo.get(i).getHOLIDAYD());
+					dNotWork= dNotWork-dHolidayD;
+					//logger.info("d dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+				//	 logger.info("d dNotWork  "+ dNotWork);
+					 if(dHolidayD!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**產假**/
+				if( leo.get(i).getHOLIDAYE()!=null && !leo.get(i).getHOLIDAYE().equals("")){
+	
+					double  dHolidayE=Float.parseFloat(leo.get(i).getHOLIDAYE());
+					dNotWork= dNotWork-dHolidayE;
+				//	logger.info("e dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+				//	 logger.info("e dNotWork  "+ dNotWork);
+					 if(dHolidayE!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**喪假**/
+				if( leo.get(i).getHOLIDAYF()!=null && !leo.get(i).getHOLIDAYF().equals("")){
+	
+					double  dHolidayF=Float.parseFloat(leo.get(i).getHOLIDAYF());
+					dNotWork= dNotWork-dHolidayF;
+				//	logger.info("f dNotWork  "+ dNotWork);
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+				//		logger.info("f dNotWork  "+ dNotWork);
+					 if(dHolidayF!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				 /**年假**/
+				if( leo.get(i).getHOLIDAYH()!=null && !leo.get(i).getHOLIDAYH().equals("")){
+	
+					double  dHolidayH=Float.parseFloat(leo.get(i).getHOLIDAYH());
+					dNotWork= dNotWork-dHolidayH;
+				//	logger.info("h dNotWork  "+ String.valueOf(dNotWork));
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+				//		logger.info("h dNotWork  "+ dNotWork);
+					 if(dHolidayH!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+			
+				
+			}
+			/**如果有休假就扣掉曠工 END**/
+		}
+		
+	}
+	
+	
+	/**
 	 * 查詢日報表資料並改寫內容
 	 * @param con
 	 * @param otVo
 	 * @throws Exception
 	 */
-	public static void dayReportAlter(Connection con, leaveCardVO lcVo) {
+	public static void dayReportAlter(Connection con, leaveCardVO lcVo) throws Exception {
 	
 		
 		Log4jUtil lu = new Log4jUtil();
@@ -2198,6 +3076,13 @@ public class DBUtil
 					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
 			}
+			/**假日不能曠職 start**/
+		        int ci= DateUtil.getWeekday(lcVo.getApplicationDate());
+			if( ci==1){
+			     sNotWork="0.0";
+			    updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+			}
+			/**假日不能曠職 end**/
 			/**如果有遲到 減少上班時數 END**/
 			
 			/**夜班紀錄到130 START**/
@@ -2420,7 +3305,7 @@ public class DBUtil
 	 * @param lcVo
 	 * @return
 	 */
-public static List<dayReportRO> getDayReportMonth(Connection con, leaveCardVO lcVo) {
+public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO lcVo) {
 	
 		
 		Log4jUtil lu = new Log4jUtil();
@@ -2433,15 +3318,15 @@ public static List<dayReportRO> getDayReportMonth(Connection con, leaveCardVO lc
 		Sql=Sql.replace("<DAY/>", lcVo.getApplicationDate());
 
 		logger.info("sql_getDayReportMonth Sql : "+ Sql);
-		dayReportRO er=new dayReportRO();
+		dayCReportRO er=new dayCReportRO();
 		PreparedStatement STMT = null;
 		ReflectHelper rh = new ReflectHelper();
-		List<dayReportRO> leo = null;
+		List<dayCReportRO> leo = null;
 		try
 		{
 			STMT = con.prepareStatement(Sql);
 			ResultSet rs = STMT.executeQuery();
-			leo = (List<dayReportRO>) rh.getBean(rs, er);
+			leo = (List<dayCReportRO>) rh.getBean(rs, er);
 
 		}
 		catch (Exception error)
@@ -2505,13 +3390,172 @@ public static List<dayReportRO> getDayReportMonth(Connection con, leaveCardVO lc
 		
 		for(int i=0;i<leo.size();i++){
 			mw=(monthSumDataWo)leo.get(i);
-			logger.info(mw.getEMPLOYEENO()+":getMonthReportL : "+mw.getMonthReportL());
+		
 			listmW.put(mw.getEMPLOYEENO(), mw);
 			
 			
 		}
 		return listmW;
 	}
+	
+	public static final    List<repMonthDetailRO>   getMonthDetailData(Connection con, leaveCardVO lcVo,String Day) throws Exception{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_getMonthDetailReport);
+		sql = sql.replace("<DAY/>", Day);
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+			sql = sql.replace("<DEPARTMENT/>", " 1=1");
+		}
+		else
+		{
+			sql = sql.replace("<DEPARTMENT/>", " D.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+			sql = sql.replace("<UNIT/>", " 1=1");
+		}
+		else
+		{
+			sql = sql.replace("<UNIT/>", "  U.ID='" + lcVo.getSearchUnit() + "'  ");
+		}
+		// 建立資料表資料
+		logger.info("sql_getMonthSumData Sql : "+ sql);
+		repMonthDetailRO mw=new repMonthDetailRO();
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<repMonthDetailRO> leo = null;
+		List<repMonthDetailRO>re = new ArrayList<repMonthDetailRO>();
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<repMonthDetailRO>) rh.getBean(rs, mw);
+	
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		/**先查出假期使用年分**/
+	
+		DBUtilTList<checkYearDayRO> bl=new DBUtilTList<checkYearDayRO>();
+		checkYearDayRO rd=new checkYearDayRO();
+		List<checkYearDayRO> lco=bl.queryTList(con, SqlUtil.getYearCheckDay(lcVo.getApplicationDate().split("/")[0]), rd);
+		checkYearDayRO chro=lco.get(0);
+		boolean noRepeat=true;//已執行過其他就別在執行
+		
+		for(int i=0;i<leo.size();i++){
+		    repMonthDetailRO rmd=leo.get(i);
+		    
+		    
+		    /**判斷是否特殊假日農國歷上班**/
+		    if(DateUtil.checkDays(chro,rmd.getDAY())){
+			logger.info("發現有特殊假日"+rmd.getEMPLOYEE()+"/"+rmd.getDAY());
+			if(!rmd.getWORKETIME().isEmpty() && !rmd.getWORKFTIME().isEmpty()){
+        			    if(! rmd.getWORKETIME().equals("00:00") && ! rmd.getWORKFTIME().equals("00:00") ){
+        			    logger.info("特殊假日 發現有上下班工時"+rmd.getEMPLOYEE()+"/"+rmd.getDAY());
+        			    rmd.setGALA(rmd.getATTENDANCE());
+        			    noRepeat=false;
+				}
+			}
+		    }
+		    /**判斷是否周日加班**/
+			   int ci= DateUtil.getWeekday(rmd.getDAY());
+			    if(ci==1 && noRepeat){ //星期天
+				logger.info("發現有星期天");
+				if(!rmd.getWORKETIME().isEmpty() && !rmd.getWORKFTIME().isEmpty()){
+				    if(! rmd.getWORKETIME().equals("00:00") && ! rmd.getWORKFTIME().equals("00:00") ){
+					logger.info("星期天 發現有上下班工時"+rmd.getEMPLOYEE()+"/"+rmd.getDAY());
+					rmd.setSUNDAY(rmd.getATTENDANCE());
+				    }
+				}
+			    }
+			    if(ci==1 ){ //星期天將曠職取消
+				 if( rmd.getWORKETIME().equals("00:00") &&  rmd.getWORKFTIME().equals("00:00") ){
+				     rmd.setNOTWORK("0.0");
+				 }
+			    }
+			    
+		    /**判斷是否晚班**/
+		    if(rmd.getTURN().equals("C3") && noRepeat){
+			logger.info("發現有C3班"+rmd.getEMPLOYEE()+"/"+rmd.getDAY());
+			rmd.setNIGHTSHIFT(rmd.getATTENDANCE());
+			
+		    }
+		    re.add(rmd);
+		}
+		
+		
+		
+		return re;
+	}
+	
+	/**
+	 * 月份總表統計結果值
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final 	Hashtable  getMonthTotleData(Connection con, leaveCardVO lcVo,String Day)
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_getReportTotleMonth);
+		sql = sql.replace("<DAY>", Day);
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+			sql = sql.replace("<DEPARTMENT/>", " 1=1");
+		}
+		else
+		{
+			sql = sql.replace("<DEPARTMENT/>", " D.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+			sql = sql.replace("<UNIT/>", " 1=1");
+		}
+		else
+		{
+			sql = sql.replace("<UNIT/>", "  U.ID='" + lcVo.getSearchUnit() + "'  ");
+		}
+		// 建立資料表資料
+		logger.info("sql_getMonthSumData Sql : "+ sql);
+		monthSumTotalWo mw=new monthSumTotalWo();
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<monthSumTotalWo> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<monthSumTotalWo>) rh.getBean(rs, mw);
+	
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		Hashtable listmW = new Hashtable();
+		logger.info("leo.size() : "+leo.size());
+		//logger.info("(monthReportNoteWO)leo.get(0): "+leo.get(0).getEMPLOYEENO());
+		
+		for(int i=0;i<leo.size();i++){
+			mw=(monthSumTotalWo)leo.get(i);
+		
+			listmW.put(mw.getEMPLOYEENO(), mw);
+			
+			
+		}
+		return listmW;
+	}
+	
+	
+	
 	/**
 	 * 更新人員
 	 */

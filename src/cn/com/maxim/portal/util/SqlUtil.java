@@ -14,11 +14,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
+import cn.com.maxim.portal.attendan.ro.dayCReportRO;
 import cn.com.maxim.portal.attendan.ro.dayReportRO;
 import cn.com.maxim.portal.attendan.ro.editProcessRO;
 import cn.com.maxim.portal.attendan.ro.empYearChange;
 import cn.com.maxim.portal.attendan.ro.processUserRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
+import cn.com.maxim.portal.attendan.ro.repMonthDetailRO;
 import cn.com.maxim.portal.attendan.vo.delUserWriteDataVO;
 import cn.com.maxim.portal.attendan.vo.editDeptUnit;
 import cn.com.maxim.portal.attendan.vo.editLholidayVO;
@@ -37,6 +39,7 @@ import cn.com.maxim.portal.attendan.wo.EmailWO;
 import cn.com.maxim.portal.attendan.wo.dayAttendanceWO;
 import cn.com.maxim.portal.attendan.wo.monthReportNoteWO;
 import cn.com.maxim.portal.attendan.wo.monthSumDataWo;
+import cn.com.maxim.portal.attendan.wo.monthSumTotalWo;
 import cn.com.maxim.portal.hr.rep_daily;
 import cn.com.maxim.potral.consts.keyConts;
 import cn.com.maxim.potral.consts.sqlConsts;
@@ -1990,8 +1993,9 @@ public class SqlUtil
 	 * 
 	 * @param lcVo
 	 * @return
+	 * @throws Exception 
 	 */
-	public static final String getdailyReport(Connection con, leaveCardVO lcVo)
+	public static final String getdailyReport(Connection con, leaveCardVO lcVo) throws Exception
 	{
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(SqlUtil.class);
@@ -2051,14 +2055,16 @@ public class SqlUtil
 		lcVo.setSearchUnit(raVo.getSearchUnit());
 	
 		//先建立整個月日報
+		logger.info("先建立整個月日報 start");
 		long startTime=System.currentTimeMillis();//记录开始时间
 		getMonthdailyReportP1(con,	lcVo,raVo.getQueryYearMonth()+"/01");
 		
-		List<dayReportRO> leo =null;
-	
+		List<dayCReportRO> leo =null;
+		logger.info("先建立整個月日報 end");
 		
 		
 		/** 建立日報資料 輸出查詢資料 **/
+		logger.info("建立日報資料 輸出查詢資料");
 		lcVo.setApplicationDate(raVo.getQueryYearMonth());	
 		leo = getMonthdailyReportP2(con,	lcVo);/** 建立日報資料 輸出查詢資料 **/
 		
@@ -2400,19 +2406,54 @@ public class SqlUtil
 	
 	
 	
-	
 	/**
 	 * 更新當天日報並查出
 	 * 
 	 * @param lcVo
 	 * @return
 	 */
-	public static final List<dayReportRO> getMonthdailyReportP2(Connection con, leaveCardVO lcVo)
+	public static final List<dayCReportRO> getMonthTotalReportP2(Connection con, leaveCardVO lcVo)
 	{
-		DBUtil.dayReportAlter(con, lcVo);
+	     
+	      
+		
+	        //DBUtil.dayReportMax(con, lcVo);
+	        DBUtil.dayReportTotalMax(con, lcVo);
 		// 查出結果
 		return DBUtil.getDayReportMonth(con, lcVo);
-}
+	}
+	/**
+	 * 更新當天日報並查出
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final List<dayCReportRO> getMonthdailyReportP2(Connection con, leaveCardVO lcVo)
+	{
+	     
+	      
+		//DBUtil.dayReportAlter(con, lcVo);
+	        DBUtil.dayReportMax(con, lcVo);
+		// 查出結果
+		return DBUtil.getDayReportMonth(con, lcVo);
+	}
+	
+	
+	/**
+	 * 細節表更新當天日報
+	 * 
+	 * @param lcVo
+	 * @return
+	 */
+	public static final void getMonthDetailReportP2(Connection con, leaveCardVO lcVo)
+	{
+	     
+	      
+		//DBUtil.dayReportAlter(con, lcVo);
+	        DBUtil.dayReportMax(con, lcVo);
+		// 查出結果
+		//return DBUtil.getDayReportMonth(con, lcVo);
+	}
 	
 	/**
 	 * 月份考勤表-查出資料
@@ -2851,7 +2892,26 @@ public class SqlUtil
 
 		sql = hu.gethtml(sqlConsts.sql_excelDaily);
 		sql = sql.replace("<DAY/>", lcVo.getApplicationDate());
-
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+			sql = sql.replace("<DEPT/>", " 1=1");
+			
+		}
+		else
+		{
+			sql = sql.replace("<DEPT/>", " VD.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+			sql = sql.replace("<UNIT/>", " 1=1");
+		
+		}
+		else
+		{
+			sql = sql.replace("<UNIT/>", "  VU.ID='" + lcVo.getSearchUnit() + "'  ");
+			
+		}
 		return sql;
 	}
 
@@ -3923,6 +3983,26 @@ public class SqlUtil
 		String sql = "";
 		sql = hu.gethtml(sqlConsts.sql_getDayReport);
 		sql = sql.replace("<DAY/>", lcVo.getApplicationDate());
+		if (lcVo.getSearchDepartmen().equals("0"))
+		{
+			sql = sql.replace("<DEPT/>", " 1=1");
+			
+		}
+		else
+		{
+			sql = sql.replace("<DEPT/>", " VD.ID='" + lcVo.getSearchDepartmen() + "'  ");
+		
+		}
+		if (lcVo.getSearchUnit().equals("0"))
+		{
+			sql = sql.replace("<UNIT/>", " 1=1");
+		
+		}
+		else
+		{
+			sql = sql.replace("<UNIT/>", "  VU.ID='" + lcVo.getSearchUnit() + "'  ");
+			
+		}
 		return sql;
 	}
 
@@ -3943,6 +4023,24 @@ public class SqlUtil
 		return Sb.toString();
 	}
 
+	
+	/**
+	 * 月報詳細表因遲到/早退改寫出勤時數
+	 * 
+	 * @param flag
+	 * @param ID
+	 * @return
+	 */
+	public static final String updateDayReportDetailAttendance(String Day, double fAttendance, String EMPLOYEENO)
+	{
+		StringBuilder Sb = new StringBuilder(" UPDATE [hr].[dbo].[VN_DAY_REPORT] ")
+			.append("SET [ATTENDANCE] ='" + fAttendance + "' ")
+			.append("WHERE [DAY]='" + Day + "'  ")
+			.append("and [EMPLOYEENO]='" + EMPLOYEENO + "'  ");
+
+		return Sb.toString();
+	}
+	
 	/**
 	 * 因有請假改寫曠工時間
 	 * 
@@ -3959,8 +4057,146 @@ public class SqlUtil
 
 		return Sb.toString();
 	}
+	
+	/**
+	 * 詳細月報因有請假改寫曠工時間
+	 * 
+	 * @param flag
+	 * @param ID
+	 * @return
+	 */
+	public static final String updateDayReportDetailNotWork(String Day, String dNotWork, String EMPLOYEENO)
+	{
+		StringBuilder Sb = new StringBuilder(" UPDATE [hr].[dbo].[VN_DAY_REPORT] ")
+			.append("SET [NOTWORK] ='" + dNotWork + "' ")
+			.append("WHERE [DAY]='" + Day + "'  ")
+			.append("and [EMPLOYEENO]='" + EMPLOYEENO + "'  ");
 
-	public static final String insterMonthdailyReport(leaveCardVO lcVo, dayReportRO dr, monthReportNoteWO mW)
+		return Sb.toString();
+	}
+	
+	
+	/**
+	 * 月報總報表建立資料
+	 * @param lcVo
+	 * @param dr
+	 * @param mW
+	 * @return
+	 */
+	public static final String insterMonthTotalReport(leaveCardVO lcVo, dayCReportRO dr, monthSumTotalWo mW)
+	{
+		
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		
+		long startTime=System.currentTimeMillis();//记录开始时间
+		HtmlUtil hu = new HtmlUtil();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_InsterMonthTotilReport);
+		long endTime=System.currentTimeMillis();//记录结束时间
+		float excTime=(float)(endTime-startTime)/1000;
+		logger.info("  讀出 InsterMonthReport 時間："+excTime+"s");
+		
+		startTime=System.currentTimeMillis();//记录开始时间
+		sql = sql.replace("<ID/>", UUIDUtil.generateShortUuid());
+		sql = sql.replace("<EMPLOYEENO/>", dr.getEMPLOYEENO());
+		sql = sql.replace("<YEAR/>", lcVo.getApplicationDate().split("/")[0]);
+		sql = sql.replace("<MONTH/>", lcVo.getApplicationDate().split("/")[1]);
+		logger.info("  dr.getEMPLOYEE()"+dr.getEMPLOYEE());
+		sql = sql.replace("<EMPLOYEE/>", dr.getEMPLOYEE());
+		sql = sql.replace("<DEPARTMENT/>", dr.getDEPARTMENT());
+		sql = sql.replace("<UNIT/>", dr.getUNIT());
+		
+		endTime=System.currentTimeMillis();//记录结束时间
+		excTime=(float)(endTime-startTime)/1000;
+		logger.info("  UNIT 時間："+excTime+"s");
+		sql = sql.replace("<ATTENDANCE/>", mW.getATTENDANCE());
+		sql = sql.replace("<OVERTIME/>", mW.getOVERTIME());
+		sql = sql.replace("<HOLIDAYH/>", mW.getHOLIDAYH());
+		sql = sql.replace("<VIETNAMESE/>", mW.getVIETNAMESE());
+		sql = sql.replace("<HOLIDAYO/>", mW.getHOLIDAYO());
+		sql = sql.replace("<HOLIDAYE/>", mW.getHOLIDAYE());
+		sql = sql.replace("<HOLIDAYD/>", mW.getHOLIDAYD());
+		sql = sql.replace("<HOLIDAYF/>", mW.getHOLIDAYF());
+		sql = sql.replace("<HOLIDAYB/>", mW.getHOLIDAYB());
+		sql = sql.replace("<HOLIDAYA/>", mW.getHOLIDAYA());
+		sql = sql.replace("<NOTWORK/>", mW.getNOTWORK());
+		sql = sql.replace("<BELATE/>", mW.getBELATE());
+		sql = sql.replace("<STOPWORK/>", mW.getSTOPWORK());
+		
+		//logger.info("  insterMonthTotalReport sql  "+sql );
+		return sql;
+	}
+	
+	
+	/**
+	 * 月報詳細報表建立資料
+	 * @param lcVo
+	 * @param dr
+	 * @param mW
+	 * @return
+	 */
+	public static final String insterMonthDetailReport(leaveCardVO lcVo, repMonthDetailRO dr)
+	{
+		
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		
+		long startTime=System.currentTimeMillis();//记录开始时间
+		HtmlUtil hu = new HtmlUtil();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_insterMonthDetailReport);
+		long endTime=System.currentTimeMillis();//记录结束时间
+		float excTime=(float)(endTime-startTime)/1000;
+		logger.info("  讀出 InsterMonthDetailReport 時間："+excTime+"s");
+		
+		startTime=System.currentTimeMillis();//记录开始时间
+		sql = sql.replace("<ID/>", UUIDUtil.generateShortUuid());
+		sql = sql.replace("<EMPLOYEENO/>", dr.getEMPLOYEENO());
+		sql = sql.replace("<YEAR/>", lcVo.getApplicationDate().split("/")[0]);
+		sql = sql.replace("<MONTH/>", lcVo.getApplicationDate().split("/")[1]);
+		logger.info("  dr.getEMPLOYEE()"+dr.getEMPLOYEE());
+		sql = sql.replace("<EMPLOYEE/>", dr.getEMPLOYEE());
+		sql = sql.replace("<DEPARTMENT/>", dr.getDEPARTMENT());
+		sql = sql.replace("<UNIT/>", dr.getUNIT());
+		
+		endTime=System.currentTimeMillis();//记录结束时间
+		excTime=(float)(endTime-startTime)/1000;
+		logger.info("  UNIT 時間："+excTime+"s");
+		sql = sql.replace("<DAY/>", dr.getDAY());
+		sql = sql.replace("<ATTENDANCE/>", dr.getATTENDANCE());
+		sql = sql.replace("<OVERTIME/>", dr.getOVERTIME());
+		sql = sql.replace("<HOLIDAYH/>", dr.getHOLIDAYH());
+		sql = sql.replace("<VIETNAMESE/>", dr.getVIETNAMESE());
+		sql = sql.replace("<HOLIDAYO/>", dr.getHOLIDAYO());
+		sql = sql.replace("<HOLIDAYE/>", dr.getHOLIDAYE());
+		sql = sql.replace("<HOLIDAYD/>", dr.getHOLIDAYD());
+		sql = sql.replace("<HOLIDAYF/>", dr.getHOLIDAYF());
+		sql = sql.replace("<HOLIDAYB/>", dr.getHOLIDAYB());
+		sql = sql.replace("<HOLIDAYA/>", dr.getHOLIDAYA());
+		sql = sql.replace("<NOTWORK/>", dr.getNOTWORK());
+		sql = sql.replace("<BELATE/>", dr.getBELATE());
+		sql = sql.replace("<STOPWORK/>", dr.getSTOPWORK());
+		sql = sql.replace("<VIETNAMESE/>", dr.getVIETNAMESE());
+		sql = sql.replace("<WorkFTime/>", dr.getWORKFTIME());
+		sql = sql.replace("<WorkETime/>", dr.getWORKETIME());
+		sql = sql.replace("<NIGHTSHIFT/>", dr.getNIGHTSHIFT());
+		sql = sql.replace("<SUNDAY/>", dr.getSUNDAY());
+		sql = sql.replace("<GALA/>", dr.getGALA());
+		sql = sql.replace("<TURN/>", dr.getTURN());
+		//logger.info("  InsterMonthDetailReport sql  "+sql );
+		return sql;
+	}
+	
+	
+	/**
+	 * 原先月報
+	 * @param lcVo
+	 * @param dr
+	 * @param mW
+	 * @return
+	 */
+	public static final String insterMonthdailyReport(leaveCardVO lcVo, dayCReportRO dr, monthReportNoteWO mW)
 	{
 		
 		Log4jUtil lu = new Log4jUtil();
@@ -4772,6 +5008,26 @@ public class SqlUtil
 	
 	
 	/**
+	 *查詢已設定待工部門單位流程資料筆數 
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryDeptUnitStopCount(processUserRO pr) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryDeptUnitStopCount);
+		sql = sql.replace("<DEPT/>", pr.getDEPARTMENT());
+		sql = sql.replace("<UNIT/>", pr.getUNIT());
+		sql = sql.replace("<STATUS/>", pr.getSTATUS());
+		sql = sql.replace("<ROLE/>", pr.getROLE());
+
+		return sql;
+	}
+	
+	
+	
+	/**
 	 *查詢已設定加班部門單位流程資料筆數 
 	 * @param edVo
 	 * @return
@@ -4788,7 +5044,6 @@ public class SqlUtil
 
 		return sql;
 	}
-	
 	
 	
 	/**
@@ -6071,6 +6326,132 @@ public class SqlUtil
 		sql = sql.replace("<rowID/>", delVo.getRowID());
 		return sql;
 	}
+	
+	/**
+	 * 查出月詳細表(網頁用)
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String getMonthDetailReport(repAttendanceVO raVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryMonthDetailReport);
+		sql = sql.replace("<YEAR/>",  raVo.getQueryYearMonth().split("/")[0]);
+		sql = sql.replace("<MONTH/>",  raVo.getQueryYearMonth().split("/")[1]);
+		if (!raVo.getSearchDepartmen().equals("0"))
+		{
+		    sql = sql.replace("<DEPT/>","  D.ID='" + raVo.getSearchDepartmen() + "'  ");
+		}else{
+		    sql = sql.replace("<DEPT/>", " 1=1 ");
+		}
+		if (!raVo.getSearchUnit().equals("0"))
+		{
+		
+			sql = sql.replace("<UNIT/>","  U.ID='" + raVo.getSearchUnit()+ "'  ");
+		}else{
+		    sql = sql.replace("<UNIT/>", " 1=1 ");
+		}
+		
+		return sql;
+	}
+	
+	/**
+	 * 查出月詳細表(EXCEL用)
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String getMonthDetailExcelReport(repAttendanceVO raVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getMonthDetailExcelRepo);
+		sql = sql.replace("<YEAR/>",  raVo.getQueryYearMonth().split("/")[0]);
+		sql = sql.replace("<MONTH/>",  raVo.getQueryYearMonth().split("/")[1]);
+		if (!raVo.getSearchDepartmen().equals("0"))
+		{
+		    sql = sql.replace("<DEPT/>","  D.ID='" + raVo.getSearchDepartmen() + "'  ");
+		}else{
+		    sql = sql.replace("<DEPT/>", " 1=1 ");
+		}
+		if (!raVo.getSearchUnit().equals("0"))
+		{
+		
+			sql = sql.replace("<UNIT/>","  U.ID='" + raVo.getSearchUnit()+ "'  ");
+		}else{
+		    sql = sql.replace("<UNIT/>", " 1=1 ");
+		}
+		
+		return sql;
+	}
+	
+	/**
+	 * 查出月總表(網頁用)
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String getMonthTotalReport(repAttendanceVO raVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getMonthTotalReport);
+		sql = sql.replace("<YEAR/>",  raVo.getQueryYearMonth().split("/")[0]);
+		sql = sql.replace("<MONTH/>",  raVo.getQueryYearMonth().split("/")[1]);
+		if (!raVo.getSearchDepartmen().equals("0"))
+		{
+		    sql = sql.replace("<DEPT/>","  YM.DEPARTMENT='" + raVo.getSearchDepartmen() + "'  ");
+		}else{
+		    sql = sql.replace("<DEPT/>", " 1=1 ");
+		}
+		if (!raVo.getSearchUnit().equals("0"))
+		{
+		
+			sql = sql.replace("<UNIT/>","  YM.UNIT='" + raVo.getSearchUnit()+ "'  ");
+		}else{
+		    sql = sql.replace("<UNIT/>", " 1=1 ");
+		}
+		
+		return sql;
+	}
+	/**
+	 * 查出月總表(EXCEL用)
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String getMonthTotalExcelReport(repAttendanceVO raVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getMonthTotalExcel);
+		sql = sql.replace("<YEAR/>",  raVo.getQueryYearMonth().split("/")[0]);
+		sql = sql.replace("<MONTH/>",  raVo.getQueryYearMonth().split("/")[1]);
+		if (!raVo.getSearchDepartmen().equals("0"))
+		{
+		    sql = sql.replace("<DEPT/>","  YM.DEPARTMENT='" + raVo.getSearchDepartmen() + "'  ");
+		}else{
+		    sql = sql.replace("<DEPT/>", " 1=1 ");
+		}
+		if (!raVo.getSearchUnit().equals("0"))
+		{
+		
+			sql = sql.replace("<UNIT/>","  YM.UNIT='" + raVo.getSearchUnit()+ "'  ");
+		}else{
+		    sql = sql.replace("<UNIT/>", " 1=1 ");
+		}
+		
+		return sql;
+	}
+	
+	
+	/**
+	 * 檢查是否有假期日期
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String getYearCheckDay(String Year) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_getYearCheckDay);
+		sql = sql.replace("<YEAR/>",  Year);
+		return sql;
+	}
+	
 	
 	
 }

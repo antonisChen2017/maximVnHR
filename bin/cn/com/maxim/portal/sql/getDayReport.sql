@@ -1,8 +1,8 @@
 SELECT  
 	[EMPLOYEENO] as '工号'
 ,[EMPLOYEE] as '姓名'
-,[DEPARTMENT]  as '部门'
-,[UNIT]  as '单位'
+,DR.DEPARTMENT  as '部门'
+,DR.UNIT  as '单位'
 ,[ATTENDANCE] as '正班出勤' 
 ,[OVERTIME]  as '加班'
 ,[HOLIDAYH]  as '年假'
@@ -20,6 +20,10 @@ SELECT
 ,[STOPWORK]  as '早退'
 ,[MEALS] as '簽名'
 ,[NOTE]  as '備註'
-  FROM [hr].[dbo].[VN_DAY_REPORT]
-WHERE DAY='2017/07/03'
-order by [EMPLOYEENO] 
+  FROM [hr].[dbo].[VN_DAY_REPORT] DR
+JOIN  VN_UNIT VU ON DR.UNIT=VU.UNIT
+JOIN VN_DEPARTMENT VD ON VD.DEPARTMENT=DR.DEPARTMENT
+WHERE DAY='<DAY/>'
+AND <DEPT/>
+AND <UNIT/>
+order by DR.DEPARTMENT DESC, DR.UNIT DESC

@@ -312,4 +312,26 @@ public class sqlConsts
 	public static final String sql_insterLEDELSave="/cn/com/maxim/portal/sql/insterLEDELSave.sql";
 	/**更新刪除請假單**/
 	public static final String sql_updateLEDELSave="/cn/com/maxim/portal/sql/updateLEDELSave.sql";
+	/**新的日報資料查詢**/
+	public static final String sql_getDayReptData="/cn/com/maxim/portal/sql/getDayReptData.sql";
+	/**新的月報總表資料查詢**/
+	public static final String sql_getReportTotleMonth="/cn/com/maxim/portal/sql/getReportTotleMonth.sql";
+	/**月報總表資料建立**/
+	public static final String sql_InsterMonthTotilReport="/cn/com/maxim/portal/sql/InsterMonthTotilReport.sql";
+	/**月報總表資料查詢**/
+	public static final String sql_getMonthTotalReport="/cn/com/maxim/portal/sql/getMonthTotalReport.sql";
+	/**月報總表查詢 EXCEL**/
+	public static final String sql_getMonthTotalExcel="/cn/com/maxim/portal/sql/getMonthTotalExcel.sql";
+	/**月報詳細表查詢 EXCEL**/
+	public static final String sql_getMonthDetailReport="/cn/com/maxim/portal/sql/getMonthDetailReport.sql";
+	/**查詢有無符合日期**/
+	public static final String sql_getYearCheckDay="/cn/com/maxim/portal/sql/getYearCheckDay.sql";
+	/**新增詳細表資料**/
+	public static final String sql_insterMonthDetailReport="/cn/com/maxim/portal/sql/insterMonthDetailReport.sql";
+	/**查詢詳細表資料**/
+	public static final String sql_queryMonthDetailReport="/cn/com/maxim/portal/sql/queryMonthDetailReport.sql";
+	
+	public static final String sql_getMonthDetailExcelRepo="/cn/com/maxim/portal/sql/getMonthDetailExcelRepo.sql";
+	/**檢查有無設定待工權限**/
+	public static final String sql_queryDeptUnitStopCount="/cn/com/maxim/portal/sql/queryDeptUnitStopCount.sql";
 }

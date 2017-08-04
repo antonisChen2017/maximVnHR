@@ -17,6 +17,7 @@ import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
+import cn.com.maxim.portal.dao.stopWorkDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -57,14 +58,17 @@ public class dep_StopWorking extends TemplatePortalPen
 						showHtml(con, out, swVo,UserInformation);
 					}
 					if (actText.equals("Save")) {
-						logger.info("停工申請/Save : swVo" +swVo.toString());
+					      String msg=stopWorkDAO.getStopProcess(con,swVo);
+						if(msg.equals("o")){
 						swVo.setShowDataTable(true);
 						// 儲存db
-						String msg=DBUtil.saveStopWorking(swVo , con);
+						msg=DBUtil.saveStopWorking(swVo , con);
 						swVo.setMsg(msg);
-					
+						}else{
+						    swVo.setMsg(keyConts.noProcessOverMsg);
+						    logger.info(keyConts.noProcessOverMsg);
+						}
 						showHtml(con, out,  swVo,UserInformation);
-						
 					}
 					if (actText.equals("Delete")) {
 						logger.info("停工申請/Delete : swVo" +swVo.toString());

@@ -10,7 +10,8 @@ public class repAttendanceVO implements Serializable
 {
 
 	private static final long serialVersionUID = 1937575219098094082L;
-	
+	/**報表選擇**/
+	private String drawReportSelect;
 	/**部门 */
 	private String searchDepartmen;
 	/**单位 */
@@ -28,6 +29,15 @@ public class repAttendanceVO implements Serializable
 	/**工號*/
 	private String  EMPLOYEENO;
 	
+	
+	
+	
+	public String getDrawReportSelect() {
+	    return drawReportSelect;
+	}
+	public void setDrawReportSelect(String drawReportSelect) {
+	    this.drawReportSelect = drawReportSelect;
+	}
 	public String getSearchDepartmen()
 	{
 		return searchDepartmen;

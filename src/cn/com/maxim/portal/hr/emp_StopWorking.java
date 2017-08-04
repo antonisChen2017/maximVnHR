@@ -26,7 +26,11 @@ import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.UrlUtil;
 import cn.com.maxim.potral.consts.htmlConsts;
 import cn.com.maxim.potral.consts.keyConts;
-
+/**
+ * 個人申請停工
+ * @author antonis.chen
+ *
+ */
 public class emp_StopWorking extends TemplatePortalPen
 {
 	Log4jUtil lu=new Log4jUtil();

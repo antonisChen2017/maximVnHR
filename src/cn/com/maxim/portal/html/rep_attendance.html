@@ -60,6 +60,25 @@
 										<div class="row">
 										<div class="col-md-6">
 										<div class="form-group">
+										<SPAN class="control-label col-md-3">報表選擇:</SPAN>			
+										<div class="col-md-9">
+										<drawReportSelect/>
+										</div>
+										 </div>
+										</div>
+										<div class="col-md-6">
+										<div class="form-group">
+										<SPAN class="control-label col-md-3"></SPAN>
+										<div     class="col-md-9">
+										 </div>
+										</div>
+										</div>
+										</div>
+										
+										
+										<div class="row">
+										<div class="col-md-6">
+										<div class="form-group">
 										<SPAN class="control-label col-md-3">部门:</SPAN>
 										
 										<div class="col-md-9">
@@ -97,6 +116,7 @@
 								</div>
 								<div class="form-actions right">
 									<button class="btn btn-success " onclick="queryTable();" type="button">查询</button>
+									<button id='upExcelBut' class="btn btn-primary "   style='display: none;' onclick="outExecl()" type="button">输出EXCEL</button>
 								</div>
 								</FORM>
 								<msg />
@@ -189,7 +209,24 @@
 								});
 
 						});
+						//判斷全部審核按鈕需不需要出現
+						   var html="";
+						   var index=0;
+							$("#data_table_1 tr").each(function(){
+								var $MerchandiseIdTd = $("td:eq(0)",$(this) );//商品ID
+								var html=$MerchandiseIdTd.html();
+							
+								 if (typeof(html) != "undefined"){
+									 index=1;
+								 }
+							});
 
+						   if(index>0  ){
+						  // alert('1');
+						   	$("#upExcelBut").show();
+						   }else{
+						   	$("#upExcelBut").hide();
+						   }
 					});
 
 					function updateUnit() {
@@ -239,15 +276,18 @@
 					}
 
 					function queryTable() {
-					
+						if($('#drawReportSelect').val()=='0'){  
+							 layer.msg('请选择报表类型');
+							 return;
+						}
 						   //loading层
-					    var index = layer.load(1, {
-					      shade: [0.1,'#fff'] //0.1透明度的白色背景
-					    });
-						ActionForm.action="<ActionURI/>"
-						ActionForm.act.value='QUE';
-						ActionForm.submit();
-
+						    var index = layer.load(1, {
+						      shade: [0.1,'#fff'] //0.1透明度的白色背景
+						    });
+							ActionForm.action="<ActionURI/>"
+							ActionForm.act.value='QUE';
+							ActionForm.submit();
+						
 					}
 					
 					 function     outExecl(){
@@ -258,6 +298,9 @@
 					 
 					 
 					 function  showData(data){
+						 
+						
+						 
 					//	 alert(data);
 						 layer.alert(data, {
 							    skin: 'layui-layer-lan'

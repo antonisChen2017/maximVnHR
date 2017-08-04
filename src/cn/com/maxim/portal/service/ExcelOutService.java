@@ -28,6 +28,9 @@ import cn.com.maxim.portal.attendan.ro.dayAttendanceRO;
 import cn.com.maxim.portal.attendan.ro.empnumRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.ro.repDailyRO;
+import cn.com.maxim.portal.attendan.ro.repMonthDetailRO;
+import cn.com.maxim.portal.attendan.ro.repMonthExcelDetailRO;
+import cn.com.maxim.portal.attendan.ro.repMonthTotalRO;
 import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
@@ -138,6 +141,8 @@ public class ExcelOutService  extends HttpServlet{
 		 * 月份考勤表
 		 */
 		if (_name.equals("repAttendance")) {
+		    String drawReportSelect = request.getParameter("drawReportSelect");
+		    if(drawReportSelect.equals("0")){
 			repAttendanceVO raVo = new repAttendanceVO(); 
 			BeanUtils.populate(raVo,request.getParameterMap());
 		
@@ -165,7 +170,68 @@ public class ExcelOutService  extends HttpServlet{
 		                out.close();
 		            }
 		        }
+		    }
+		    //月份考勤明细表
+		    if(drawReportSelect.equals("1")){
+			repAttendanceVO raVo = new repAttendanceVO(); 
+ 			BeanUtils.populate(raVo,request.getParameterMap());
+ 			 String title1="";
+	 		        OutputStream out = null;
+	 		        try {
+	 		        	 String[] headers =null;  
+	 		        	  List<repMonthExcelDetailRO> eaRolist=( List<repMonthExcelDetailRO>)request.getSession().getAttribute("raRolist");
+	 		        	  String  Departmen= (String)request.getSession().getAttribute("Departmen");
+	 				      headers = keyConts.repAttendanceExcelheaders.split(",");  	     
+	 				      title1=Departmen.trim()+raVo.getQueryYearMonth().split("/")[0]+"年"+raVo.getQueryYearMonth().split("/")[1]+"月份考勤明细表";
+	 				   
+	 				    
+	 			         ExcelUtil<repMonthExcelDetailRO> eu = new ExcelUtil<repMonthExcelDetailRO>();
+	 			         HSSFWorkbook workbook = eu.exportMonthDetailExcel(title1,headers,eaRolist,raVo,rootPath);
+	 			         
+	 			         String filename =title1+".xls";
+	 				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
+	 					 
+	 					  
+	 			         out = response.getOutputStream();  
+	 			         workbook.write(out);  
+	 		        } finally {
+	 		            if(out!=null){
+	 		                out.close();
+	 		            }
+	 		        }
 			
+		    }
+		    
+		    /**月份總表**/
+		    if(drawReportSelect.equals("2")){
+		 			repAttendanceVO raVo = new repAttendanceVO(); 
+		 			BeanUtils.populate(raVo,request.getParameterMap());
+		 		
+		 		        String title1="";
+		 		        OutputStream out = null;
+		 		        try {
+		 		        	 String[] headers =null;  
+		 		        	  List<repMonthTotalRO> eaRolist=( List<repMonthTotalRO>)request.getSession().getAttribute("raRolist");
+		 		        	  String  Departmen= (String)request.getSession().getAttribute("Departmen");
+		 				      headers = keyConts.repAttendanceExcelheaders.split(",");  	     
+		 				      title1=Departmen.trim()+raVo.getQueryYearMonth().split("/")[0]+"年"+raVo.getQueryYearMonth().split("/")[1]+"月分考勤總表";
+		 				   
+		 				    
+		 			         ExcelUtil<repMonthTotalRO> eu = new ExcelUtil<repMonthTotalRO>();
+		 			         HSSFWorkbook workbook = eu.exportMonthTotalExcel(title1,headers,eaRolist,raVo,rootPath);
+		 			         
+		 			         String filename =title1+".xls";
+		 				 response.setHeader("Content-Disposition", "attachment;filename=" +encodeFileName(request,filename)); 
+		 					 
+		 					  
+		 			         out = response.getOutputStream();  
+		 			         workbook.write(out);  
+		 		        } finally {
+		 		            if(out!=null){
+		 		                out.close();
+		 		            }
+		 		        }
+		 		    }
 		}
 		
 		

@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 //import org.apache.struts.util.LabelValueBean;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 
+import cn.com.maxim.portal.attendan.ro.checkYearDayRO;
 import cn.com.maxim.portal.attendan.ro.empYearChange;
 
 /**
@@ -1042,4 +1043,53 @@ public class DateUtil {
 	    return min;
 	}
     }
+    
+    
+    
+/**
+ * 判斷日期如果與節日相同 輸出false
+ * @param chro
+ * @param Day
+ * @return
+ */
+    public static boolean checkDays(checkYearDayRO chro,String Day) {
+	boolean flag=false;
+	
+	String toDay=Day.split("/")[1]+"/"+Day.split("/")[2];
+		
+	if(chro.getCHECKDAY1().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY2().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY3().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY4().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY5().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY6().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY7().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY8().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY9().equals(toDay)){
+	    flag=true;
+	}
+	if(chro.getCHECKDAY10().equals(toDay)){
+	    flag=true;
+	}
+	return flag;
+	
+    }
+    
+    
 }

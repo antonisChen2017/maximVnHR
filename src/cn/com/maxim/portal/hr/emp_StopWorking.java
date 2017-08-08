@@ -3,6 +3,7 @@ package cn.com.maxim.portal.hr;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +15,10 @@ import org.apache.log4j.Logger;
 import cn.com.maxim.portal.TemplatePortalPen;
 import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
+import cn.com.maxim.portal.attendan.ro.exStopCardRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
+import cn.com.maxim.portal.dao.stopWorkDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -52,15 +55,43 @@ public class emp_StopWorking extends TemplatePortalPen
 					// 查询
 					if (actText.equals("QUE")) {
 						swVo.setShowDataTable(true);
+						swVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, swVo,UserInformation,request);
 					}
 					if (actText.equals("Save")) {
-						logger.info("個人申請加班/Save : " +swVo.toString());
-						swVo.setShowDataTable(true);
-						// 儲存db
-						String msg=DBUtil.saveStopWorking(swVo , con);
-						swVo.setMsg(msg);
-					
+					    String msg=stopWorkDAO.getStopProcess(con,swVo);
+						if(msg.equals("o")){
+						    String stopEdit=( String)request.getSession().getAttribute("stopEdit");
+							if(stopEdit.equals("Update")){
+							
+							       swVo.setShowDataTable(true);
+								String rowID = request.getParameter("rowID");
+								logger.info("Save swVo : "+swVo);
+								swVo.setRowID(rowID);
+								logger.info("Save swVo : "+swVo);
+								logger.info("Save updateDepLeavecard : " +SqlUtil.updateStopWork(swVo));
+								boolean flag =DBUtil.updateSql(SqlUtil.updateStopWork(swVo), con);
+								if(flag){
+								    swVo.setMsg(keyConts.editOK);
+								}else{
+								    swVo.setMsg(keyConts.editNO);
+								}
+							    
+							}else{
+            						swVo.setShowDataTable(true);
+            						// 儲存db
+            						List<employeeUserRO> lro=getUser(con,UserInformation,request);
+            						swVo.setLogin(lro.get(0).getID());
+            						logger.info("setLogin : " +lro.get(0).getID());
+            						msg=stopWorkDAO.saveStopWorking(con,swVo );
+            						swVo.setMsg(msg);
+							}
+						}else{
+						    swVo.setMsg(keyConts.noProcessOverMsg);
+						    logger.info(keyConts.noProcessOverMsg);
+						}
+						swVo.setSaveButText(keyConts.butSave);
+						request.getSession().setAttribute("stopEdit","Save");
 						showHtml(con, out,  swVo,UserInformation,request);
 						
 					}
@@ -75,8 +106,42 @@ public class emp_StopWorking extends TemplatePortalPen
 						}else{
 							swVo.setMsg("刪除失敗!");
 						}
-					
+						swVo.setSaveButText(keyConts.butSave);
+						request.getSession().setAttribute("stopEdit","Delete");
 						showHtml(con, out, swVo,UserInformation,request);
+					}
+					
+					if (actText.equals("Refer"))//提交審核
+					{
+						String rowID = request.getParameter("rowID");
+						swVo.setRowID(rowID);
+					
+						logger.info("Refer swVo : "+swVo);
+					
+						logger.info(" Refer: " +swVo.toString());
+						DBUtil.updateSql(SqlUtil.upStopStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
+						/**20170802暫時不寄信**/
+						//stopWorkDAO.deptProcessEmail(con,swVo);
+						swVo.setSearchEmployeeNo("0");
+						swVo.setShowDataTable(true);
+						swVo.setSaveButText(keyConts.butSave);
+						showHtml(con, out, swVo,UserInformation,request);
+						
+					}
+					if (actText.equals("Update"))//更新
+					{
+						//lcVo.setSubmitDate(DateUtil.NowDateTime());
+					
+						String rowID = request.getParameter("rowID");
+				
+						swVo.setShowDataTable(true);
+						swVo.setRowID(rowID);
+						swVo=SharedCode(con,swVo);
+						swVo.setSaveButText(keyConts.butUpdate);
+						swVo.setMsg(keyConts.editStopTip);
+						request.getSession().setAttribute("stopEdit","Update");
+						logger.info("Update : " +swVo.toString());
+						showHtml(con, out,  swVo,UserInformation,request);	
 					}
 				}else{
 					//預設
@@ -92,7 +157,9 @@ public class emp_StopWorking extends TemplatePortalPen
 					swVo.setStartTimeHh("0");
 					swVo.setEndTimeHh("0");
 					swVo.setEndTimemm("0");
-				
+					request.getSession().setAttribute("stopEdit","");
+					swVo.setSaveButText(keyConts.butSave);
+					swVo.setRowID("0");
 					swVo.setNote("");
 					showHtml(con, out, swVo,UserInformation,request);
 				
@@ -107,57 +174,71 @@ public class emp_StopWorking extends TemplatePortalPen
 		
 		
 		
-		if(ajax.equals("SwDUnit")){
-			 String searchUnit = request.getParameter("searchUnit");
-			 String searchDepartmen = request.getParameter("searchDepartmen");
-			 String html="",subSql="";
-			 overTimeVO otVo = new overTimeVO(); 
-			 otVo.setSearchEmployeeNo("0");
+	    if(ajax.equals("unit")){
+		 String employeeID = request.getParameter("employeeID");
+		 String unitID= DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(employeeID,"  V.UNIT_ID "),"UNIT_ID");
+		 String html="";
+		try
+		{
+			html = ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID);
+		}
+		catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 out.println(html);
+	}
+	 if(ajax.equals("SwTime")){
+		 overTimeVO otVo = new overTimeVO(); 
+		 otVo.setOverTimeClass(request.getParameter("overTimeClass"));
+		 otVo.setAct("SwTime");
+		 
+		 String ehm=DBUtil.queryDBField(con,SqlUtil.getEhm(otVo),"ehm");
+		 if(ehm.indexOf(":")==-1){
+			 ehm="00:00";
+		 }
+		 String[] ehms=ehm.split(":");
+		 otVo.setStartTimeHh(ehms[0]);
+		 otVo.setStartTimemm(ehms[1]);
+		 int hr=Integer.valueOf(ehms[0])+5;
+		 if(hr>23){
+			 hr=23;
+		 }
+		 otVo.setEndTimeHh(String.valueOf(hr));
+		 otVo.setEndTimemm(ehms[1]);
+		 
+		 String TimeDiv= HtmlUtil.getTimeDiv("startTimeHh", "startTimemm", "endTimeHh", "endTimemm",otVo);
+		 System.out.println("TimeDiv :"+TimeDiv);
+		 out.println(TimeDiv);
+	}
+	 if(ajax.equals("SwDUnit")){
+		 String searchUnit = request.getParameter("searchUnit");
+		 String searchDepartmen = request.getParameter("searchDepartmen");
+		 String html="",subSql="";
+		 overTimeVO otVo = new overTimeVO(); 
+		 otVo.setSearchEmployeeNo("0");
+	
+		 if(searchUnit.equals("0")){
+			 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "'   ";
+		 }else{
+			 subSql=" UNIT_ID ='" + searchUnit + "'  ";
+		 }
+		// System.out.println("subSql : "+subSql);
+		try
 		
-			 if(searchUnit.equals("0")){
-				 subSql=" DEPARTMENT_ID = '"+searchDepartmen + "' ";
-			 }else{
-				 subSql=" UNIT_ID ='" + searchUnit + "' ";
-			 }
-			// System.out.println("subSql : "+subSql);
-			try
-			
-			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo())
-						+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo());
-			}
-			catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// System.out.println("html : "+html);
-			 out.println(html);
-	 	}
-		 if(ajax.equals("duties")){
-			  String employeeID = request.getParameter("employeeID");
-			  String entryDate= DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(employeeID,"  V.ENTRYDATE "),"ENTRYDATE");
-			  String duties= DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(employeeID,"  V.DUTIES "),"DUTIES");
-			  String data= "[{ \"duties\":\""+duties+"\" , \"entryDate\":\""+entryDate+"\" }]";
-			// System.out.println("TimeDiv :"+TimeDiv);
-			  out.println(data);
-	 	}
-		
-		 if(ajax.equals("unit")){
-			 String employeeID = request.getParameter("employeeID");
-			 String unitID= DBUtil.queryDBField(con,  SqlUtil.getVnEmployee(employeeID,"  V.UNIT_ID "),"UNIT_ID");
-			 String html="";
-			try
-			{
-				html = ControlUtil.drawSelectDBControl(con, out, "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + DBUtil.selectDBDepartmentID(con, UserInformation.getUserEmployeeNo()) + "'", unitID);
-			}
-			catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			 out.println(html);
-	 	}
+		{
+			html = ControlUtil.drawSelectDBControl(con, out, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", subSql, otVo.getSearchEmployeeNo())
+					+"#"+ControlUtil.drawSelectDBControl(con, out, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", subSql, otVo.getSearchEmployeeNo());
+		}
+		catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// System.out.println("html : "+html);
+		 out.println(html);
+	}
 	 }
 	
 	private void showHtml(Connection con, PrintWriter out, stopWorkVO swVo , UserDescriptor UserInformation,HttpServletRequest request) throws SQLException {
@@ -174,6 +255,7 @@ public class emp_StopWorking extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<hiddenUserNo/>",ControlUtil.drawHidden(lro.get(0).getID(), "searchEmployee"));	
 		htmlPart1=htmlPart1.replace("<hiddenUnit/>",ControlUtil.drawHidden(lro.get(0).getUID(), "searchUnit"));	
 		htmlPart1=htmlPart1.replace("<hiddenUser/>",ControlUtil.drawHidden(lro.get(0).getID(), "searchEmployeeNo"));	
+		swVo.setSearchEmployeeNo(lro.get(0).getID());
 		htmlPart1=htmlPart1.replace("<hiddenEmployeeNo/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));
 		htmlPart1=htmlPart1.replace("<UserEmployeeNo/>", 	lro.get(0).getDEPARTMENT());
 		
@@ -189,11 +271,13 @@ public class emp_StopWorking extends TemplatePortalPen
 		htmlPart1=htmlPart1.replace("<endTimemm/>",HtmlUtil.getLeaveCardMinuteDiv("endTimemm",swVo.getEndTimemm()));
 		htmlPart1=htmlPart1.replace("<startStopWorkDate/>",HtmlUtil.getDateDiv("startStopWorkDate", swVo.getStartStopWorkDate()));
 		htmlPart1=htmlPart1.replace("<endStopWorkDate/>",HtmlUtil.getDateDiv("endStopWorkDate", swVo.getEndStopWorkDate()));
-
+		htmlPart1=htmlPart1.replace("<saveButText/>",swVo.getSaveButText());	
+		htmlPart1=htmlPart1.replace("<rowID/>",swVo.getRowID());	
+		
 		if(swVo.isShowDataTable()){
-		//	System.out.println("sql  :  "+SqlUtil.getStopWork(swVo));
+		    	logger.info("getStopWorkTable sql  :  "+SqlUtil.getStopWorkTable(swVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawStopWorking(
-					SqlUtil.getStopWork(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageSave));
+					SqlUtil.getStopWorkTable(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageSave));
 		}
 		
 	    out.println(htmlPart1);
@@ -219,5 +303,38 @@ public class emp_StopWorking extends TemplatePortalPen
 			List<employeeUserRO> lro=DBUtil.queryUserList(con,SqlUtil.getEmployeeNODate(UserName) ,eo);	
 			return lro;
 	 }
+	 
+	 /**
+		 * 共用查询區塊
+	 * @throws ParseException 
+		 */
+		 private stopWorkVO SharedCode(Connection con,stopWorkVO swVo) throws Exception{
+		     		exStopCardRO er=new exStopCardRO();
+				List<exStopCardRO> ero=DBUtil.queryStopCardList(con,SqlUtil.getStopViewData(swVo.getRowID()),er);
+				logger.info("getBeLeaveCard : " +SqlUtil.getBeLeaveCard(swVo.getRowID()));
+			
+				swVo.setRowID(ero.get(0).getID());
+				String [] StartsLeaves = ero.get(0).getSTARTSTOPDATE().split("\\s+");
+				swVo.setStartStopWorkDate(StartsLeaves[0].replace("-", "/"));
+				String [] StartsLeavess =StartsLeaves[1].split(":");
+				swVo.setStartTimeHh(StartsLeavess[0]);
+				swVo.setStartTimemm(StartsLeavess[1]);
+			
+				String [] EndLeaves = ero.get(0).getENDENDDATE().split("\\s+");
+				swVo.setEndStopWorkDate(EndLeaves[0].replace("-", "/"));
+				String [] EndLeavess =EndLeaves[1].split(":");
+				swVo.setEndTimeHh(EndLeavess[0]);
+				swVo.setEndTimemm(EndLeavess[1]);
+				
+				swVo.setAddDay( ero.get(0).getDAYCOUNT());
+				
+				swVo.setNote( ero.get(0).getNOTE());
+				swVo.setSearchEmployee(ero.get(0).getEMPLOYEE());
+				swVo.setSearchEmployeeNo(ero.get(0).getEMPLOYEENO());
+				swVo.setSearchDepartmen(ero.get(0).getDEPARTMENT());
+				swVo.setSearchUnit(ero.get(0).getUNIT());
+				swVo.setSearchReasons(ero.get(0).getREASON_ID());
+			 return swVo;
+		 }
 }
 

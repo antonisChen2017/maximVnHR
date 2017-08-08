@@ -56,7 +56,7 @@
 								<div class="portlet-body form">
 									<!-- BEGIN FORM-->
 									<form class="form-horizontal" name="ActionForm" method="post" action="<ActionURI/>">
-										<input type='hidden' name='act'> <input type='hidden' name='rowID' id='rowID'>
+										<input type='hidden' name='act'> <input type='hidden'       value='<rowID/>' name='rowID' id='rowID'>
 										<div class="form-body">
 											<div class="row">
 												<div class="col-md-6">
@@ -199,7 +199,7 @@
 								</div>
 								<div class="form-actions right">
 									<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button>
-									<button id='saveBut' class="btn btn-primary " onclick="saveData()" type="button">保存</button>
+									<button id='saveBut' class="btn btn-primary " onclick="saveData()" type="button"><saveButText/></button>
 								</div>
 								</FORM>
 								<msg />

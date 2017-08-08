@@ -690,8 +690,8 @@ public class leaveCardDAO {
     public static final boolean checkCadeTime(leaveCardVO lcVo, Connection con) throws Exception {
 	Log4jUtil lu = new Log4jUtil();
 	Logger logger = lu.initLog4j(leaveCardDAO.class);
-	boolean flag = false, BworkFDate = false, BworkEDate = false;
-	String StartCardTime = "", EndCardTime = "";
+	boolean flag = false ;
+	
 	/** 同一天 **/
 	if (lcVo.getStartLeaveDate().equals(lcVo.getEndLeaveDate())) {
 	    flag =checkCadeDay( lcVo,  con);

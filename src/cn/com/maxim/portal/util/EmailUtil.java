@@ -122,7 +122,20 @@ public class EmailUtil {
 	Template = Template.replace("<RUSER/>", RUSER);
 	return Template;
     }
-
+    /**
+     * 待工Template
+     * 
+     * @param email
+     * @return
+     */
+    public static String getStopEmailTemplate(String USER, String EID, String RUSER) {
+	HtmlUtil hu = new HtmlUtil();
+	String Template = hu.gethtml(UrlUtil.email_oneStopEmail);
+	Template = Template.replace("<USER/>", USER);
+	Template = Template.replace("<EID/>", EID);
+	Template = Template.replace("<RUSER/>", RUSER);
+	return Template;
+    }
     /**
      * Template
      * 

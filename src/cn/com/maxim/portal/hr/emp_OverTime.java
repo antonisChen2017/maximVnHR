@@ -127,7 +127,7 @@ public class emp_OverTime extends TemplatePortalPen
 						showHtml(con, out, otVo,UserInformation,request);
 						
 					}
-					if (actText.equals("Update"))//送交
+					if (actText.equals("Update"))//更新
 					{
 						otVo.setSubmitDate(DateUtil.NowDateTime());
 						logger.info("個人申請加班/Update : " +otVo.toString());

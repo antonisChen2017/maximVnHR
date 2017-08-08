@@ -35,6 +35,7 @@ import cn.com.maxim.portal.attendan.ro.empnumRO;
 import cn.com.maxim.portal.attendan.ro.exLeaveCardCRO;
 import cn.com.maxim.portal.attendan.ro.exLeaveCardRO;
 import cn.com.maxim.portal.attendan.ro.exOvertimeRO;
+import cn.com.maxim.portal.attendan.ro.exStopCardRO;
 import cn.com.maxim.portal.attendan.ro.leaveEmailListRO;
 import cn.com.maxim.portal.attendan.ro.overEmailListRO;
 import cn.com.maxim.portal.attendan.ro.processCOUserRO;
@@ -987,6 +988,38 @@ public class DBUtil
 		return flag;
 	}
 	
+	/**更新加班單**/
+	public static boolean updateTimeStopStatus(stopWorkVO swVo , Connection con)
+	{
+	    
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		boolean flag = false;
+		if ((swVo.getSTATUS() == null) || (swVo.getRowID() == null))
+		{
+			return false;
+		}
+		try
+		{
+			Statement stmt = con.createStatement();
+			logger.info("SqlUtil.setStatusS : "+SqlUtil.upStopStatus(swVo.getSTATUS(),swVo.getRowID(),swVo.getLeaveApply()));
+			stmt.executeUpdate(SqlUtil.upStopStatus(swVo.getSTATUS(),swVo.getRowID(),swVo.getLeaveApply()));
+			stmt.close();
+
+			flag = true;
+		}
+		catch (Exception Exception)
+		{
+		
+			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
+			flag = false;
+		}
+
+		return flag;
+	}
+	
+	
 	
 	/**更新CS加班單**/
 	public static boolean updateCSstatus(overTimeVO otVo, Connection con)
@@ -1019,7 +1052,36 @@ public class DBUtil
 		return flag;
 	}
 	
-	
+	/**更新待工單**/
+	public static boolean updateTimeStopStatus(overTimeVO otVo, Connection con)
+	{
+	    
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		boolean flag = false;
+		if ((otVo.getStatus() == null) || (otVo.getRowID() == null))
+		{
+			return false;
+		}
+		try
+		{
+			Statement stmt = con.createStatement();
+			logger.info("SqlUtil.setStatusS : "+SqlUtil.setStatusS(otVo));
+			stmt.executeUpdate(SqlUtil.setStatusS(otVo));
+			stmt.close();
+
+			flag = true;
+		}
+		catch (Exception Exception)
+		{
+		
+			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
+			flag = false;
+		}
+
+		return flag;
+	}
 
 	/**
 	 * 存入請假卡
@@ -1292,6 +1354,40 @@ public class DBUtil
 		}
 		return lro;
 	}
+	
+	
+	/**
+	 * 代工更新按鈕搜尋資料
+	 * 
+	 * @param con
+	 * @param sql
+	 * @param er
+	 * @return
+	 */
+	public static List<exStopCardRO> queryStopCardList(Connection con, String sql, exStopCardRO er)
+	{
+		// System.out.println("sql : "+sql);
+
+		String result = "";
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<exStopCardRO> lro = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			lro = (List<exStopCardRO>) rh.getBean(rs, er);
+
+		}
+		catch (Exception error)
+		{
+			Log4jUtil lu = new Log4jUtil();
+			Logger logger = lu.initLog4j(DBUtil.class);
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		return lro;
+	}
+	
 	
 	/**
 	 * 搜尋超時加班資料
@@ -3754,6 +3850,67 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		return ep.get(0);
 	}
 	
+	
+	
+	/**
+	 * 用行ID查出待工流程
+	 * @param con
+	 * @param lcVo
+	 * @param Day
+	 * @return
+	 * @throws Exception 
+	 */
+	public static final 	editProcessRO  getProcessStopData(String rowID,Connection con) throws Exception
+	{
+		//用工號查出部門單位角色
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		processIDUserRO ra=new processIDUserRO();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_queryStopUserData);
+		//sql = sql.replace("<rowID/>", lcVo.getRowID());
+		sql = sql.replace("<rowID/>", rowID);
+		logger.info("sql_queryStopUserData sql : "+sql );
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<processIDUserRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<processIDUserRO>) rh.getBean(rs, ra);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		processIDUserRO ru=(processIDUserRO)leo.get(0);
+		//logger.info("部門:"+ru.getDEPARTMENT());
+		//logger.info("單位:"+ru.getUNIT());
+		//logger.info("角色:"+ru.getROLE());
+		//logger.info("DAYCOUNT:"+ru.getDAYCOUNT());
+		float  dayCount=Float.parseFloat(ru.getDAYCOUNT());
+		String STATUS="0";//三天以下
+		
+		editProcessRO epDD=new editProcessRO();
+		editProcessVO edVo =new editProcessVO();
+		edVo.setDept(ru.getDEPARTMENT());
+		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
+			edVo.setUnit(ru.getUNIT());
+		}else{
+			edVo.setUnit("0");
+		}
+		edVo.setStatus(STATUS);
+		edVo.setRole(ru.getROLE());
+		logger.info("queryDeptStopProcess SQL  :"+SqlUtil.queryDeptStopProcess(edVo));
+		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptStopProcess(edVo),epDD);
+		//logger.info("getSingRoleL1 :"+ep.get(0).getSingRoleL1());
+	//	logger.info("getSingRoleL1EP :"+ep.get(0).getSingRoleL1EP());
+		return ep.get(0);
+	}
+	
 	/**
 	 * 用行ID查出請假流程
 	 * @param con
@@ -4055,6 +4212,62 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		return ep.get(0);
 	}
 	
+	
+	
+	/**
+	 * 待工記錄取出後台設定寫入請假卡
+	 * @param con
+	 * @param lcVo
+	 * @param Day
+	 * @return
+	 * @throws Exception 
+	 */
+	public static final 	editProcessRO  getStopProcessData(  stopWorkVO swVo,Connection con) throws Exception
+	{
+		//用工號查出部門單位角色
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		processUserRO ra=new processUserRO();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_queryUserData);
+		sql = sql.replace("<EMPLOYEENO/>", swVo.getSearchEmployeeNo());
+		logger.info("用工號查出部門單位角色:"+sql);
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<processUserRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<processUserRO>) rh.getBean(rs, ra);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		processUserRO ru=(processUserRO)leo.get(0);
+		//logger.info("部門:"+ru.getDEPARTMENT());
+		//logger.info("單位:"+ru.getUNIT());
+		logger.info("角色:"+ru.getROLE());
+	
+		String STATUS="0";
+		
+		editProcessRO epDD=new editProcessRO();
+		editProcessVO edVo =new editProcessVO();
+		edVo.setDept(ru.getDEPARTMENT());
+		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
+			edVo.setUnit(ru.getUNIT());
+		}else{
+			edVo.setUnit("0");
+		}
+		edVo.setStatus(STATUS);
+		edVo.setRole(ru.getROLE());
+		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptStopData(edVo),epDD);
+		
+		return ep.get(0);
+	}
 	
 	/**
 	 * 超時加班使用工號查詢部門單位

@@ -43,6 +43,7 @@ public class keyConts
 	  public static final String  saveNO="新增失败";
 	  public static final String  editOverTip="修改加班单";
 	  public static final String  editLeaveTip="修改请假单";
+	  public static final String  editStopTip="修改待工单";
 	  public static final String  editOK="修改成功";
 	  public static final String  editDeptNoUnit="请先将相关单位删除";
 	  public static final String  editDeptIDRepeat="部门ID不可重复";
@@ -87,6 +88,8 @@ public class keyConts
 	  public static final String dbTableRB="RB";
 	  /***員工超時加班狀態-副總退回**/
 	  public static final String dbTableRR="RR";
+	  /**紀錄資料狀態**/
+	  public static final String dbTableS="S";
 	  /**日期調整參數Max**/
 	  public static final String spinnerDayMax="30";
 	  /**日期調整參數Min**/
@@ -157,6 +160,9 @@ public class keyConts
 	  public static final String butUpdate= "更新";	  
 	  /**請假信件標題**/
 	  public static final String EmailLeaveSubject= "请假单审核通知";
+	  /**待工信件標題**/
+	  public static final String EmailStopSubject= "待工单审核通知";
+	
 	  /**加班信件標題**/
 	  public static final String EmailOverSubject= "加班单审核通知";
 	  /**加班信件標題**/

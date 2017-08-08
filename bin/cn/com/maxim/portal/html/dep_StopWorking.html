@@ -195,7 +195,7 @@
 								</div>
 								<div class="form-actions right">
 									<button class="btn btn-success " onclick="ActionForm.act.value='QUE';ActionForm.submit();" type="button">查询</button>
-									<button id='saveBut' class="btn btn-primary " onclick="saveData()" type="button">保存</button>
+									<button id='saveBut' class="btn btn-primary " onclick="saveData()" type="button"><saveButText/></button>
 								</div>
 								</FORM>
 								<msg/>
@@ -257,10 +257,11 @@
 						App.init(); // init layout and core plugins
 						TableAdvanced.init();
 						FormComponents.init();
+
 						 $('#searchDepartmen').change(function(){  
 								
 							 var p1= $('#searchDepartmen').val();
-						  
+						     
 						   jQuery.ajax({
 								url:'<ActionURI/>&doajax=SwUnit',
 								type:'POST',
@@ -274,17 +275,30 @@
 
 									  $('#searchEmployee').change(function(){  
 										     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-										 	$('#searchEmployeeNo').val(p1);       
+										 	$('#searchEmployeeNo').select2('val',p1);      
 										   })  
 									   $('#searchEmployeeNo').change(function(){  
 											  var p1=$(this).children('option:selected').val();  //这就是selected的值  
-										      $('#searchEmployee').val(p1);       
+										      $('#searchEmployee').select2('val',p1);     
 									   }) 
 									}
 								});
 						   
 						   
 							});
+					   
+					   
+					  
+						   $('#searchEmployee').change(function(){  
+							     var p1=$(this).children('option:selected').val();  //这就是selected的值  
+							 	$('#searchEmployeeNo').select2('val',p1);     
+							 //	changeDuties();
+							   })  
+						   $('#searchEmployeeNo').change(function(){  
+								  var p1=$(this).children('option:selected').val();  //这就是selected的值  
+							      $('#searchEmployee').select2('val',p1);           
+							   //   changeDuties();
+						   }) 
 					   
 					   
 					  

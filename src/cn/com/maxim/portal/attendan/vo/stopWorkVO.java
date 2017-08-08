@@ -37,8 +37,74 @@ public class stopWorkVO implements Serializable
 	private String  msg;
 	/**ActionURI*/
 	private String  ActionURI;
+	/**紀錄請假操作員帳號 */
+	private String Login;
+	/**行ID**/
+	private String  rowID;
+	/**員工角色 */
+	private String searchRole;
+	/**流程狀態 */
+	private String leaveStatus;
+	/**申請角色 */
+	private String leaveRole;
+	/**請假成功記號 */
+	private String leaveApply;
+	/**按鈕記號 */
+	private String saveButText;
+	/**狀態 */
+	private String STATUS;
 	
 	
+	
+	
+	public String getSTATUS() {
+	    return STATUS;
+	}
+	public void setSTATUS(String sTATUS) {
+	    STATUS = sTATUS;
+	}
+	public String getRowID() {
+	    return rowID;
+	}
+	public void setRowID(String rowID) {
+	    this.rowID = rowID;
+	}
+	public String getSearchRole() {
+	    return searchRole;
+	}
+	public void setSearchRole(String searchRole) {
+	    this.searchRole = searchRole;
+	}
+	public String getLeaveStatus() {
+	    return leaveStatus;
+	}
+	public void setLeaveStatus(String leaveStatus) {
+	    this.leaveStatus = leaveStatus;
+	}
+	public String getLeaveRole() {
+	    return leaveRole;
+	}
+	public void setLeaveRole(String leaveRole) {
+	    this.leaveRole = leaveRole;
+	}
+	public String getLeaveApply() {
+	    return leaveApply;
+	}
+	public void setLeaveApply(String leaveApply) {
+	    this.leaveApply = leaveApply;
+	}
+	public String getSaveButText() {
+	    return saveButText;
+	}
+	public void setSaveButText(String saveButText) {
+	    this.saveButText = saveButText;
+	}
+	public String getLogin() {
+	    return Login;
+	}
+	public void setLogin(String login) {
+	    Login = login;
+	}
 	public String getSearchDepartmen()
 	{
 		return searchDepartmen;
@@ -173,10 +239,17 @@ public class stopWorkVO implements Serializable
 		ActionURI = actionURI;
 	}
 	@Override
-	public String toString()
-	{
-		return "stopWorkVO [searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchReasons=" + searchReasons + ", startStopWorkDate=" + startStopWorkDate + ", endStopWorkDate=" + endStopWorkDate + ", startTimeHh=" + startTimeHh + ", startTimemm=" + startTimemm + ", endTimeHh=" + endTimeHh + ", endTimemm=" + endTimemm + ", addDay=" + addDay + ", searchEmployee=" + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", showDataTable=" + showDataTable + ", msg=" + msg + ", ActionURI=" + ActionURI + "]";
+	public String toString() {
+	    return "stopWorkVO [searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit + ", searchReasons="
+		    + searchReasons + ", startStopWorkDate=" + startStopWorkDate + ", endStopWorkDate="
+		    + endStopWorkDate + ", startTimeHh=" + startTimeHh + ", startTimemm=" + startTimemm + ", endTimeHh="
+		    + endTimeHh + ", endTimemm=" + endTimemm + ", addDay=" + addDay + ", searchEmployee="
+		    + searchEmployee + ", searchEmployeeNo=" + searchEmployeeNo + ", note=" + note + ", showDataTable="
+		    + showDataTable + ", msg=" + msg + ", ActionURI=" + ActionURI + ", Login=" + Login + ", rowID="
+		    + rowID + ", searchRole=" + searchRole + ", leaveStatus=" + leaveStatus + ", leaveRole=" + leaveRole
+		    + ", leaveApply=" + leaveApply + ", saveButText=" + saveButText + "]";
 	}
+	
 	
 	
 	

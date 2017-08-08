@@ -1558,22 +1558,11 @@ public class HtmlUtil
 		{
 			htmlButton = "";
 		}
-		if (page.equals("save"))
-		{
-			bStatus = "S";
-		}
-		if (page.equals(keyConts.pageMsList))
-		{
-			bStatus = "M";
-		}
-		if (page.equals(keyConts.pageList))
-		{
-			bStatus = "L";
-		}
+		
 
 		WebDBTableCL table = new WebDBTableCL(con, sql);
 
-		return table.getHTMLTableStopWork(out, "無資料", css, htmlButton, msg, bStatus);
+		return table.getHTMLTableStopWork(out, "無資料", css, htmlButton, msg, page);
 		// System.out.println("table :"+table.toString());
 	}
 

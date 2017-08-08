@@ -334,4 +334,25 @@ public class sqlConsts
 	public static final String sql_getMonthDetailExcelRepo="/cn/com/maxim/portal/sql/getMonthDetailExcelRepo.sql";
 	/**檢查有無設定待工權限**/
 	public static final String sql_queryDeptUnitStopCount="/cn/com/maxim/portal/sql/queryDeptUnitStopCount.sql";
+	/**新增待工單**/
+	public static final String sql_insterStopCard="/cn/com/maxim/portal/sql/insterStopCard.sql";
+	/**修改待工單**/
+	public static final String sql_updateStopWork="/cn/com/maxim/portal/sql/updateStopWork.sql";
+	/**修改待工單**/
+	public static final String sql_getStopViewData="/cn/com/maxim/portal/sql/getStopViewData.sql";
+	/**查詢待工單**/
+	public static final String sql_getStopWorkTable="/cn/com/maxim/portal/sql/getStopWorkTable.sql";
+	/**查詢待工單人員資料**/
+	public static final String sql_queryStopUserData="/cn/com/maxim/portal/sql/queryStopUserData.sql";
+	/**查詢待工單流程資料**/
+	public static final String sql_queryDeptStopProcess="/cn/com/maxim/portal/sql/queryDeptStopProcess.sql";
+	/**查詢待工單員工編號**/
+	public static final String sql_getStopEPIP="/cn/com/maxim/portal/sql/getStopEPIP.sql";
+	/**查詢待工單部門下拉**/
+	public static final String sql_queryStopDept="/cn/com/maxim/portal/sql/queryStopDept.sql";
+	/**單位主管查詢待工單**/
+	public static final String sql_queryUnitStopTable="/cn/com/maxim/portal/sql/queryUnitStopTable.sql";
+	/**部門主管查詢待工單**/
+	public static final String sql_getDeptTable="/cn/com/maxim/portal/sql/getDeptTable.sql";
+	
 }

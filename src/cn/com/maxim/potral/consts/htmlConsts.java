@@ -75,9 +75,9 @@ public class htmlConsts
 	  /**測試用 刪請假加班單**/
 	  public static final String html_delUserWriteData="/cn/com/maxim/portal/html/ts_delUserWriteData.html";
 	  /**經理審核待工報表**/
-	 public static final String html_mgr_StopWorking="/cn/com/maxim/portal/sql/mgr_StopWorking.html";
+	 public static final String html_mgr_StopWorking="/cn/com/maxim/portal/html/mgr_StopWorking.html";
 	 /**副總審核待工報表**/
-	 public static final String html_bos_StopWorking="/cn/com/maxim/portal/sql/bos_StopWorking.html";
+	 public static final String html_bos_StopWorking="/cn/com/maxim/portal/html/bos_StopWorking.html";
 	 
 	  
 }

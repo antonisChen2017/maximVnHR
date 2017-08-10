@@ -3201,8 +3201,12 @@ public String getHTMLTableEditT( PrintWriter out,String NoRowMessage,String Tabl
 		        		}
 		        		else if(rowaction.equals("M")){//管理部審核ok
 		        			
-		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部已審核通過</td> \r");
 		        			
+		        			 if(delbut.equals("E")){
+		        			     if(LEAVEAPPLY.equals("0")){
+		        				 Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待审核</td> \r");
+		        				}
+		        			}
 		        		}
 		        	
 		        	}else if(col.ColumnName.equals("請假開始时间") ||  col.ColumnName.equals("請假結束时间")){
@@ -3500,7 +3504,7 @@ public String getHTMLTableSales( PrintWriter out,String NoRowMessage,String Tabl
 		        		}
 		        		else if(rowaction.equals("M")){//管理部審核ok
 		        			
-		        			Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部已審核通過</td> \r");
+		        		    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待审核</td> \r");
 		        			
 		        		}
 		        	

@@ -22,11 +22,15 @@ public class keyConts
 	  public static final String pageInspect = "inspect";
 	  public static final String dbTableCR= "VN_LEAVECARD";
 	  public static final String dbTableCRStatuS_U="U";
-	  public static final String dbTableCRStatuS_M="M";
 	  public static final String dbTableCRStatuS_D="D";
 	  public static final String dbTableCRStatuS_B="B";
 	  public static final String dbTableCRStatuS_R="R";
 	  public static final String dbTableCRStatuS_T="T";
+	  
+	  public static final String LeaveStatus_M="M";
+	  public static final String LeaveCRStatus_MR="MR";
+	  /**經理**/
+	  public static final String dbTableCRStatuS_L="L";
 	  public static final String  lateExcelheaders="STT\n序\n次,MST\n工号,TÊN\n姓名,BỘ PHẬN\n部门,ĐƠN VỊ\n单位,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ,21,22,23,24,25,26,27,28,29,30,31,分,小时,迟到次数";
 	  public static final String  earlyExcelheaders="STT\n序\n次,MST\n工号,TÊN\n姓名,BỘ PHẬN\n部门,ĐƠN VỊ\n单位,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ,21,22,23,24,25,26,27,28,29,30,31,分,小时,早退次数";
 	  public static final String  dailyExcelheaders="STT\n序\n次,MST\n工号,HỌ TÊN\n姓名,BỘ PHẬN\n部门,ĐƠN VỊ\n单位,正班出勤\nGiờ công,加班,年假 \n Phép năm,公假 \n Phép công,产假 \n Thai sản,婚假 \n Kết hôn ,丧假  \n  Phép tang,病假 \n Phép bệnh ,事假 \n Việc riêng,旷工 \n Lãng công ,迟到  \n Đi trễ  ,    ,待工\n Nghỉ    chờ  \n  việ  ,簽名 \n Ký tê,GHI CHÚ  \n 备注";
@@ -76,6 +80,15 @@ public class keyConts
 	  public static final String   EmpRoleM="M";
 	  /**副總**/
 	  public static final String   EmpRoleB="B";
+	  
+	  /**副總退回**/
+	  public static final String   StatusBR="BR";
+	  /**經理退回**/
+	  public static final String   StatusLR="LR";
+	  /**部門主管退回**/
+	  public static final String   StatusDR="DR";
+	  /**單位主管退回**/
+	  public static final String   StatusUR="UR";
 	  /**单位退回狀態**/
 	  public static final String dbTableUR="UR";
 	  /**单位提交員工超時加班狀態**/

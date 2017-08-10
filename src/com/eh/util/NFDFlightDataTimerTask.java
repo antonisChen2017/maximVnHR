@@ -7,6 +7,7 @@ package com.eh.util;
 
 import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.dao.overTimeDAO;
+import cn.com.maxim.portal.dao.stopWorkDAO;
 import cn.com.maxim.portal.util.ExcelUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
      
@@ -31,6 +32,10 @@ import cn.com.maxim.portal.util.Log4jUtil;
         	leaveCardDAO.deptProcessTimeEmail();
         	/**加班定時寄信**/
         	overTimeDAO.deptProcessTimeEmail();
+        	/**待工定時寄信**/
+        	stopWorkDAO.deptProcessTimeEmail();
+        	
+        	
             } catch (Exception e) {
         	logger.info("-------------解析信息发生异常START--------------");
         	logger.info(e.getMessage());

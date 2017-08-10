@@ -354,5 +354,20 @@ public class sqlConsts
 	public static final String sql_queryUnitStopTable="/cn/com/maxim/portal/sql/queryUnitStopTable.sql";
 	/**部門主管查詢待工單**/
 	public static final String sql_getDeptTable="/cn/com/maxim/portal/sql/getDeptTable.sql";
-	
+	/**待工定時寄信-人員資料**/
+	public static final String sql_queryEmailStopSingep="/cn/com/maxim/portal/sql/queryEmailStopSingep.sql";
+	/**待工定時寄信--寄信列表**/
+	public static final String sql_querySendEmailStopList="/cn/com/maxim/portal/sql/querySendEmailStopList.sql";
+	/**待工經理審核**/
+	public static final String sql_queryLStopTable="/cn/com/maxim/portal/sql/queryLStopTable.sql";
+	/**人事功能查詢待工**/
+	public static final String sql_queryPStopTable="/cn/com/maxim/portal/sql/queryPStopTable.sql";
+	/**待工刪除列表**/
+	public static final String sql_queryStopDelList="/cn/com/maxim/portal/sql/queryStopDelList.sql";
+	/**待工單刪除前紀錄**/
+	public static final String sql_InsterSTDelSave="/cn/com/maxim/portal/sql/InsterSTDelSave.sql";
+	/**更新待工單刪除紀錄**/
+	public static final String sql_updateSTDelSave="/cn/com/maxim/portal/sql/updateSTDelSave.sql";
+	/**刪除待工單**/
+	public static final String sql_deleteStop="/cn/com/maxim/portal/sql/deleteStop.sql";
 }

@@ -138,7 +138,10 @@ public class ControlUtil
 		ht1.put("text", "加班单");
 		ht1.put("value", "2");
 		al.add(ht1);
-		
+		Hashtable ht2=new Hashtable();
+		ht2.put("text", "待工单");
+		ht2.put("value", "3");
+		al.add(ht2);
 		return drawCustomSelectShared("drawOLSelect",al,SelectedOption);
 	}
 	

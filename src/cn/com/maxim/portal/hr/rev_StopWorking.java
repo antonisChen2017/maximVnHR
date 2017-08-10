@@ -3,6 +3,7 @@ package cn.com.maxim.portal.hr;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -208,7 +209,7 @@ public class rev_StopWorking extends TemplatePortalPen
 	 	}
 	 }
 	
-	private void showHtml(Connection con, PrintWriter out, stopWorkVO swVo , UserDescriptor UserInformation) throws SQLException {
+	private void showHtml(Connection con, PrintWriter out, stopWorkVO swVo , UserDescriptor UserInformation) throws Exception {
 		HtmlUtil hu=new HtmlUtil();
 		String htmlPart1=hu.gethtml(htmlConsts.html_rev_StopWorkingRead);
 		htmlPart1=htmlPart1.replace("<ActionURI/>", 	swVo.getActionURI());
@@ -223,7 +224,7 @@ public class rev_StopWorking extends TemplatePortalPen
 		if(swVo.isShowDataTable()){
 	//	System.out.println("StopWork : " +SqlUtil.getStopWork(swVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawStopWorking(
-					SqlUtil.getStopWork(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageList));
+					SqlUtil.queryPStopTable(swVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageList));
 		}
 		
 	    out.println(htmlPart1);

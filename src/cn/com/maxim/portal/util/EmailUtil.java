@@ -226,6 +226,37 @@ public class EmailUtil {
 	return Template;
     }
 
+    
+    /**
+     * 定時寄送代工列表email
+     * 
+     * @param USER
+     * @param EID
+     * @param RUSER
+     * @return
+     */
+    public static String getStopEmailTemplateList(List<overEmailListRO> ler, String USER) {
+	HtmlUtil hu = new HtmlUtil();
+	String Template = hu.gethtml(UrlUtil.email_timeStopEmail);
+	Template = Template.replace("<USER/>", USER);
+	String row = "", tmp = "";
+	for (int i = 0; i < ler.size(); i++) {
+	    tmp = hu.gethtml(UrlUtil.email_overEmailRow);
+
+	    tmp = tmp.replace("<EMPLOYEE/>", ler.get(i).getEMPLOYEE());
+	    tmp = tmp.replace("<EMPLOYEENO/>", ler.get(i).getEMPLOYEENO());
+	    tmp = tmp.replace("<DEPARTMENT/>", ler.get(i).getDEPARTMENT());
+	    tmp = tmp.replace("<UNIT/>", ler.get(i).getUNIT());
+	    tmp = tmp.replace("<APPLICATIONHOURS/>", ler.get(i).getAPPLICATION_HOURS());
+	    tmp = tmp.replace("<OVERTIMESTART/>", ler.get(i).getOVERTIME_START());
+	    tmp = tmp.replace("<OVERTIMEEND/>", ler.get(i).getOVERTIME_END());
+	    tmp = tmp.replace("<REASONS/>", ler.get(i).getREASONS());
+	    row = row + tmp;
+	}
+	Template = Template.replace("<row/>", row);
+	return Template;
+    }
+    
     /**
      * 定時寄送CS列表email
      * 

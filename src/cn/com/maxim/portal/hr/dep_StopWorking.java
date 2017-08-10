@@ -122,7 +122,7 @@ public class dep_StopWorking extends TemplatePortalPen
 						logger.info(" Refer: " +swVo.toString());
 						DBUtil.updateSql(SqlUtil.upStopStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
 						/**20170802暫時不寄信**/
-						//stopWorkDAO.deptProcessEmail(con,swVo);
+						stopWorkDAO.deptProcessEmail(con,swVo);
 						swVo.setSearchEmployeeNo("0");
 						swVo.setShowDataTable(true);
 						swVo.setSaveButText(keyConts.butSave);

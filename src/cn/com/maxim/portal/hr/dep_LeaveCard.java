@@ -140,7 +140,7 @@ public class dep_LeaveCard extends TemplatePortalPen
 					if (actText.equals("Refer"))//提交審核
 					{
 						logger.info("請假卡 員工/Save : Refer: " +lcVo.toString());
-						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
+						DBUtil.updateSql(SqlUtil.upLCStatus(keyConts.LeaveStatus_M,request.getParameter("rowID"),"0"), con);
 						/**20170802暫時不寄信**/
 						//leaveCardDAO.deptProcessEmail(con,lcVo);
 						lcVo.setShowDataTable(true);

@@ -5886,6 +5886,24 @@ public class SqlUtil
 	}
 	
 	/**
+	 *查詢待工單的待審員工名單
+	 * @param lc
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String querySendEmailStopList(leaveCardVO lc) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_querySendEmailStopList);
+		sql = sql.replace("<SINGEP/>", lc.getNote());
+		sql = sql.replace("<STATUS/>", lc.getStatus());
+		sql = sql.replace("<ROLE/>", lc.getSearchRole());
+		sql = sql.replace("<AND/>", lc.getReturnMsg());
+		return sql;
+	}
+	
+	
+	/**
 	 *查詢CS加班單的待審員工名單
 	 * @param lc
 	 * @return
@@ -6441,6 +6459,18 @@ public class SqlUtil
 		return sql;
 	}
 	/**
+	 * 刪除待工資料
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String deleteStop(delUserWriteDataVO delVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_deleteStop);
+		sql = sql.replace("<rowID/>", delVo.getRowID());
+		return sql;
+	}
+	/**
 	 * 刪除請假資料
 	 * @return
 	 * @throws ParseException
@@ -6477,7 +6507,19 @@ public class SqlUtil
 		sql = sql.replace("<rowID/>", delVo.getRowID());
 		return sql;
 	}
-	
+	/**
+	 * 更新刪除待工資料
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String UpdateSTDelSave(delUserWriteDataVO delVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_updateSTDelSave);
+		sql = sql.replace("<LOGIN/>", delVo.getLOGIN());
+		sql = sql.replace("<rowID/>", delVo.getRowID());
+		return sql;
+	}
 	
 	/**
 	 * 存入刪除請假資料
@@ -6757,7 +6799,7 @@ public class SqlUtil
 		if (! swVo.getStartStopWorkDate().trim().equals( swVo.getEndStopWorkDate().trim()))
 		{
 			//Sb.append(" AND   S.SUBMITDATE BETWEEN '" + otVo.getStartSubmitDate() + " 00:00:00" + "'  AND '" + otVo.getEndSubmitDate() + " 23:59:59' \n");
-			 sql = sql.replace("<StartDate/>",  "  S.SUBMITDATE BETWEEN '" + swVo.getStartStopWorkDate() + " 00:00:00" + "'  AND '" +swVo.getEndStopWorkDate()  + " 23:59:59'  ");
+			 sql = sql.replace("<StartDate/>",  "  S.STARTSTOPDATE BETWEEN '" + swVo.getStartStopWorkDate() + " 00:00:00" + "'  AND '" +swVo.getEndStopWorkDate()  + " 23:59:59'  ");
 		}
 		if (swVo.getStartStopWorkDate().trim().equals(swVo.getEndStopWorkDate().trim()))
 		{
@@ -6781,9 +6823,9 @@ public class SqlUtil
 		String sql = hu.gethtml(sqlConsts.sql_getDeptTable);
 		if (!swVo.getSearchEmployeeNo().equals("0"))
 		{
-		    sql = sql.replace("<EP_ID/>",  " S.EP_ID='"+swVo.getSearchEmployeeNo() +"'" );
+		    sql = sql.replace("<EPID/>",  " S.EP_ID='"+swVo.getSearchEmployeeNo() +"'" );
 		}else{
-		    sql = sql.replace("<EP_ID/>","  1=1 ");
+		    sql = sql.replace("<EPID/>","  1=1 ");
 		}
 		if (!swVo.getSearchDepartmen().equals("0"))
 		{
@@ -6807,17 +6849,222 @@ public class SqlUtil
 		if (! swVo.getStartStopWorkDate().trim().equals( swVo.getEndStopWorkDate().trim()))
 		{
 			//Sb.append(" AND   S.SUBMITDATE BETWEEN '" + otVo.getStartSubmitDate() + " 00:00:00" + "'  AND '" + otVo.getEndSubmitDate() + " 23:59:59' \n");
-			 sql = sql.replace("<StartDate/>",  "  S.SUBMITDATE BETWEEN '" + swVo.getStartStopWorkDate() + " 00:00:00" + "'  AND '" +swVo.getEndStopWorkDate()  + " 23:59:59'  ");
+			 sql = sql.replace("<StartDate/>",  "  S.STARTSTOPDATE BETWEEN '" + swVo.getStartStopWorkDate() + " 00:00:00" + "'  AND '" +swVo.getEndStopWorkDate()  + " 23:59:59'  ");
 		}
 		if (swVo.getStartStopWorkDate().trim().equals(swVo.getEndStopWorkDate().trim()))
 		{
 			
-			 sql = sql.replace("<StartDate/>",  "   CONVERT(varchar(100),  S.SUBMITDATE, 111) = '" + swVo.getStartStopWorkDate() + "'  ");
+			 sql = sql.replace("<StartDate/>",  "   CONVERT(varchar(100),  S.STARTSTOPDATE, 111) = '" + swVo.getStartStopWorkDate() + "'  ");
 		}
 		
 		
 	        sql = sql.replace("<SINGROLEL2/>",  "   (S.SINGROLEL2='1' and S.SINGROLEL2EP='"+SINGROLEEP+"' )" );
 			
+		return sql;
+	}
+	/**
+	 *經理查詢待工
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryLStopTable(stopWorkVO swVo,String SINGROLEEP) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryLStopTable);
+		if (!swVo.getSearchDepartmen().equals("0"))
+		{
+		    sql = sql.replace("<DEPT/>",  "  DT.ID='"+swVo.getSearchDepartmen()+"' ");
+		}else{
+		    sql = sql.replace("<DEPT/>"," 1=1 ");
+		}
+		if (!swVo.getSearchEmployeeNo().equals("0"))
+		{
+		    sql = sql.replace("<EPID/>",  " S.EP_ID='"+swVo.getSearchEmployeeNo() +"'" );
+		}else{
+		    sql = sql.replace("<EPID/>","  1=1 ");
+		}
+		if (! swVo.getStartStopWorkDate().trim().equals( swVo.getEndStopWorkDate().trim()))
+		{
+			//Sb.append(" AND   S.SUBMITDATE BETWEEN '" + otVo.getStartSubmitDate() + " 00:00:00" + "'  AND '" + otVo.getEndSubmitDate() + " 23:59:59' \n");
+			 sql = sql.replace("<StartDate/>",  "  S.STARTSTOPDATE BETWEEN '" + swVo.getStartStopWorkDate() + " 00:00:00" + "'  AND '" +swVo.getEndStopWorkDate()  + " 23:59:59'  ");
+		}
+		if (swVo.getStartStopWorkDate().trim().equals(swVo.getEndStopWorkDate().trim()))
+		{
+			
+			// sql = sql.replace("<StartDate/>",  "   CONVERT(varchar(100),  S.STARTSTOPDATE, 111) = '" + swVo.getStartStopWorkDate() + "'  ");
+		    sql = sql.replace("<StartDate/>",  "   1=1  ");
+		}
+		/** 未審核 **/
+		if (swVo.getSTATUS().equals("U"))
+		{      
+		    sql = sql.replace("<SINGROLEL/>",  "  AND NOT (S.STATUS='T' AND  S.SINGROLEL1EP<>'')    "
+		    	+ " AND NOT (S.STATUS='U' AND  S.SINGROLEL2EP<>'')  "
+		    	+ " AND NOT (S.STATUS='L' AND  S.LEAVEAPPLY ='0')  "
+		    	+ " AND (S.SINGROLEL3='1' and S.SINGROLEL3EP='"+SINGROLEEP+"') "
+		    	+ " and   S.LEAVEAPPLY ='0' ");
+		}
+		/** 已審核或退回 **/
+		if (swVo.getSTATUS().equals("I"))
+		{ 
+		    sql = sql.replace("<SINGROLEL/>",  "  and   (S.LEAVEAPPLY ='1'  or  S.LEAVEAPPLY ='2')   ");
+			
+		}
+		return sql;
+	}
+	
+	/**
+	 *副總查詢待工
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String queryBStopTable(stopWorkVO swVo,String SINGROLEEP) throws Exception
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryLStopTable);
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		
+		
+		if (!swVo.getSearchDepartmen().equals("0"))
+		{
+		    sql = sql.replace("<DEPT/>",  "  DT.ID='"+swVo.getSearchDepartmen()+"' ");
+		}else{
+		    sql = sql.replace("<DEPT/>"," 1=1 ");
+		}
+		if (!swVo.getSearchEmployeeNo().equals("0"))
+		{
+		    sql = sql.replace("<EPID/>",  " S.EP_ID='"+swVo.getSearchEmployeeNo() +"'" );
+		}else{
+		    sql = sql.replace("<EPID/>","  1=1 ");
+		}
+		//logger.info("queryBStopTable StartStopWorkDate   "+swVo.getStartStopWorkDate());
+		//logger.info("queryBStopTable StartStopWorkDate   "+swVo.getEndStopWorkDate());
+	//	logger.info("queryBStopTable sql    "+sql);
+		if (! swVo.getStartStopWorkDate().trim().equals( swVo.getEndStopWorkDate().trim()))
+		{
+			//Sb.append(" AND   S.SUBMITDATE BETWEEN '" + otVo.getStartSubmitDate() + " 00:00:00" + "'  AND '" + otVo.getEndSubmitDate() + " 23:59:59' \n");
+			 sql = sql.replace("<StartDate/>",  "  S.STARTSTOPDATE BETWEEN '" + swVo.getStartStopWorkDate() + " 00:00:00" + "'  AND '" +swVo.getEndStopWorkDate()  + " 23:59:59'  ");
+		}
+		if (swVo.getStartStopWorkDate().trim().equals(swVo.getEndStopWorkDate().trim()))
+		{
+			
+			// sql = sql.replace("<StartDate/>",  "   CONVERT(varchar(100),  S.STARTSTOPDATE, 111) = '" + swVo.getStartStopWorkDate() + "'  ");
+		    sql = sql.replace("<StartDate/>",  "   1=1  ");
+		}
+		/** 未審核 **/
+		if (swVo.getSTATUS().equals("U"))
+		{      
+		    
+			
+		    sql = sql.replace("<SINGROLEL/>",  "  AND NOT (S.STATUS='T' AND  S.SINGROLEL1EP<>'')    "
+		    	+ " AND NOT (S.STATUS='U' AND  S.SINGROLEL2EP<>'')  "
+			+ " AND NOT (S.STATUS='D' AND  S.SINGROLEL3EP<>'')  "
+		    	+ " AND (S.SINGROLEL4='1' and S.SINGROLEL4EP='"+SINGROLEEP+"') "
+		    	+ " and   S.LEAVEAPPLY ='0' ");
+		}
+		/** 已審核或退回 **/
+		if (swVo.getSTATUS().equals("I"))
+		{ 
+		    sql = sql.replace("<SINGROLEL/>",  "  and   (S.LEAVEAPPLY ='1'  or  S.LEAVEAPPLY ='2')   ");
+			
+		}
+		return sql;
+	}
+	
+	/**
+	 * 使用加班單狀態取員工資料行號
+	 * @param rowID
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String queryEmailStopSingep(leaveCardVO lc) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryEmailStopSingep);
+		sql = sql.replace("<SINGEP/>", lc.getNote());
+		sql = sql.replace("<STATUS/>", lc.getStatus());
+		sql = sql.replace("<ROLE/>", lc.getSearchRole());
+		sql = sql.replace("<AND/>", lc.getReturnMsg());
+		return sql;
+	}
+	
+	/**
+	 * 使用加班單狀態取員工資料行號
+	 * @param rowID
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String queryPStopTable(stopWorkVO swVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryPStopTable);
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		
+		
+		if (!swVo.getSearchDepartmen().equals("0"))
+		{
+		    sql = sql.replace("<DEPT/>",  "  DT.ID='"+swVo.getSearchDepartmen()+"' ");
+		}else{
+		    sql = sql.replace("<DEPT/>"," 1=1 ");
+		}
+		if (!swVo.getSearchEmployeeNo().equals("0"))
+		{
+		    sql = sql.replace("<EPID/>",  " S.EP_ID='"+swVo.getSearchEmployeeNo() +"'" );
+		}else{
+		    sql = sql.replace("<EPID/>","  1=1 ");
+		}
+		if (!swVo.getSearchUnit().equals("0"))
+		{
+		    sql = sql.replace("<UNIT/>",  " UT.ID='"+swVo.getSearchUnit() +"'" );
+		}else{
+		    sql = sql.replace("<UNIT/>","  1=1 ");
+		}
+		if (!swVo.getSearchReasons().equals("0"))
+		{
+		    sql = sql.replace("<STOPRESON/>",  " RS.ID='"+swVo.getSearchReasons() +"'" );
+		}else{
+		    sql = sql.replace("<STOPRESON/>","  1=1 ");
+		}
+		return sql;
+	}
+	/**
+	 * 使用加班單狀態取員工資料行號
+	 * @param rowID
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String queryStopDelList(delUserWriteDataVO delVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_queryStopDelList);
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(SqlUtil.class);
+		if(delVo.getSearchDepartmen().equals("0")){
+		    sql = sql.replace("<DEPT/>", " 1=1" );
+		}else{
+		    sql = sql.replace("<DEPT/>", " D.ID ='"+delVo.getSearchDepartmen()+"'" );
+		}
+		if(delVo.getSearchUnit().equals("0")){
+		    sql = sql.replace("<UNIT/>", " 1=1" );
+		}else{
+		    sql = sql.replace("<UNIT/>", " U.ID ='"+delVo.getSearchUnit()+"'" );
+		}
+		return sql;
+	}
+	/**
+	 * 使用加班單狀態取員工資料行號
+	 * @param rowID
+	 * @return
+	 * @throws ParseException
+	 */
+	public static final String InsterSTDelSave(delUserWriteDataVO delVo) throws ParseException
+	{
+		HtmlUtil hu = new HtmlUtil();
+		String sql = hu.gethtml(sqlConsts.sql_InsterSTDelSave);
+		sql = sql.replace("<rowID/>", delVo.getRowID() );
 		return sql;
 	}
 	

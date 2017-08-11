@@ -370,4 +370,10 @@ public class sqlConsts
 	public static final String sql_updateSTDelSave="/cn/com/maxim/portal/sql/updateSTDelSave.sql";
 	/**刪除待工單**/
 	public static final String sql_deleteStop="/cn/com/maxim/portal/sql/deleteStop.sql";
+	/**更新日報表工時**/
+	public static final String sql_updateDayAttendance="/cn/com/maxim/portal/sql/updateDayAttendance.sql";
+	/**報表查詢遲到次數與遲到分**/
+	public static final String sql_getBelateCount="/cn/com/maxim/portal/sql/getBelateCount.sql";
+	/**報表查詢所有工號**/
+	public static final String sql_queryMonthDetailEmp="/cn/com/maxim/portal/sql/queryMonthDetailEmp.sql";
 }

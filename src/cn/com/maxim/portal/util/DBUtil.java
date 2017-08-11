@@ -55,6 +55,9 @@ import cn.com.maxim.portal.attendan.vo.editProcessVO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.vo.stopWorkVO;
+import cn.com.maxim.portal.attendan.wo.BelateDetailWO;
+import cn.com.maxim.portal.attendan.wo.BelateEmpWO;
+import cn.com.maxim.portal.attendan.wo.BelateRepoWO;
 import cn.com.maxim.portal.attendan.wo.EmailWO;
 import cn.com.maxim.portal.attendan.wo.dayAttendanceWO;
 import cn.com.maxim.portal.attendan.wo.monthReportNoteWO;
@@ -64,6 +67,7 @@ import cn.com.maxim.portal.bean.dayTableMoble;
 import cn.com.maxim.portal.bean.repAttendanceDayBean;
 import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.dao.overTimeDAO;
+import cn.com.maxim.portal.dao.reportMonthDAO;
 import cn.com.maxim.portal.leat.rowItem;
 import cn.com.maxim.potral.consts.keyConts;
 import cn.com.maxim.potral.consts.sqlConsts;
@@ -2365,11 +2369,12 @@ public class DBUtil
 		String sNotWork="";
 		for( int i=0;i< leo.size();i++){
 		//	logger.info("  leo.get(i) "+ leo.get(i));
-			/**如果有遲到 減少上班時數 START**/
+			
 			double  fAttendance=0;
 			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
 				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
 			}
+			/**如果有遲到 減少上班時數 START
 			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")  ){
 				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
 				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
@@ -2382,9 +2387,9 @@ public class DBUtil
 					 updateSql(SqlUtil.updateDayReportDetailAttendance(leo.get(i).getDAY(),fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
 			}
-		
+			**/
 			
-			/**如果有早退 減少上班時數 START
+			/**如果有早退 減少上班時數 START**/
 			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
 				double  fEarly=Float.parseFloat(leo.get(i).getEARLY());
 				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
@@ -2397,7 +2402,7 @@ public class DBUtil
 					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
 			}
-			如果有早退 減少上班時數 END**/
+			/**如果有早退 減少上班時數 END**/
 			
 			/**如果出勤 扣掉曠工 START
 			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
@@ -2553,7 +2558,7 @@ public class DBUtil
 	
 					double  dHolidayH=Float.parseFloat(leo.get(i).getHOLIDAYH());
 					dNotWork= dNotWork-dHolidayH;
-				//	logger.info("h dNotWork  "+ String.valueOf(dNotWork));
+				//	logger.info("f dNotWork  "+ dNotWork);
 					 if(dNotWork<=0 ){
 						 dNotWork=0;
 					 }
@@ -2561,7 +2566,7 @@ public class DBUtil
 						 dNotWork=0;
 					 }
 					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
-				//		logger.info("h dNotWork  "+ dNotWork);
+				//		logger.info("f dNotWork  "+ dNotWork);
 					 if(dHolidayH!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
@@ -2908,7 +2913,7 @@ public class DBUtil
 		String sNotWork="";
 		for( int i=0;i< leo.size();i++){
 		//	logger.info("  leo.get(i) "+ leo.get(i));
-			/**如果有遲到 減少上班時數 START**/
+			/**如果有遲到 減少上班時數 START
 			double  fAttendance=0;
 			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
 				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
@@ -2924,10 +2929,14 @@ public class DBUtil
 				 if(fBelate!=0 ){
 					 updateSql(SqlUtil.updateDayReportDetailAttendance(leo.get(i).getDAY(),fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
-			}
+			}**/
 		
 			
-			/**如果有早退 減少上班時數 START
+			/**如果有早退 減少上班時數 START**/
+		        double  fAttendance=0;
+		        if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
+				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+			}
 			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
 				double  fEarly=Float.parseFloat(leo.get(i).getEARLY());
 				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
@@ -2940,7 +2949,7 @@ public class DBUtil
 					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
 			}
-			如果有早退 減少上班時數 END**/
+			/**如果有早退 減少上班時數 END**/
 			
 			/**如果出勤 扣掉曠工 START
 			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
@@ -3017,26 +3026,7 @@ public class DBUtil
 						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
 				}
-				 /**工傷假
-				logger.info(" getHOLIDAYI  "+ leo.get(i).getHOLIDAYI());
-				if( leo.get(i).getHOLIDAYI()!=null && !leo.get(i).getHOLIDAYI().equals("")){
-	
-					double  dHolidayI=Float.parseFloat(leo.get(i).getHOLIDAYI());
-					dNotWork= dNotWork-dHolidayI;
-				//	logger.info(" c dNotWork  "+ dNotWork);
-					 if(dNotWork<0 ){
-						 dNotWork=0;
-					 }
-					 if( String.valueOf(dNotWork).equals("0.0")){
-						 dNotWork=0;
-					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
-				//		logger.info("c dNotWork  "+ dNotWork);
-					 if(dHolidayI!=0 & dNotWork<=8){
-						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
-					 }
-				}
-				**/
+				
 				 /**婚假**/
 				if( leo.get(i).getHOLIDAYD()!=null && !leo.get(i).getHOLIDAYD().equals("")){
 	
@@ -3155,8 +3145,12 @@ public class DBUtil
 		String sNotWork="";
 		for( int i=0;i< leo.size();i++){
 			logger.info("  leo.get(i) "+ leo.get(i));
-			/**如果有遲到 減少上班時數 START**/
 			double  fAttendance=0;
+			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
+				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
+			}
+			/**如果有遲到 減少上班時數 START
+			/double  fAttendance=0;
 			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
 				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
 			}
@@ -3171,27 +3165,17 @@ public class DBUtil
 				 if(fBelate!=0 ){
 					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
-			}
+			}**/
 			/**假日不能曠職 start**/
 		        int ci= DateUtil.getWeekday(lcVo.getApplicationDate());
 			if( ci==1){
-			     sNotWork="0.0";
+			     sNotWork="";
 			    updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
 			}
 			/**假日不能曠職 end**/
-			/**如果有遲到 減少上班時數 END**/
 			
-			/**夜班紀錄到130 START**/
 			
-			/**夜班紀錄到130  END**/
-			/**周日上班紀錄到200 START**/
-			
-			/**周日上班紀錄到200  END**/
-			/**節日日上班紀錄到300 START**/
-			
-			/**節日上班紀錄到300  END**/
-			
-			/**如果有早退 減少上班時數 START
+			/**如果有早退 減少上班時數 START**/
 			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
 				double  fEarly=Float.parseFloat(leo.get(i).getEARLY());
 				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
@@ -3204,7 +3188,7 @@ public class DBUtil
 					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
 			}
-			如果有早退 減少上班時數 END**/
+			/**如果有早退 減少上班時數 END**/
 			
 			/**如果出勤 扣掉曠工 START
 			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
@@ -3236,8 +3220,10 @@ public class DBUtil
 					 if( String.valueOf(dNotWork).equals("0.0")){
 						 dNotWork=0;
 					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
-						//logger.info("a dNotWork  "+ dNotWork);
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
 					 if(dHolidayA!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
@@ -3254,32 +3240,16 @@ public class DBUtil
 					 if( String.valueOf(dNotWork).equals("0.0")){
 						 dNotWork=0;
 					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
 				//		logger.info("b dNotWork  "+ dNotWork);
 					 if(dHolidayB!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
 				}
-				 /**工傷假
-				logger.info(" getHOLIDAYI  "+ leo.get(i).getHOLIDAYI());
-				if( leo.get(i).getHOLIDAYI()!=null && !leo.get(i).getHOLIDAYI().equals("")){
-	
-					double  dHolidayI=Float.parseFloat(leo.get(i).getHOLIDAYI());
-					dNotWork= dNotWork-dHolidayI;
-				//	logger.info(" c dNotWork  "+ dNotWork);
-					 if(dNotWork<0 ){
-						 dNotWork=0;
-					 }
-					 if( String.valueOf(dNotWork).equals("0.0")){
-						 dNotWork=0;
-					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
-				//		logger.info("c dNotWork  "+ dNotWork);
-					 if(dHolidayI!=0 & dNotWork<=8){
-						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
-					 }
-				}
-				**/
+				
 				 /**婚假**/
 				if( leo.get(i).getHOLIDAYD()!=null && !leo.get(i).getHOLIDAYD().equals("")){
 	
@@ -3292,7 +3262,10 @@ public class DBUtil
 					 if( String.valueOf(dNotWork).equals("0.0")){
 						 dNotWork=0;
 					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
 				//	 logger.info("d dNotWork  "+ dNotWork);
 					 if(dHolidayD!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
@@ -3310,7 +3283,10 @@ public class DBUtil
 					 if( String.valueOf(dNotWork).equals("0.0")){
 						 dNotWork=0;
 					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
 				//	 logger.info("e dNotWork  "+ dNotWork);
 					 if(dHolidayE!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
@@ -3328,7 +3304,10 @@ public class DBUtil
 					 if( String.valueOf(dNotWork).equals("0.0")){
 						 dNotWork=0;
 					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
 				//		logger.info("f dNotWork  "+ dNotWork);
 					 if(dHolidayF!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
@@ -3346,31 +3325,16 @@ public class DBUtil
 					 if( String.valueOf(dNotWork).equals("0.0")){
 						 dNotWork=0;
 					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
 				//		logger.info("h dNotWork  "+ dNotWork);
 					 if(dHolidayH!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
 				}
-				 /**工傷假
-				if( leo.get(i).getHOLIDAYI()!=null && !leo.get(i).getHOLIDAYI().equals("")){
-	
-					double  dHolidayI=Float.parseFloat(leo.get(i).getHOLIDAYI());
-					dNotWork= dNotWork-dHolidayI;
-				//	logger.info("h dNotWork  "+ String.valueOf(dNotWork));
-					 if(dNotWork<=0 ){
-						 dNotWork=0;
-					 }
-					 if( String.valueOf(dNotWork).equals("0.0")){
-						 dNotWork=0;
-					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
-				//		logger.info("h dNotWork  "+ dNotWork);
-					 if(dHolidayI!=0 & dNotWork<=8){
-						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
-					 }
-				}
-				**/
+			
 				 /**公假**/
 				if( leo.get(i).getHOLIDAYO()!=null && !leo.get(i).getHOLIDAYO().equals("")){
 	
@@ -3383,7 +3347,10 @@ public class DBUtil
 					 if( String.valueOf(dNotWork).equals("0.0")){
 						 dNotWork=0;
 					 }
-					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
 				//		logger.info("b dNotWork  "+ dNotWork);
 					 if(dHolidayO!=0 & dNotWork<=8){
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
@@ -3391,6 +3358,47 @@ public class DBUtil
 				}
 			}
 			/**如果有休假就扣掉曠工 END**/
+			 /**如果當天年假公假婚假喪假補回工時**/
+			
+			    /**年假**/
+			    if(!leo.get(i).getHOLIDAYH().equals("") ){
+				double  fHolidayH=Float.parseFloat(leo.get(i).getHOLIDAYH());
+				fAttendance=  fAttendance+fHolidayH;
+				if(fAttendance<0){
+				fAttendance=0;
+				 }
+				
+				 updateSql(SqlUtil.updateDayAttendance(lcVo,String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
+			    /**公假**/
+			    if(!leo.get(i).getHOLIDAYO().equals("") ){
+			 	double  fHolidayO=Float.parseFloat(leo.get(i).getHOLIDAYO());
+			 	fAttendance=  fAttendance+fHolidayO;
+			 	if(fAttendance<0){
+			 	fAttendance=0;
+			 	 }
+			 	updateSql(SqlUtil.updateDayAttendance(lcVo,String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
+			    /**婚假**/
+			    if(!leo.get(i).getHOLIDAYD().equals("") ){
+			 	double  fHolidayD=Float.parseFloat(leo.get(i).getHOLIDAYD());
+			 	fAttendance=  fAttendance+fHolidayD;
+			 	if(fAttendance<0){
+			 	fAttendance=0;
+			 	 }
+			 	updateSql(SqlUtil.updateDayAttendance(lcVo,String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
+			    /**喪假**/
+			    if(!leo.get(i).getHOLIDAYF().equals("") ){
+			 	double  fHolidayF=Float.parseFloat(leo.get(i).getHOLIDAYF());
+			 	fAttendance=  fAttendance+fHolidayF;
+			 	if(fAttendance<0){
+			 	    fAttendance=0;
+			 	 }
+			 	
+			 		logger.info("喪假更新報表工時 "+ SqlUtil.updateDayAttendance(lcVo,String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()));
+			 	updateSql(SqlUtil.updateDayAttendance(lcVo,String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
 		}
 		
 	}
@@ -3581,11 +3589,62 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 			rmd.setNIGHTSHIFT(rmd.getATTENDANCE());
 			
 		    }
+		    /**如果當天年假公假婚假喪假補回工時**/
+		   double  fAttendance=0;
+		    if(! rmd.getATTENDANCE().equals("") && rmd.getATTENDANCE() !=null){
+			 fAttendance=Float.parseFloat( rmd.getATTENDANCE());
+		    }
+		    /**年假**/
+		    if(!rmd.getHOLIDAYH().equals("") ){
+			double  fHolidayH=Float.parseFloat(rmd.getHOLIDAYH());
+			fAttendance=  fAttendance+fHolidayH;
+			if(fAttendance<0){
+			fAttendance=0;
+			 }
+			rmd.setATTENDANCE(String.valueOf(fAttendance));
+		    }
+		    /**公假**/
+		    if(!rmd.getHOLIDAYO().equals("") ){
+		 	double  fHolidayO=Float.parseFloat(rmd.getHOLIDAYO());
+		 	fAttendance=  fAttendance+fHolidayO;
+		 	if(fAttendance<0){
+		 	fAttendance=0;
+		 	 }
+		 	rmd.setATTENDANCE(String.valueOf(fAttendance));
+		    }
+		    /**婚假**/
+		    if(!rmd.getHOLIDAYD().equals("") ){
+		 	double  fHolidayD=Float.parseFloat(rmd.getHOLIDAYD());
+		 	fAttendance=  fAttendance+fHolidayD;
+		 	if(fAttendance<0){
+		 	fAttendance=0;
+		 	 }
+		 	rmd.setATTENDANCE(String.valueOf(fAttendance));
+		    }
+		    /**喪假**/
+		    if(!rmd.getHOLIDAYF().equals("") ){
+		 	double  fHolidayF=Float.parseFloat(rmd.getHOLIDAYF());
+		 	fAttendance=  fAttendance+fHolidayF;
+		 	if(fAttendance<0){
+		 	fAttendance=0;
+		 	 }
+		 	rmd.setATTENDANCE(String.valueOf(fAttendance));
+		    }
+		    /**如果當天年假公假婚假喪假補回工時 END**/
+		    
+		    /**判斷如早上或下午未打卡 則遲到或早退顯示未打卡 START**/
+		    if(rmd.getWORKETIME().equals(keyConts.noTime) && !rmd.getWORKFTIME().equals(keyConts.noTime)){
+			rmd.setEARLY(keyConts.NoCard);
+		    }
+		    if(!rmd.getWORKETIME().equals(keyConts.noTime) && rmd.getWORKFTIME().equals(keyConts.noTime)){
+			rmd.setBELATE(keyConts.NoCard);
+		    }
+		    /**判斷如早上或下午未打卡 則遲到或早退顯示未打卡 END**/
 		    re.add(rmd);
 		}
-		
-		
-		
+		/**計算遲到時間扣除月底工時**/
+		re=reportMonthDAO.getBelateDetailWO(con, Day,lcVo,re);
+	               
 		return re;
 	}
 	
@@ -3594,8 +3653,9 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 	 * 
 	 * @param lcVo
 	 * @return
+	 * @throws Exception 
 	 */
-	public static final 	Hashtable  getMonthTotleData(Connection con, leaveCardVO lcVo,String Day)
+	public static final 	Hashtable  getMonthTotleData(Connection con, leaveCardVO lcVo,String Day) throws Exception
 	{
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(SqlUtil.class);
@@ -3642,10 +3702,84 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		
 		for(int i=0;i<leo.size();i++){
 			mw=(monthSumTotalWo)leo.get(i);
-		
+			    /**如果當天年假公假婚假喪假補回工時**/
+			   double  fAttendance=0;
+			    if(! mw.getATTENDANCE().equals("") && mw.getATTENDANCE() !=null){
+				 fAttendance=Float.parseFloat( mw.getATTENDANCE());
+			    }
+			    /**年假**/
+			    if(!mw.getHOLIDAYH().equals("") ){
+				double  fHolidayH=Float.parseFloat(mw.getHOLIDAYH());
+				fAttendance=  fAttendance+fHolidayH;
+				if(fAttendance<0){
+				fAttendance=0;
+				 }
+				
+			    }
+			    /**公假**/
+			    if(!mw.getHOLIDAYO().equals("") ){
+			 	double  fHolidayO=Float.parseFloat(mw.getHOLIDAYO());
+			 	fAttendance=  fAttendance+fHolidayO;
+			 	if(fAttendance<0){
+			 	fAttendance=0;
+			 	 }
+			 	
+			    }
+			    /**婚假**/
+			    if(!mw.getHOLIDAYD().equals("") ){
+			 	double  fHolidayD=Float.parseFloat(mw.getHOLIDAYD());
+			 	fAttendance=  fAttendance+fHolidayD;
+			 	if(fAttendance<0){
+			 	fAttendance=0;
+			 	 }
+			 	
+			    }
+			    /**喪假**/
+			    if(!mw.getHOLIDAYF().equals("") ){
+			 	double  fHolidayF=Float.parseFloat(mw.getHOLIDAYF());
+			 	fAttendance=  fAttendance+fHolidayF;
+			 	if(fAttendance<0){
+			 	fAttendance=0;
+			 	 }
+			 
+			    }
+			/**計算員工要按打卡時間的規定打卡，若超過5分鐘視為遲到，當月不超過3次。
+			 *    如超過3次，遲到情況將計算如下：
+     				從第1分鐘至30分鐘將算滿30分鐘。
+     				從第31分鐘至60分鐘將算滿60分鐘。
+     				**/
+			 
+			    DBUtilTList<BelateRepoWO>  dblist=new DBUtilTList<BelateRepoWO>();
+			    BelateRepoWO bw=new BelateRepoWO();
+			    List<BelateRepoWO> lb= dblist.queryTList(con, SqlUtil.getBelateCount(mw.getEMPLOYEENO(),Day), bw);
+			    int BelateCount=0;
+			    int BelateAdd=0;
+			    int BelateMax=0;
+			    for(int j=0;j<lb.size();j++){
+				BelateRepoWO row=lb.get(j);
+				int Intbelate =Integer.valueOf(row.getBELATE());
+				if(Intbelate>=5){ //遲到
+				   // logger.info("遲到 Intbelate : "+Intbelate);
+				    BelateCount++;
+				    BelateAdd=BelateAdd+Intbelate;
+				    if(BelateCount>3){ //遲到超過三次
+					BelateMax=BelateMax+BelateAdd;
+				    }
+				}
+				
+			    }
+			    logger.info("=======================================");
+			    logger.info(mw.getEMPLOYEENO() +"遲到超過5分 次數: "+BelateCount);
+			    logger.info(mw.getEMPLOYEENO() +"遲到超過5分 總時間 : "+BelateMax);
+			   double  dBelate=NumberUtil.getBelate(Float.parseFloat(String.valueOf(BelateMax)));
+			   logger.info(mw.getEMPLOYEENO() +"遲到超過5分 總工時 : "+dBelate);
+			   logger.info(mw.getEMPLOYEENO() +"目前工時 : "+fAttendance);
+			   fAttendance=fAttendance-dBelate;
+			   logger.info(mw.getEMPLOYEENO() +"減去遲到工時 : "+fAttendance);
+			    logger.info("=======================================");
+			    /**員工打卡時間 END**/
+			mw.setATTENDANCE(String.valueOf(fAttendance));
 			listmW.put(mw.getEMPLOYEENO(), mw);
-			
-			
 		}
 		return listmW;
 	}

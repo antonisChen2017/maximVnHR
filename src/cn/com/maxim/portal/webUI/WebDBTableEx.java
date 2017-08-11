@@ -3207,6 +3207,13 @@ public String getHTMLTableEditT( PrintWriter out,String NoRowMessage,String Tabl
 		        				 Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待审核</td> \r");
 		        				}
 		        			}
+		        			 if(delbut.equals("2")){
+		        			     if(LEAVEAPPLY.equals("0")){
+		        				 Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+				        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='T';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+		        				}
+		        			}
 		        		}
 		        	
 		        	}else if(col.ColumnName.equals("請假開始时间") ||  col.ColumnName.equals("請假結束时间")){
@@ -3422,16 +3429,16 @@ public String getHTMLTableSales( PrintWriter out,String NoRowMessage,String Tabl
 		        		}else if(rowaction.equals("MR")){//管理退回
 		        			if(delbut.equals("0")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
-				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">人事部退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">送出请假单</button></td> \r");
 		        			}else  if(delbut.equals("E")){
 		        				Sb.append("<td class=\"text-right  "+TRStyle+"\"  >"
-				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">管理部退回</button>"
+				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">人事部退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">送出请假单</button></td> \r");
 		        			}else{
-		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">管理部退回</td> \r");
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">人事部退回</td> \r");
 		        			
 		        			}
 		        		}else if(rowaction.equals("LR")){//副總退回

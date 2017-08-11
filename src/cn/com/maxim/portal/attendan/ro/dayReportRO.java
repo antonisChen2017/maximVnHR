@@ -50,10 +50,19 @@ public class dayReportRO
 	private String NOTWORK;
 	/**遲到**/
 	private String BELATE;
-	
+	/**早退**/
+	private String EARLY;
 
 	
 	
+	public String getEARLY() {
+	    return EARLY;
+	}
+
+	public void setEARLY(String eARLY) {
+	    EARLY = eARLY;
+	}
+
 	public String getDEPARTMENT() {
 	    return DEPARTMENT;
 	}

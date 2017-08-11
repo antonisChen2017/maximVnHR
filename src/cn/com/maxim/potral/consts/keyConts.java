@@ -217,4 +217,9 @@ public class keyConts
 	  public static final String delbuildMsg= "删除登入帐号成功!";
 	  /***刪除登入帳號**/
 	  public static final String delbuildNoMsg= "删除登入帐号失败";
+	  /**報表-顯示未打卡**/
+	  public static final String NoCard="No Punch Card";
+	  /**報表-無打卡時間**/
+	  public static final String noTime="00:00";
+	  
 }

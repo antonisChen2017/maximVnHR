@@ -16,6 +16,7 @@ import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -58,8 +59,9 @@ public class rev_LeaveCard extends TemplatePortalPen
 					}
 					//管理部退回
 					if (actText.equals("MR")) {
-						logger.info(" 請假卡 三天以下 管理部審核/MR: " +lcVo.toString());	
+						logger.info(" 請假卡 人事退回: " +lcVo.toString());	
 						lcVo.setStatus(actText);
+						lcVo.setLeaveApply("2");
 						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
 							lcVo.setMsg(keyConts.returnMsg);
 						}
@@ -68,14 +70,17 @@ public class rev_LeaveCard extends TemplatePortalPen
 						showHtml(con, out, lcVo,UserInformation);
 					}
 					//管理部通過
-					if (actText.equals("M")) {
-						logger.info(" 請假卡 三天以下 管理部審核/M: " +lcVo.toString());	
+					if (actText.equals("T")) {
+						logger.info(" 請假卡人事通過/T: " +lcVo.toString());	
 
 						lcVo.setShowDataTable(true);
 						lcVo.setStatus(actText);
+						lcVo.setLeaveApply("0");
 						// 儲存db
 						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
 							lcVo.setMsg(keyConts.okMsg);
+							/**人事通過寄信給主管**/
+							//leaveCardDAO.deptProcessEmail(con,lcVo);
 						}
 				
 						showHtml(con, out, lcVo,UserInformation);

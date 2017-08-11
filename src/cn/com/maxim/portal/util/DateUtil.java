@@ -1092,4 +1092,32 @@ public class DateUtil {
     }
     
     
+    /**
+     * 計算當月最後一個上班日
+     * 
+     * @param date
+     * @return
+     */
+    public static String getMonthWorkDay(String YM) throws Exception {// 获取当月天数
+	String re="";
+	Calendar ca = Calendar.getInstance();
+	SimpleDateFormat ss = new SimpleDateFormat("yyyy/MM");
+	// System.out.println("1");
+	Date dd1 = ss.parse(YM);
+	ca.setTime(dd1); // 要计算你想要的月份，改变这里即可
+	// System.out.println("2");
+	int days = ca.getActualMaximum(Calendar.DAY_OF_MONTH);
+	// System.out.println("3 days="+days);
+	for(int i=days;i>0;i--){
+		String ymd=YM+"/"+i;
+	//	 System.out.println("4 ymd="+ymd);
+	 	if(DateUtil.getWeekday(ymd)!=1){
+	 //	  System.out.println("5 ymd="+ymd);
+	 	   re=ymd;
+	 	   break;
+	 	}
+	}
+	return re;
+    }
+    
 }

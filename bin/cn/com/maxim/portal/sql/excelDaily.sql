@@ -4,7 +4,7 @@ SELECT
 ,DR.EMPLOYEE
 ,DR.DEPARTMENT
 ,DR.UNIT
-,[ATTENDANCE] 
+,(case when [ATTENDANCE]='0.0' then '' else [ATTENDANCE] end )  AS [ATTENDANCE]
 ,[OVERTIME] 
 ,[HOLIDAYH] 
 ,[HOLIDAYC] 
@@ -16,9 +16,9 @@ SELECT
 ,[HOLIDAYI] 
 ,[HOLIDAYG] 
 ,[HOLIDAYO] 
-,[NOTWORK] 
-,[BELATE] 
-,[EARLY] 
+,(case when[NOTWORK] ='0.0' then '' else [NOTWORK]  end )  AS [NOTWORK]
+,(case when [BELATE]='0' then '' else [BELATE] end ) AS [BELATE]
+,(case when [EARLY]='0' then '' else [EARLY] end ) AS [EARLY]
 ,[STOPWORK] 
 ,[MEALS] 
 ,[NOTE] 

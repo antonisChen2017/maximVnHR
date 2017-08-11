@@ -61,35 +61,8 @@ public class testSql {
      public static void main(String[] args) throws Exception {
 	 
 	 
-	 /*	final SimpleDateFormat SF = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-         
-	        Date[] a = {SF.parse("2017/06/20 07:20"), SF.parse("2017/06/20 16:32")};
-	        Date[] b = {SF.parse("2017/06/20 16:33"), SF.parse("2017/06/20 18:30")};
-	         
-	        System.out.println("您好, 智能的电脑! 请问:");
-	        for (Date date : a) {
-	            System.out.print(date.toString() + " ~  ");
-	        }
-	        System.out.println("包含:");
-	        for (Date date : b) {
-	            System.out.print(date.toString() + " ~  ");
-	        }
-	        System.out.println("吗?");
-	         
-	        boolean ret = DateUtil.isContain(a, b);
-	        System.out.println("o(∩_∩)o 哈哈 ~ 我猜是: " + ret);
-	         
-	        ret = DateUtil.isContainEnd(a, b);
-	        System.out.println("o(∩_∩)o 哈哈 ~ 允许首尾相等 我猜是: " + ret);*/
-	// String t1="2017/07/03 16:30";
-	// String t2="2017/07/03 23:59";
-	// Long value=dateDiff(t1,t2,"yyyy/MM/dd HH:mm","h");
-	// System.out.println("o(∩_∩)o 哈哈 ~ 第一個時間為: " + value);
-	// t1="2017/07/04 00:00";
-	// t2="2017/07/04 02:30";
-	// value=dateDiff(t1,t2,"yyyy/MM/dd HH:mm","h");
-	// System.out.println("o(∩_∩)o 哈哈 ~  第二個時間為: " + value);
-	 String t1="2017/07/26";
+	
+	/** String t1="2017/07/26";
 	 int value=-1;
 	 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	        Calendar c = Calendar.getInstance();
@@ -106,112 +79,36 @@ public class testSql {
 	        y = c.getTime();
 	        year = format.format(y);
 	        System.out.println("过去2年："+year);
-	 	/*HSSFWorkbook wb = new HSSFWorkbook();
-	        HSSFSheet sheet = wb.createSheet("sheet1");
-	        sheet.setDefaultColumnWidth(20); // 默认列宽
-
-	        HSSFFont font = wb.createFont();
-	        font.setFontName("Times New Roman");
-	        font.setFontHeightInPoints((short) 13);// 设置字体大小
-	        font.setColor(HSSFColor.BLACK.index); //字体颜色
-
-	        HSSFCellStyle headStyle = wb.createCellStyle(); // 头部样式
-	        headStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);// 水平居中
-	        headStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
-	        headStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);// 左边框
-	        headStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);// 上边框
-	        headStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
-	        headStyle.setFillForegroundColor(HSSFColor.YELLOW.index);// 设置背景色
-	        headStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-	        headStyle.setFont(font);// 选择需要用到的字体格式
-
-	        HSSFCellStyle contentStyle = wb.createCellStyle(); // 内容样式
-	        contentStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
-	        contentStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);// 左边框
-	        contentStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);// 上边框
-	        contentStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
-
-	        //打开图片  
-	        InputStream is = new FileInputStream("D:\\Portal\\TEST\\excel.png");  
-	        byte[] bytes = IOUtils.toByteArray(is);  
-	          
-	        // 增加图片到 Workbook  
-	        int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);  
-	        is.close();  
-	     // Create the drawing patriarch.  This is the top level container for all shapes.  
-	        Drawing drawing = sheet.createDrawingPatriarch();  
-	        CreationHelper helper = wb.getCreationHelper(); 
-	        //add a picture shape  
-	        ClientAnchor anchor = helper.createClientAnchor();  
-	     // 设置图片位置  
-	        anchor.setCol1(3);  
-	        anchor.setRow1(10);  
-	        Picture pict = drawing.createPicture(anchor, pictureIdx);  
-	      //auto-size picture relative to its top-left corner  
-	        pict.resize();  
-	        //表头
-	        HSSFRow row1 = sheet.createRow((short) 0);
-	        HSSFCell cell_1_0 = row1.createCell(0);
-	        cell_1_0.setCellValue("员工编号");
-	        cell_1_0.setCellStyle(headStyle);
-	        
-	        HSSFCell cell_1_1 = row1.createCell(1);
-	        cell_1_1.setCellValue("姓名");
-	        cell_1_1.setCellStyle(headStyle);
-	        
-	        HSSFCell cell_1_2 = row1.createCell(2);
-	        cell_1_2.setCellValue("绩效等级");
-	        cell_1_2.setCellStyle(headStyle);
-	        
-	        HSSFCell cell_1_3 = row1.createCell(3);
-	        cell_1_3.setCellValue("考核类型");
-	        cell_1_3.setCellStyle(headStyle);
-	        
-	        for(int i=1;i<=5;i++){
-	            
-	            HSSFRow row2 = sheet.createRow(i);
-	            HSSFCell cell_2_0 = row2.createCell(0);
-	            cell_2_0.setCellValue(String.valueOf((int)(Math.random()*100)));
-	            cell_2_0.setCellStyle(contentStyle);
-	            
-	            HSSFCell cell_2_1 = row2.createCell(1);
-	            cell_2_1.setCellValue("Test" + i);
-	            cell_2_1.setCellStyle(contentStyle);
-	            
-	            HSSFCell cell_2_2 = row2.createCell(2);
-	            cell_2_2.setCellValue("B");
-	            cell_2_2.setCellStyle(contentStyle);
-
-	            HSSFCell cell_2_3 = row2.createCell(3);
-	            cell_2_3.setCellValue("月季考核");
-	            cell_2_3.setCellStyle(contentStyle);
-	            
-	        }
-	        
-	        CellRangeAddress c = CellRangeAddress.valueOf("B1");
-	        sheet.setAutoFilter(c);
-	       
-	        FileOutputStream fileOut = new FileOutputStream("d:/mysheet.xls"); //导出路径
-	        wb.write(fileOut);
-	        fileOut.close();
-	        
-	// String html="<H1>Jobs Report</H1><table border=\"1\"><tr><th>作业名</th><th>最近执行时间</th><th>最近执行状态</th><th>运行持续时间</th><th>最近运行状态信息</th><th>下次运行时间</th></tr>";
-	 
-       //  String s = sendmail("15618790307@163.com", "J1846K", "15618790307@163.com", "15618790307@163.com", "TESTportal", html);
-       //  System.out.println(s);
-        //  System.out.println(DateUtil.getWeekday("2017/07/08"));
-	 
-	/** Connection con=DBUtil.getHRCon();
-	 leaveCardVO lc=new leaveCardVO();
-	
-		lc.setSearchRole("E");
-		lc.setStatus("U");
-		lc.setNote(keyConts.SingRoleL1EP);
-		List<supervisorRO> lsr=DBUtil.queryEmailSingep(con,SqlUtil.queryEmailSingep(lc));
-	 **/
-	 
+**/
+	 System.out.println("此月分最後一個上班日:"+ getMonthWorkDay("2017/06"));
      }
-     
+     /**
+      * 計算當月最後一個上班日
+      * 
+      * @param date
+      * @return
+      */
+     public static String getMonthWorkDay(String YM) throws Exception {// 获取当月天数
+ 	String re="";
+ 	Calendar ca = Calendar.getInstance();
+ 	SimpleDateFormat ss = new SimpleDateFormat("yyyy/MM");
+ 	 System.out.println("1");
+ 	Date dd1 = ss.parse(YM);
+ 	ca.setTime(dd1); // 要计算你想要的月份，改变这里即可
+	 System.out.println("2");
+ 	int days = ca.getActualMaximum(Calendar.DAY_OF_MONTH);
+	 System.out.println("3 days="+days);
+ 	for(int i=days;i>0;i--){
+ 		String ymd=YM+"/"+i;
+ 		 System.out.println("4 ymd="+ymd);
+ 	 	if(DateUtil.getWeekday(ymd)!=1){
+ 	 	  System.out.println("5 ymd="+ymd);
+ 	 	   re=ymd;
+ 	 	   break;
+ 	 	}
+ 	}
+ 	return re;
+     }
      
      public static Long dateDiff(String startTime, String endTime,     
 	            String format, String str) {     

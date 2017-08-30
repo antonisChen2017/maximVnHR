@@ -10,12 +10,16 @@ INSERT INTO [hr].[dbo].[VN_LEAVECARD]
            ,[MINUTECOUNT]
            ,[NOTE]
            ,[STATUS]
+           ,[NEXTSTATUS]
            ,[SAVETIME]
            ,[PROCESS]
+           ,[GROUP]
+           ,[SINGROLEL0]
            ,[SINGROLEL1]
            ,[SINGROLEL2]
            ,[SINGROLEL3]
            ,[SINGROLEL4]
+           ,[SINGROLEL0EP]
            ,[SINGROLEL1EP]
            ,[SINGROLEL2EP]
            ,[SINGROLEL3EP]
@@ -36,12 +40,16 @@ INSERT INTO [hr].[dbo].[VN_LEAVECARD]
            ,'<MINUTECOUNT/>'
            ,'<NOTE/>'
            ,'<STATUS/>'
+           ,'<NEXTSTATUS/>'
            ,getdate()
            ,'<PROCESS/>'
+           ,'<GROUP/>'
+           ,'<SINGROLEL0/>'
            ,'<SINGROLEL1/>'
            ,'<SINGROLEL2/>'
            ,'<SINGROLEL3/>'
            ,'<SINGROLEL4/>'
+           ,'<SINGROLEL0EP/>'
            ,'<SINGROLEL1EP/>'
            ,'<SINGROLEL2EP/>'
            ,'<SINGROLEL3EP/>'

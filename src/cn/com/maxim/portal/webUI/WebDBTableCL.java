@@ -322,6 +322,58 @@ public class WebDBTableCL extends WebDBTableEx
 			        		    }
 			        		  
 			        		}
+			        		if(rowaction.equals(keyConts.EmpRoleG)){//組長
+			        		    
+			        		    if(page.equals(keyConts.EmpRoleG)){//單位主管
+        			        		    if(LEAVEAPPLY.equals("0")){
+        			        			      Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核通过</td> \r");
+        				        			  }
+        			        		    if(LEAVEAPPLY.equals("1")){
+        			        			      Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待工申请完成</td> \r");
+        				        			  }
+			        		    }
+			        		    if(page.equals(keyConts.pageUsList)){//單位主管
+			        			
+			        			  if(LEAVEAPPLY.equals("0")){
+			        			      Sb.append( getRUButton(keyConts.dbTableCRStatuS_U,rowID,TRStyle)); 
+				        			  }
+			        			  if(LEAVEAPPLY.equals("1")){
+			        			      Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待工申请完成</td> \r");
+				        			  }
+			        		    }
+			         		    if(page.equals(keyConts.pageDtmList)){//部門主管
+			         			  if(LEAVEAPPLY.equals("0")){
+			         			     Sb.append( getRUButton(keyConts.dbTableCRStatuS_D,rowID,TRStyle)); 
+				        		  }
+			         			  if(LEAVEAPPLY.equals("1")){
+			         			     Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待工申请完成</td> \r");
+					        	}
+			         		    }
+			         		   if(page.equals(keyConts.pageSave)){//填寫
+			         			  if(LEAVEAPPLY.equals("0")){
+			         			     Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核通过</td> \r");
+				        		  }
+			         			  if(LEAVEAPPLY.equals("1")){
+			         			     Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待工申请完成</td> \r");
+					        	}
+			         		    }
+			         		  if(page.equals(keyConts.pageLList)){//單位主管
+			         		     if(LEAVEAPPLY.equals("0")){
+			         			   Sb.append( getRUButton(keyConts.dbTableCRStatuS_L,rowID,TRStyle)); 
+				        		  }
+			         		    if(LEAVEAPPLY.equals("1")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待工申请完成</td> \r");
+				        		  }
+			         		  }
+			         		 if(page.equals(keyConts.pageB)){//單位主管
+			         		    if(LEAVEAPPLY.equals("0")){
+			        			    Sb.append( getRUButton(keyConts.dbTableCRStatuS_B,rowID,TRStyle)); 
+				        		  }
+			         			if(LEAVEAPPLY.equals("1")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待工申请完成</td> \r");
+				        		  }
+			         		  }
+			        		}
 			        		if(rowaction.equals(keyConts.EmpRoleU)){//
 			        		    
 			        		    if(page.equals(keyConts.pageUsList)){//單位主管
@@ -352,6 +404,9 @@ public class WebDBTableCL extends WebDBTableEx
 			         		  if(page.equals(keyConts.pageLList)){//單位主管
 			         		     if(LEAVEAPPLY.equals("0")){
 			         			   Sb.append( getRUButton(keyConts.dbTableCRStatuS_L,rowID,TRStyle)); 
+				        		  }
+			         		    if(LEAVEAPPLY.equals("1")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">待工申请完成</td> \r");
 				        		  }
 			         		  }
 			         		 if(page.equals(keyConts.pageB)){//單位主管
@@ -587,6 +642,38 @@ public class WebDBTableCL extends WebDBTableEx
 			        		    if(page.equals(keyConts.pageList)){//人事部查詢
 			        			if(LEAVEAPPLY.equals("2")){
 			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管审核退回</td> \r");
+				        		  }
+			        			}
+			        		}
+			        		if(rowaction.equals(keyConts.StatusGR)){//狀態組長退回
+			        		    if(page.equals(keyConts.pageLList)){//經理
+			        			if(LEAVEAPPLY.equals("2")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核退回</td> \r");
+				        		  }
+			        		    }
+			        		    if(page.equals(keyConts.pageB)){//副總
+			        			if(LEAVEAPPLY.equals("2")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核退回</td> \r");
+				        		  }
+			        		    }
+			        		    if(page.equals(keyConts.pageDtmList)){//部門主管
+			        			if(LEAVEAPPLY.equals("2")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核退回</td> \r");
+				        		  }
+			        		    }
+			        		    if(page.equals(keyConts.pageUsList)){//部門主管
+			        			if(LEAVEAPPLY.equals("2")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核退回</td> \r");
+				        		  }
+			        		    }
+			        		    if(page.equals(keyConts.pageSave)){//填寫頁面
+			        			if(LEAVEAPPLY.equals("2")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核退回</td> \r");
+				        		  }
+			        		    }
+			        		    if(page.equals(keyConts.pageList)){//人事部查詢
+			        			if(LEAVEAPPLY.equals("2")){
+			        			    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长审核退回</td> \r");
 				        		  }
 			        			}
 			        		}

@@ -53,8 +53,16 @@ public class dayReportRO
 	/**早退**/
 	private String EARLY;
 
+	private String STOPWORK;
 	
-	
+	public String getSTOPWORK() {
+	    return STOPWORK;
+	}
+
+	public void setSTOPWORK(String sTOPWORK) {
+	    STOPWORK = sTOPWORK;
+	}
+
 	public String getEARLY() {
 	    return EARLY;
 	}

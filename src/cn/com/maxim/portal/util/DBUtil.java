@@ -936,12 +936,15 @@ public class DBUtil
 	 * @return
 	 */
 	public static boolean updateSql(String Sql, Connection con)
-	{
+	{	
+	    	Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
 		boolean flag = false;
 		if ((Sql == null))
 		{
 			return flag;
 		}
+		logger.info("updateSql : "+Sql);
 		try
 		{
 			Statement stmt = con.createStatement();
@@ -952,8 +955,7 @@ public class DBUtil
 		}
 		catch (Exception Exception)
 		{
-			Log4jUtil lu = new Log4jUtil();
-			Logger logger = lu.initLog4j(DBUtil.class);
+		
 			logger.error(vnStringUtil.getExceptionAllinformation(Exception));
 			flag = false;
 		}
@@ -1007,8 +1009,8 @@ public class DBUtil
 		try
 		{
 			Statement stmt = con.createStatement();
-			logger.info("SqlUtil.setStatusS : "+SqlUtil.upStopStatus(swVo.getSTATUS(),swVo.getRowID(),swVo.getLeaveApply()));
-			stmt.executeUpdate(SqlUtil.upStopStatus(swVo.getSTATUS(),swVo.getRowID(),swVo.getLeaveApply()));
+			logger.info("SqlUtil.setStatusS : "+SqlUtil.upStopStatus(swVo.getSTATUS(),swVo.getRowID(),swVo.getLeaveApply(),swVo.getNextStatus()));
+			stmt.executeUpdate(SqlUtil.upStopStatus(swVo.getSTATUS(),swVo.getRowID(),swVo.getLeaveApply(),swVo.getNextStatus()));
 			stmt.close();
 
 			flag = true;
@@ -1155,40 +1157,14 @@ public class DBUtil
 			else
 			{
 				// 不同天
-				//leaveCardVO WorkFlcVo = new leaveCardVO();
-				//WorkFlcVo.setStartLeaveDate(lcVo.getStartLeaveDate());
-				//WorkFlcVo.setStartLeaveTime(lcVo.getStartLeaveTime());
-				//WorkFlcVo.setStartLeaveMinute(lcVo.getEndLeaveMinute());
-				//WorkFlcVo.setEndLeaveDate(lcVo.getStartLeaveDate());
-				//WorkFlcVo.setEndLeaveTime("23");
-				//WorkFlcVo.setEndLeaveMinute("59");
-				//WorkFlcVo.setSearchEmployeeNo(lcVo.getSearchEmployeeNo());
-			 	//logger.info("不同天  SqlUtil.getOnlyWorkTime(lcVo) "+SqlUtil.getOnlyWorkTime(lcVo));
-				//WorkFDate = queryDBField(con, SqlUtil.getOnlyWorkTime(WorkFlcVo), "WorkFDate");
-			
+				
 				if (checkCade)
 				{
 					logger.info("不能有打卡时间");
 					return "o";
 				}
 
-				//leaveCardVO WorkElcVo = new leaveCardVO();
-				//WorkElcVo.setStartLeaveDate(lcVo.getEndLeaveDate());
-				//WorkElcVo.setStartLeaveTime("05");
-				//WorkElcVo.setStartLeaveMinute("30");
-				//WorkElcVo.setEndLeaveDate(lcVo.getEndLeaveDate());
-				//WorkElcVo.setEndLeaveTime(lcVo.getEndLeaveTime());
-				//WorkElcVo.setEndLeaveMinute(lcVo.getEndLeaveTime());
-				//WorkElcVo.setSearchEmployeeNo(lcVo.getSearchEmployeeNo());
-				// System.out.println("不能已有結束打卡时间 Sql:
-				// "+SqlUtil.getOnlyWorkTime(WorkElcVo));
-				//WorkFDate = queryDBField(con, SqlUtil.getOnlyWorkTime(WorkElcVo), "WorkFDate");
-				// System.out.println("不能已有結束打卡时间 : WorkFDate"+WorkFDate);
-				//if (!WorkFDate.equals(""))
-				//{
-				//	logger.info("不能已有結束打卡时间 : WorkFDate"+WorkFDate);
-				//	return "o";
-				//}
+				
 				/** 已請假不能再請 **/
 			
 				WorkFDate = queryDBField(con, SqlUtil.getOnlyLeaveTime(lcVo), "STARTLEAVEDATE");
@@ -2374,20 +2350,7 @@ public class DBUtil
 			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
 				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
 			}
-			/**如果有遲到 減少上班時數 START
-			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")  ){
-				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
-				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
-					double fBelateCount= NumberUtil.getBelate(fBelate);
-				 fAttendance=  fAttendance-fBelateCount;
-				 if(fAttendance<0){
-					 fAttendance=0;
-				 }
-				 if(fBelate!=0 ){
-					 updateSql(SqlUtil.updateDayReportDetailAttendance(leo.get(i).getDAY(),fAttendance,leo.get(i).getEMPLOYEENO()), con);
-				 }
-			}
-			**/
+			
 			
 			/**如果有早退 減少上班時數 START**/
 			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
@@ -2571,10 +2534,80 @@ public class DBUtil
 						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
 				}
-			
-				
+				 /**待工**/
+				if( leo.get(i).getSTOPWORK()!=null && !leo.get(i).getSTOPWORK().equals("")){
+	
+					double  dStop=Float.parseFloat(leo.get(i).getSTOPWORK());
+					dNotWork= dNotWork-dStop;
+				//	logger.info("f dNotWork  "+ dNotWork);
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork).replaceAll(".0", "");
+				//		logger.info("f dNotWork  "+ dNotWork);
+					 if(dStop!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
 			}
 			/**如果有休假就扣掉曠工 END**/
+			  /**如果當天年假公假婚假喪假補回工時**/
+			    /**年假**/
+			if( leo.get(i).getHOLIDAYH()!=null && !leo.get(i).getHOLIDAYH().equals("")){
+				double  fHolidayH=Float.parseFloat( leo.get(i).getHOLIDAYH());
+				fAttendance=  fAttendance+fHolidayH;
+				if(fAttendance<0){
+				fAttendance=0;
+				 }
+				/**一天請假補回工時不能超過8HR**/
+			 	if(fAttendance>8){
+			 	    fAttendance=8;
+			 	 }
+			 	 updateSql(SqlUtil.updateDayReportMaxAtt(leo.get(i).getDAY(),String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
+			    /**公假**/
+			if( leo.get(i).getHOLIDAYO()!=null && !leo.get(i).getHOLIDAYO().equals("")){
+			 	double  fHolidayO=Float.parseFloat(leo.get(i).getHOLIDAYO());
+			 	fAttendance=  fAttendance+fHolidayO;
+			 	if(fAttendance<0){
+			 	    fAttendance=0;
+			 	 }
+			 	/**一天請假補回工時不能超過8HR**/
+			 	if(fAttendance>8){
+			 	    fAttendance=8;
+			 	 }
+			 	 updateSql(SqlUtil.updateDayReportMaxAtt(leo.get(i).getDAY(),String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
+			    /**婚假**/
+			if( leo.get(i).getHOLIDAYD()!=null && !leo.get(i).getHOLIDAYD().equals("")){
+			 	double  fHolidayD=Float.parseFloat(leo.get(i).getHOLIDAYD());
+			 	fAttendance=  fAttendance+fHolidayD;
+			 	if(fAttendance<0){
+			 	    fAttendance=0;
+			 	 }
+			 	/**一天請假補回工時不能超過8HR**/
+			 	if(fAttendance>8){
+			 	    fAttendance=8;
+			 	 }
+			 	 updateSql(SqlUtil.updateDayReportMaxAtt(leo.get(i).getDAY(),String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
+			    /**喪假**/
+			if( leo.get(i).getHOLIDAYF()!=null && !leo.get(i).getHOLIDAYF().equals("")){
+			 	double  fHolidayF=Float.parseFloat(leo.get(i).getHOLIDAYF());
+			 	fAttendance=  fAttendance+fHolidayF;
+			 	if(fAttendance<0){
+			 	    fAttendance=0;
+			 	 }
+			 	/**一天請假補回工時不能超過8HR**/
+			 	if(fAttendance>8){
+			 	    fAttendance=8;
+			 	 }
+			 	 updateSql(SqlUtil.updateDayReportMaxAtt(leo.get(i).getDAY(),String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
+			    }
+			    /**如果當天年假公假婚假喪假補回工時 END**/
 		}
 		
 	}
@@ -2932,7 +2965,7 @@ public class DBUtil
 			}**/
 		
 			
-			/**如果有早退 減少上班時數 START**/
+			/**如果有早退 減少上班時數 START
 		        double  fAttendance=0;
 		        if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
 				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
@@ -2949,7 +2982,7 @@ public class DBUtil
 					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
 				 }
 			}
-			/**如果有早退 減少上班時數 END**/
+			如果有早退 減少上班時數 END**/
 			
 			/**如果出勤 扣掉曠工 START
 			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
@@ -3099,7 +3132,24 @@ public class DBUtil
 						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
 				}
-			
+				 /**待工**/
+				if( leo.get(i).getSTOPWORK()!=null && !leo.get(i).getSTOPWORK().equals("")){
+	
+					double  dStop=Float.parseFloat(leo.get(i).getSTOPWORK());
+					dNotWork= dNotWork-dStop;
+				//	logger.info("h dNotWork  "+ String.valueOf(dNotWork));
+					 if(dNotWork<=0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+				//		logger.info("h dNotWork  "+ dNotWork);
+					 if(dStop!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportDetailNotWork(leo.get(i).getDAY(),sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
 				
 			}
 			/**如果有休假就扣掉曠工 END**/
@@ -3149,23 +3199,7 @@ public class DBUtil
 			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
 				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
 			}
-			/**如果有遲到 減少上班時數 START
-			/double  fAttendance=0;
-			if(! leo.get(i).getATTENDANCE().equals("") && leo.get(i).getATTENDANCE()!=null){
-				 fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
-			}
-			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")  ){
-				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
-				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
-					double fBelateCount= NumberUtil.getBelate(fBelate);
-				 fAttendance=  fAttendance-fBelateCount;
-				 if(fAttendance<0){
-					 fAttendance=0;
-				 }
-				 if(fBelate!=0 ){
-					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
-				 }
-			}**/
+		
 			/**假日不能曠職 start**/
 		        int ci= DateUtil.getWeekday(lcVo.getApplicationDate());
 			if( ci==1){
@@ -3173,37 +3207,6 @@ public class DBUtil
 			    updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
 			}
 			/**假日不能曠職 end**/
-			
-			
-			/**如果有早退 減少上班時數 START**/
-			if( leo.get(i).getEARLY()!=null && !leo.get(i).getEARLY().equals("")  ){
-				double  fEarly=Float.parseFloat(leo.get(i).getEARLY());
-				// double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
-					double fEarlyCount= NumberUtil.getBelate(fEarly);
-				 fAttendance=  fAttendance-fEarlyCount;
-				 if(fAttendance<0){
-					 fAttendance=0;
-				 }
-				 if(fEarly!=0 ){
-					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
-				 }
-			}
-			/**如果有早退 減少上班時數 END**/
-			
-			/**如果出勤 扣掉曠工 START
-			if( leo.get(i).getBELATE()!=null && !leo.get(i).getBELATE().equals("")){
-				double  fBelate=Float.parseFloat(leo.get(i).getBELATE());
-				 double  fAttendance=Float.parseFloat(leo.get(i).getATTENDANCE());
-					double fBelateCount= NumberUtil.getBelate(fBelate);
-				 fAttendance=  fAttendance-fBelateCount;
-				 if(fAttendance<0){
-					 fAttendance=0;
-				 }
-				 if(fBelate!=0 && fAttendance<8){
-					 updateSql(SqlUtil.updateDayReportAttendance(lcVo,fAttendance,leo.get(i).getEMPLOYEENO()), con);
-				 }
-			}
-			如果出勤 扣掉曠工 START**/
 			
 			/**如果有休假就扣掉曠工 START**/
 			//logger.info(" getNOTWORK  "+ leo.get(i).getNOTWORK());
@@ -3356,6 +3359,28 @@ public class DBUtil
 						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
 					 }
 				}
+				/**待工**/
+				if( leo.get(i).getSTOPWORK()!=null && !leo.get(i).getSTOPWORK().equals("")){
+					
+					double  dStopWork=Float.parseFloat(leo.get(i).getSTOPWORK());
+					dNotWork= dNotWork-dStopWork;
+				//	logger.info(" b dNotWork  "+ dNotWork);
+					 if(dNotWork<0 ){
+						 dNotWork=0;
+					 }
+					 if( String.valueOf(dNotWork).equals("0.0")){
+						 dNotWork=0;
+					 }
+					 sNotWork= String.valueOf(dNotWork);
+					 if(sNotWork.equals("0")){
+					     sNotWork="0.0";
+					 }
+				//		logger.info("b dNotWork  "+ dNotWork);
+					 if(dStopWork!=0 & dNotWork<=8){
+						 updateSql(SqlUtil.updateDayReportdNotWork(lcVo,sNotWork,leo.get(i).getEMPLOYEENO()), con);
+					 }
+				}
+				
 			}
 			/**如果有休假就扣掉曠工 END**/
 			 /**如果當天年假公假婚假喪假補回工時**/
@@ -3396,9 +3421,23 @@ public class DBUtil
 			 	    fAttendance=0;
 			 	 }
 			 	
+				//    if(rmd.getWORKETIME().equals(keyConts.noTime) && !rmd.getWORKFTIME().equals(keyConts.noTime)){
+				//	rmd.setEARLY(keyConts.NoCard);
+				//    }
+				 //   if(!rmd.getWORKETIME().equals(keyConts.noTime) && rmd.getWORKFTIME().equals(keyConts.noTime)){
+				//	rmd.setBELATE(keyConts.NoCard);
+				 //   }
+				    /**判斷如早上或下午未打卡 則遲到或早退顯示未打卡 END**/
 			 		logger.info("喪假更新報表工時 "+ SqlUtil.updateDayAttendance(lcVo,String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()));
 			 	updateSql(SqlUtil.updateDayAttendance(lcVo,String.valueOf(fAttendance),leo.get(i).getEMPLOYEENO()), con);
 			    }
+			    /**判斷如早上或下午未打卡 則遲到或早退顯示未打卡 START**/
+			 	 if(leo.get(i).getWorkETime().equals(keyConts.noTime) &&  !leo.get(i).getWorkFTime().equals(keyConts.noTime)){
+			 	    updateSql(SqlUtil.updateRepoDayBE(lcVo,"1",leo.get(i).getEMPLOYEENO()), con);
+			 	 }
+			 	 if(!leo.get(i).getWorkETime().equals(keyConts.noTime) &&  leo.get(i).getWorkFTime().equals(keyConts.noTime)){
+			 	    updateSql(SqlUtil.updateRepoDayBE(lcVo,"0",leo.get(i).getEMPLOYEENO()), con);
+			 	 }
 		}
 		
 	}
@@ -3601,6 +3640,10 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 			if(fAttendance<0){
 			fAttendance=0;
 			 }
+			/**一天請假補回工時不能超過8HR**/
+		 	if(fAttendance>8){
+		 	    fAttendance=8;
+		 	 }
 			rmd.setATTENDANCE(String.valueOf(fAttendance));
 		    }
 		    /**公假**/
@@ -3608,7 +3651,11 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		 	double  fHolidayO=Float.parseFloat(rmd.getHOLIDAYO());
 		 	fAttendance=  fAttendance+fHolidayO;
 		 	if(fAttendance<0){
-		 	fAttendance=0;
+		 	    fAttendance=0;
+		 	 }
+		 	/**一天請假補回工時不能超過8HR**/
+		 	if(fAttendance>8){
+		 	    fAttendance=8;
 		 	 }
 		 	rmd.setATTENDANCE(String.valueOf(fAttendance));
 		    }
@@ -3617,7 +3664,11 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		 	double  fHolidayD=Float.parseFloat(rmd.getHOLIDAYD());
 		 	fAttendance=  fAttendance+fHolidayD;
 		 	if(fAttendance<0){
-		 	fAttendance=0;
+		 	    fAttendance=0;
+		 	 }
+		 	/**一天請假補回工時不能超過8HR**/
+		 	if(fAttendance>8){
+		 	    fAttendance=8;
 		 	 }
 		 	rmd.setATTENDANCE(String.valueOf(fAttendance));
 		    }
@@ -3626,7 +3677,11 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		 	double  fHolidayF=Float.parseFloat(rmd.getHOLIDAYF());
 		 	fAttendance=  fAttendance+fHolidayF;
 		 	if(fAttendance<0){
-		 	fAttendance=0;
+		 	    fAttendance=0;
+		 	 }
+		 	/**一天請假補回工時不能超過8HR**/
+		 	if(fAttendance>8){
+		 	    fAttendance=8;
 		 	 }
 		 	rmd.setATTENDANCE(String.valueOf(fAttendance));
 		    }
@@ -3643,7 +3698,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		    re.add(rmd);
 		}
 		/**計算遲到時間扣除月底工時**/
-		re=reportMonthDAO.getBelateDetailWO(con, Day,lcVo,re);
+		//re=reportMonthDAO.getBelateDetailWO(con, Day,lcVo,re);
 	               
 		return re;
 	}
@@ -3698,7 +3753,8 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		}
 		Hashtable listmW = new Hashtable();
 		logger.info("leo.size() : "+leo.size());
-		//logger.info("(monthReportNoteWO)leo.get(0): "+leo.get(0).getEMPLOYEENO());
+		
+		/**求當月最大工時**/
 		
 		for(int i=0;i<leo.size();i++){
 			mw=(monthSumTotalWo)leo.get(i);
@@ -3707,42 +3763,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 			    if(! mw.getATTENDANCE().equals("") && mw.getATTENDANCE() !=null){
 				 fAttendance=Float.parseFloat( mw.getATTENDANCE());
 			    }
-			    /**年假**/
-			    if(!mw.getHOLIDAYH().equals("") ){
-				double  fHolidayH=Float.parseFloat(mw.getHOLIDAYH());
-				fAttendance=  fAttendance+fHolidayH;
-				if(fAttendance<0){
-				fAttendance=0;
-				 }
-				
-			    }
-			    /**公假**/
-			    if(!mw.getHOLIDAYO().equals("") ){
-			 	double  fHolidayO=Float.parseFloat(mw.getHOLIDAYO());
-			 	fAttendance=  fAttendance+fHolidayO;
-			 	if(fAttendance<0){
-			 	fAttendance=0;
-			 	 }
-			 	
-			    }
-			    /**婚假**/
-			    if(!mw.getHOLIDAYD().equals("") ){
-			 	double  fHolidayD=Float.parseFloat(mw.getHOLIDAYD());
-			 	fAttendance=  fAttendance+fHolidayD;
-			 	if(fAttendance<0){
-			 	fAttendance=0;
-			 	 }
-			 	
-			    }
-			    /**喪假**/
-			    if(!mw.getHOLIDAYF().equals("") ){
-			 	double  fHolidayF=Float.parseFloat(mw.getHOLIDAYF());
-			 	fAttendance=  fAttendance+fHolidayF;
-			 	if(fAttendance<0){
-			 	fAttendance=0;
-			 	 }
-			 
-			    }
+			
 			/**計算員工要按打卡時間的規定打卡，若超過5分鐘視為遲到，當月不超過3次。
 			 *    如超過3次，遲到情況將計算如下：
      				從第1分鐘至30分鐘將算滿30分鐘。
@@ -3758,16 +3779,17 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 			    for(int j=0;j<lb.size();j++){
 				BelateRepoWO row=lb.get(j);
 				int Intbelate =Integer.valueOf(row.getBELATE());
-				if(Intbelate>=5){ //遲到
-				   // logger.info("遲到 Intbelate : "+Intbelate);
 				    BelateCount++;
 				    BelateAdd=BelateAdd+Intbelate;
-				    if(BelateCount>3){ //遲到超過三次
-					BelateMax=BelateMax+BelateAdd;
-				    }
-				}
-				
+				    BelateMax=BelateMax+BelateAdd;					
 			    }
+			    //只要超过4次没超过5分也要扣，只能迟到3次以内不超过5分就不扣
+			    if(BelateCount<=3){
+				if(BelateMax<=5){
+				    BelateMax=0;
+				}
+			    }
+			    
 			    logger.info("=======================================");
 			    logger.info(mw.getEMPLOYEENO() +"遲到超過5分 次數: "+BelateCount);
 			    logger.info(mw.getEMPLOYEENO() +"遲到超過5分 總時間 : "+BelateMax);
@@ -3837,95 +3859,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		}
 		return leo;
 	}
-	/**
-	 * 請假先檢查是否有設定流程
-	 * @param con
-	 * @param lcVo
-	 * @param Day
-	 * @return
-	 * @throws Exception 
-	 */
-	public static final 	String  getPersonalProcess(Connection con, leaveCardVO lcVo) throws Exception
-	{
-		//用工號查出部門單位角色
-		Log4jUtil lu = new Log4jUtil();
-		Logger logger = lu.initLog4j(DBUtil.class);
-		HtmlUtil hu = new HtmlUtil();
-		processUserRO ra=new processUserRO();
-		String sql = "";
-		sql = hu.gethtml(sqlConsts.sql_queryUserData);
-		sql = sql.replace("<EMPLOYEENO/>", lcVo.getSearchEmployeeNo());
 	
-		PreparedStatement STMT = null;
-		ReflectHelper rh = new ReflectHelper();
-		List<processUserRO> leo = null;
-		try
-		{
-			STMT = con.prepareStatement(sql);
-			ResultSet rs = STMT.executeQuery();
-			leo = (List<processUserRO>) rh.getBean(rs, ra);
-
-		}
-		catch (Exception error)
-		{
-			logger.error(vnStringUtil.getExceptionAllinformation(error));
-		}
-		processUserRO ru=(processUserRO)leo.get(0);
-	
-		float  dayCount=Float.parseFloat(lcVo.getDayCount());
-		String STATUS="0";//三天以下
-		if(dayCount>=3){
-			 STATUS="1";//三天以上
-		}
-		ru.setSTATUS(STATUS);
-		int count=0;
-		
-		String COUNT ="";
-
-		processCheckRO  prow=new processCheckRO();
-		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			logger.info("檢查此部門或單位:"+SqlUtil.queryDeptLeaveCardCount(ru));
-			COUNT = DBUtil.queryDBField(con,SqlUtil.queryDeptLeaveCardCount(ru), "COUNT");
-			count=Integer.valueOf(COUNT);
-			if(count>0){
-        			/**檢查欄位**/
-        			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-        			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processLETable));
-        			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processLETable), new processCheckRO());
-        			if(cr.size()>0){
-        			    prow=cr.get(0);
-        			}
-			}
-			
-		}else{
-			logger.info("檢查此部門:"+SqlUtil.queryLeavePreossCount(ru));
-			COUNT = DBUtil.queryDBField(con,SqlUtil.queryLeavePreossCount(ru), "COUNT");
-			count=Integer.valueOf(COUNT);
-			if(count>0){
-        			/**檢查欄位**/
-        			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-        			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processLETable));
-        			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processLETable), new processCheckRO());
-        			if(cr.size()>0){
-        			    prow=cr.get(0);
-        			}
-			}
-		}
-		if(count>0){
-			
-			/**檢查四個欄位有無值無值一樣不能過**/
-			if(prow.getSINGROLEL1().equals("0") && prow.getSINGROLEL2().equals("0")
-				&& prow.getSINGROLEL3().equals("0") && prow.getSINGROLEL4().equals("0")){
-			    count=0;
-			}
-		}
-		String msg="o";
-		if(count==0){
-			msg="x";
-		}
-	
-		return msg;
-	}
 	
 	/**
 	 * 請假記錄取出後台設定寫入請假卡
@@ -3972,11 +3906,15 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		editProcessRO epDD=new editProcessRO();
 		editProcessVO edVo =new editProcessVO();
 		edVo.setDept(ru.getDEPARTMENT());
-		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			edVo.setUnit(ru.getUNIT());
-		}else{
-			edVo.setUnit("0");
+		if(ru.getUNIT().equals("") || ru.getUNIT()==null){
+		    ru.setUNIT("0");
 		}
+		if(ru.getGROUP().equals("") || ru.getGROUP()==null){
+		    ru.setGROUP("0");
+		}
+		
+		edVo.setUnit(ru.getUNIT());
+		edVo.setGroup(ru.getGROUP());
 		edVo.setStatus(STATUS);
 		edVo.setRole(ru.getROLE());
 		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epDD);
@@ -4036,6 +3974,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		}else{
 			edVo.setUnit("0");
 		}
+		edVo.setGroup(ru.getGROUP());
 		edVo.setStatus(STATUS);
 		edVo.setRole(ru.getROLE());
 		logger.info("queryDeptStopProcess SQL  :"+SqlUtil.queryDeptStopProcess(edVo));
@@ -4062,9 +4001,11 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		processIDUserRO ra=new processIDUserRO();
 		String sql = "";
 		sql = hu.gethtml(sqlConsts.sql_queryLeaveCardUserData);
-		//sql = sql.replace("<rowID/>", lcVo.getRowID());
+		logger.info("getProcessIDData 1");
+		rowID=rowID.replace("#", "");
+		logger.info("getProcessIDData 2"+rowID);
 		sql = sql.replace("<rowID/>", rowID);
-		logger.info("sql_queryLeaveCardUserData sql : "+sql );
+		logger.info("getProcessIDData  3 sql : "+sql );
 		PreparedStatement STMT = null;
 		ReflectHelper rh = new ReflectHelper();
 		List<processIDUserRO> leo = null;
@@ -4092,13 +4033,11 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		editProcessRO epDD=new editProcessRO();
 		editProcessVO edVo =new editProcessVO();
 		edVo.setDept(ru.getDEPARTMENT());
-		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			edVo.setUnit(ru.getUNIT());
-		}else{
-			edVo.setUnit("0");
-		}
+		edVo.setUnit(ru.getUNIT());
+		edVo.setGroup(ru.getGROUP());
 		edVo.setStatus(STATUS);
 		edVo.setRole(ru.getROLE());
+		logger.info(" 4061 queryDeptLeaveData  :"+SqlUtil.queryDeptLeaveData(edVo));
 		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptLeaveData(edVo),epDD);
 		//logger.info("getSingRoleL1 :"+ep.get(0).getSingRoleL1());
 	//	logger.info("getSingRoleL1EP :"+ep.get(0).getSingRoleL1EP());
@@ -4106,82 +4045,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 	}
 	
 	
-	/**
-	 * 加班先檢查是否有設定流程
-	 * @param con
-	 * @param lcVo
-	 * @param Day
-	 * @return
-	 * @throws Exception 
-	 */
-	public static final 	String  getOverProcess(Connection con, overTimeVO otVo) throws Exception
-	{
-		//用工號查出部門單位角色
-		Log4jUtil lu = new Log4jUtil();
-		Logger logger = lu.initLog4j(DBUtil.class);
-		HtmlUtil hu = new HtmlUtil();
-		processUserRO ra=new processUserRO();
-		String sql = "";
-		sql = hu.gethtml(sqlConsts.sql_queryUserData);
-		sql = sql.replace("<EMPLOYEENO/>", otVo.getSearchEmployeeNo());
 	
-		PreparedStatement STMT = null;
-		ReflectHelper rh = new ReflectHelper();
-		List<processUserRO> leo = null;
-		try
-		{
-			STMT = con.prepareStatement(sql);
-			ResultSet rs = STMT.executeQuery();
-			leo = (List<processUserRO>) rh.getBean(rs, ra);
-
-		}
-		catch (Exception error)
-		{
-			logger.error(vnStringUtil.getExceptionAllinformation(error));
-		}
-		processUserRO ru=(processUserRO)leo.get(0);
-	
-	
-		String STATUS="1";//正常流程
-		
-		ru.setSTATUS(STATUS);
-		int count=0;
-		
-		processCheckRO  prow=new processCheckRO();
-		String COUNT ="";
-		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			logger.info("檢查此部門或單位:"+SqlUtil.queryDeptUnitOverCount(ru));
-			COUNT = DBUtil.queryDBField(con,SqlUtil.queryDeptUnitOverCount(ru), "COUNT");
-			/**檢查欄位**/
-			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processOVTable));
-			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processOVTable), new processCheckRO());
-			prow=cr.get(0);
-		}else{
-			logger.info("檢查此部門:"+SqlUtil.queryOverPreossCount(ru));
-			COUNT = DBUtil.queryDBField(con,SqlUtil.queryOverPreossCount(ru), "COUNT");
-			/**檢查欄位**/
-			ru.setUNIT("0");		
-			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-			logger.info("queryProcessCheck sql="+SqlUtil.queryProcessCheck(ru,keyConts.processOVTable));
-			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processOVTable), new processCheckRO());
-			prow=cr.get(0);
-		}
-		if(COUNT!=null || !COUNT.equals("") ){
-			count=Integer.valueOf(COUNT);
-			/**檢查四個欄位有無值無值一樣不能過**/
-			if(prow.getSINGROLEL1().equals("0") && prow.getSINGROLEL2().equals("0")
-				&& prow.getSINGROLEL3().equals("0") && prow.getSINGROLEL4().equals("0")){
-			    count=0;
-			}
-		}
-		String msg="o";
-		if(count==0){
-			msg="x";
-		}
-	
-		return msg;
-	}
 	
 	
 	/**
@@ -4334,13 +4198,11 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		editProcessRO epDD=new editProcessRO();
 		editProcessVO edVo =new editProcessVO();
 		edVo.setDept(ru.getDEPARTMENT());
-		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			edVo.setUnit(ru.getUNIT());
-		}else{
-			edVo.setUnit("0");
-		}
+		edVo.setUnit(ru.getUNIT());
+		edVo.setGroup(ru.getGROUP());
 		edVo.setStatus(STATUS);
 		edVo.setRole(ru.getROLE());
+		logger.info("queryDeptOverData:"+SqlUtil.queryDeptOverData(edVo));		
 		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
 		
 		return ep.get(0);
@@ -4391,11 +4253,8 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		editProcessRO epDD=new editProcessRO();
 		editProcessVO edVo =new editProcessVO();
 		edVo.setDept(ru.getDEPARTMENT());
-		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			edVo.setUnit(ru.getUNIT());
-		}else{
-			edVo.setUnit("0");
-		}
+		edVo.setUnit(ru.getUNIT());
+		edVo.setGroup(ru.getGROUP());
 		edVo.setStatus(STATUS);
 		edVo.setRole(ru.getROLE());
 		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptStopData(edVo),epDD);
@@ -4505,7 +4364,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		String sql = "";
 		sql = hu.gethtml(sqlConsts.sql_queryOverTimeUserData);
 		sql = sql.replace("<rowID/>", otVo.getRowID());
-		logger.info("sql_queryLeaveCardUserData sql : "+sql );
+		logger.info("sql_queryOverTimeUserData sql : "+sql );
 		PreparedStatement STMT = null;
 		ReflectHelper rh = new ReflectHelper();
 		List<processIDUserRO> leo = null;
@@ -4531,11 +4390,8 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		editProcessRO epDD=new editProcessRO();
 		editProcessVO edVo =new editProcessVO();
 		edVo.setDept(ru.getDEPARTMENT());
-		if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
-			edVo.setUnit(ru.getUNIT());
-		}else{
-			edVo.setUnit("0");
-		}
+		edVo.setUnit(ru.getUNIT());
+		edVo.setGroup(ru.getGROUP());
 		edVo.setStatus(STATUS);
 		edVo.setRole(ru.getROLE());
 		

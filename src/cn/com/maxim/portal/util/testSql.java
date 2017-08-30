@@ -80,8 +80,45 @@ public class testSql {
 	        year = format.format(y);
 	        System.out.println("过去2年："+year);
 **/
-	 System.out.println("此月分最後一個上班日:"+ getMonthWorkDay("2017/06"));
+	// System.out.println("此月分最後一個上班日:"+ getMonthWorkDay("2017/06"));
+	     String yesterday="";
+	     String ym="2017/06";
+	     Calendar cal = Calendar.getInstance();
+	     cal.add(Calendar.DATE, 0);
+	     String today = new SimpleDateFormat( "yyyy/MM/dd").format(cal.getTime());
+	     String[] todays=today.split("/");
+	     String[] yms=ym.split("/");
+	     if(todays[0].equals(yms[0]) && todays[1].equals(yms[1])){
+		  System.out.println("本月取昨天 但不能低於01日");
+		  System.out.println("todays[2]  "+todays[2]);
+		  if(todays[2].trim().equals("01")){
+		      yesterday=today;
+		  }else{
+		      cal.add(Calendar.DATE, -1);
+		      yesterday= new SimpleDateFormat( "yyyy/MM/dd").format(cal.getTime());
+		  }
+	     }else{
+		  System.out.println("其他月取當月最後一天");
+		  int maxDate = 0;
+		Date first = null;
+			 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+		first = sdf.parse(ym);
+		 cal.setTime(first);
+		  int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		// 设置创造新日期，这个日期是本月的最后一天
+		cal.set(Calendar.DATE, days);
+		// 然后打印出来
+		Date newD = cal.getTime();
+		// 加上格式化
+		System.out.println("本月最后一天的日期是："+ new SimpleDateFormat("yyyy/MM/dd").format(newD));
+		 yesterday=  new SimpleDateFormat("yyyy/MM/dd").format(newD);
+	     }
+	    System.out.println(yesterday);
      }
+     
+     
+  
      /**
       * 計算當月最後一個上班日
       * 

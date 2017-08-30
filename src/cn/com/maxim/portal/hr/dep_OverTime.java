@@ -64,7 +64,14 @@ public class dep_OverTime extends TemplatePortalPen
 
 					if (actText.equals("Save")) {
 						logger.info("加班申請單 員工/Save : " +otVo.toString());
-						String msg=DBUtil.getOverProcess(con,otVo);
+						String msg=overTimeDAO.getOverProcess(con,otVo);
+						String group="";
+						if(msg.indexOf("#")!=-1){
+						   String[] msgs= msg.split("#");
+						    msg=msgs[0];
+						    group=msgs[1];
+						}
+						logger.info("msg : " +msg);
 						List<employeeUserRO> lro=getUser(con,UserInformation,request);
 						otVo.setLogin(lro.get(0).getID());
 						if(msg.equals("o")){
@@ -98,10 +105,13 @@ public class dep_OverTime extends TemplatePortalPen
 									 msg=DBUtil.saveMaxOvertime(otVo , con);
 									 otVo.setMsg(msg);
 								}
+						}else if(msg.equals("g")){
+						        otVo.setMsg(keyConts.noGroupMsgP1+group+keyConts.noGroupMsgP3);
+							logger.info(keyConts.noGroupMsgP1+group+keyConts.noGroupMsgP3);
 						}else{
-									otVo.setMsg(keyConts.noProcessOverMsg);
-									logger.info(keyConts.noProcessOverMsg);
-							}
+							otVo.setMsg(keyConts.noProcessOverMsg);
+							logger.info(keyConts.noProcessOverMsg);
+						}
 						otVo.setSaveButText(keyConts.butSave);
 						request.getSession().setAttribute("dotEdit","Save");
 						showHtml(con, out,  otVo,UserInformation,request);

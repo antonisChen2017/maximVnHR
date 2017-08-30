@@ -4,7 +4,10 @@ SELECT
       , ROLE
       ,' ' as STATUS
  ,'0' as DAYCOUNT
+    ,  (case when G.[GROUP] IS null then '0' else G.[GROUP] end ) as [GROUP] 
   FROM HR_EMPLOYEE E 
    JOIN VN_OVERTIME_S L
 ON E.ID=L.EP_ID
+FULL JOIN VN_GROUP_EMP G
+ON G.EMPLOYEENO=E.EMPLOYEENO
 where L.ID='<rowID/>'

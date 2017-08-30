@@ -67,7 +67,13 @@ public class emp_LeaveCard extends TemplatePortalPen
 					
 					if (actText.equals("Save")) {
 						
-						String msg=DBUtil.getPersonalProcess(con,lcVo);
+					    String msg=leaveCardDAO.getPersonalProcess(con,lcVo);
+						String group="";
+						if(msg.indexOf("#")!=-1){
+						   String[] msgs= msg.split("#");
+						    msg=msgs[0];
+						    group=msgs[1];
+						}
 						List<employeeUserRO> lro=getUser(con,UserInformation,request);
 						lcVo.setLogin(lro.get(0).getID());
 						
@@ -81,8 +87,6 @@ public class emp_LeaveCard extends TemplatePortalPen
 								}else{
 									lcVo.setMsg(keyConts.editNO);
 								}
-							
-								
 							}else{
 								
 								lcVo.setApplicationDate(DateUtil.NowDateTime());
@@ -113,7 +117,11 @@ public class emp_LeaveCard extends TemplatePortalPen
 								}
 								
 							}
-						}else{
+						}else if(msg.equals("g")){
+						        lcVo.setMsg(keyConts.noGroupMsgP1+group+keyConts.noGroupMsgP2);
+							logger.info(keyConts.noGroupMsgP1+group+keyConts.noGroupMsgP2);
+						}
+						else{
 							lcVo.setMsg(keyConts.noProcessMsg);
 							logger.info(keyConts.noProcessMsg);
 						}

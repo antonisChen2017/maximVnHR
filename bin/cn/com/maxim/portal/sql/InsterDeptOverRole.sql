@@ -2,12 +2,15 @@ INSERT INTO VN_DEPT_OVER_ROLE
           (ID
            ,DEPT
            ,UNIT
+           ,[GROUP]
            ,ROLE
            ,STATUS
+           ,SINGROLEL0
            ,SINGROLEL1
            ,SINGROLEL2
            ,SINGROLEL3
            ,SINGROLEL4
+           ,SINGROLEL0EP
            ,SINGROLEL1EP
            ,SINGROLEL2EP
            ,SINGROLEL3EP
@@ -17,13 +20,16 @@ INSERT INTO VN_DEPT_OVER_ROLE
      VALUES
            ('<ID/>'
            ,'<DEPT/>'
-           ,'<UNIT>'
+           ,'<UNIT/>'
+           ,'<GROUP/>'
            ,'<ROLE/>'
            ,'<STATUS/>'
+           ,'<SINGROLEL0/>'
            ,'<SINGROLEL1/>'
            ,'<SINGROLEL2/>'
            ,'<SINGROLEL3/>'
            ,'<SINGROLEL4/>'
+           ,'<SINGROLEL0EP/>'
            ,'<SINGROLEL1EP/>'
            ,'<SINGROLEL2EP/>'
            ,'<SINGROLEL3EP/>'

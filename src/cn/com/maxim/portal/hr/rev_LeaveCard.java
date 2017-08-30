@@ -75,13 +75,14 @@ public class rev_LeaveCard extends TemplatePortalPen
 
 						lcVo.setShowDataTable(true);
 						lcVo.setStatus(actText);
-						lcVo.setLeaveApply("0");
+						lcVo.setMsg(leaveCardDAO.Process(con,lcVo));
+						leaveCardDAO.deptProcessEmail(con,lcVo);
 						// 儲存db
-						if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
-							lcVo.setMsg(keyConts.okMsg);
+						//if(DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)){
+						//	lcVo.setMsg(keyConts.okMsg);
 							/**人事通過寄信給主管**/
-							//leaveCardDAO.deptProcessEmail(con,lcVo);
-						}
+						//	leaveCardDAO.deptProcessEmail(con,lcVo);
+					//	}
 				
 						showHtml(con, out, lcVo,UserInformation);
 					}
@@ -257,7 +258,7 @@ public class rev_LeaveCard extends TemplatePortalPen
 		if(lcVo.isShowDataTable()){
 			logger.info(" sql 管理部 LeaveCard="+SqlUtil.getRevLeaveCard(lcVo));
 			htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-					SqlUtil.getRevLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
+					SqlUtil.getRevLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pagePList));
 		}
 	
 		

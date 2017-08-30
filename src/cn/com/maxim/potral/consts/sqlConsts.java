@@ -376,4 +376,40 @@ public class sqlConsts
 	public static final String sql_getBelateCount="/cn/com/maxim/portal/sql/getBelateCount.sql";
 	/**報表查詢所有工號**/
 	public static final String sql_queryMonthDetailEmp="/cn/com/maxim/portal/sql/queryMonthDetailEmp.sql";
+	/**查詢組別**/
+	public static final String sql_queryGroup="/cn/com/maxim/portal/sql/queryGroup.sql";
+	/**新增組別**/
+	public static final String sql_insterGroup="/cn/com/maxim/portal/sql/insterGroup.sql";
+	/**修改單日放假**/
+	public static final String sql_updateRepoDayBE="/cn/com/maxim/portal/sql/updateRepoDayBE.sql";
+	/**刪除組別**/
+	public static final String sql_deleteGroup="/cn/com/maxim/portal/sql/deleteGroup.sql";
+	/**更新組別**/
+	public static final String sql_updateGroup="/cn/com/maxim/portal/sql/updateGroup.sql";
+	/**單位人員查詢**/
+	public static final String sql_queryUnitEmp="/cn/com/maxim/portal/sql/queryUnitEmp.sql";
+	/**小組人員查詢**/
+	public static final String sql_queryGroupEmpList="/cn/com/maxim/portal/sql/queryGroupEmpList.sql";
+	/**小組人員刪除**/
+	public static final String sql_delGroupEmp="/cn/com/maxim/portal/sql/delGroupEmp.sql";
+	/**小組人員新增**/
+	public static final String sql_insterGroupEmp="/cn/com/maxim/portal/sql/insterGroupEmp.sql";
+	/**查詢有無小組設定**/
+	public static final String sql_queryGroupLeaveCount="/cn/com/maxim/portal/sql/queryGroupLeaveCount.sql";
+	/**新增小組請假流程**/
+	public static final String sql_InsterGroupLeaveRole="/cn/com/maxim/portal/sql/InsterGroupLeaveRole.sql";
+	/**查詢小組請假流程**/
+	public static final String sql_queryGroupLeaveData="/cn/com/maxim/portal/sql/queryGroupLeaveData.sql";
+	/**查詢小組加班有無設定**/
+	public static final String sql_queryGroupOverCount="/cn/com/maxim/portal/sql/queryGroupOverCount.sql";
+	/**查詢小組待工有無設定**/
+	public static final String sql_queryGroupStopCount="/cn/com/maxim/portal/sql/queryGroupStopCount.sql";
+	/**查詢有無組別設定**/
+	public static final String sql_queryEmpToGroup="/cn/com/maxim/portal/sql/queryEmpToGroup.sql";
+	/**查詢有無停工下拉設定**/
+	public static final String sql_querySelectStopDept="/cn/com/maxim/portal/sql/querySelectStopDept.sql";
+	/**查詢組長停工資料設定**/
+	public static final String sql_queryGStopTable="/cn/com/maxim/portal/sql/queryGStopTable.sql";
+	/**查詢組長停工資料設定**/
+	public static final String sql_queryStopProcess="/cn/com/maxim/portal/sql/queryStopProcess.sql";
 }

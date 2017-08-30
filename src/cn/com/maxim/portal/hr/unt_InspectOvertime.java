@@ -211,19 +211,17 @@ public class unt_InspectOvertime extends TemplatePortalPen {
 			UnitSql=" DEPARTMENT_ID= '"+lro.get(0).getDID()+"'";
 			
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
-		//	htmlPart1=htmlPart1.replace("<hiddenUnit/>",ControlUtil.drawHidden(lro.get(0).getUID(), "searchUnit"));	
-		//	htmlPart1=htmlPart1.replace("<UserUnit/>", 	HtmlUtil.getLabelHtml(lro.get(0).getUNIT()));
-		//	htmlPart1=htmlPart1.replace("<hiddenDepartmen/>",ControlUtil.drawHidden(lro.get(0).getDID(), "searchDepartmen"));	
 			htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + lro.get(0).getDID()+ "'    ", otVo.getSearchUnit(),false,null));	
 			htmlPart1=htmlPart1.replace("<UserDepartmen/>",ControlUtil.drawChosenSql(con,  "searchDepartmen",SqlUtil.querySelectOverDept(lro.get(0).getEMPLOYEENO()), otVo.getSearchDepartmen(),keyConts.msgS));	
 			htmlPart1=htmlPart1.replace("&submitDate",HtmlUtil.getDateDivSw("startSubmitDate","endSubmitDate", otVo.getStartSubmitDate(),otVo.getEndSubmitDate()));
 			htmlPart1=htmlPart1.replace("<SearchEmployeeNo/>",ControlUtil.drawChosenSelect(con, "searchEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "UNIT_ID='" +lro.get(0).getUID()+ "'", otVo.getSearchEmployeeNo(),false,null));
 			htmlPart1=htmlPart1.replace("<SearchEmployee/>",ControlUtil.drawChosenSelect(con, "searchEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "UNIT_ID='" +lro.get(0).getUID()+ "'", otVo.getSearchEmployee(),false,null));
 			htmlPart1=htmlPart1.replace("<ActionURI/>", 	otVo.getActionURI());
-			//htmlPart1=htmlPart1.replace("<SearchUnit/>",ControlUtil.drawChosenSelect(con,  "searchUnit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + otVo.getSearchDepartmen()+ "'  AND UNIT not like '%部%'  ", otVo.getSearchUnit(),false,null));
-		    htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabel6Html(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
-			logger.info("getOvertimeNoSave "+	SqlUtil.getOvertimeNoSave(otVo,lro.get(0).getEMPLOYEENO()));
+			htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(otVo.getMsg()));
+			htmlPart1=htmlPart1.replace("<Userdata/>",HtmlUtil.getLabel6Html(DBUtil.queryDBField(con,SqlUtil.queryChargeName(lro.get(0).getEMPLOYEENO()),"EMPLOYEE")));
+		
 			if(otVo.isShowDataTable()){
+				logger.info("getOvertimeNoSave "+	SqlUtil.getOvertimeNoSave(otVo,lro.get(0).getEMPLOYEENO()));
 				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawOvertimeTable(
 						SqlUtil.getOvertimeNoSave(otVo,lro.get(0).getEMPLOYEENO()),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageUsList));
 			}

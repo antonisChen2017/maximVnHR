@@ -52,7 +52,8 @@ public class ad_editOProcess extends TemplatePortalPen
 			
 				//查詢
 				if (actText.equals("QUE"))
-				{
+				{	
+				    	edVo=setData(edVo);
 					edVo.setShowDataTable(true);
 					showHtml(con, out, edVo, UserInformation);
 				}
@@ -63,6 +64,8 @@ public class ad_editOProcess extends TemplatePortalPen
 					
 					//edVo.setShowDataTable(true);
 					edVo.setDept( request.getParameter("Dept"));
+					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
 					//先查有無資料
 					int COUNT=0;
 					logger.info("queryDept  queryDeptOverCount    "+	SqlUtil.queryDeptOverCount(edVo));
@@ -79,6 +82,8 @@ public class ad_editOProcess extends TemplatePortalPen
 						edVo=setDeptNoData(edVo);
 						edVo.setMsg(keyConts.processNoData);
 					}
+					edVo.setUnit(request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
 					//再查出資料
 					showHtml(con, out, edVo, UserInformation);
 				}
@@ -103,7 +108,9 @@ public class ad_editOProcess extends TemplatePortalPen
 						ad_editOProcessDAO.insterDeptProcess(con,edVo);
 						edVo.setMsg(keyConts.saveOK);
 					}
-			
+					edVo.setDept( request.getParameter("Dept"));
+					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
 				
 					showHtml(con, out, edVo, UserInformation);
 				}
@@ -113,6 +120,7 @@ public class ad_editOProcess extends TemplatePortalPen
 					logger.info("queryUnit");
 					edVo.setDept( request.getParameter("Dept"));
 					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
 					//logger.info("getUnit "+edVo.getUnit());
 					int COUNT=0,COUNTD=0;
 					String Ucount=DBUtil.queryDBField(con,SqlUtil.queryUnitOverCount(edVo), "COUNT");
@@ -147,7 +155,7 @@ public class ad_editOProcess extends TemplatePortalPen
 					
 					edVo.setDept( request.getParameter("Dept"));
 					edVo.setUnit( request.getParameter("Unit"));
-					
+					edVo.setGroup( request.getParameter("Group"));
 					int COUNT=0;
 					logger.info(" SqlUtil.queryUnitOverCount(edVo)"+SqlUtil.queryUnitOverCount(edVo));
 					String Ucount=DBUtil.queryDBField(con,SqlUtil.queryUnitOverCount(edVo), "COUNT");
@@ -165,12 +173,90 @@ public class ad_editOProcess extends TemplatePortalPen
 						edVo=ad_editOProcessDAO.getUnitProcess(con,edVo);	
 						edVo.setMsg(keyConts.saveOK);
 					}
+					edVo.setDept( request.getParameter("Dept"));
 					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
 					//再查出資料
 					showHtml(con, out, edVo, UserInformation);
 				}
 				
+				// 查詢單位資料
+				if (actText.equals("queryGroup")){
+					logger.info("queryGroup");
+					edVo.setDept( request.getParameter("Dept"));
+					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
+					//logger.info("getUnit "+edVo.getUnit());
+					int COUNT=0,COUNTD=0;
+					logger.info("queryGroupOverCount "+SqlUtil.queryGroupOverCount(edVo));
+					String Ucount=DBUtil.queryDBField(con,SqlUtil.queryGroupOverCount(edVo), "COUNT");
+					logger.info("Ucount "+Ucount);
+					if(Ucount!=null && !Ucount.equals("")){
+						 COUNT=Integer.valueOf(Ucount);
+					}
+					
+					if(COUNT>0){
+						edVo=ad_editOProcessDAO.getGroupProcess(con,edVo);	
+						//edVo=ad_editProcessDAO.getDeptProcess(con,edVo);	
+						edVo.setMsg(keyConts.processGroupData);
+					}else{
+						logger.info("COUNT "+COUNT);
+						String Dcount=DBUtil.queryDBField(con,SqlUtil.queryDeptOverCount(edVo), "COUNT");
+						if(Dcount!=null && !Dcount.equals("")){
+							COUNTD=Integer.valueOf(Dcount);
+						}
+						if(COUNTD>0){
+							edVo=ad_editOProcessDAO.getDeptProcess(con,edVo);	
+						}
+						Dcount=DBUtil.queryDBField(con,SqlUtil.queryUnitOverCount(edVo), "COUNT");
+						if(Dcount!=null && !Dcount.equals("")){
+							COUNTD=Integer.valueOf(Dcount);
+						}
+						if(COUNTD>0){
+						        edVo.setGroup("0");
+							edVo=ad_editOProcessDAO.getUnitProcess(con,edVo);	
+						}
+						edVo.setMsg(keyConts.processGroupNoData);
+						edVo=setGroupNoData(edVo);
+					}
+					edVo.setDept( request.getParameter("Dept"));
+					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
+					//再查出資料
+					showHtml(con, out, edVo, UserInformation);
+				}
 				
+				// 查詢小組資料
+				if (actText.equals("saveGroup")){
+					logger.info("saveGroup");
+					edVo.setDept( request.getParameter("Dept"));
+					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
+					//logger.info("getUnit "+edVo.getUnit());
+					int COUNT=0,COUNTD=0;
+					logger.info("queryGroupOverCount "+SqlUtil.queryGroupOverCount(edVo));
+					String Ucount=DBUtil.queryDBField(con,SqlUtil.queryGroupOverCount(edVo), "COUNT");
+					logger.info("Ucount "+Ucount);
+					
+					if(Ucount!=null && !Ucount.equals("")){
+						 COUNT=Integer.valueOf(Ucount);
+					}
+					
+					if(COUNT>0){
+						ad_editOProcessDAO.updateGroupProcess(con,edVo);	
+						edVo=ad_editOProcessDAO.getGroupProcess(con,edVo);	
+						edVo.setMsg(keyConts.editOK);
+					}else{
+						ad_editOProcessDAO.insterGroupProcess(con,edVo);	
+						edVo=ad_editOProcessDAO.getGroupProcess(con,edVo);	
+						edVo.setMsg(keyConts.saveOK);
+					}
+					edVo.setDept( request.getParameter("Dept"));
+					edVo.setUnit( request.getParameter("Unit"));
+					edVo.setGroup( request.getParameter("Group"));
+					//再查出資料
+					showHtml(con, out, edVo, UserInformation);
+				}
 			}
 			else
 			{
@@ -233,27 +319,45 @@ public class ad_editOProcess extends TemplatePortalPen
 		htmlPart1 = htmlPart1.replace("<ActionURI/>", edVo.getActionURI());
 		htmlPart1=htmlPart1.replace("<Dept/>", 	ControlUtil.drawChosenSelect(con, "Dept", "VN_DEPARTMENT", "ID", "DEPARTMENT", null ,edVo.getDept(),false,null));
 		htmlPart1=htmlPart1.replace("<Unit/>",ControlUtil.drawChosenSelect(con,  "Unit", "VN_UNIT", "ID", "UNIT", "DEPARTMENT_ID='" + edVo.getDept() +"'  ", edVo.getUnit(),false,null));
+		String GroupSql = "";
+		if (edVo.getUnit().equals("0")) {
+		    GroupSql = " Unit='0' ";
+		} else {
+		    GroupSql = " Unit= '" + edVo.getUnit() + "'";
+		}
+		htmlPart1=htmlPart1.replace("<Group/>",  ControlUtil.drawChosenSelect(con, "Group", "VN_GROUP", "[GROUP]","[GROUP]", GroupSql, edVo.getGroup(), false, null));
 		htmlPart1=htmlPart1.replace("<threeDID/>",ControlUtil.drawHidden(edVo.getThreeDID(), "threeDID"));
 		htmlPart1=htmlPart1.replace("<threeMID/>",ControlUtil.drawHidden(edVo.getThreeMID(), "threeMID"));
 		htmlPart1=htmlPart1.replace("<threeEID/>",ControlUtil.drawHidden(edVo.getThreeEID(), "threeEID"));
 		htmlPart1=htmlPart1.replace("<threeUID/>",ControlUtil.drawHidden(edVo.getThreeUID(), "threeUID"));
-		
+		htmlPart1=htmlPart1.replace("<threeGEID/>",ControlUtil.drawHidden(edVo.getThreeGEID(), "threeGEID"));
 	
+		
+		edVo.setRole("G");
+		htmlPart1=htmlPart1.replace("<threeGELever0/>",ControlUtil.drawChosenSql(con,  "threeGELever0",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeGELever0(),keyConts.msgZ));	
+		
 		edVo.setRole("U");
 		htmlPart1=htmlPart1.replace("<threeELever1/>",ControlUtil.drawChosenSql(con,  "threeELever1",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever1(),keyConts.msgZ));	
+		htmlPart1=htmlPart1.replace("<threeGELever1/>",ControlUtil.drawChosenSql(con,  "threeGELever1",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeGELever1(),keyConts.msgZ));	
+		
 		edVo.setRole("D");
 		htmlPart1=htmlPart1.replace("<threeELever2/>",ControlUtil.drawChosenSql(con,  "threeELever2",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever2(),keyConts.msgZ));		
 		htmlPart1=htmlPart1.replace("<threeULever2/>",ControlUtil.drawChosenSql(con,  "threeULever2",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeULever2(),keyConts.msgZ));	
+		htmlPart1=htmlPart1.replace("<threeGELever2/>",ControlUtil.drawChosenSql(con,  "threeGELever2",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeGELever2(),keyConts.msgZ));		
+		
 		edVo.setRole("M");
 		htmlPart1=htmlPart1.replace("<threeELever3/>",ControlUtil.drawChosenSql(con,  "threeELever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever3(),keyConts.msgZ));	
 		htmlPart1=htmlPart1.replace("<threeULever3/>",ControlUtil.drawChosenSql(con,  "threeULever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeULever3(),keyConts.msgZ));
 		htmlPart1=htmlPart1.replace("<threeDLever3/>",ControlUtil.drawChosenSql(con,  "threeDLever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeDLever3(),keyConts.msgZ));
+		htmlPart1=htmlPart1.replace("<threeGELever3/>",ControlUtil.drawChosenSql(con,  "threeGELever3",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeGELever3(),keyConts.msgZ));	
+		
 		edVo.setRole("B");
 		htmlPart1=htmlPart1.replace("<threeELever4/>",ControlUtil.drawChosenSql(con,  "threeELever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeELever4(),keyConts.msgZ));	
 		htmlPart1=htmlPart1.replace("<threeULever4/>",ControlUtil.drawChosenSql(con,  "threeULever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeULever4(),keyConts.msgZ));
 		htmlPart1=htmlPart1.replace("<threeDLever4/>",ControlUtil.drawChosenSql(con,  "threeDLever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeDLever4(),keyConts.msgZ));
 		htmlPart1=htmlPart1.replace("<threeMLever4/>",ControlUtil.drawChosenSql(con,  "threeMLever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeMLever4(),keyConts.msgZ));
-
+		htmlPart1=htmlPart1.replace("<threeGELever4/>",ControlUtil.drawChosenSql(con,  "threeGELever4",SqlUtil.getEmpDUdata(edVo.getRole()), edVo.getThreeGELever4(),keyConts.msgZ));	
+		
 		htmlPart1=htmlPart1.replace("<msg/>",HtmlUtil.getMsgDiv(edVo.getMsg()));
 		if (edVo.isShowDataTable())
 		{
@@ -269,7 +373,9 @@ public class ad_editOProcess extends TemplatePortalPen
 	private editProcessVO setData(editProcessVO edVo){
 		edVo.setID("0");
 		edVo.setDept("0");
-	
+		edVo.setUnit("0");
+		edVo.setGroup("0");
+		edVo.setThreeGEID("0");
 		edVo.setOneDID("0");
 		edVo.setOneMID("0");
 		edVo.setThreeDID("0");
@@ -310,6 +416,26 @@ public class ad_editOProcess extends TemplatePortalPen
 		edVo.setThreeULever2("0");
 		edVo.setThreeULever3("0");
 		edVo.setThreeULever4("0");
+		return edVo;
+	}
+	
+	/**查詢小組無資料**/
+	private editProcessVO setGroupNoData(editProcessVO edVo){
+	
+	
+		edVo.setOneGEID("0");
+		edVo.setThreeGEID("0");
+		edVo.setThreeGELever0("0");
+		edVo.setThreeGELever1("0");
+		edVo.setThreeGELever2("0");
+		edVo.setThreeGELever3("0");
+		edVo.setThreeGELever4("0");
+		edVo.setOneGELever0("0");
+		edVo.setOneGELever1("0");
+		edVo.setOneGELever2("0");
+		edVo.setOneGELever3("0");
+		edVo.setOneGELever4("0");
+		
 		return edVo;
 	}
 }

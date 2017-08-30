@@ -33,35 +33,10 @@ SELECT
 	VD.DEPARTMENT,
 	VU.UNIT ,
 	(
-	  Select 
-	  	case when (WorkFDate='' AND WorkEDate='' ) 
-		then 
-			'0'
-		else  
-		 case when (DATEDIFF (HOUR,WorkFDate,WorkEDate))>0  then 
-		     case when (DATEDIFF (HOUR,WorkFDate,WorkEDate))>=8
-		     then 
-				'8'
-				else
-					(DATEDIFF (HOUR,WorkFDate,WorkEDate))
-				end
-			 else (
-			 select CAST((T.AllMin-T.DinnTime)/60 as decimal(2, 1)) AS TIME from PWERP_MS.dbo.RsKQResult R
-JOIN PWERP_MS.dbo.RsBasTurn T
-ON R.Turn=T.Code
-JOIN HR_EMPLOYEE E
-ON E.EmpCode=R.EmpCode
-where E.EMPLOYEENO=VE.EMPLOYEENO
-AND FDate='<FDate/>')
-			end
-	  end 
-	    FROM  
-	 PWERP_MS.dbo.RsKQResult AS K
-	 ,HR_EMPLOYEE SVE
-	 where
-	 SVE.EmpCode=K.EmpCode
-	 AND FDate= '<FDate/>'
-	 and SVE.EMPLOYEENO=VE.EMPLOYEENO
+	 SELECT convert(numeric(8,2),TotalTime) 
+  FROM [PWERP_MS].[dbo].[V_RsKQResult]
+   WHERE RsEmpCode=VE.EMPLOYEENO
+   AND FDate='<FDate/>'
 	)
 	AS ATTENDANCE,
 	(
@@ -199,7 +174,7 @@ AND FDate='<FDate/>')
 	) AS HOLIDAYS,--其他
 	(
     select 
-	case when (SK.WorkFDate='' AND  SK.WorkEDate='' ) 
+	case when (SK.WorkFDate='' or  SK.WorkEDate='' ) 
 	then (
 			 select CAST((T.AllMin-T.DinnTime)/60 as decimal(2, 1)) AS TIME from PWERP_MS.dbo.RsKQResult R
 JOIN PWERP_MS.dbo.RsBasTurn T

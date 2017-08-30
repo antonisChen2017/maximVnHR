@@ -53,10 +53,17 @@ public class stopWorkVO implements Serializable
 	private String saveButText;
 	/**狀態 */
 	private String STATUS;
+	/**請假流程下一個狀態*/
+	private String  nextStatus;
 	
 	
 	
-	
+	public String getNextStatus() {
+	    return nextStatus;
+	}
+	public void setNextStatus(String nextStatus) {
+	    this.nextStatus = nextStatus;
+	}
 	public String getSTATUS() {
 	    return STATUS;
 	}

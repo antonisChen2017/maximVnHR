@@ -5,6 +5,12 @@ SELECT D.DEPARTMENT as '部門'
         then '无'
         else 
         U.UNIT end) AS '單位'
+        ,(case 
+        when 
+        L.[GROUP] is null OR L.[GROUP]='0'
+        then '无'
+        else 
+        L.[GROUP] end) AS '組別'
       ,R.TITLE AS '员工身份'
       ,(case 
         when 

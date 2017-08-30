@@ -1125,6 +1125,10 @@ public class HtmlUtil
 		{
 			bStatus = "2";
 		}
+		if (page.equals(keyConts.pagePList))
+		{
+			bStatus = "P";
+		}
 		if (page.equals(keyConts.pageLList))
 		{
 			bStatus = "1";
@@ -1132,6 +1136,10 @@ public class HtmlUtil
 		if (page.equals(keyConts.pageUsList))
 		{
 			bStatus = "U";
+		}
+		if (page.equals(keyConts.pageGList))
+		{
+			bStatus = "G";
 		}
 		if (page.equals(keyConts.pageEmpUnitList))
 		{

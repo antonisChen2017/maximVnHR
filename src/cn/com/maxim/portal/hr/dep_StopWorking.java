@@ -63,6 +63,13 @@ public class dep_StopWorking extends TemplatePortalPen
 					}
 					if (actText.equals("Save")) {
 					      String msg=stopWorkDAO.getStopProcess(con,swVo);
+					      String group="";
+						if(msg.indexOf("#")!=-1){
+						   String[] msgs= msg.split("#");
+						    msg=msgs[0];
+						    group=msgs[1];
+						}
+						logger.info("msg : " +msg);
 						if(msg.equals("o")){
 						    String stopEdit=( String)request.getSession().getAttribute("stopEdit");
 							if(stopEdit.equals("Update")){
@@ -89,6 +96,9 @@ public class dep_StopWorking extends TemplatePortalPen
                 						msg=stopWorkDAO.saveStopWorking(con,swVo );
                 						swVo.setMsg(msg);
 							}
+						}else if(msg.equals("g")){
+						        swVo.setMsg(keyConts.noGroupMsgP1+group+keyConts.noGroupMsgP4);
+							logger.info(keyConts.noGroupMsgP1+group+keyConts.noGroupMsgP4);
 						}else{
 						    swVo.setMsg(keyConts.noProcessOverMsg);
 						    logger.info(keyConts.noProcessOverMsg);
@@ -120,7 +130,7 @@ public class dep_StopWorking extends TemplatePortalPen
 						logger.info("Refer swVo : "+swVo);
 					
 						logger.info(" Refer: " +swVo.toString());
-						DBUtil.updateSql(SqlUtil.upStopStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0"), con);
+						DBUtil.updateSql(SqlUtil.upStopStatus(keyConts.dbTableCRStatuS_T,request.getParameter("rowID"),"0",""), con);
 						/**20170802暫時不寄信**/
 						stopWorkDAO.deptProcessEmail(con,swVo);
 						swVo.setSearchEmployeeNo("0");

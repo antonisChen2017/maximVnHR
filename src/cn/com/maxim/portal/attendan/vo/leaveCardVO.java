@@ -45,6 +45,8 @@ public class leaveCardVO implements Serializable
 	private String note;
 	/**請假卡狀態*/
 	private String  status;
+	/**請假流程下一個狀態*/
+	private String  nextStatus;
 	/**請假天數*/
 	private String  dayCount;
 	/**請假小時*/
@@ -75,6 +77,12 @@ public class leaveCardVO implements Serializable
 	private String Login;
 
 	
+	public String getNextStatus() {
+	    return nextStatus;
+	}
+	public void setNextStatus(String nextStatus) {
+	    this.nextStatus = nextStatus;
+	}
 	public String getLogin() {
 	    return Login;
 	}

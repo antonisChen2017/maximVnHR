@@ -182,7 +182,7 @@
     </thead>
     <tbody>
       <tr>
-        <td> 一般员工<threeEID/></td>
+        <td> 一般员工或组长<threeEID/></td>
         <td><threeELever1/> </td>
         <td><threeELever2/> </td>
         <td><threeELever3/> </td>
@@ -226,6 +226,86 @@
 </div>
 </div>
 
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1">单位所属组别:</SPAN>
+
+<div  id='UnitDiv' class="col-md-2">
+<Group/>
+</div>
+<SPAN class="control-label col-md-1"> </SPAN>
+<div class="col-md-6">
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1">簽核流程設定:</SPAN>
+
+
+<div class="col-md-10">
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">加班流程</h3>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+     <th>员工身份</th>
+       <th>组长</th>
+         <th>单位主管</th>
+         <th>部门主管</th>
+        <th>经理</th>
+        <th>副总</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td> 组员<threeGEID/></td>
+                  <td><threeGELever0/> </td>
+        <td><threeGELever1/> </td>
+        <td><threeGELever2/> </td>
+        <td><threeGELever3/> </td>
+        <td><threeGELever4/> </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+<div class="col-md-1">
+
+ </div>
+
+ </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<div class="form-group">
+<SPAN class="control-label col-md-1"></SPAN>
+
+<div  class="col-md-2">
+<button class="btn btn-success " onclick="saveGroupData();" type="button">组别设定</button>
+</div>
+<SPAN class="control-label col-md-1"> </SPAN>
+<div class="col-md-6">
+</div>
+ </div>
+</div>
+<div class="col-md-6">
+<div class="form-group">
+</div>
+</div>
+</div>
 
 </div>
 </div>
@@ -307,6 +387,13 @@ jQuery(document).ready(function() {
 	    ActionForm.act.value='queryUnit';
 		ActionForm.submit();
 		});
+   
+   $('#Group').change(function(){  
+		
+	    ActionForm.act.value='queryGroup';
+		ActionForm.submit();
+		});
+   
    
    $('#oneDAuditorTitle').change(function(){ 
 	   var p1= $('#oneDAuditorTitle').val();
@@ -415,14 +502,7 @@ function    saveDeptData(){
 			return;  
 	}  
 	
-	if($('#oneDAuditor').val()=='0'){   
-		 layer.msg('请选择部门主管審核者');  
-			return;  
-	}  
-	if($('#oneMAuditor').val()=='0'){   
-			 layer.msg('请选择經理審核者');  
-				return;  
-		}  
+
 	if($('#threeDLever3').val()=='0' & $('#threeDLever4').val()=='0' ){   
 		 layer.msg('请选择部门主管加班审核流程');  
 			return;  
@@ -446,14 +526,7 @@ function    saveUnitData(){
 		 layer.msg('请选择單位');  
 			return;  
 	}  
-	if($('#oneEAuditor').val()=='0'){   
-		 layer.msg('请选择一般员工審核者');  
-			return;  
-	}  
-	if($('#oneUAuditor').val()=='0'){   
-			 layer.msg('请选择单位主管審核者');  
-				return;  
-		}  
+
 	if($('#threeELever1').val()=='0' & $('#threeELever2').val()=='0' & $('#threeELever2').val()=='0'  & $('#threeELever4').val()=='0' ){   
 		 layer.msg('请选择一般员工加班审核流程');  
 			return;  
@@ -467,7 +540,30 @@ function    saveUnitData(){
 
 }  
 
+function    saveGroupData(){  
+	 
+	if($('#Dept').val()=='0'){   
+		 layer.msg('请选择部门');  
+			return;  
+	}  
+	if($('#Unit').val()=='0'){   
+		 layer.msg('请选择單位');  
+			return;  
+	}  
+	if($('#Group').val()=='0'){   
+		 layer.msg('请选择组别');  
+			return;  
+	}  
+	
+	if($('#threeGELever0').val()=='0' & $('#threeGELever1').val()=='0' & $('#threeGELever2').val()=='0' & $('#threeGELever3').val()=='0'  & $('#threeGELever4').val()=='0' ){   
+		 layer.msg('请选择组员加班审核流程');  
+			return;  
+	}  
 
+	ActionForm.act.value='saveGroup';
+	ActionForm.submit();
+
+}  
 
 function    checkNO(){  
 

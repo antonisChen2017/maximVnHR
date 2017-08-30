@@ -3,5 +3,8 @@ SELECT
 		[UNIT_ID] as UNIT
       , ROLE
       ,' ' as STATUS
-  FROM [hr].[dbo].[HR_EMPLOYEE]
-where [ID]='<EMPLOYEENO/>'
+      ,(case when [GROUP] IS null then '0' else [GROUP] end )[GROUP]
+  FROM [hr].[dbo].[HR_EMPLOYEE] E
+    FULL  JOIN VN_GROUP_EMP G
+   ON E.EMPLOYEENO=G.EMPLOYEENO
+where E.[ID]='<EMPLOYEENO/>'

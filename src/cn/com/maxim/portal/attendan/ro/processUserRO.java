@@ -14,8 +14,14 @@ public class processUserRO
 	
 	private String STATUS;
 	
-	
-	
+	private String GROUP;
+
+	public String getGROUP() {
+	    return GROUP;
+	}
+	public void setGROUP(String gROUP) {
+	    GROUP = gROUP;
+	}
 	public String getSTATUS()
 	{
 		return STATUS;

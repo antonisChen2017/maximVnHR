@@ -9,9 +9,13 @@ public class editProcessRO
 	/** */
 	private String Unit;
 	/** */
+	private String Group;
+	/** */
 	private String Role;
 	/**B(,) */
 	private String Status;
+	/**A1 **/
+	private String SingRoleL0;
 	/**A1 **/
 	private String SingRoleL1;
 	/**A1 **/
@@ -20,6 +24,8 @@ public class editProcessRO
 	private String SingRoleL3;
 	/**A1 **/
 	private String SingRoleL4;
+	/**A1T **/
+	private String SingRoleL0EP;
 	/**A1T **/
 	private String SingRoleL1EP;
 	/**A2 T**/
@@ -33,6 +39,28 @@ public class editProcessRO
 	/**代理审核人职称**/
 	private String twoTitle;
 	
+	
+	
+	
+	
+	public String getGroup() {
+	    return Group;
+	}
+	public void setGroup(String group) {
+	    Group = group;
+	}
+	public String getSingRoleL0() {
+	    return SingRoleL0;
+	}
+	public void setSingRoleL0(String singRoleL0) {
+	    SingRoleL0 = singRoleL0;
+	}
+	public String getSingRoleL0EP() {
+	    return SingRoleL0EP;
+	}
+	public void setSingRoleL0EP(String singRoleL0EP) {
+	    SingRoleL0EP = singRoleL0EP;
+	}
 	public String getOneTitle()
 	{
 		return oneTitle;

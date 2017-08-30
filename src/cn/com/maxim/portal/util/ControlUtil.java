@@ -196,6 +196,43 @@ public class ControlUtil
 						
 		return Sb.toString();
 	}
+	
+	
+	/**
+	 * 左右移動下拉
+	 * @param con
+	 * @param out
+	 * @param name
+	 * @param tableName
+	 * @param valueField
+	 * @param DisplayField
+	 * @param whereSql
+	 * @param SelectedOption
+	 * @param isDistinct
+	 * @param GroupField
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawChangeSelect(Connection con,  String sql) throws SQLException
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ControlUtil.class);
+		
+			    Statement st = con.createStatement();
+			    logger.info("drawChangeSelect : "+sql);
+			    ResultSet rs = st.executeQuery(sql);
+			    StringBuilder Sb = new StringBuilder("");
+			    int count=0;
+			    while (rs.next()) {
+			    	 Sb.append("<option value='"+rs.getString(1)+"'  selected>"+rs.getString(2)+"/"+rs.getString(3)+"</option> \r\n");
+			    	
+			    	  count=count+1;
+			      }
+			  
+		return Sb.toString();
+	}
+	
+	
 	/**
 	 * 可搜尋下拉
 	 * @param con
@@ -228,6 +265,7 @@ public class ControlUtil
 			    }
 			    
 			    Statement st = con.createStatement();
+		//	    logger.info("drawChosenSelect : "+sql);
 			    ResultSet rs = st.executeQuery(sql);
 			    StringBuilder Sb = new StringBuilder("");
 				Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\"\"  tabindex=\"2\"> \r\n");

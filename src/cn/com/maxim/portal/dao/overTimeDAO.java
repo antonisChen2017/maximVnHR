@@ -2,6 +2,8 @@ package cn.com.maxim.portal.dao;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,17 +18,23 @@ import cn.com.maxim.portal.attendan.ro.configRO;
 import cn.com.maxim.portal.attendan.ro.editProcessRO;
 import cn.com.maxim.portal.attendan.ro.leaveEmailListRO;
 import cn.com.maxim.portal.attendan.ro.overEmailListRO;
+import cn.com.maxim.portal.attendan.ro.processCheckRO;
 import cn.com.maxim.portal.attendan.ro.processUserRO;
 import cn.com.maxim.portal.attendan.ro.supervisorRO;
 import cn.com.maxim.portal.attendan.vo.leaveCardVO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
 import cn.com.maxim.portal.attendan.wo.EmailWO;
 import cn.com.maxim.portal.util.DBUtil;
+import cn.com.maxim.portal.util.DBUtilTList;
 import cn.com.maxim.portal.util.DateUtil;
 import cn.com.maxim.portal.util.EmailUtil;
+import cn.com.maxim.portal.util.HtmlUtil;
 import cn.com.maxim.portal.util.Log4jUtil;
+import cn.com.maxim.portal.util.ReflectHelper;
 import cn.com.maxim.portal.util.SqlUtil;
+import cn.com.maxim.portal.util.vnStringUtil;
 import cn.com.maxim.potral.consts.keyConts;
+import cn.com.maxim.potral.consts.sqlConsts;
 
 public class overTimeDAO {
 
@@ -59,12 +67,59 @@ public class overTimeDAO {
 	// 正常加班流程
 	editProcessRO edPR = DBUtil.getProcessOverIDData(otVo, con);
 
+	
+	// 查詢流程
+	    if (otVo.getStatus().equals("G")) {// 組長
+		if (edPR.getSingRoleL1().equals("0") && edPR.getSingRoleL2().equals("0")
+			&& edPR.getSingRoleL3().equals("0") && edPR.getSingRoleL4().equals("0")) { 
+		    logger.info("之後沒有審核");
+		    otVo.setLeaveApply("1");// 請假完成
+		    otVo.setNextStatus("X");
+		    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+			    otVo.setMsg(keyConts.okMsg);
+		    }
+		}
+		if (edPR.getSingRoleL1().equals("1")) { 
+		    logger.info("之後單位主管審核");
+		    otVo.setLeaveApply("0");// 請假完成
+		    otVo.setNextStatus("U");
+		    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+			otVo.setMsg(keyConts.okMsg);
+		    }
+		}
+		if (edPR.getSingRoleL1().equals("0") && edPR.getSingRoleL2().equals("1")) { 
+		    logger.info("之後部門主管審核");
+		    otVo.setLeaveApply("0");// 請假完成
+		    otVo.setNextStatus("D");
+		    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+			otVo.setMsg(keyConts.okMsg);
+		    }
+		}
+		if (edPR.getSingRoleL1().equals("0") && edPR.getSingRoleL2().equals("0") && edPR.getSingRoleL3().equals("1")) { 
+		    logger.info("之後經理審核");
+		    otVo.setLeaveApply("0");// 請假完成
+		    otVo.setNextStatus("L");
+		    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+			otVo.setMsg(keyConts.okMsg);
+		    }
+		}
+		if (edPR.getSingRoleL1().equals("0") && edPR.getSingRoleL2().equals("0") && edPR.getSingRoleL3().equals("0")&& edPR.getSingRoleL4().equals("1")) { 
+		    logger.info("之後副總審核");
+		    otVo.setLeaveApply("0");// 請假完成
+		    otVo.setNextStatus("B");
+		    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+			otVo.setMsg(keyConts.okMsg);
+		    }
+		}
+	    }
+	
 	if (otVo.getStatus().equals("U")) {// 單位主管
 
 	    if (edPR.getSingRoleL2().equals("0") && edPR.getSingRoleL3().equals("0")
 		    && edPR.getSingRoleL4().equals("0")) { // 之後沒有審核
 		logger.info("之後沒有審核");
 		otVo.setLeaveApply("1");// 請假完成
+		otVo.setNextStatus("X");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -73,6 +128,7 @@ public class overTimeDAO {
 		    && edPR.getSingRoleL4().equals("0")) { // 部門主管審核
 		logger.info("部門主管審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("D");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -82,6 +138,7 @@ public class overTimeDAO {
 		    && edPR.getSingRoleL4().equals("0")) { // 部門主管審核
 		logger.info("部門主管經理審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("D");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -91,6 +148,7 @@ public class overTimeDAO {
 		    && edPR.getSingRoleL4().equals("1")) { // 部門主管審核
 		logger.info("部門主管審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("D");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -100,6 +158,7 @@ public class overTimeDAO {
 		    && edPR.getSingRoleL4().equals("0")) { // 經理審核
 		logger.info("經理審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("L");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -109,6 +168,7 @@ public class overTimeDAO {
 		    && edPR.getSingRoleL4().equals("1")) { // 經理副總審核
 		logger.info("經理副總審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("L");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -118,6 +178,7 @@ public class overTimeDAO {
 		    && edPR.getSingRoleL4().equals("1")) { // 副總
 		logger.info("副總審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("L");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -131,6 +192,7 @@ public class overTimeDAO {
 	    if (edPR.getSingRoleL3().equals("0") && edPR.getSingRoleL4().equals("0")) { // 之後沒有審核
 		logger.info("之後沒有審核");
 		otVo.setLeaveApply("1");// 請假完成
+		otVo.setNextStatus("X");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -138,6 +200,7 @@ public class overTimeDAO {
 	    if (edPR.getSingRoleL3().equals("0") && edPR.getSingRoleL4().equals("1")) { // 跳過經理
 		logger.info("跳過經理");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("B");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -146,6 +209,7 @@ public class overTimeDAO {
 	    if (edPR.getSingRoleL3().equals("1") && edPR.getSingRoleL4().equals("1")) { // 之後經理副總審核
 		logger.info("之後經理副總審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("L");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -154,6 +218,7 @@ public class overTimeDAO {
 	    if (edPR.getSingRoleL3().equals("1") && edPR.getSingRoleL4().equals("0")) { // 之後經理審核
 		logger.info("之後經理審核");
 		otVo.setLeaveApply("0");// 請假未完成
+		otVo.setNextStatus("L");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -165,6 +230,7 @@ public class overTimeDAO {
 	    if (edPR.getSingRoleL4().equals("0")) { // 之後沒有審核
 		logger.info("之後沒有審核");
 		otVo.setLeaveApply("1");// 請假完成
+		otVo.setNextStatus("X");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -172,6 +238,7 @@ public class overTimeDAO {
 	    if (edPR.getSingRoleL4().equals("1")) { // 副總審核
 		logger.info("副總審核");
 		otVo.setLeaveApply("0");// 請假完成
+		otVo.setNextStatus("B");
 		if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		    otVo.setMsg(keyConts.okMsg);
 		}
@@ -182,6 +249,7 @@ public class overTimeDAO {
 	if (otVo.getStatus().equals("B")) {// 副總
 	    logger.info("副總判斷流程 ");
 	    otVo.setLeaveApply("1");// 請假完成
+	    otVo.setNextStatus("X");
 	    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
 		otVo.setMsg(keyConts.okMsg);
 	    }
@@ -376,10 +444,49 @@ public class overTimeDAO {
 	boolean checkEmail = false;// 是否有信箱
 
 	Connection con = DBUtil.getHRCon();
-
 	// 先查出當天請假需要寄信主管 查寄信人與主管等級差異-兩級以上定時寄
 	logger.info("=================================");
 	leaveCardVO lc = new leaveCardVO();
+	
+	
+	
+	
+	/** --員工請假組長審過等待單位主管審查有幾個主管-START- **/
+	logger.info("員工請假組長審過等待單位主管審查");
+	lc.setSearchRole("E");
+	lc.setStatus("G");
+	lc.setReturnMsg("");
+	lc.setNote(keyConts.SingRoleL1EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	/** --員工請假組長審過等待單位主管審查-END- **/
+	
+	/** -特殊-員工組長審過跳到部門主管審查-START- **/
+	logger.info("員工組長審過跳到部門主管審查");
+	lc.setSearchRole("E");
+	lc.setStatus("G");
+	lc.setReturnMsg(" and SINGROLEL1='0'  ");
+	lc.setNote(keyConts.SingRoleL2EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	/** --特殊-員工組長審過跳到部門主管審查-END- **/
+	
+	/** -特殊-員工組長審過跳到經理審查-START- **/
+	logger.info("員工組長審過跳到部門主管審查");
+	lc.setSearchRole("E");
+	lc.setStatus("G");
+	lc.setReturnMsg(" and SINGROLEL1='0'   and SINGROLEL2='0' ");
+	lc.setNote(keyConts.SingRoleL3EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	/** --特殊-員工組長審過跳到經理審查-END- **/
+	
+	/** -特殊-員工組長審過跳到副總審查-START- **/
+	logger.info("員工組長審過跳到部門主管審查");
+	lc.setSearchRole("E");
+	lc.setStatus("G");
+	lc.setReturnMsg(" and SINGROLEL1='0'   and SINGROLEL2='0' and SINGROLEL3='0' ");
+	lc.setNote(keyConts.SingRoleL4EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	/** --特殊-員工組長審過跳到副總審查-END- **/
+	
 	/** --員工請假單位主管審過等待部門主管審查有幾個主管-START- **/
 	logger.info("員工加班單位主管審過等待部門主管審查");
 	lc.setSearchRole("E");
@@ -405,6 +512,56 @@ public class overTimeDAO {
 	lc.setNote(keyConts.SingRoleL4EP);
 	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
 	/** --員工經理審過等待副總審查有幾人-END- **/
+	
+	/** --組長請假單位主管審過等待部門主管審查有幾個主管-START- **/
+	logger.info("組長請假單位主管審過等待部門主管審查");
+	lc.setSearchRole("G");
+	lc.setStatus("U");
+	lc.setReturnMsg("");
+	lc.setNote(keyConts.SingRoleL2EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	/** --組長請假單位主管審過等待部門主管審查有幾個主管-END- **/
+	logger.info("=================================");
+	/** --組長部門主管審過等待經理審查-START- **/
+	logger.info("組長部門主管審過等待經理審查");
+	lc.setSearchRole("G");
+	lc.setStatus("D");
+	lc.setReturnMsg("");
+	lc.setNote(keyConts.SingRoleL3EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	logger.info("=================================");
+	
+	
+	/** --組長經理審過等待副總審查有幾人-START- **/
+	logger.info("=================================");
+	logger.info("組長待工經理審過等待副總審查");
+	lc.setSearchRole("G");
+	lc.setStatus("L");
+	lc.setReturnMsg("");
+	lc.setNote(keyConts.SingRoleL4EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	logger.info("=================================");
+	/** --組長經理審過等待副總審查有幾人-END- **/
+	
+	/** --特殊-組長單位主管審過跳到經理審查-START- **/
+	logger.info("組長單位主管審過跳到經理審查");
+	lc.setSearchRole("G");
+	lc.setStatus("U");
+	lc.setReturnMsg("  and SINGROLEL2='0' ");
+	lc.setNote(keyConts.SingRoleL3EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	/** --特殊-組長單位主管審過跳到經理審查-END- **/
+	logger.info("=================================");
+	/** --特殊-組長單位主管審過跳到副總審查-START- **/
+	logger.info("組長單位主管審過跳到副總審查");
+	lc.setSearchRole("G");
+	lc.setStatus("U");
+	lc.setReturnMsg("   and SINGROLEL2='0'  and SINGROLEL3='0' ");
+	lc.setNote(keyConts.SingRoleL4EP);
+	forOverSendEmail(lc, con, logger, toEamil, checkEmail);
+	/** --特殊-員工單位主管審過跳到副總審查-END- **/
+	
+	
 	logger.info("=================================");
 	/** --單位主管申請 部門主管審過等待經理審-START- **/
 	logger.info("單位主管申請 部門主管審過等待經理審");
@@ -730,5 +887,98 @@ public class overTimeDAO {
 	logger.info("=========================================");
 	return newVo;
     }
+    
+    
+    /**
+	 * 加班先檢查是否有設定流程
+	 * @param con
+	 * @param lcVo
+	 * @param Day
+	 * @return
+	 * @throws Exception 
+	 */
+	public static final 	String  getOverProcess(Connection con, overTimeVO otVo) throws Exception
+	{
+		//用工號查出部門單位角色
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		HtmlUtil hu = new HtmlUtil();
+		processUserRO ra=new processUserRO();
+		String sql = "";
+		sql = hu.gethtml(sqlConsts.sql_queryUserData);
+		sql = sql.replace("<EMPLOYEENO/>", otVo.getSearchEmployeeNo());
+	
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<processUserRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<processUserRO>) rh.getBean(rs, ra);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		processUserRO ru=(processUserRO)leo.get(0);
+	
+	
+		String STATUS="1";//正常流程
+		
+		ru.setSTATUS(STATUS);
+		int count=0;
+		
+		processCheckRO  prow=new processCheckRO();
+		String COUNT ="";
+		if(ru.getROLE().equals("E") || ru.getROLE().equals("U") || ru.getROLE().equals("G") ) {//多組長
+			logger.info("檢查此部門或單位:"+SqlUtil.queryDeptUnitOverCount(ru));
+			COUNT = DBUtil.queryDBField(con,SqlUtil.queryDeptUnitOverCount(ru), "COUNT");
+			count=Integer.valueOf(COUNT);
+			if(count>0){
+			/**檢查欄位**/
+    			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
+    			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processOVTable));
+    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processOVTable), new processCheckRO());
+    			if(cr.size()>0){
+				    prow=cr.get(0);
+				}
+			}
+		}else{
+			logger.info("檢查此部門:"+SqlUtil.queryOverPreossCount(ru));
+			COUNT = DBUtil.queryDBField(con,SqlUtil.queryOverPreossCount(ru), "COUNT");
+			/**檢查欄位**/
+			count=Integer.valueOf(COUNT);
+			if(count>0){
+    			ru.setUNIT("0");		
+    			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
+    			logger.info("queryProcessCheck sql="+SqlUtil.queryProcessCheck(ru,keyConts.processOVTable));
+    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processOVTable), new processCheckRO());
+    			if(cr.size()>0){
+    			    prow=cr.get(0);
+    			}
+			}
+		}
+		if(count>0){
+			
+			/**檢查5個欄位有無值無值一樣不能過**/
+			if(prow.getSINGROLEL0().equals("0") && prow.getSINGROLEL1().equals("0") && prow.getSINGROLEL2().equals("0")
+				&& prow.getSINGROLEL3().equals("0") && prow.getSINGROLEL4().equals("0")){
+			    count=0;
+			}
+		}
+		String msg="o";
+		if(count==0){
+			msg="x";
+			if(ru.getROLE().equals("E") && !ru.getGROUP().equals("0")){
+			    logger.info("此員工為組員組別為:"+ru.getGROUP());
+			    msg="g#"+ru.getGROUP(); 
+			}
+		}
+	
+		return msg;
+	}
+    
     
 }

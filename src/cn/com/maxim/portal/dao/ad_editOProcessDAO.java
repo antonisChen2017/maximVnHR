@@ -28,11 +28,13 @@ public class ad_editOProcessDAO
 
 		editProcessRO epDD=new editProcessRO();
 		edVo.setUnit("0");
+		edVo.setGroup("0");
 		edVo.setStatus(keyConts.processStatus0);
 		edVo.setRole(keyConts.EmpRoleD);
 		
 		/**部門主管正常加班流程**/
 		edVo.setStatus(keyConts.processStatus1);
+		logger.info("getDeptProcess queryDeptOverData "+  SqlUtil.queryDeptOverData(edVo));
 		List<editProcessRO> threeD=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
 		edVo.setThreeDID(threeD.get(0).getID());
 		edVo.setThreeDLever3(threeD.get(0).getSingRoleL3EP());
@@ -70,8 +72,15 @@ public class ad_editOProcessDAO
 		}else{
 		    epDU.setUnit(edVo.getUnit());
 		}
+		if(edVo.getGroup()==null){
+		    epDU.setGroup("0");
+		}else{
+		    epDU.setGroup(edVo.getUnit());
+		}
 		epDU.setRole(keyConts.EmpRoleD);
 		epDU.setStatus("1");
+		epDU.setSingRoleL0("0");
+		epDU.setSingRoleL0EP("");
 		epDU.setSingRoleL1("0");
 		epDU.setSingRoleL1EP("");
 		epDU.setSingRoleL2("0");
@@ -108,8 +117,15 @@ public class ad_editOProcessDAO
 		}else{
 		    epMU.setUnit(edVo.getUnit());
 		}
+		if(edVo.getGroup()==null){
+		    epMU.setGroup("0");
+		}else{
+		    epMU.setGroup(edVo.getUnit());
+		}
 		epMU.setRole(keyConts.EmpRoleM);
 		epMU.setStatus("1");
+		epMU.setSingRoleL0("0");
+		epMU.setSingRoleL0EP("");
 		epMU.setSingRoleL1("0");
 		epMU.setSingRoleL1EP("");
 		epMU.setSingRoleL2("0");
@@ -149,7 +165,10 @@ public class ad_editOProcessDAO
 		epDU.setDept(edVo.getDept());
 		epDU.setRole(keyConts.EmpRoleD);
 		epDU.setUnit("0");
+		epDU.setGroup("0");
 		epDU.setStatus(keyConts.processStatus1);
+		epDU.setSingRoleL0("0");
+		epDU.setSingRoleL0EP("");
 		epDU.setSingRoleL1("0");
 		epDU.setSingRoleL1EP("");
 		epDU.setSingRoleL2("0");
@@ -179,7 +198,10 @@ public class ad_editOProcessDAO
 		epMU.setDept(edVo.getDept());
 		epMU.setRole(keyConts.EmpRoleM);
 		epMU.setUnit("0");
+		epMU.setGroup("0");
 		epMU.setStatus(keyConts.processStatus1);
+		epMU.setSingRoleL0("0");
+		epMU.setSingRoleL0EP("");
 		epMU.setSingRoleL1("0");
 		epMU.setSingRoleL1EP("");
 		epMU.setSingRoleL2("0");
@@ -212,11 +234,11 @@ public class ad_editOProcessDAO
 		editProcessRO epDD=new editProcessRO();
 		
 		editProcessRO epEU=new editProcessRO();
-		edVo.setStatus(keyConts.processStatus0);
 		edVo.setRole(keyConts.EmpRoleE);
-		
+		edVo.setGroup("0");
 		/**員工加班流程**/
 		edVo.setStatus(keyConts.processStatus1);
+	
 		List<editProcessRO> threeE=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epEU);
 		if(threeE.size()>0){
         		edVo.setThreeEID(threeE.get(0).getID());
@@ -291,6 +313,185 @@ public class ad_editOProcessDAO
 	
 	
 	/**
+	 * 查詢小組請假流程資料
+	 */
+	public static final editProcessVO getGroupProcess(Connection con,editProcessVO edVo) throws Exception
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ad_editProcessDAO.class);
+		editProcessRO epDD=new editProcessRO();
+		edVo.setRole(keyConts.EmpRoleE);
+		edVo.setStatus(keyConts.processStatus1);
+		List<editProcessRO> threeGE=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
+		if(threeGE.size()>0){
+    		edVo.setThreeGEID(threeGE.get(0).getID());
+    		edVo.setThreeGELever0(threeGE.get(0).getSingRoleL0EP());
+    		edVo.setThreeGELever1(threeGE.get(0).getSingRoleL1EP());
+    		edVo.setThreeGELever2(threeGE.get(0).getSingRoleL2EP());
+    		edVo.setThreeGELever3(threeGE.get(0).getSingRoleL3EP());
+    		edVo.setThreeGELever4(threeGE.get(0).getSingRoleL4EP());
+		}else{
+		    	edVo.setThreeGEID("");
+		    	edVo.setThreeGELever0("");
+			edVo.setThreeGELever1("");
+			edVo.setThreeGELever2("");
+			edVo.setThreeGELever3("");
+			edVo.setThreeGELever4("");
+		}
+		
+		editProcessRO epEU=new editProcessRO();
+		edVo.setGroup("0");
+		/**員工加班流程**/
+
+	
+		List<editProcessRO> threeE=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epEU);
+		if(threeE.size()>0){
+        		edVo.setThreeEID(threeE.get(0).getID());
+        		edVo.setThreeELever1(threeE.get(0).getSingRoleL1EP());
+        		edVo.setThreeELever2(threeE.get(0).getSingRoleL2EP());
+        		edVo.setThreeELever3(threeE.get(0).getSingRoleL3EP());
+        		edVo.setThreeELever4(threeE.get(0).getSingRoleL4EP());
+		}else{
+		    	edVo.setThreeEID("");
+			edVo.setThreeELever1("");
+			edVo.setThreeELever2("");
+			edVo.setThreeELever3("");
+			edVo.setThreeELever4("");
+		}
+	
+		/**單位主管加班流程**/
+		edVo.setRole(keyConts.EmpRoleU);
+		edVo.setStatus(keyConts.processStatus1);
+		List<editProcessRO> threeU=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epEU);
+		if(threeU.size()>0){
+			edVo.setThreeUID(threeU.get(0).getID());
+			edVo.setThreeULever2(threeU.get(0).getSingRoleL2EP());
+			edVo.setThreeULever3(threeU.get(0).getSingRoleL3EP());
+			edVo.setThreeULever4(threeU.get(0).getSingRoleL4EP());
+			
+		}else{
+			edVo.setThreeUID("");
+			edVo.setThreeULever2("");
+			edVo.setThreeULever3("");
+			edVo.setThreeULever4("");
+			
+		}
+	
+	
+		/**部門主管流程**/
+		edVo.setUnit("0");
+		edVo.setRole(keyConts.EmpRoleD);
+		edVo.setStatus(keyConts.processStatus1);
+		logger.info("queryDeptOverData "+SqlUtil.queryDeptOverData(edVo));
+		List<editProcessRO> threeD=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
+		logger.info("threeD.size() "+threeD.size());
+		if(threeD.size()>0){
+			edVo.setThreeDID(threeD.get(0).getID());
+			edVo.setThreeDLever3(threeD.get(0).getSingRoleL3EP());
+			edVo.setThreeDLever4(threeD.get(0).getSingRoleL4EP());
+		}else{
+			edVo.setThreeDID("");
+			edVo.setThreeDLever3("");
+			edVo.setThreeDLever4("");
+		}
+	
+	
+		/**经理流程**/
+		edVo.setRole(keyConts.EmpRoleM);
+		edVo.setStatus(keyConts.processStatus1);
+		List<editProcessRO> threeM=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptOverData(edVo),epDD);
+		if(threeM.size()>0){
+		    	edVo.setThreeMID(threeM.get(0).getID());
+			edVo.setThreeMLever4(threeM.get(0).getSingRoleL4EP());
+			
+		}else{
+		    	edVo.setThreeMID("");
+			edVo.setThreeMLever4("");
+			
+		}
+		
+		
+		
+	
+		return edVo;
+	}
+	/**
+	 * 更新單位流程
+	 * @param con
+	 * @param edVo
+	 * @return
+	 * @throws Exception
+	 */
+	public static final String updateGroupProcess(Connection con,editProcessVO edVo) throws Exception
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ad_editProcessDAO.class);
+	
+		/**組員加班流程**/
+		logger.info("updateDeptProcess ThreeGDID : "+edVo.getThreeGEID());
+		editProcessRO epEU=new editProcessRO();
+		epEU.setID(edVo.getThreeEID());
+		epEU.setDept(edVo.getDept());
+		epEU.setUnit(edVo.getUnit());
+		epEU.setGroup(edVo.getGroup());
+		epEU.setRole(keyConts.EmpRoleE);
+		epEU.setStatus("1");
+		
+		if(edVo.getThreeGELever0().equals("0")){
+			epEU.setSingRoleL0("0");
+			epEU.setSingRoleL0EP("");
+		}else{
+			epEU.setSingRoleL0("1");
+			epEU.setSingRoleL0EP(edVo.getThreeGELever0());
+		}
+		
+		
+		if(edVo.getThreeGELever1().equals("0")){
+			epEU.setSingRoleL1("0");
+			epEU.setSingRoleL1EP("");
+		}else{
+			epEU.setSingRoleL1("1");
+			epEU.setSingRoleL1EP(edVo.getThreeGELever1());
+		}
+		if(edVo.getThreeGELever2().equals("0")){
+			epEU.setSingRoleL2("0");
+			epEU.setSingRoleL2EP("");
+		}else{
+			epEU.setSingRoleL2("1");
+			epEU.setSingRoleL2EP(edVo.getThreeGELever2());
+		}
+		
+		if(edVo.getThreeGELever3().equals("0")){
+			epEU.setSingRoleL3("0");
+			epEU.setSingRoleL3EP("");
+		}else{
+			epEU.setSingRoleL3("1");
+			epEU.setSingRoleL3EP(edVo.getThreeGELever3());
+		}
+		if(edVo.getThreeGELever4().equals("0")){
+			epEU.setSingRoleL4("0");
+			epEU.setSingRoleL4EP("");
+		}else{
+			epEU.setSingRoleL4("1");
+			epEU.setSingRoleL4EP(edVo.getThreeGELever4());
+		}
+		epEU.setOneTitle("");
+		epEU.setTwoTitle("");
+		logger.info("ThreeGDID updateGroupProcess  "+SqlUtil.updateDeptOverRole(epEU));
+		DBUtil.updateSql(SqlUtil.updateDeptOverRole(epEU), con);
+		/**更新相關加班單流程**/
+		DBUtil.updateSql(SqlUtil.updateOversProcess(epEU),con);
+		
+		
+		
+		return "";
+	}
+	
+	
+	
+	
+	
+	/**
 	 * 更新單位流程
 	 * @param con
 	 * @param edVo
@@ -309,8 +510,11 @@ public class ad_editOProcessDAO
 		epEU.setID(edVo.getThreeEID());
 		epEU.setDept(edVo.getDept());
 		epEU.setUnit(edVo.getUnit());
+		epEU.setGroup(edVo.getGroup());
 		epEU.setRole(keyConts.EmpRoleE);
 		epEU.setStatus("1");
+		epEU.setSingRoleL0("0");
+		epEU.setSingRoleL0EP("");
 		if(edVo.getThreeELever1().equals("0")){
 			epEU.setSingRoleL1("0");
 			epEU.setSingRoleL1EP("");
@@ -345,6 +549,7 @@ public class ad_editOProcessDAO
 		logger.info("ThreeDID updateDeptOverRole  "+SqlUtil.updateDeptOverRole(epEU));
 		DBUtil.updateSql(SqlUtil.updateDeptOverRole(epEU), con);
 		/**更新相關加班單流程**/
+		logger.info("ThreeDID updateOversProcess  "+SqlUtil.updateOversProcess(epEU));
 		DBUtil.updateSql(SqlUtil.updateOversProcess(epEU),con);
 		
 		
@@ -355,8 +560,11 @@ public class ad_editOProcessDAO
 		epMU.setID(edVo.getThreeUID());
 		epMU.setDept(edVo.getDept());
 		epMU.setUnit(edVo.getUnit());
+		epMU.setGroup(edVo.getGroup());
 		epMU.setRole(keyConts.EmpRoleU);
 		epMU.setStatus("1");
+		epMU.setSingRoleL0("0");
+		epMU.setSingRoleL0EP("");
 		epMU.setSingRoleL1("0");
 		epMU.setSingRoleL1EP("");
 		if(edVo.getThreeULever2().equals("0")){
@@ -401,9 +609,11 @@ public class ad_editOProcessDAO
 		epEU.setDept(edVo.getDept());
 		epEU.setRole(keyConts.EmpRoleE);
 		epEU.setUnit(edVo.getUnit());
+		epEU.setGroup("0");
 		epEU.setStatus(keyConts.processStatus1);
 		logger.info("insterUnitProcess edVo : "+ edVo.toString());
-		
+		epEU.setSingRoleL0("0");
+		epEU.setSingRoleL0EP("");
 		if(edVo.getThreeELever1().equals("0")){
 			epEU.setSingRoleL1("0");
 			epEU.setSingRoleL1EP("");
@@ -447,7 +657,9 @@ public class ad_editOProcessDAO
 		epDU.setRole(keyConts.EmpRoleU);
 		epDU.setUnit(edVo.getUnit());
 		epDU.setStatus(keyConts.processStatus1);
-	
+		epDU.setGroup("0");
+		epDU.setSingRoleL0("0");
+		epDU.setSingRoleL0EP("");
 		epDU.setSingRoleL1("0");
 		epDU.setSingRoleL1EP("");
 	
@@ -483,4 +695,69 @@ public class ad_editOProcessDAO
 	
 		return "";
 	}
+	
+	
+	/**
+	 * 建立單位請假加班流程資料
+	 */
+	public static final String insterGroupProcess(Connection con,editProcessVO edVo) throws Exception
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(ad_editProcessDAO.class);
+		
+		editProcessRO epEU=new editProcessRO();
+		epEU.setDept(edVo.getDept());
+		epEU.setRole(keyConts.EmpRoleE);
+		epEU.setUnit(edVo.getUnit());
+		epEU.setGroup(edVo.getGroup());
+		epEU.setStatus(keyConts.processStatus1);
+		logger.info("insterUnitProcess edVo : "+ edVo.toString());
+		if(edVo.getThreeGELever0().equals("0")){
+			epEU.setSingRoleL0("0");
+			epEU.setSingRoleL0EP("");
+		}else{
+			epEU.setSingRoleL0("1");
+			epEU.setSingRoleL0EP(edVo.getThreeGELever0());
+		}
+		if(edVo.getThreeGELever1().equals("0")){
+			epEU.setSingRoleL1("0");
+			epEU.setSingRoleL1EP("");
+		}else{
+			epEU.setSingRoleL1("1");
+			epEU.setSingRoleL1EP(edVo.getThreeGELever1());
+		}
+		if(edVo.getThreeGELever2().equals("0")){
+			epEU.setSingRoleL2("0");
+			epEU.setSingRoleL2EP("");
+		}else{
+			epEU.setSingRoleL2("1");
+			epEU.setSingRoleL2EP(edVo.getThreeGELever2());
+		}
+		if(edVo.getThreeGELever3().equals("0")){
+			epEU.setSingRoleL3("0");
+			epEU.setSingRoleL3EP("");
+		}else{
+			epEU.setSingRoleL3("1");
+			epEU.setSingRoleL3EP(edVo.getThreeGELever3());
+		}
+		
+		if(edVo.getThreeGELever4().equals("0")){
+			epEU.setSingRoleL4("0");
+			epEU.setSingRoleL4EP("");
+		}else{
+			epEU.setSingRoleL4("1");
+			epEU.setSingRoleL4EP(edVo.getThreeGELever4());
+		}
+		epEU.setOneTitle("");
+		epEU.setTwoTitle("");
+		
+		logger.info("insterUnitProcess epEU : "+ epEU.toString());
+		
+		logger.info("insterDeptLerveRole  "+SqlUtil.insterDeptOverRole(epEU));
+		DBUtil.updateSql(SqlUtil.insterDeptOverRole(epEU), con);
+		
+		return "";
+	}
+	
+	
 }

@@ -48,6 +48,8 @@ public class overTimeVO implements Serializable
 	private String  act;
 	/**加班單狀態*/
 	private String  status;
+	/**下一個簽核狀態*/
+	private String  nextStatus;
 	/**資料庫訊息*/
 	private String  msg;
 	/**是否顯示查询結果*/
@@ -93,6 +95,12 @@ public class overTimeVO implements Serializable
 	/**員工身分 */
 	private String searchRole;
 
+	public String getNextStatus() {
+	    return nextStatus;
+	}
+	public void setNextStatus(String nextStatus) {
+	    this.nextStatus = nextStatus;
+	}
 	public String getQueryDateTwo() {
 	    return queryDateTwo;
 	}

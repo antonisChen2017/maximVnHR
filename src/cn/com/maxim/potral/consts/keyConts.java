@@ -17,7 +17,9 @@ public class keyConts
 	  
 	  public static final String pageDtmList= "DeptView";
 	  public static final String pageUsList= "usList";
+	  public static final String pageGList= "gList";
 	  public static final String pageMsList= "msList";
+	  public static final String pagePList= "pList";
 	  public static final String pageLList= "LList";
 	  public static final String pageInspect = "inspect";
 	  public static final String dbTableCR= "VN_LEAVECARD";
@@ -63,13 +65,23 @@ public class keyConts
 	  public static final String   ColDeptID="部门代号";
 	  public static final String   ColENAME="英文名";
 	  public static final String   ColUnit="单位名称";
+	  public static final String   ColGroup="组别";
 	  public static final String   stopReasons="待工原因";
 	  public static final String   masterCheck="经理审核通过";
 	  public static final String   bossCheck="副总审核通过";
 	  public static final String   noProcessMsg="此部门或单位尚未设定请假流程,请洽人事";
+	  public static final String   noGroupMsgP1="此組別:";
+	  public static final String   noGroupMsgP2="尚未设定请假流程,请洽人事";
+	  public static final String   noGroupMsgP3="尚未设定加班流程,请洽人事";
+	  public static final String   noGroupMsgP4="尚未设定待工流程,请洽人事";
 	  public static final String   noProcessOverMsg="此部门或单位尚未设定加班流程,请洽人事";
 	  public static final String   noTimeCSMsg="當天申請CS加班不能超過12:30";
 	  public static final String   deletOK="删除成功";
+	  public static final String   deletNO="删除失败";
+	  public static final String  updateOK="更新成功";
+	  public static final String  updateNO="更新失败";
+	  /**組長**/
+	  public static final String   EmpRoleG="G";
 	  /**一般員工**/
 	  public static final String   EmpRoleE="E";
 	  /**单位主管**/
@@ -85,6 +97,8 @@ public class keyConts
 	  public static final String   StatusBR="BR";
 	  /**經理退回**/
 	  public static final String   StatusLR="LR";
+	  /**組長退回**/
+	  public static final String   StatusGR="GR";
 	  /**部門主管退回**/
 	  public static final String   StatusDR="DR";
 	  /**單位主管退回**/
@@ -161,8 +175,12 @@ public class keyConts
 	  public static final String processData= "取得部门设定审核流程";
 	  /**單位尚未设定审核流程**/
 	  public static final String processUnitNoData= "单位尚未设定审核流程";
+	  /**组别尚未设定审核流程**/
+	  public static final String processGroupNoData= "组别尚未设定审核流程";
 	  /**取得單位设定审核流程**/
 	  public static final String processUnitData= "取得单位设定审核流程";
+	  /**取得组别设定审核流程**/
+	  public static final String processGroupData= "取得组别设定审核流程";
 	  /**下拉未選擇**/
 	  public static final String msgS= "未選擇";
 	  /**副總請假頁面**/

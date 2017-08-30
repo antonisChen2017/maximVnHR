@@ -78,6 +78,14 @@ public class htmlConsts
 	 public static final String html_mgr_StopWorking="/cn/com/maxim/portal/html/mgr_StopWorking.html";
 	 /**副總審核待工報表**/
 	 public static final String html_bos_StopWorking="/cn/com/maxim/portal/html/bos_StopWorking.html";
-	 
-	  
+	 /**建立組別**/
+	 public static final String html_ad_editGroup="/cn/com/maxim/portal/html/ad_editGroup.html";
+	 /**設定人員與組別**/
+	 public static final String html_ad_EmptoGroup="/cn/com/maxim/portal/html/ad_EmptoGroup.html";
+	 /**組長請假核准頁面**/
+	 public static final String html_gr_LeaveCard="/cn/com/maxim/portal/html/gr_LeaveCard.html";
+	 /**組長加班核准頁面**/
+	 public static final String html_gr_OverTime="/cn/com/maxim/portal/html/gr_OverTime.html";
+	  /**建立組長待工頁面**/
+	  public static final String html_gr_StopWorking="/cn/com/maxim/portal/html/gr_StopWorking.html";
 }

@@ -16,7 +16,16 @@ private String DEPARTMENT;
 	
 	private String DAYCOUNT;
 		
-
+	private String GROUP;
+	
+	
+	
+	public String getGROUP() {
+	    return GROUP;
+	}
+	public void setGROUP(String gROUP) {
+	    GROUP = gROUP;
+	}
 	public String getDAYCOUNT()
 	{
 		return DAYCOUNT;

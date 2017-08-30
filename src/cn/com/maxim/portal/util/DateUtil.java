@@ -1120,4 +1120,48 @@ public class DateUtil {
 	return re;
     }
     
+    /**
+     * 如果本月取昨天 上個月之前取最後一天
+     * 
+     * @param date
+     * @return
+     */
+    public static String getYesterDay(String Ym) throws Exception {// 获取当月天数
+	  String yesterday="";
+ 
+	     Calendar cal = Calendar.getInstance();
+	     cal.add(Calendar.DATE, 0);
+	     String today = new SimpleDateFormat( "yyyy/MM/dd").format(cal.getTime());
+	     String[] todays=today.split("/");
+	     String[] yms=Ym.split("/");
+	     if(todays[0].equals(yms[0]) && todays[1].equals(yms[1])){
+	//	  System.out.println("本月取昨天 但不能低於01日");
+	//	  System.out.println("todays[2]  "+todays[2]);
+		  if(todays[2].trim().equals("01")){
+		      yesterday=today;
+		  }else{
+		      cal.add(Calendar.DATE, -1);
+		      yesterday= new SimpleDateFormat( "yyyy/MM/dd").format(cal.getTime());
+		  }
+	     }else{
+		//  System.out.println("其他月取當月最後一天");
+		  int maxDate = 0;
+		Date first = null;
+			 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+		first = sdf.parse(Ym);
+		 cal.setTime(first);
+		  int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		// 设置创造新日期，这个日期是本月的最后一天
+		cal.set(Calendar.DATE, days);
+		// 然后打印出来
+		Date newD = cal.getTime();
+		// 加上格式化
+		//System.out.println("本月最后一天的日期是："+ new SimpleDateFormat("yyyy/MM/dd").format(newD));
+		 yesterday=  new SimpleDateFormat("yyyy/MM/dd").format(newD);
+	     }
+	  //  System.out.println(yesterday);
+	    return yesterday;
+    }
+    
 }

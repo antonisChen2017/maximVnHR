@@ -17,10 +17,14 @@ public class editProcessVO implements Serializable
 	private String Dept;
 	/**單位 */
 	private String Unit;
+	/**組別 */
+	private String Group;
 	/**角色 */
 	private String Role;
 	/**狀態(三天以下,以上) */
 	private String Status;
+	/**審核階層0 **/
+	private String SingRoleL0;
 	/**審核階層1 **/
 	private String SingRoleL1;
 	/**審核階層1 **/
@@ -29,6 +33,8 @@ public class editProcessVO implements Serializable
 	private String SingRoleL3;
 	/**審核階層1 **/
 	private String SingRoleL4;
+	/**審核階層0員工編號 **/
+	private String SingRoleL0EP;
 	/**審核階層1員工編號 **/
 	private String SingRoleL1EP;
 	/**審核階層2 員工編號**/
@@ -53,6 +59,7 @@ public class editProcessVO implements Serializable
 	/**三天以下經理審核-副总*/
 	private String  oneMLever4;
 	
+
 	/**三天以上一般員工審核-單位主管*/
 	private String oneELever1;
 	/**三天以上一般員工審核-部門主管*/
@@ -75,6 +82,7 @@ public class editProcessVO implements Serializable
 	private String  threeDLever4;
 	/**三天以上經理審核-副总*/
 	private String  threeMLever4;
+	
 	
 	/**三天以上一般員工審核-單位主管*/
 	private String  threeELever1;
@@ -109,7 +117,121 @@ public class editProcessVO implements Serializable
 	/**三天以下經理ID*/
 	private String  threeUID;
 	
-
+	
+	
+	
+	/**組別-三天以上一般員工審核-單位主管*/
+	private String  threeGEID;
+	private String  threeGELever0;
+	private String  threeGELever1;
+	private String threeGELever2;
+	private String threeGELever3;
+	private String threeGELever4;
+	/**組別-三天以下一般員工審核-單位主管*/
+	private String  oneGEID;
+	private String  oneGELever0;
+	private String  oneGELever1;
+	private String  oneGELever2;
+	private String  oneGELever3;
+	private String  oneGELever4;
+	
+	
+	
+	
+	public String getThreeGELever0() {
+	    return threeGELever0;
+	}
+	public void setThreeGELever0(String threeGELever0) {
+	    this.threeGELever0 = threeGELever0;
+	}
+	public String getThreeGELever2() {
+	    return threeGELever2;
+	}
+	public void setThreeGELever2(String threeGELever2) {
+	    this.threeGELever2 = threeGELever2;
+	}
+	public String getThreeGELever3() {
+	    return threeGELever3;
+	}
+	public void setThreeGELever3(String threeGELever3) {
+	    this.threeGELever3 = threeGELever3;
+	}
+	public String getThreeGELever4() {
+	    return threeGELever4;
+	}
+	public void setThreeGELever4(String threeGELever4) {
+	    this.threeGELever4 = threeGELever4;
+	}
+	public String getOneGELever0() {
+	    return oneGELever0;
+	}
+	public void setOneGELever0(String oneGELever0) {
+	    this.oneGELever0 = oneGELever0;
+	}
+	public String getOneGELever2() {
+	    return oneGELever2;
+	}
+	public void setOneGELever2(String oneGELever2) {
+	    this.oneGELever2 = oneGELever2;
+	}
+	public String getOneGELever3() {
+	    return oneGELever3;
+	}
+	public void setOneGELever3(String oneGELever3) {
+	    this.oneGELever3 = oneGELever3;
+	}
+	public String getOneGELever4() {
+	    return oneGELever4;
+	}
+	public void setOneGELever4(String oneGELever4) {
+	    this.oneGELever4 = oneGELever4;
+	}
+	public String getOneGEID() {
+	    return oneGEID;
+	}
+	public void setOneGEID(String oneGEID) {
+	    this.oneGEID = oneGEID;
+	}
+	
+	public String getThreeGEID() {
+	    return threeGEID;
+	}
+	public void setThreeGEID(String threeGEID) {
+	    this.threeGEID = threeGEID;
+	}
+	
+	public String getThreeGELever1() {
+	    return threeGELever1;
+	}
+	public void setThreeGELever1(String threeGELever1) {
+	    this.threeGELever1 = threeGELever1;
+	}
+	public String getOneGELever1() {
+	    return oneGELever1;
+	}
+	public void setOneGELever1(String oneGELever1) {
+	    this.oneGELever1 = oneGELever1;
+	}
+	public String getSingRoleL0() {
+	    return SingRoleL0;
+	}
+	public void setSingRoleL0(String singRoleL0) {
+	    SingRoleL0 = singRoleL0;
+	}
+	public String getSingRoleL0EP() {
+	    return SingRoleL0EP;
+	}
+	public void setSingRoleL0EP(String singRoleL0EP) {
+	    SingRoleL0EP = singRoleL0EP;
+	}
+	
+	
+	public String getGroup() {
+	    return Group;
+	}
+	public void setGroup(String group) {
+	    Group = group;
+	}
 	public String getOneEID()
 	{
 		return oneEID;
@@ -446,9 +568,10 @@ public class editProcessVO implements Serializable
 	}
 	@Override
 	public String toString() {
-	    return "editProcessVO [ID=" + ID + ", Dept=" + Dept + ", Unit=" + Unit + ", Role=" + Role + ", Status="
-		    + Status + ", SingRoleL1=" + SingRoleL1 + ", SingRoleL2=" + SingRoleL2 + ", SingRoleL3="
-		    + SingRoleL3 + ", SingRoleL4=" + SingRoleL4 + ", SingRoleL1EP=" + SingRoleL1EP + ", SingRoleL2EP="
+	    return "editProcessVO [ID=" + ID + ", Dept=" + Dept + ", Unit=" + Unit + ", Group=" + Group + ", Role="
+		    + Role + ", Status=" + Status + ", SingRoleL0=" + SingRoleL0 + ", SingRoleL1=" + SingRoleL1
+		    + ", SingRoleL2=" + SingRoleL2 + ", SingRoleL3=" + SingRoleL3 + ", SingRoleL4=" + SingRoleL4
+		    + ", SingRoleL0EP=" + SingRoleL0EP + ", SingRoleL1EP=" + SingRoleL1EP + ", SingRoleL2EP="
 		    + SingRoleL2EP + ", SingRoleL3EP=" + SingRoleL3EP + ", SingRoleL4EP=" + SingRoleL4EP + ", msg="
 		    + msg + ", ActionURI=" + ActionURI + ", showDataTable=" + showDataTable + ", oneDLever3="
 		    + oneDLever3 + ", oneDLever4=" + oneDLever4 + ", oneMLever4=" + oneMLever4 + ", oneELever1="
@@ -460,8 +583,13 @@ public class editProcessVO implements Serializable
 		    + ", threeULever2=" + threeULever2 + ", threeULever3=" + threeULever3 + ", threeULever4="
 		    + threeULever4 + ", oneDID=" + oneDID + ", oneMID=" + oneMID + ", threeDID=" + threeDID
 		    + ", threeMID=" + threeMID + ", oneEID=" + oneEID + ", oneUID=" + oneUID + ", threeEID=" + threeEID
-		    + ", threeUID=" + threeUID + "]";
+		    + ", threeUID=" + threeUID + ", threeGEID=" + threeGEID + ", threeGELever0=" + threeGELever0
+		    + ", threeGELever1=" + threeGELever1 + ", threeGELever2=" + threeGELever2 + ", threeGELever3="
+		    + threeGELever3 + ", threeGELever4=" + threeGELever4 + ", oneGEID=" + oneGEID + ", oneGELever0="
+		    + oneGELever0 + ", oneGELever1=" + oneGELever1 + ", oneGELever2=" + oneGELever2 + ", oneGELever3="
+		    + oneGELever3 + ", oneGELever4=" + oneGELever4 + "]";
 	}
+	
 
 	
 	

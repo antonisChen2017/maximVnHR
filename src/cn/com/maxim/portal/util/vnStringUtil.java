@@ -306,5 +306,15 @@ public class vnStringUtil
     	}
     	return sw;
     }
-    
+    /**
+     * 將空欄位換為0
+     * @param value
+     * @return
+     */
+    public static String changeColUnil(String value){
+	if(value.equals("") || value==null){
+	    value="0";
+	}
+        return value;
+ }
 }

@@ -7,7 +7,9 @@ INSERT INTO [hr].[dbo].[VN_OVERTIME_S]
            ,[OVERTIME_END]
            ,[REASONS]
            ,[UNIT]
+           ,[GROUP]
            ,[STATUS]
+           ,[NEXTSTATUS]
            ,[SAVETIME]
            ,[NOTE]
            ,[USERREASONS]
@@ -15,10 +17,12 @@ INSERT INTO [hr].[dbo].[VN_OVERTIME_S]
            ,[TURN]
            ,[LEAVEAPPLY]
            ,[PROCESS]
+           ,[SINGROLEL0]
            ,[SINGROLEL1]
            ,[SINGROLEL2]
            ,[SINGROLEL3]
            ,[SINGROLEL4]
+           ,[SINGROLEL0EP]
            ,[SINGROLEL1EP]
            ,[SINGROLEL2EP]
            ,[SINGROLEL3EP]
@@ -35,7 +39,9 @@ INSERT INTO [hr].[dbo].[VN_OVERTIME_S]
            ,'<OVERTIME_END/>'
            ,'<REASONS/>'
            ,'<UNIT/>'
+           ,'<GROUP/>'
            ,'<STATUS/>'
+           ,'<NEXTSTATUS/>'
            ,getdate()
            ,'<NOTE/>'
            ,'<USERREASONS/>'
@@ -43,10 +49,12 @@ INSERT INTO [hr].[dbo].[VN_OVERTIME_S]
            ,'<TURN/>'
            ,'<LEAVEAPPLY/>'
            ,'<PROCESS/>'
+           ,'<SINGROLEL0/>'
            ,'<SINGROLEL1/>'
            ,'<SINGROLEL2/>'
            ,'<SINGROLEL3/>'
            ,'<SINGROLEL4/>'
+           ,'<SINGROLEL0EP/>'
            ,'<SINGROLEL1EP/>'
            ,'<SINGROLEL2EP/>'
            ,'<SINGROLEL3EP/>'

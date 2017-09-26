@@ -6,7 +6,7 @@ SELECT
       ,V.ENDDAY  as '出差结束日'
       ,V.NOTE as '备注'
       , V.ID as 'action'
-       , V.ID 
+    --   , V.ID 
   FROM [hr].[dbo].[VN_EMPLOYEE_SUPPLEMENT] V
   JOIN HR_EMPLOYEE  E
   ON V.EMPLOYEENO=E.ID

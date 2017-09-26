@@ -16,6 +16,7 @@ import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.ro.exOvertimeRO;
 import cn.com.maxim.portal.attendan.ro.repAttendanceRO;
 import cn.com.maxim.portal.attendan.vo.overTimeVO;
+import cn.com.maxim.portal.dao.leaveCardDAO;
 import cn.com.maxim.portal.dao.overTimeDAO;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -135,7 +136,8 @@ public class dep_OverTime extends TemplatePortalPen
 						logger.info("加班申請單 員工/Refer : " +otVo.toString());
 						otVo.setStatus(keyConts.dbTableCRStatuS_T);
 						otVo.setLeaveApply("0");
-						DBUtil.updateTimeOverSStatus(otVo, con);
+						otVo.setMsg(overTimeDAO.Process(con,otVo));
+					
 						/**20170802暫時不寄信**/
 						//overTimeDAO.deptProcessEmail(con,otVo);
 						

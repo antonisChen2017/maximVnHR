@@ -18,7 +18,7 @@
 <link rel="stylesheet" type="text/css" href="javascript/assets/css/style-upgrade.css"/>
 <link rel="stylesheet" type="text/css" href="javascript/assets/css/theme-default.css"/>
 <link rel="stylesheet" type="text/css" href="javascript/assets/css/plugins.css"/>
-
+<link rel="stylesheet" type="text/css" href="javascript/assets/plugins/fuelux/css/tree-custom.css"/>
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" href="javascript/assets//css/ie8.css"/>
 <![endif]-->
@@ -32,7 +32,7 @@
   <!-- BEGIN PAGE HEADER-->  
  <div class="row">   
    <!-- BEGIN PAGE TITLE-->  
-   <h3 class="page-title">設定切換人員</small> </h3>
+   <h3 class="page-title">設定部門單位組別 </h3>
    <!-- END PAGE TITLE-->   
  </div>  
 <div class="clearfix"> </div>
@@ -56,43 +56,61 @@
 
 
 
-  <div class="row">
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">角色:</SPAN>
-<div class="col-md-9">
-<ORole/>
-</div>
- </div>
-</div>
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">姓名:</SPAN>
-<div  id='EmployeeDiv'     class="col-md-9">
-<OEmployee/>
- </div>
-</div>
-</div>
-</div>
-
-<div class="row">
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">工号:</SPAN>
-<div id='EmployeeNoDiv'   class="col-md-9">
-<OEmployeeNo/>
-</div> 
- </div>
-</div>
-<div class="col-md-6">
-<div class="form-group">
-<SPAN class="control-label col-md-3">目前帳號設定工號:</SPAN>
-<div   class="col-md-9">
-<newEmp/>
-</div> 
- </div>
-</div>
-</div>
+     <!-- BEGIN PAGE ROW-->
+        <div class="row ">
+          <div class="col-md-6 col-sm-6">
+            <div class="portlet">
+              <div class="portlet-title">
+                <div class="caption"> <i class="fa fa-eye"></i>樹狀選單示範</div>
+              </div>
+              <div class="portlet-body">
+                <div id="MyTree" class="tree">
+                  <div class="tree-folder" style="display:none;">
+                    <div class="tree-folder-header"> <i class="fa fa-folder"></i>
+                      <div class="tree-folder-name"> </div>
+                    </div>
+                    <div class="tree-folder-content"> </div>
+                    <div class="tree-loader" style="display:none"> </div>
+                  </div>
+                  <div class="tree-item" style="display:none;"> <i class="tree-dot"></i>
+                    <div class="tree-item-name"> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <div class="portlet">
+              <div class="portlet-title no-color">
+                <div class="caption"><i class="fa fa-code"></i>樹狀選單原始碼</div>
+              </div>
+              <div class="portlet-body">
+                <pre class="prettyprint linenums">&lt;div id=&quot;MyTree&quot; class=&quot;tree&quot;&gt;
+  &lt;div class=&quot;tree-folder&quot; style=&quot;display:none;&quot;&gt;
+    &lt;div class=&quot;tree-folder-header&quot;&gt; &lt;i class=&quot;fa fa-folder&quot;&gt;&lt;/i&gt;
+      &lt;div class=&quot;tree-folder-name&quot;&gt; &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;tree-folder-content&quot;&gt; &lt;/div&gt;
+    &lt;div class=&quot;tree-loader&quot; style=&quot;display:none&quot;&gt; &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;tree-item&quot; style=&quot;display:none;&quot;&gt; &lt;i class=&quot;tree-dot&quot;&gt;&lt;/i&gt;&lt;div class=&quot;tree-item-name&quot;&gt; &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+                <h5>必要Javascript</h5>
+                <pre class="prettyprint linenums">
+&lt;script type=&quot;text/javascript&quot; src=&quot;assets/plugins/fuelux/js/tree.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;assets/scripts/ui-tree.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+jQuery(document).ready(function() {    
+    UITree.init();
+});
+&lt;/script&gt;</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"> </div>
+        <!-- END PAGE ROW--> 
 
 </div>
 </div>
@@ -102,6 +120,7 @@
 <msg/>
 </div> 
 <drawTableM/>
+
 </div> 
 </div>
   <!-- END PAGE CONTENT --> 
@@ -153,6 +172,8 @@
 <script type="text/javascript" src="javascript/assets/scripts/ui-jqueryui-select.js"></script> 
 <script type="text/javascript" src="javascript/assets//scripts/table-advanced.js"></script> 
 <script type="text/javascript" src="javascript/assets/layer/layer.js"></script> 
+<script type="text/javascript" src="javascript/assets/plugins/fuelux/js/tree.min.js"></script>
+<script type="text/javascript" src="javascript/assets/scripts/ui-tree.js"></script> 
 <!-- END PAGE LEVEL SCRIPTS --> 
 <script>
 jQuery(document).ready(function() {    
@@ -160,41 +181,9 @@ jQuery(document).ready(function() {
    App.init(); // init layout and core plugins
    TableAdvanced.init();
    FormComponents.init();
-   $('#ORole').change(function(){  
-		
-		 var p1= $('#ORole').val();
-		 
-	   jQuery.ajax({
-			url:'<ActionURI/>&doajax=SwEmpNo',
-			type:'POST',
-			data:{ORole:p1},
-			success:function(data){
-				 $('#EmployeeNoDiv').html(data);    
-				 $('#OEmployeeNo').change(function(){  
-				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-					 $('#OEmployee').select2('val',p1);    
-				   }) 
-			}
-		});
-	   
-	   jQuery.ajax({
-			url:'<ActionURI/>&doajax=SwEmp',
-			type:'POST',
-			data:{ORole:p1},
-			success:function(data){
-				 $('#EmployeeDiv').html(data);    
-				 $('#OEmployee').change(function(){  
-				     var p1=$(this).children('option:selected').val();  //这就是selected的值  
-				 	$('#OEmployeeNo').select2('val',p1);    
-				 
-				   })  
-			}
-		});
-	});
+   UITree.init();
    
-   
-  
-  		
+
 });
 
 

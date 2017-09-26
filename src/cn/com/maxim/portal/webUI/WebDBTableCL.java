@@ -261,7 +261,7 @@ public class WebDBTableCL extends WebDBTableEx
 
 					if (col.ColumnName.equals("action"))
 					{
-					    String rowID = getValue("ID", true);
+					        String rowID = getValue("ID", true);
 			        		String rowaction = getValue("action", true);
 			        		String returnMSG = getValue("returnMSG", true);
 			        		String ROLE = getValue("ROLE", true);

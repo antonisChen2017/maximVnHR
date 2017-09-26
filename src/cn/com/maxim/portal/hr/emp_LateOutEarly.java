@@ -16,6 +16,7 @@ import cn.com.maxim.portal.UserDescriptor;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
 import cn.com.maxim.portal.attendan.ro.yearMonthLateRO;
 import cn.com.maxim.portal.attendan.vo.lateOutEarlyVO;
+import cn.com.maxim.portal.dao.MonthReportDAO;
 import cn.com.maxim.portal.util.ControlUtil;
 import cn.com.maxim.portal.util.DBUtil;
 import cn.com.maxim.portal.util.DateUtil;
@@ -51,6 +52,10 @@ public class emp_LateOutEarly extends TemplatePortalPen
 					BeanUtils.populate(eaVo,request.getParameterMap()); 
 					// 查询
 					if (actText.equals("QUE")) {
+					    	//logger.info("1 eaVo"+eaVo.toString());
+					    	//String searchUnit = request.getParameter("searchUnit");
+					       // eaVo.setSearchUnit( request.getParameter("searchUnit"));
+						//logger.info("2 eaVo"+eaVo.toString());
 						eaVo.setShowDataTable(true);
 						showHtml(con, out, eaVo,UserInformation,request);
 					}
@@ -96,7 +101,8 @@ public class emp_LateOutEarly extends TemplatePortalPen
 			if(eaVo.isShowDataTable()){
 
 				htmlPart1=htmlPart1.replace("<drawTableM/>",ControlUtil.drawAccordions( con,eaVo));
-			
+				htmlPart1=htmlPart1.replace("<drawTableS/>",HtmlUtil.drawRepOneTable(
+					   MonthReportDAO.getMonthOneReport(con,eaVo),"",  con, out,eaVo));
 			}			
 		    out.println(htmlPart1);
 		    }

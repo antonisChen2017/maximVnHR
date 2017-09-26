@@ -75,8 +75,17 @@ public class leaveCardVO implements Serializable
 	private String saveButText;
 	/**紀錄請假操作員帳號 */
 	private String Login;
-
+	/**紀錄請假完成時間 */
+	private String submitTime;
 	
+	
+	
+	public String getSubmitTime() {
+	    return submitTime;
+	}
+	public void setSubmitTime(String submitTime) {
+	    this.submitTime = submitTime;
+	}
 	public String getNextStatus() {
 	    return nextStatus;
 	}

@@ -88,4 +88,6 @@ public class htmlConsts
 	 public static final String html_gr_OverTime="/cn/com/maxim/portal/html/gr_OverTime.html";
 	  /**建立組長待工頁面**/
 	  public static final String html_gr_StopWorking="/cn/com/maxim/portal/html/gr_StopWorking.html";
+	  /**測試ajax**/
+	  public static final String html_testMaxinAjax="/cn/com/maxim/portal/html/testMaxinAjax.html";
 }

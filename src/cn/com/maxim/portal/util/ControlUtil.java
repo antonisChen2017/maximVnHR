@@ -265,7 +265,7 @@ public class ControlUtil
 			    }
 			    
 			    Statement st = con.createStatement();
-		//	    logger.info("drawChosenSelect : "+sql);
+			    logger.info("drawChosenSelect : "+sql);
 			    ResultSet rs = st.executeQuery(sql);
 			    StringBuilder Sb = new StringBuilder("");
 				Sb.append("<select class=\"populate select2_category form-control\"  id='"+name+"' name='"+name+"' data-placeholder=\"\"  tabindex=\"2\"> \r\n");

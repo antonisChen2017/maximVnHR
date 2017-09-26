@@ -15,6 +15,8 @@ public class lateOutEarlyVO  implements Serializable
 	
 	/**部门 */
 	private String searchDepartmen;
+	/**單位 */
+	private String searchUnit;
 	/**年月 */
 	private String  queryYearMonth;
 	/** 遲到:1/早退:2  */
@@ -28,6 +30,12 @@ public class lateOutEarlyVO  implements Serializable
 	/**ActionURI*/
 	private String  ActionURI;
 	
+	public String getSearchUnit() {
+	    return searchUnit;
+	}
+	public void setSearchUnit(String searchUnit) {
+	    this.searchUnit = searchUnit;
+	}
 	public String getQueryYearMonth()
 	{
 		return queryYearMonth;
@@ -88,10 +96,12 @@ public class lateOutEarlyVO  implements Serializable
 		this.searchDepartmen = searchDepartmen;
 	}
 	@Override
-	public String toString()
-	{
-		return "lateOutEarlyVO [queryYearMonth=" + queryYearMonth + ", queryIsLate=" + queryIsLate + ", showDataTable=" + showDataTable + ", msg=" + msg + ", EmpID=" + EmpID + ", ActionURI=" + ActionURI + "]";
+	public String toString() {
+	    return "lateOutEarlyVO [searchDepartmen=" + searchDepartmen + ", searchUnit=" + searchUnit
+		    + ", queryYearMonth=" + queryYearMonth + ", queryIsLate=" + queryIsLate + ", showDataTable="
+		    + showDataTable + ", msg=" + msg + ", EmpID=" + EmpID + ", ActionURI=" + ActionURI + "]";
 	}
+	
 
 	
 	

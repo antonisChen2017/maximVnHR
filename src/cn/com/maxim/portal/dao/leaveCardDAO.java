@@ -87,6 +87,7 @@ public class leaveCardDAO {
 		    logger.info("之後沒有審核");
 		    lcVo.setLeaveApply("1");// 請假完成
 		    lcVo.setNextStatus("X");// 請假完成
+		 //   lcVo.setSubmitTime(submitTime);
 		    if (DBUtil.updateSql(SqlUtil.updateLcStatus(lcVo), con)) {
 			lcVo.setMsg(keyConts.okMsg);
 		    }
@@ -1167,8 +1168,8 @@ public class leaveCardDAO {
 			if(count>0){
     			/**檢查欄位**/
     			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-    			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processLETable));
-    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processLETable), new processCheckRO());
+    			logger.info("processOVTable sql="+SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable));
+    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable), new processCheckRO());
     			if(cr.size()>0){
     			    prow=cr.get(0);
     			}
@@ -1181,14 +1182,21 @@ public class leaveCardDAO {
 			if(count>0){
     			/**檢查欄位**/
     			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-    			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processLETable));
-    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processLETable), new processCheckRO());
-    			if(cr.size()>0){
-    			    prow=cr.get(0);
-    			}
+    			logger.info("processOVTable sql="+SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable));
+    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable), new processCheckRO());
+        			if(cr.size()>0){
+        			    prow=cr.get(0);
+        			}
 			}
 		}
-		if(count>0){
+		 logger.info("prow :"+prow.getSINGROLEL1());
+		String msg="o";
+		if(prow.getSINGROLEL1()==null){
+			msg="x";
+		}
+		
+		
+		if(prow.getSINGROLEL1()!=null &&  count>0){
 			
 			/**檢查伍個欄位有無值無值一樣不能過**/
 			if(prow.getSINGROLEL0().equals("0") && prow.getSINGROLEL1().equals("0") && prow.getSINGROLEL2().equals("0")
@@ -1196,7 +1204,7 @@ public class leaveCardDAO {
 			    count=0;
 			}
 		}
-		String msg="o";
+		
 		
 		if(count==0){
 			msg="x";
@@ -1269,8 +1277,8 @@ public class leaveCardDAO {
 				if(count>0){
 	    			/**檢查欄位**/
 	    			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-	    			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processLETable));
-	    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processLETable), new processCheckRO());
+	    			logger.info("processOVTable sql="+SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable));
+	    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable), new processCheckRO());
 	    			if(cr.size()>0){
 	    			    prow=cr.get(0);
 	    			}
@@ -1283,8 +1291,8 @@ public class leaveCardDAO {
 				if(count>0){
 	    			/**檢查欄位**/
 	    			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-	    			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processLETable));
-	    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processLETable), new processCheckRO());
+	    			logger.info("processOVTable sql="+SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable));
+	    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryLcProcessCheck(ru,lcVo,keyConts.processLETable), new processCheckRO());
 	    			if(cr.size()>0){
 	    			    prow=cr.get(0);
 	    			}

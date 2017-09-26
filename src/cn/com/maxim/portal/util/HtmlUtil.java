@@ -1307,6 +1307,39 @@ public class HtmlUtil
 		return table.getHTMLTableRA(out, "無資料", css, msg, htmlButton, con, raVo);
 		// System.out.println("table :"+table.toString());
 	}
+	
+	
+	
+	/**
+	 * 個人月考績表table
+	 * 
+	 * @param sql
+	 * @param htmlButton
+	 * @param con
+	 * @param out
+	 * @param page
+	 * @return
+	 * @throws SQLException
+	 */
+	public static String drawRepOneTable(String sql, String htmlButton, Connection con, PrintWriter out, lateOutEarlyVO eaVo) throws SQLException
+	{
+
+		String css = "table table-striped table-bordered table-hover";
+
+		String bStatus = "0";
+
+		String msg = "";
+
+		// if(page.equals("save")){
+		bStatus = "0";
+		// }
+
+		WebDBTableLO table = new WebDBTableLO(con, sql);
+
+		return table.getHTMLTableOne(out, "無資料", css, msg, htmlButton, con, eaVo);
+		// System.out.println("table :"+table.toString());
+	}
+	
 
 	/**
 	 * 員工查询遲到早退表單

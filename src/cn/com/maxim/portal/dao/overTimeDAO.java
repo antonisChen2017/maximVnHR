@@ -44,12 +44,18 @@ public class overTimeDAO {
     public static final String deptAllProcess(Connection con, overTimeVO otVo, String rowIDs) throws Exception {
 	Log4jUtil lu = new Log4jUtil();
 	Logger logger = lu.initLog4j(leaveCardDAO.class);
-	String[] rowIDLs = rowIDs.split("##");
+	String[] rowIDLs = rowIDs.split("#");
 	logger.info("rowIDLs"+rowIDLs[0]);
 	logger.info("rowIDLslength"+rowIDLs.length);
 	for (int i = 0; i < rowIDLs.length; i++) {
 	    if(rowIDLs[i].length()>0){
-        	    otVo.setRowID(rowIDLs[i]);
+		String rowID="";
+		if(rowIDLs[i].indexOf("#")!=-1){
+		 rowID=rowIDLs[i].replaceAll("#", "");
+		}else{
+		    rowID=rowIDLs[i];
+		}
+        	    otVo.setRowID(rowID);
         	    deptProcess(con, otVo);
 	    }
 	}
@@ -939,8 +945,8 @@ public class overTimeDAO {
 			if(count>0){
 			/**檢查欄位**/
     			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-    			logger.info("processOVTable sql="+SqlUtil.queryProcessCheck(ru,keyConts.processOVTable));
-    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processOVTable), new processCheckRO());
+    			logger.info("processOVTable sql="+SqlUtil.queryOvProcessCheck(ru,otVo,keyConts.processOVTable));
+    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryOvProcessCheck(ru,otVo,keyConts.processOVTable), new processCheckRO());
     			if(cr.size()>0){
 				    prow=cr.get(0);
 				}
@@ -953,14 +959,19 @@ public class overTimeDAO {
 			if(count>0){
     			ru.setUNIT("0");		
     			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-    			logger.info("queryProcessCheck sql="+SqlUtil.queryProcessCheck(ru,keyConts.processOVTable));
-    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processOVTable), new processCheckRO());
+    			logger.info("queryProcessCheck sql="+SqlUtil.queryOvProcessCheck(ru,otVo,keyConts.processOVTable));
+    			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryOvProcessCheck(ru,otVo,keyConts.processOVTable), new processCheckRO());
     			if(cr.size()>0){
     			    prow=cr.get(0);
     			}
 			}
 		}
-		if(count>0){
+		 logger.info("prow :"+prow.getSINGROLEL1());
+			String msg="o";
+			if(prow.getSINGROLEL1()==null){
+				msg="x";
+			}
+		if(prow.getSINGROLEL1()!=null && count>0){
 			
 			/**檢查5個欄位有無值無值一樣不能過**/
 			if(prow.getSINGROLEL0().equals("0") && prow.getSINGROLEL1().equals("0") && prow.getSINGROLEL2().equals("0")
@@ -968,7 +979,7 @@ public class overTimeDAO {
 			    count=0;
 			}
 		}
-		String msg="o";
+		
 		if(count==0){
 			msg="x";
 			if(ru.getROLE().equals("E") && !ru.getGROUP().equals("0")){
@@ -979,6 +990,106 @@ public class overTimeDAO {
 	
 		return msg;
 	}
-    
-    
+	  /**
+	     * 加班單送出時判斷下一個流程
+	     */
+	    public static final String Process(Connection con,  overTimeVO otVo) throws Exception {
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(overTimeDAO.class);
+		//String count = DBUtil.queryDBField(con, SqlUtil.queryLeaveCardProcess(lcVo), "count");
+		// logger.info("count: " + count );
+		//lcVo.setStatus("T");
+		//if (count.equals("0")) {
+		    editProcessRO edPR = DBUtil.getProcessOverIDData(otVo, con);
+		    
+		    // 查詢流程
+		    if (otVo.getStatus().equals("T")) {//送出加班單
+			if (edPR.getSingRoleL0().equals("1") ) { 
+			   
+			    otVo.setLeaveApply("0");// 
+			    otVo.setNextStatus("G");//下一個U
+			    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+				otVo.setMsg(keyConts.okMsg);
+			    }
+			}
+			if (edPR.getSingRoleL0().equals("0") && edPR.getSingRoleL1().equals("1")) { 
+			    logger.info("之後單位主管審核");
+			    otVo.setLeaveApply("0");// 請假完成
+			    otVo.setNextStatus("U");
+			    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+				otVo.setMsg(keyConts.okMsg);
+			    }
+			}
+			if (edPR.getSingRoleL0().equals("0") && edPR.getSingRoleL1().equals("0") && edPR.getSingRoleL2().equals("1")) { 
+			    logger.info("之後部門主管審核");
+			    otVo.setLeaveApply("0");// 請假完成
+			    otVo.setNextStatus("D");
+			    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+				otVo.setMsg(keyConts.okMsg);
+			    }
+			}
+			if (edPR.getSingRoleL0().equals("0") && edPR.getSingRoleL1().equals("0") 
+				&& edPR.getSingRoleL2().equals("0")&& edPR.getSingRoleL3().equals("1") ) { 
+			    logger.info("之後經理審核");
+			    otVo.setLeaveApply("0");// 請假完成
+			    otVo.setNextStatus("L");
+			    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+				otVo.setMsg(keyConts.okMsg);
+			    }
+			}
+			if (edPR.getSingRoleL0().equals("0") && edPR.getSingRoleL1().equals("0") 
+				&& edPR.getSingRoleL2().equals("0") && edPR.getSingRoleL3().equals("0")&& edPR.getSingRoleL4().equals("1")) { 
+			    logger.info("之後副總審核");
+			    otVo.setLeaveApply("0");// 請假完成
+			    otVo.setNextStatus("B");
+			    if (DBUtil.updateTimeOverSStatus(otVo, con)) {
+				otVo.setMsg(keyConts.okMsg);
+			    }
+			}
+		    }
+		  
+		    
+		
+		
+		
+		return otVo.getMsg();
+	    }
+	    /**
+	     * 檢查加班一天不能超過4小時
+	     */
+	    public static final boolean checkDayHour(Connection con, overTimeVO otVo) throws Exception {
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(leaveCardDAO.class);
+		double hour = Double.parseDouble(otVo.getAddTime());
+		boolean flag=true;
+		if(hour>4){
+		    flag=false;
+		}
+		return flag;
+	    }
+	    
+	    /**
+	     * 檢查加班一周不能超過12小時
+	     */
+	    public static final boolean checkWeekHour(Connection con, overTimeVO otVo) throws Exception {
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(leaveCardDAO.class);
+		boolean flag=true;
+		logger.info("sql getOverWeekHour=>"+SqlUtil.getOverWeekHour(
+			DateUtil.convertWeekByDate(otVo.getQueryDate())
+			,otVo.getSearchEmployeeNo()));
+		String weekTime=DBUtil.queryDBField(con,SqlUtil.getOverWeekHour(
+			DateUtil.convertWeekByDate(otVo.getQueryDate())
+			,otVo.getSearchEmployeeNo()), "weekTime");
+		logger.info("weekTime => "+weekTime);
+		double whour = Double.parseDouble(weekTime);
+		double todayHour= Double.parseDouble(otVo.getAddTime());
+		double hour =whour+todayHour;
+		if(hour>12){
+		    flag=false;
+		}
+		return flag;
+	    }
+
+	   
 }

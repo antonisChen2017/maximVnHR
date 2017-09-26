@@ -2642,7 +2642,13 @@ public class ExcelUtil<T>
         cell_6_18.setCellValue("待工\n Ngh chờ việc");
         cell_6_18.setCellStyle(style);
         
-     
+        HSSFCell cell_6_19 = row6.createCell(19);
+        cell_6_19.setCellValue("签名\n Chữ ký");
+        cell_6_19.setCellStyle(style);
+        
+        HSSFCell cell_6_20= row6.createCell(20);
+        cell_6_20.setCellValue("备注\n Ghi chú");
+        cell_6_20.setCellStyle(style);
    //     for (short i = 0; i < headers.length; i++) {
        //    HSSFCell cell = row2.createCell(i);
        //    cell.setCellStyle(style);     
@@ -2650,7 +2656,7 @@ public class ExcelUtil<T>
        //    cell.setCellValue(text);
        // }
         /**加上排序欄位**/
-        sheet.setAutoFilter(CellRangeAddress.valueOf("A7:S7"));
+        sheet.setAutoFilter(CellRangeAddress.valueOf("A7:U7"));
         /**凍結左邊兩行 上方7行**/
         sheet.createFreezePane(3, 7, 3, 7);
         
@@ -2675,6 +2681,8 @@ public class ExcelUtil<T>
         sheet.setColumnWidth(16,  (int)((10 + 0.72) * 256));
         sheet.setColumnWidth(17,  (int)((10 + 0.72) * 256));
         sheet.setColumnWidth(18,  (int)((10 + 0.72) * 256));
+        sheet.setColumnWidth(19,  (int)((10 + 0.72) * 256));
+        sheet.setColumnWidth(20,  (int)((10 + 0.72) * 256));
         // 遍历集合数据，产生数据行  
         Iterator<T> it = dataset.iterator();
         int index = 6;
@@ -2732,7 +2740,7 @@ public class ExcelUtil<T>
             index++;
             row = sheet.createRow(index);
             row.setHeightInPoints((float) 30);
-            for (short i = 0; i <19; i++) {
+            for (short i = 0; i <21; i++) {
         	   HSSFCell cell = row.createCell(i);
                    cell.setCellStyle(style6);
                    if(i==2){
@@ -2749,7 +2757,7 @@ public class ExcelUtil<T>
             index++;
             row = sheet.createRow(index);
             row.setHeightInPoints((float) 30);
-            for (short i = 0; i <19; i++) {
+            for (short i = 0; i <21; i++) {
      	     HSSFCell cell = row.createCell(i);
                 cell.setCellStyle(style5);
                 if(i==8){
@@ -2760,7 +2768,7 @@ public class ExcelUtil<T>
             index++;
             row = sheet.createRow(index);
             row.setHeightInPoints((float) 30);
-            for (short i = 0; i <19; i++) {
+            for (short i = 0; i <21; i++) {
      	     HSSFCell cell = row.createCell(i);
                 cell.setCellStyle(style5);
                 if(i==8){

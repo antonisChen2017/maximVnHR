@@ -96,7 +96,7 @@ public class ts_newAccount extends TemplatePortalPen
 	
 	private void showHtml(Connection con, PrintWriter out, editSupervisorVO edVo , UserDescriptor UserInformation,HttpServletRequest request) throws Exception {
 		HtmlUtil hu=new HtmlUtil();
-		String htmlPart1=hu.gethtml(htmlConsts.html_changeEmp);
+		String htmlPart1=hu.gethtml(htmlConsts.html_newAccount);
 
 		htmlPart1=htmlPart1.replace("<newEmp/>", 	getUser(con,UserInformation,request));
 		htmlPart1=htmlPart1.replace("<ActionURI/>", 	edVo.getActionURI());

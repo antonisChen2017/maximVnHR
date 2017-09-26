@@ -60,6 +60,21 @@ public class rev_empSettUnit  extends TemplatePortalPen
 						lcVo.setShowDataTable(true);
 						lcVo=DBUtil.updateUnit(con,lcVo);
 						lcVo=DBUtil.updateRole(con,lcVo);
+						/**刪除登入帳號角色並重建登入帳號角色 START**/
+						   // logger.info("SqlUtil.deleteBuildSysUser(lcVo) " +SqlUtil.deleteBuildSysUser(lcVo));	
+						if(DBUtil.deleteBuildSysUser(con,SqlUtil.deleteBuildSysUser(lcVo)))
+						{
+						  //  logger.info("SqlUtil.buildSysLoginUser(lcVo) " +SqlUtil.buildSysLoginUser(lcVo));	
+						    if(DBUtil.buildSysLoginUser(con,SqlUtil.unitBuildULoginUser(lcVo)))
+							{
+								lcVo.setMsg(keyConts.unitBuildMsg);
+							}else{
+							        lcVo.setMsg(keyConts.unitBuildNoMsg);
+							}
+						}else{
+						        lcVo.setMsg(keyConts.delbuildNoMsg);
+						}
+						/**刪除登入帳號角色並重建登入帳號角色 END**/
 						 showSetData=true;
 						showHtml(con, out, lcVo,UserInformation,showSetData);
 					}
@@ -206,7 +221,7 @@ public class rev_empSettUnit  extends TemplatePortalPen
 						SqlUtil.getRoleUser(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 				}else{
 				    logger.info("SqlUtil.getRoleUser(lcVo): " +SqlUtil.getRole(lcVo));	
-				htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawTable(
+				    htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawTable(
 						SqlUtil.getRole(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageMsList));
 				}
 			}			

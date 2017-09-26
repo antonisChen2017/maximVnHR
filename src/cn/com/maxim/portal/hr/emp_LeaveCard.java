@@ -308,7 +308,7 @@ public class emp_LeaveCard extends TemplatePortalPen
 			if(lcVo.isShowDataTable()){
 				logger.info(" sql getLeaveCard="+SqlUtil.getLeaveCard(lcVo));
 					htmlPart1=htmlPart1.replace("<drawTableM/>",HtmlUtil.drawLeaveCardTable(
-							SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageSave));
+							SqlUtil.getLeaveCard(lcVo),HtmlUtil.drawTableMcheckButton(),  con, out,keyConts.pageEmpUnitList));
 			}
 		    out.println(htmlPart1);
 	    }

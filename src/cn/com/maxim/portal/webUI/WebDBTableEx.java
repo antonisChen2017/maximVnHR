@@ -652,7 +652,7 @@ public class WebDBTableEx  {
 		        }
 	        }else {
 	        	String rowID = getValue("action", true);
-	        	Sb.append("<td class=\"" + TRStyle + "\"  ><button onclick=\"delData("+rowID+")\"   type=\"button\" class=\"btn btn-info btn-sm\">DELETE</button></td> \r");
+	        	Sb.append("<td class=\"" + TRStyle + "\"  ><button onclick=\"delData('"+rowID+"')\"   type=\"button\" class=\"btn btn-info btn-sm\">DELETE</button></td> \r");
 	        }
 	      }
 	    }
@@ -2413,8 +2413,13 @@ public String getHTMLTableEditT( PrintWriter out,String NoRowMessage,String Tabl
         		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长退回</td> \r");
         		        			   }
 			        		    }
+			        		    if(delbut.equals("B")){ //申請
+     			        		   if(LEAVEAPPLY.equals("2")){
+     		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">组长退回</td> \r");
+     		        			   }
+			        		    }
 			        		}
-			        		else  if(rowaction.equals("RR")){//副總退回
+			        		else  if(rowaction.equals("RR")){//超時副總退回
 			        			
 			        			if(delbut.equals("PL")){ //超時頁面
 			        			    
@@ -2986,7 +2991,16 @@ public String getHTMLTableEditT( PrintWriter out,String NoRowMessage,String Tabl
 				        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='U';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
 		        			    }
+		        			 
 		        		        }	
+		        			if(delbut.equals("DT")){
+		        			    if(LEAVEAPPLY.equals("0")){
+		        				Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
+				        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
+				        						+ " \n <button onclick=\"ActionForm.act.value='U';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+		        			    }
+		        			    
+		        		        }
 		        		}else if(rowaction.equals("G")){//狀態為組長通過
 		        		      if(delbut.equals("G")){
 		        			  if(LEAVEAPPLY.equals("0")){
@@ -3157,6 +3171,14 @@ public String getHTMLTableEditT( PrintWriter out,String NoRowMessage,String Tabl
 				        				+ "<button class=\"btn tooltips  btn-sm\" data-placement=\"left\" data-original-title=\""+returnMSG+"\" data-original-title=\"退回原因\">单位主管退回</button>"
 				        						+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">刪除</button>"
 				        						+ " \n <button onclick=\"ActionForm.act.value='Refer';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-primary  btn-sm\">送出请假单</button></td> \r");
+		        			}else if(delbut.equals("P")){
+		        			    if(LEAVEAPPLY.equals("1")){
+	        					Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">请假申请完成</td> \r");
+		        			    }else if(LEAVEAPPLY.equals("2")){
+	        					Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">主管退回</td> \r");
+		        			    }else if(LEAVEAPPLY.equals("0")){
+	        					Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管審核通過</td> \r");
+		        			    }
 		        			}else if(delbut.equals("2")){
 		        				//logger.info("人事部查看 ");
 		        				Sb.append(getUnitmsg(TDStyle,TRStyle,col));/**顯示单位已審核**/
@@ -3316,9 +3338,7 @@ public String getHTMLTableEditT( PrintWriter out,String NoRowMessage,String Tabl
 		        				if(LEAVEAPPLY.equals("1")){
 		        					Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">请假申请完成</td> \r");
 		        				}else if(LEAVEAPPLY.equals("0")){
-		        					Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
-					        				+ "<button onclick=\"upReturn("+rowID+")\"   type=\"button\" class=\"btn btn-warning  btn-sm\">退回</button>"
-					        						+ " \n <button onclick=\"ActionForm.act.value='U';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-success  btn-sm\">審核通過</button></td> \r");
+		        				    Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">经理审核通过</td> \r");
 		        				}else if(LEAVEAPPLY.equals("2")){
 		        					Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">退回</td> \r");
 		        				}
@@ -3647,6 +3667,8 @@ public String getHTMLTableSales( PrintWriter out,String NoRowMessage,String Tabl
 		        			}else  if(delbut.equals("1")){
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管審核通過</td> \r");
 		        			}else  if(delbut.equals("E")){
+		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管審核通過</td> \r");
+		        			}else  if(delbut.equals("P")){
 		        				Sb.append("    <td class=\"text-right   "+TRStyle+"\"  data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">单位主管審核通過</td> \r");
 		        			}
 		        			
@@ -4030,7 +4052,7 @@ public String getHTMLTableSales( PrintWriter out,String NoRowMessage,String Tabl
 			        		
 			        		logger.info("加班單 ======================");
 			        		Sb.append("<td class=\"text-right   "+TRStyle+"\"  >"
-			        		+ "\n <button onclick=\"ActionForm.act.value='Delete';ActionForm.rowID.value='"+rowID+"';ActionForm.submit();\"   type=\"button\" class=\"btn btn-info  btn-sm\">删除</button> \r");
+			        		+ "\n <button onclick=\"delData('"+rowID+"')\"   type=\"button\" class=\"btn btn-info  btn-sm\">删除</button> \r");
 			        			
 			        		}else{
 			        		    Sb.append("    <td class=\"" + TRStyle + "\" data-title='"+ col.ColumnHeader+"'"+ (this.nowrap ? "nowrap " : "") + TDStyle + ">" + Data + "</td> \r");

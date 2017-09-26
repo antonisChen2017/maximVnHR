@@ -388,13 +388,13 @@ public class rev_TravelAndTransfer extends TemplatePortalPen
 			if(taVo.getTab().equals("o")){
 				logger.info("queryEmpLeverTrue :"+SqlUtil.getSupplementR(taVo));	
 					htmlPart1 = htmlPart1.replace("<drawTableM/>",
-							HtmlUtil.drawStopWorking(SqlUtil.getSupplementR(taVo), 
+							HtmlUtil.drawDelUserDataTable(SqlUtil.getSupplementR(taVo), 
 								HtmlUtil.drawTableMcheckButton(), con, out, keyConts.ColUnit));
 			}
 			if(taVo.getTab().equals("n")){
 				logger.info("getEmpNoData :"+SqlUtil.getSupplementL(taVo));	
 				htmlPart1 = htmlPart1.replace("<drawTableM/>",
-						HtmlUtil.drawStopWorking(SqlUtil.getSupplementL(taVo), 
+						HtmlUtil.drawDelUserDataTable(SqlUtil.getSupplementL(taVo), 
 							HtmlUtil.drawTableMcheckButton(), con, out, keyConts.pageSave));
 			}
 	

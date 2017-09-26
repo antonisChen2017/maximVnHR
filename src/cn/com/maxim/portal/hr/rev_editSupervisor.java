@@ -73,7 +73,7 @@ public class rev_editSupervisor extends TemplatePortalPen
 						lcVo.setSearchEmployee(edVo.getNEmployeeNo());
 						lcVo.setSearchEmployeeNo(edVo.getNEmployeeNo());
 						lcVo.setSearchUnit(edVo.getNUnit());
-						lcVo.setSearchUnit(edVo.getNDepartment());
+						lcVo.setSearchDepartmen(edVo.getNDepartment());
 						lcVo.setSearchRole(edVo.getNRole());
 						DBUtil.updateSql(SqlUtil.saveEmployUnit(lcVo), con) ;
 						DBUtil.updateRole(con,lcVo);
@@ -199,8 +199,8 @@ public class rev_editSupervisor extends TemplatePortalPen
 	
 		htmlPart1=htmlPart1.replace("<OEmail/>",HtmlUtil.getEmailDiv("OEmail",edVo.getOEmail(),"" ));
 		htmlPart1=htmlPart1.replace("<ORole/>",ControlUtil.drawChosenSelect(con, "ORole", "VN_ROLE", "ID", "TITLE", " ID NOT IN ('E') " ,edVo.getORole(),false,null));
-		htmlPart1=htmlPart1.replace("<OEmployee/>",ControlUtil.drawChosenSelect(con,  "OEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "ROLE='"+edVo.getORole()+"' ", edVo.getOEmployee(),false,null));
-		htmlPart1=htmlPart1.replace("<OEmployeeNo/>",ControlUtil.drawChosenSelect(con,  "OEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEE", "ROLE='"+edVo.getORole()+"' ", edVo.getOEmployeeNo(),false,null));
+		htmlPart1=htmlPart1.replace("<OEmployee/>",ControlUtil.drawChosenSelect(con,  "OEmployee", "HR_EMPLOYEE", "ID", "EMPLOYEE", "ROLE='"+edVo.getORole()+"' ", edVo.getOEmployee(),false,null));
+		htmlPart1=htmlPart1.replace("<OEmployeeNo/>",ControlUtil.drawChosenSelect(con,  "OEmployeeNo", "HR_EMPLOYEE", "ID", "EMPLOYEENO", "ROLE='"+edVo.getORole()+"' ", edVo.getOEmployeeNo(),false,null));
 		
 		htmlPart1=htmlPart1.replace("<NRole/>",ControlUtil.drawChosenSelect(con, "NRole", "VN_ROLE", "ID", "TITLE", " ID NOT IN ('E')  ",edVo.getNRole(),false,null));
 		htmlPart1=htmlPart1.replace("<NDepartment/>", 	ControlUtil.drawChosenSelect(con, "NDepartment", "VN_DEPARTMENT", "ID", "DEPARTMENT", null,edVo.getNDepartment(),false,null));
@@ -218,14 +218,14 @@ public class rev_editSupervisor extends TemplatePortalPen
 			if(edVo.getTab().equals("o")){
 				logger.info("queryEmpLeverTrue :"+SqlUtil.queryEmpLeverTrue(edVo));	
 					htmlPart1 = htmlPart1.replace("<drawTableM/>",
-							HtmlUtil.drawTable(SqlUtil.queryEmpLeverTrue(edVo), 
+							HtmlUtil.drawDelUserDataTable(SqlUtil.queryEmpLeverTrue(edVo), 
 								HtmlUtil.drawTableMcheckButton(), con, out, keyConts.ColUnit));
 			}
 			if(edVo.getTab().equals("n")){
 				logger.info("getEmpNoData :"+SqlUtil.getEmpNoData(edVo));	
 				htmlPart1 = htmlPart1.replace("<drawTableM/>",
-						HtmlUtil.drawStopWorking(SqlUtil.getEmpNoData(edVo), 
-							HtmlUtil.drawTableMcheckButton(), con, out, keyConts.pageSave));
+						HtmlUtil.drawDelUserDataTable(SqlUtil.getEmpNoData(edVo), 
+							HtmlUtil.drawTableMcheckButton(), con, out, keyConts.ColUnit));
 			}
 	
 		}

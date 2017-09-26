@@ -126,12 +126,12 @@ public class emp_OverTime extends TemplatePortalPen
 						logger.info("個人申請加班/Refer : " +otVo.toString());
 						otVo.setLeaveApply("0");
 						otVo.setStatus(keyConts.dbTableCRStatuS_T);
-						DBUtil.updateTimeOverSStatus(otVo, con);
+						otVo.setMsg(overTimeDAO.Process(con,otVo));
 						/**2017/08/02 暫時不寄信**/
 						//overTimeDAO.deptProcessEmail(con,otVo);
 						/**2017/08/02 暫時不寄信**/
 						otVo.setShowDataTable(true);
-						otVo.setMsg("已送交");
+						//otVo.setMsg("已送交");
 						request.getSession().setAttribute("eotEdit","Refer");
 						otVo.setSaveButText(keyConts.butSave);
 						showHtml(con, out, otVo,UserInformation,request);

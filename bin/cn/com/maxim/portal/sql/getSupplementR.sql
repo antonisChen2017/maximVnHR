@@ -5,7 +5,7 @@ SELECT
       ,V.STARTDAY as '调职日'
       ,V.NOTE as '备注'
       ,V.ID as 'action'
-        , V.ID 
+      --  , V.ID 
   FROM [hr].[dbo].[VN_EMPLOYEE_SUPPLEMENT] V
   JOIN HR_EMPLOYEE  E
   ON V.EMPLOYEENO=E.ID

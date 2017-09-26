@@ -229,6 +229,10 @@ public class keyConts
 	  /**建立新帳號**/
 	  public static final String buildMsg= "建立新帐号成功!";
 	  /**建立新帳號**/
+	  public static final String unitBuildMsg= "更新部门单位与登入帐号修改权限成功";
+	  /**建立新帳號**/
+	  public static final String unitBuildNoMsg= "更新部门单位与登入帐号修改权限失败";
+	  /**建立新帳號**/
 	  public static final String buildNoMsg= "建立新帐号失败";
 	  
 	  /**刪除登入帳號**/
@@ -239,5 +243,9 @@ public class keyConts
 	  public static final String NoCard="No Punch Card";
 	  /**報表-無打卡時間**/
 	  public static final String noTime="00:00";
+	  
+	  public static final String checkDayTime="加班一天不能超过4小时";
+	  
+	  public static final String checkWeekTime="加班一周不能超过12小时";
 	  
 }

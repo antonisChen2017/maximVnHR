@@ -412,4 +412,12 @@ public class sqlConsts
 	public static final String sql_queryGStopTable="/cn/com/maxim/portal/sql/queryGStopTable.sql";
 	/**查詢組長停工資料設定**/
 	public static final String sql_queryStopProcess="/cn/com/maxim/portal/sql/queryStopProcess.sql";
+	/**超時加班流程查詢**/
+	public static final String sql_queryCSProcess="/cn/com/maxim/portal/sql/queryCSProcess.sql";
+	/**超時加班流程查詢**/
+	public static final String sql_unitBuildSysLogin="/cn/com/maxim/portal/sql/unitBuildSysLogin.sql";
+	/**個人考績考績總表**/
+	public static final String sql_getMonthOneReport="/cn/com/maxim/portal/sql/getMonthOneReport.sql";
+	/**查詢當周時間(不能超過12小時)**/
+	public static final String sql_getOverWeekHour="/cn/com/maxim/portal/sql/getOverWeekHour.sql";
 }

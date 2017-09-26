@@ -12,7 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1003,6 +1005,8 @@ public class DateUtil {
      */
     public static double dateDiff(String startTime, String endTime, String format, String str) {
 	// 按照传入的格式生成一个simpledateformate对象
+	Log4jUtil lu = new Log4jUtil();
+	Logger logger = lu.initLog4j(DateUtil.class);
 	SimpleDateFormat sd = new SimpleDateFormat(format);
 	long nd = 1000 * 24 * 60 * 60;// 一天的毫秒数
 	long nh = 1000 * 60 * 60;// 一小时的毫秒数
@@ -1021,9 +1025,9 @@ public class DateUtil {
 	    min = diff % nd % nh / nm + day * 24 * 60;// 计算差多少分钟
 	    sec = diff % nd % nh % nm / ns;// 计算差多少秒
 	    // 输出结果
-	    System.out.println(
+	    logger.info(
 		    "时间相差：" + day + "天" + (hour - day * 24) + "小时" + (min - day * 24 * 60) + "分钟" + sec + "秒。");
-	    System.out.println("hour=" + hour + ",min=" + min);
+	    logger.info("hour=" + hour + ",min=" + min);
 	    if (min >= 28) {
 		hour = hour + 0.5;
 	    }
@@ -1163,5 +1167,43 @@ public class DateUtil {
 	  //  System.out.println(yesterday);
 	    return yesterday;
     }
+    
+    /** 
+     * 根据日期计算所在周的上下界 
+     *  (目前求某日期該周星期一)
+     * @param time 
+     */  
+    public static String convertWeekByDate(String t1) throws Exception {  
+	Log4jUtil lu = new Log4jUtil();
+	Logger logger = lu.initLog4j(DateUtil.class);
+	logger.info("t1="+t1);
+	 SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd");
+	 Date time=sd.parse(t1);
+	 
+        Map<String, Object> map = new HashMap<String, Object>();  
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // 设置时间格式  
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(time);  
+        // 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了  
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天  
+        if (1 == dayWeek) {  
+            cal.add(Calendar.DAY_OF_MONTH, -1);  
+        }  
+        System.out.println("要计算日期为:" + sdf.format(cal.getTime())); // 输出要计算日期  
+        cal.setFirstDayOfWeek(Calendar.MONDAY);// 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一  
+        int day = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天  
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值  
+        String imptimeBegin = sdf.format(cal.getTime());  
+        System.out.println("所在周星期一的日期：" + imptimeBegin);  
+        cal.add(Calendar.DATE, 6);  
+        String imptimeEnd = sdf.format(cal.getTime());  
+        System.out.println("所在周星期日的日期：" + imptimeEnd);  
+  
+        map.put("first", imptimeBegin);  
+  
+        map.put("last", imptimeEnd);  
+  
+        return imptimeBegin;  
+    } 
     
 }

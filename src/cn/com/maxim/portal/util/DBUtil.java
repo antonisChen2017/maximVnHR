@@ -28,6 +28,7 @@ import cn.com.maxim.portal.attendan.ro.dayCReportRO;
 import cn.com.maxim.portal.attendan.ro.dayMaxReportRO;
 import cn.com.maxim.portal.attendan.ro.dayPlantRO;
 import cn.com.maxim.portal.attendan.ro.dayReportRO;
+import cn.com.maxim.portal.attendan.ro.editCSProcessRO;
 import cn.com.maxim.portal.attendan.ro.editProcessRO;
 import cn.com.maxim.portal.attendan.ro.empLateEarlyRO;
 import cn.com.maxim.portal.attendan.ro.employeeUserRO;
@@ -278,7 +279,7 @@ public class DBUtil
 	 * @return
 	 * @throws SQLException
 	 */
-	public static String addExceedOverS(String MID, overTimeVO otVo, Connection con,editProcessRO ePro)
+	public static String addExceedOverS(String MID, overTimeVO otVo, Connection con,editCSProcessRO ePro)
 	{
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(DBUtil.class);
@@ -425,10 +426,23 @@ public class DBUtil
 		    /**同一天**/
 		    t1=otVo.getQueryDate()+" "+otVo.getStartTimeHh()+":"+otVo.getStartTimemm();
 		    t2=otVo.getQueryDate()+" "+otVo.getEndTimeHh()+":"+otVo.getEndTimemm();
-		    otVo.setAddTime(String.valueOf(DateUtil.dateDiff(t1,t2,"yyyy/MM/dd HH:mm","h")));         
-		    msg =saveOvertime(otVo,con);
-		    String[] mgs=msg.split("#");	  
-		    re = mgs[0];
+		    otVo.setAddTime(String.valueOf(DateUtil.dateDiff(t1,t2,"yyyy/MM/dd HH:mm","h")));     
+		    /**檢察一天不能超過4HR**/
+		    boolean dayFlag=overTimeDAO.checkDayHour(con, otVo);
+		    boolean weekFlag=overTimeDAO.checkWeekHour(con, otVo);
+		    if(!dayFlag){
+			re=keyConts.checkDayTime;
+		    }
+		    if(!weekFlag){
+			re=keyConts.checkWeekTime;
+		    }
+		    if(dayFlag && weekFlag){
+			msg =saveOvertime(otVo,con);
+			String[] mgs=msg.split("#");	  
+			re = mgs[0];
+		    }
+		    
+		    
 		}else{
 		    /**不同天**/
         		    List<String> dateList =  DateUtil.getDatesBetweenTwoDate(otVo.getQueryDate(),otVo.getQueryDateTwo());
@@ -441,14 +455,25 @@ public class DBUtil
                 			  t1=otVo.getQueryDate()+" "+otVo.getStartTimeHh()+":"+otVo.getStartTimemm();
                 			  t2=otVo.getQueryDate()+" "+otVo.getEndTimeHh()+":"+otVo.getEndTimemm();
                 			  otVo.setAddTime(String.valueOf(DateUtil.dateDiff(t1,t2,"yyyy/MM/dd HH:mm","h")));       
-                			 msg =saveOvertime(otVo,con);
-                			 String[] mgs=msg.split("#");
-                			 if(mgs[1].equals("x")){
-                			     re = mgs[0];
-                			     break;
-                			 }else{
-                			     re = mgs[0];
-                			 }
+                			   boolean dayFlag=overTimeDAO.checkDayHour(con, otVo);
+                			   boolean weekFlag=overTimeDAO.checkWeekHour(con, otVo);
+                			    if(!dayFlag){
+                				re=keyConts.checkDayTime;
+                			    }
+                			    if(!weekFlag){
+                				re=keyConts.checkWeekTime;
+                			    }
+                			    if(dayFlag && weekFlag){
+                				 msg =saveOvertime(otVo,con);
+                        			 String[] mgs=msg.split("#");
+                        			 if(mgs[1].equals("x")){
+                        			     re = mgs[0];
+                        			     break;
+                        			 }else{
+                        			     re = mgs[0];
+                        			 }
+                			    }
+                			
                 		    }
         		    }
         		    
@@ -465,14 +490,24 @@ public class DBUtil
                     			         t2=dateList.get(i)+" 23:59";
                     			      	 newVo.setAddTime(String.valueOf(DateUtil.dateDiff(t1,t2,"yyyy/MM/dd HH:mm","h")));          
                     			      	 logger.info("第一天 VO:"+newVo.toString());
-                        			 msg =saveOvertime(newVo,con);
-                        			 String[] mgs=msg.split("#");
-                        			 if(mgs[1].equals("x")){
-                        			     re = mgs[0];
-                        			     break;
-                        			 }else{
-                        			     re = mgs[0];
-                        			 }
+                    			         boolean dayFlag=overTimeDAO.checkDayHour(con, otVo);
+                        			     boolean weekFlag=overTimeDAO.checkWeekHour(con, otVo);
+                        			    if(!dayFlag){
+                        				re=keyConts.checkDayTime;
+                        			    }
+                        			    if(!weekFlag){
+                        				re=keyConts.checkWeekTime;
+                        			    }
+                          			    if(dayFlag && weekFlag){
+                          				 msg =saveOvertime(otVo,con);
+                                  			 String[] mgs=msg.split("#");
+                                  			 if(mgs[1].equals("x")){
+                                  			     re = mgs[0];
+                                  			     break;
+                                  			 }else{
+                                  			     re = mgs[0];
+                                  			 }
+                          			    }
                     			}
                     			if(i==1){
                     			    	overTimeVO newVo =overTimeDAO.OverTimeCopyVo(otVo);
@@ -484,14 +519,24 @@ public class DBUtil
                     			         newVo.setAddTime(String.valueOf(DateUtil.dateDiff(t1,t2,"yyyy/MM/dd HH:mm","h")));         
                     				 logger.info("t1:"+t1);
                     				 logger.info("t2:"+t2);
-                    			    	 msg =saveOvertime(newVo,con);
-                        			 String[] mgs=msg.split("#");
-                        			 if(mgs[1].equals("x")){
-                        			     re = mgs[0];
-                        			     break;
-                        			 }else{
-                        			     re = mgs[0];
-                        			 }
+                    				  boolean dayFlag=overTimeDAO.checkDayHour(con, otVo);
+                    				  boolean weekFlag=overTimeDAO.checkWeekHour(con, otVo);
+                          			    if(!dayFlag){
+                          				re=keyConts.checkDayTime;
+                          			    }
+                          			    if(!weekFlag){
+                          				re=keyConts.checkWeekTime;
+                          			    }
+                         			    if(dayFlag && weekFlag){
+                         				 msg =saveOvertime(otVo,con);
+                                 			 String[] mgs=msg.split("#");
+                                 			 if(mgs[1].equals("x")){
+                                 			     re = mgs[0];
+                                 			     break;
+                                 			 }else{
+                                 			     re = mgs[0];
+                                 			 }
+                         			    }
                     			}
                     			
                     		    }
@@ -579,9 +624,8 @@ public class DBUtil
 							else
 							{
 								    DBUtil.delDBTableRow(SqlUtil.delOvertimeM(resultID), con);
-									DBUtil.delDBTableRow(SqlUtil.delOvertimeS(SID), con);
-									msg = "超过每月规定加班时数#x";
-							
+								    DBUtil.delDBTableRow(SqlUtil.delOvertimeS(SID), con);
+								   msg = "超过每月规定加班时数#x";
 							}
 						}
 						else
@@ -755,7 +799,7 @@ public class DBUtil
 		Logger logger = lu.initLog4j(DBUtil.class);
 		String msg = "";
 		String SID = "x";
-		editProcessRO ePro=null;
+		editCSProcessRO ePro=null;
 		/**
 		 * stop1 查询是否有主表
 		 */
@@ -1908,6 +1952,7 @@ public class DBUtil
 		Log4jUtil lu = new Log4jUtil();
 		Logger logger = lu.initLog4j(DBUtil.class);
 		String count = queryDBField(con, SqlUtil.getEmpnum(lcVo.getApplicationDate()), "count");
+		
 		if (Integer.valueOf(count) == 0)
 		{
 			//第一行
@@ -3828,7 +3873,6 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 			logger.info("更新人員error");
 		}
 	}
-	
 	/**
 	 * 查詢請假權限流程部門資料 
 	 * 
@@ -3851,6 +3895,37 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 			STMT = con.prepareStatement(sql);
 			ResultSet rs = STMT.executeQuery();
 			leo = (List<editProcessRO>) rh.getBean(rs, ra);
+
+		}
+		catch (Exception error)
+		{
+			logger.error(vnStringUtil.getExceptionAllinformation(error));
+		}
+		return leo;
+	}
+	
+	/**
+	 * 查詢CS請假權限流程部門資料 
+	 * 
+	 * @param con
+	 * @param sql
+	 * @param ra
+	 * @return
+	 */
+	public static List<editCSProcessRO> queryDeptCSLeaveData(Connection con, String sql, editCSProcessRO ra)
+	{
+		Log4jUtil lu = new Log4jUtil();
+		Logger logger = lu.initLog4j(DBUtil.class);
+		
+		
+		PreparedStatement STMT = null;
+		ReflectHelper rh = new ReflectHelper();
+		List<editCSProcessRO> leo = null;
+		try
+		{
+			STMT = con.prepareStatement(sql);
+			ResultSet rs = STMT.executeQuery();
+			leo = (List<editCSProcessRO>) rh.getBean(rs, ra);
 
 		}
 		catch (Exception error)
@@ -4095,8 +4170,8 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 			COUNT = DBUtil.queryDBField(con,SqlUtil.queryCSPreossCount(ru), "COUNT");
 			ru.setUNIT("0");
 			DBUtilTList<processCheckRO> pr=new DBUtilTList<processCheckRO>();
-			logger.info("queryProcessCheck sql="+SqlUtil.queryProcessCheck(ru,keyConts.processCSTable));
-			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryProcessCheck(ru,keyConts.processCSTable), new processCheckRO());
+			logger.info("queryProcessCheck sql="+SqlUtil.queryCsProcessCheck(ru,keyConts.processCSTable));
+			List<processCheckRO> cr=pr.queryTList(con, SqlUtil.queryCsProcessCheck(ru,keyConts.processCSTable), new processCheckRO());
 			prow=cr.get(0);
 			
 		
@@ -4193,7 +4268,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		//logger.info("單位:"+ru.getUNIT());
 		logger.info("角色:"+ru.getROLE());
 	
-		String	 STATUS="1";//正常流程
+		String STATUS="1";//正常流程
 		
 		editProcessRO epDD=new editProcessRO();
 		editProcessVO edVo =new editProcessVO();
@@ -4313,7 +4388,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 	 * @return
 	 * @throws Exception 
 	 */
-	public static final 	editProcessRO  getCSProcessData( overTimeVO otVo,Connection con,processCOUserRO ru) throws Exception
+	public static final 	editCSProcessRO  getCSProcessData( overTimeVO otVo,Connection con,processCOUserRO ru) throws Exception
 	{
 		//用工號查出部門單位角色
 		Log4jUtil lu = new Log4jUtil();
@@ -4326,7 +4401,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 	
 		String	 STATUS="1";//正常流程
 		
-		editProcessRO epDD=new editProcessRO();
+		editCSProcessRO epDD=new editCSProcessRO();
 		editProcessVO edVo =new editProcessVO();
 		edVo.setDept(ru.getDEPARTMENT());
 		//if(ru.getROLE().equals("E") || ru.getROLE().equals("U")){
@@ -4339,7 +4414,7 @@ public static List<dayCReportRO> getDayReportMonth(Connection con, leaveCardVO l
 		edVo.setStatus(STATUS);
 		edVo.setRole(ru.getROLE());
 		logger.info("queryDeptCSData:"+SqlUtil.queryDeptCSData(edVo));
-		List<editProcessRO> ep=DBUtil.queryDeptLeaveData(con,SqlUtil.queryDeptCSData(edVo),epDD);
+		List<editCSProcessRO> ep=DBUtil.queryDeptCSLeaveData(con,SqlUtil.queryDeptCSData(edVo),epDD);
 		
 		return ep.get(0);
 	}

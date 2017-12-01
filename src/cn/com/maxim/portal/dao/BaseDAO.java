@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
- 
+
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+ 
+
  
 
 public class BaseDAO {
@@ -31,7 +33,7 @@ public class BaseDAO {
                     sqlString,
                     new BeanListHandler(clazz));
         } catch (SQLException e) {
-            e.printStackTrace();
+          
         } finally {
             DbUtils.closeQuietly(conn);
         }
@@ -56,8 +58,8 @@ public class BaseDAO {
                     conn,
                     sqlString,
                     new BeanListHandler(clazz));
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
         } finally {
             DbUtils.closeQuietly(conn);
         }
@@ -85,7 +87,7 @@ public class BaseDAO {
                 flag = true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+           
         } finally {
             DbUtils.closeQuietly(conn);
         }

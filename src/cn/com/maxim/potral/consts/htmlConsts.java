@@ -90,4 +90,6 @@ public class htmlConsts
 	  public static final String html_gr_StopWorking="/cn/com/maxim/portal/html/gr_StopWorking.html";
 	  /**測試ajax**/
 	  public static final String html_testMaxinAjax="/cn/com/maxim/portal/html/testMaxinAjax.html";
+	  /**測試CFX**/
+	  public static final String html_vn_getOrder="/cn/com/maxim/portal/html/vn_getOrder.html";
 }

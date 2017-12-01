@@ -12,7 +12,7 @@ public class Log4jUtil
 
 		Properties prop = new Properties();
 		// ### set log levels ###
-		prop.setProperty("log4j.rootLogger", "debug ,stdout ,D ,E");
+		prop.setProperty("log4j.rootLogger", "debug ,stdout ,D ,E,W");
 		// ### 输出到控制台 ###
 		prop.setProperty("log4j.appender.stdout", "org.apache.log4j.ConsoleAppender");
 		prop.setProperty("log4j.appender.stdout.Target", "System.out");
@@ -36,6 +36,17 @@ public class Log4jUtil
 		prop.setProperty("log4j.appender.E.layout", "org.apache.log4j.PatternLayout");
 		prop.setProperty("log4j.appender.E.layout.ConversionPattern", "%-d{yyyy-MM-dd HH:mm:ss} [%F:%L ]  - [ %p ]  %m%n");
 		prop.setProperty("log4j.appender.E.encoding","UTF-8");
+		
+		// ### 保存webService到单独文件 ###
+		prop.setProperty("log4j.appender.W", "org.apache.log4j.DailyRollingFileAppender");
+		prop.setProperty("log4j.appender.W.File", "vnlog/Cfx.log");
+		prop.setProperty("log4j.appender.W.Append", " true");
+		prop.setProperty("log4j.appender.W.Threshold" , "WARN");
+		prop.setProperty("log4j.appender.W.layout", "org.apache.log4j.PatternLayout");
+		prop.setProperty("log4j.appender.W.layout.ConversionPattern", "%-d{yyyy-MM-dd HH:mm:ss} [%F:%L ]  - [ %p ]  %m%n");
+		prop.setProperty("log4j.appender.W.encoding","UTF-8");
+		
+		
 		PropertyConfigurator.configure(prop);
 		return Logger.getLogger(czass);
 	}

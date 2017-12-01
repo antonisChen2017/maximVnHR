@@ -13,12 +13,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jdom.Document;
-import org.jdom.JDOMException;
+
 import org.jdom.input.SAXBuilder;
-
-import com.alibaba.druid.util.StringUtils;
-
 import cn.com.maxim.DB.DBManager;
+import cn.com.maxim.portal.PortalManager;
 import cn.com.maxim.portal.attendan.ro.CSRepoRO;
 import cn.com.maxim.portal.attendan.ro.checkYearDayRO;
 import cn.com.maxim.portal.attendan.ro.configRO;
@@ -91,6 +89,10 @@ public class DBUtil
 		Document doc = xmlBuilder.build(new File("D:\\mxportal\\script\\dba.xml"));
 		DBManager dba = new DBManager(doc);
 		Connection con=dba.getConnection("HR");
+		
+//		Connection connection = PortalManager.getDBA().getConnection("HR");	
+//		PortalManager.getDBA().freeConnection("HR", connection);
+		
 		return con;
 	}
 	/**
